@@ -4,10 +4,10 @@
 
 | Item | Description |
 |---|---|
-| Course |  |
-| Class |  |
+| Course | PRN232 |
+| Class | SE18D05 |
 | Semester | SU26 |
-| Group |  |
+| Group | 4 |
 | Topic |  |
 | Repository |  |
 
@@ -17,11 +17,11 @@
 
 | No | Student ID | Full Name | GitHub Username | Role | Main Responsibility |
 |---:|---|---|---|---|---|
-| 1 |  |  |  | Leader |  |
-| 2 |  |  |  | Member |  |
-| 3 |  |  |  | Member |  |
-| 4 |  |  |  | Member |  |
-| 5 |  |  |  | Member |  |
+| 1 | DE180116 | Nguyễn Minh Tuấn | winhtuan | Leader |  |
+| 2 | DE180083 | Nguyễn Tiến Đạt | datnt04 | Member |  |
+| 3 | DE180093 | Phạm Hồng Quân | hongquandt | Member |  |
+| 4 | DE180117 | Ngô Sỹ Giá | Giahensum | Member |  |
+| 5 | DE191106 | Nguyễn Lê Tiểu Long | longg1708 | Member |  |
 
 ---
 
