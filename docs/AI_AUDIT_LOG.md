@@ -4,15 +4,15 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Môn học |  |
-| Mã môn học |  |
-| Lớp |  |
-| Học kỳ |  |
-| Tên bài tập / Project |  |
-| Tên sinh viên / Nhóm |  |
+| Môn học | Building Cross-Platform Back-End Application With .NET |
+| Mã môn học | PRN232 |
+| Lớp | SE18D05 |
+| Học kỳ | 8 |
+| Tên bài tập / Project | VivuCar |
+| Tên sinh viên / Nhóm | Nhóm 4 |
 | MSSV / Danh sách MSSV |  |
-| Giảng viên hướng dẫn |  |
-| Ngày bắt đầu |  |
+| Giảng viên hướng dẫn | QuangLTN3 |
+| Ngày bắt đầu | 16/5/2026 |
 | Ngày hoàn thành |  |
 
 ---
@@ -22,14 +22,14 @@
 Đánh dấu các công cụ AI đã sử dụng trong quá trình thực hiện bài tập/project.
 
 - [ ] ChatGPT
-- [ ] Gemini
+- [ x ] Gemini
 - [ ] Claude
 - [ ] GitHub Copilot
 - [ ] Cursor
 - [ ] Antigravity
 - [ ] Perplexity
 - [ ] Microsoft Copilot
-- [ ] Công cụ khác: ....................................
+- [ x ] Công cụ khác: Google Stitch
 
 ---
 
@@ -55,7 +55,8 @@ Ví dụ:
 ### Mô tả mục tiêu sử dụng AI
 
 ```text
-Viết tại đây...
+Nhóm sử dụng AI để hỗ trợ tăng tốc quá trình phát triển hệ thống, đặc biệt trong việc Phân tích yêu cầu bài toán, tối ưu logic xử lý, debug lỗi, thiết kế giao diện UI/UX, xây dựng cấu trúc database và tìm hiểu các công nghệ mới phục vụ cho dự án.
+```
 
 ## 4. Nhật ký sử dụng AI chi tiết
 
@@ -68,16 +69,17 @@ Viết tại đây...
 
 | Nội dung | Thông tin |
 |---|---|
-| Ngày sử dụng |  |
-| Công cụ AI | ChatGPT / Gemini / Claude / GitHub Copilot / Cursor / Antigravity / Khác |
-| Mục đích sử dụng |  |
-| Phần việc liên quan | Requirement / Design / Database / Frontend / Backend / Testing / Debug / Report / Presentation / Other |
-| Mức độ sử dụng | Hỗ trợ ý tưởng / Hỗ trợ một phần / Hỗ trợ nhiều / Sinh chính nội dung |
+| Ngày sử dụng | 16/5/2026 |
+| MSSV | DE180116 |
+| Công cụ AI | Stitch |
+| Mục đích sử dụng | Thiết kế layout UI cho trang của Admin |
+| Phần việc liên quan | Frontend |
+| Mức độ sử dụng | Hỗ trợ ý tưởng |
 
 #### 4.1. Prompt đã sử dụng
 
 ```text
-Dán nguyên văn prompt đã hỏi AI tại đây.
+Bạn là Senior Frontend Developer chuyên thiết kế Admin Dashboard bằng HTML5 và Tailwind CSS cho hệ thống thuê xe. Hãy tạo giao diện quản trị hiện đại, responsive theo phong cách SaaS dashboard chuyên nghiệp như Uber Admin hoặc Grab Merchant. Hệ thống bao gồm các chức năng: quản lý danh mục phương tiện với CRUD xe, upload và preview hình ảnh, filter, pagination và block/unblock xe; dashboard thống kê doanh thu với biểu đồ trực quan và chức năng export Excel/PDF; quản lý voucher với tạo mã giảm giá, thiết lập điều kiện áp dụng và theo dõi trạng thái, hiệu suất voucher. Giao diện cần có sidebar, navbar, cards, tables, modal confirm, status badge, search/filter toolbar và sử dụng mock data thực tế. Xuất code bằng HTML5 kết hợp Tailwind CSS CDN, code sạch, có comment, hỗ trợ responsive cho mobile, tablet và desktop, sử dụng Heroicons hoặc FontAwesome.
 ```
 
 #### 4.2. Kết quả AI gợi ý
@@ -85,7 +87,7 @@ Dán nguyên văn prompt đã hỏi AI tại đây.
 Tóm tắt nội dung AI đã trả lời hoặc gợi ý.
 
 ```text
-Viết tại đây...
+Tạo ra 5 màn hình của Admin cho các trang quản lý, thông kê
 ```
 
 #### 4.3. Phần sinh viên/nhóm đã sử dụng từ AI
