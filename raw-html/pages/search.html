@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tìm xe | VivuCar</title>
+    <script>
+      tailwind.config = { theme: { extend: { fontFamily: { sans: ['Outfit','Segoe UI','Arial','sans-serif'], mono: ['SFMono-Regular','Consolas','monospace'] }, colors: { notion: { bg: '#f7f7f5', surface: '#ffffff', muted: '#fbfbfa', border: '#e6e4df', text: '#1f1f1f' } } } } };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../assets/css/animations.css" />
+  </head>
+  <body data-layout="user" data-page="search" data-public="true" class="min-h-[100dvh] bg-[#f7f7f5] text-[#1f1f1f] font-sans antialiased overflow-x-hidden">
+    <div id="headerMount"></div>
+    <main class="page-shell">
+      <div class="page-heading">
+        <div>
+          <h1>Tìm xe</h1>
+          <p>
+            Tìm theo brand, model, license_plate, address. Mặc định chỉ hiện
+            `available`.
+          </p>
+        </div>
+      </div>
+      <section class="panel p-3 mb-4">
+        <div class="search-box !mt-0">
+          <input
+            id="searchKeyword"
+            placeholder="Tìm theo tên xe, hãng xe hoặc dòng xe"
+          /><button class="btn btn-primary" id="btnSearch">Tìm kiếm</button>
+        </div>
+        <div
+          id="searchSuggestions"
+          class="chip-row hidden mt-2.5"
+        ></div>
+        <div id="filterError" class="alert alert-error hidden"></div>
+      </section>
+      <div class="listing-layout">
+        <aside class="filter-panel" id="filterPanel"></aside>
+        <section>
+          <div class="section-head">
+            <h2 id="resultCount">Tìm thấy 0 xe</h2>
+            <select id="sortCars">
+              <option value="relevant">Phù hợp nhất</option>
+              <option value="price_asc">Giá thấp đến cao</option>
+              <option value="price_desc">Giá cao đến thấp</option>
+              <option value="rating_desc">Rating cao nhất</option>
+            </select>
+          </div>
+          <div id="searchResultGrid" class="car-grid">
+            <div class="skeleton"></div>
+          </div>
+          <div class="pagination" id="searchPagination"></div>
+        </section>
+      </div>
+    </main>
+    <div id="modalMount"></div>
+    <script src="../assets/js/tailwind-ui.js"></script><script src="../assets/js/constants.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/db-mock.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/layout.js"></script>
+    <script src="../assets/js/search.js"></script>
+  </body>
+</html>
+
+
+
