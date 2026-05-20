@@ -43,15 +43,6 @@
           </div>
         </section>
         <section class="checkout-section">
-          <h2>Lịch thuê</h2>
-          <div class="form-grid">
-            <label>Nhận xe<input id="pickupDatetime" name="pickup_datetime" type="datetime-local" value="${tomorrow}" required></label>
-            <label>Trả xe<input id="returnDatetime" name="return_datetime" type="datetime-local" value="${after}" required></label>
-            <label class="full">Địa điểm nhận xe<input id="pickupAddress" name="pickup_address" value="${car.address}" required></label>
-          </div>
-          <div id="availabilityNote" class="availability-note">Đang kiểm tra lịch xe...</div>
-        </section>
-        <section class="checkout-section">
           <h2>Thông tin người lái</h2>
           <div class="form-grid">
             <label>Họ tên<input id="driverName" value="${currentUser.full_name}" required></label>
@@ -69,19 +60,37 @@
           </div>
           <div class="image-preview-grid" id="licensePreview"></div>
         </section>
-        <section class="checkout-section">
-          <h2>Voucher và thanh toán</h2>
-          <div class="voucher-inline">
-            <input id="voucherCode" placeholder="Nhập mã voucher">
-            <button class="btn btn-secondary" id="applyVoucher" type="button">Áp dụng</button>
-          </div>
-          <div class="payment-method-grid mt-3">
-            ${["vnpay", "momo", "cash"].map((method, index) => `<label class="method-card"><input type="radio" name="method" value="${method}" ${index === 0 ? "checked" : ""}><strong>${method === "cash" ? "Tiền mặt" : method === "momo" ? "MoMo" : "VNPay"}</strong><span class="muted">${method === "cash" ? "Thanh toán khi nhận xe" : "Chuyển sang trang kết quả mock"}</span></label>`).join("")}
-          </div>
-        </section>
         <button class="btn btn-primary btn-full" type="submit">Tạo đơn và tiếp tục thanh toán</button>
       </form>
-      <aside class="summary-card" id="summaryCard"></aside>`;
+      <aside class="flex flex-col gap-4 sticky top-24" id="checkoutSidebar">
+        <section class="checkout-section">
+          <h2>Lịch thuê</h2>
+          <div class="form-grid">
+            <label class="full">Nhận xe<input id="pickupDatetime" name="pickup_datetime" type="datetime-local" value="${tomorrow}" form="checkoutForm" required></label>
+            <label class="full">Trả xe<input id="returnDatetime" name="return_datetime" type="datetime-local" value="${after}" form="checkoutForm" required></label>
+            <label class="full">Địa điểm nhận xe<input id="pickupAddress" name="pickup_address" value="${car.address}" form="checkoutForm" required></label>
+          </div>
+          <div id="availabilityNote" class="availability-note">Đang kiểm tra lịch xe...</div>
+        </section>
+        <section class="checkout-section">
+          <h2>Voucher ưu đãi</h2>
+          <div class="voucher-inline flex gap-2">
+            <input id="voucherCode" placeholder="Nhập mã voucher" form="checkoutForm" class="flex-1">
+            <button class="btn btn-secondary shrink-0" id="applyVoucher" type="button">Áp dụng</button>
+          </div>
+          <div class="field mt-3">
+            <label for="voucherSelect" class="text-xs font-semibold text-neutral-500 mb-1 block">Hoặc chọn ưu đãi có sẵn:</label>
+            <select id="voucherSelect" class="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-sm">
+              <option value="">-- Chọn voucher --</option>
+              ${DB.vouchers.map(v => {
+                const desc = v.discount_type === "percentage" ? `${v.discount_value}%` : `${U.formatVnd(v.discount_value)}`;
+                return `<option value="${v.code}">${v.code} (${v.name} - Giảm ${desc})</option>`;
+              }).join("")}
+            </select>
+          </div>
+        </section>
+        <div class="summary-card" id="summaryCard"></div>
+      </aside>`;
     bind();
     updateAll();
   }
@@ -89,6 +98,11 @@
   function bind() {
     ["pickupDatetime", "returnDatetime"].forEach((id) => U.byId(id).addEventListener("change", updateAll));
     U.byId("applyVoucher").addEventListener("click", applyVoucher);
+    U.byId("voucherSelect").addEventListener("change", (e) => {
+      const code = e.target.value;
+      U.byId("voucherCode").value = code;
+      applyVoucher();
+    });
     ["licenseFront", "licenseBack"].forEach((id) => U.byId(id).addEventListener("change", previewLicense));
     U.byId("checkoutForm").addEventListener("submit", submitBooking);
   }
@@ -117,20 +131,30 @@
 
   function applyVoucher() {
     const code = U.byId("voucherCode").value.trim().toUpperCase();
+    if (!code) {
+      appliedVoucher = null;
+      U.renderToast("Đã hủy áp dụng voucher.", "neutral");
+      if (U.byId("voucherSelect")) U.byId("voucherSelect").value = "";
+      updateAll();
+      return;
+    }
     const voucher = DB.vouchers.find((item) => item.code.toUpperCase() === code);
     if (!voucher) {
       appliedVoucher = null;
       U.renderToast("Không tìm thấy voucher.", "danger");
+      if (U.byId("voucherSelect")) U.byId("voucherSelect").value = "";
       updateAll();
       return;
     }
     const result = Pricing.calculateVoucher(voucher, currentPricing().subtotal);
     if (result.error) {
       U.renderToast(result.error, "danger");
+      if (U.byId("voucherSelect")) U.byId("voucherSelect").value = "";
       return;
     }
     appliedVoucher = voucher;
     U.renderToast("Đã áp dụng voucher.", "success");
+    if (U.byId("voucherSelect")) U.byId("voucherSelect").value = code;
     updateAll();
   }
 
@@ -187,7 +211,7 @@
     if (appliedVoucher) {
       DB.voucher_usages.push({ id: Math.max(0, ...DB.voucher_usages.map((item) => item.id)) + 1, voucher_id: appliedVoucher.id, user_id: booking.user_id, booking_id: id, used_at: new Date().toISOString() });
     }
-    const method = document.querySelector("input[name='method']:checked").value;
+    const method = "vnpay"; // Default to VNPay as payment selector has been removed from UI
     // UI-only interpretation. payments.amount is used as deposit amount in current frontend mock.
     DB.payments.push({ id: Math.max(0, ...DB.payments.map((item) => item.id)) + 1, booking_id: id, method, amount: Math.round(pricing.total * 0.3), status: "pending", transaction_code: `PAY${Date.now()}`, paid_at: null });
     window.VivuCarSaveDB();
