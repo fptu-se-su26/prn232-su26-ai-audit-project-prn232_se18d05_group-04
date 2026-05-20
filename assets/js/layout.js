@@ -184,20 +184,47 @@
   }
 
   function renderOwnerSidebar(activeKey) {
+    const ownerAliases = {
+      "owner-booking-detail": "owner-bookings",
+      "owner-booking-tracking": "owner-bookings",
+      "owner-car-create": "owner-cars",
+      "owner-car-edit": "owner-cars",
+      "owner-car-images": "owner-cars",
+      "owner-car-status": "owner-cars",
+      "owner-car-activity": "owner-cars",
+      "owner-handover-condition": "owner-handover",
+      "owner-return-condition": "owner-handover",
+      "owner-return-inspection": "owner-handover"
+    };
+    const resolvedKey = ownerAliases[activeKey] || activeKey;
+    const ownerIcons = {
+      dashboard: '<svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm320 96c0-26.9-16.5-49.9-40-59.3V88c0-13.3-10.7-24-24-24s-24 10.7-24 24v204.7c-23.5 9.5-40 32.5-40 59.3c0 35.3 28.7 64 64 64s64-28.7 64-64zM144 176a32 32 0 1 0 0-64 32 32 0 1 0 0 64zm-16 80a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64zM400 144a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>',
+      car: '<svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M135.2 117.4 109.1 192h293.8l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8 74.8 96.3C88.3 57.8 124.6 32 165.4 32h181.2c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5C495.6 207.6 512 231.1 512 258.5V400c0 26.5-21.5 48-48 48h-16v32c0 17.7-14.3 32-32 32h-32c-17.7 0-32-14.3-32-32v-32H160v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32v-32H48c-26.5 0-48-21.5-48-48V258.5c0-27.4 16.4-50.9 39.6-61.7zM128 352a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm256 0a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg>',
+      booking: '<svg aria-hidden="true" viewBox="0 0 448 512" class="h-4 w-4 fill-current"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v16 48V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V192 144 128c0-35.3-28.7-64-64-64H344V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 192H400V448c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192zm176 40c-13.3 0-24 10.7-24 24v48H152c-13.3 0-24 10.7-24 24s10.7 24 24 24h48v48c0 13.3 10.7 24 24 24s24-10.7 24-24V352h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H248V256c0-13.3-10.7-24-24-24z"/></svg>',
+      handover: '<svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M32 96l320 0V32c0-12.9 7.8-24.6 19.8-29.6s25.7-2.2 34.9 6.9l96 96c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-96 96c-9.2 9.2-22.9 11.9-34.9 6.9s-19.8-16.6-19.8-29.6V160L32 160c-17.7 0-32-14.3-32-32s14.3-32 32-32zM480 352c17.7 0 32 14.3 32 32s-14.3 32-32 32H160v32c0 12.9-7.8 24.6-19.8 29.6s-25.7 2.2-34.9-6.9l-96-96c-6-6-9.4-14.1-9.4-22.6s3.4-16.6 9.4-22.6l96-96c9.2-9.2 22.9-11.9 34.9-6.9s19.8 16.6 19.8 29.6l0 32H480z"/></svg>',
+      support: '<svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M256 48C141.1 48 48 141.1 48 256v40c0 13.3-10.7 24-24 24s-24-10.7-24-24V256C0 114.6 114.6 0 256 0S512 114.6 512 256V400.1c0 48.6-39.4 88-88.1 88L313.6 488c-8.3 14.3-23.8 24-41.6 24H240c-26.5 0-48-21.5-48-48s21.5-48 48-48h32c17.8 0 33.3 9.7 41.6 24l110.4 .1c22.1 0 40-17.9 40-40V256c0-114.9-93.1-208-208-208zM144 208a112 112 0 1 1 224 0 112 112 0 1 1 -224 0z"/></svg>',
+      logout: '<svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224H192c-17.7 0-32 14.3-32 32s14.3 32 32 32h210.7l-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96C43 32 0 75 0 128v256c0 53 43 96 96 96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H96c-17.7 0-32-14.3-32-32V128c0-17.7 14.3-32 32-32h64z"/></svg>'
+    };
+    const iconBox = (icon, active = false) => `<span class="admin-nav-icon ${active ? 'admin-nav-icon-active' : ''}">${icon}</span>`;
+    const activeIndicator = '<span class="admin-nav-indicator" aria-hidden="true"></span>';
     const items = [
-      ["owner-booking-requests", "Yêu cầu đặt xe", "owner-booking-requests.html"],
-      ["owner-handover", "Bàn giao & trả xe", "owner-handover-dashboard.html"],
-      ["owner-cars", "Xe của tôi", "owner-cars.html"],
-      ["owner-support", "Hỗ trợ khách hàng", "owner-support-inbox.html"],
-      ["owner-activity", "Lịch sử hoạt động", "owner-car-activity-history.html?carId=1"],
-      ["profile", "Hồ sơ", "profile.html"]
+      ["owner-dashboard", "Dashboard", "owner-dashboard.html", ownerIcons.dashboard],
+      ["owner-cars", "Quản lý xe", "owner-cars.html", ownerIcons.car],
+      ["owner-bookings", "Yêu cầu đặt xe", "owner-booking-requests.html", ownerIcons.booking],
+      ["owner-handover", "Bàn giao & Trả xe", "owner-handover-dashboard.html", ownerIcons.handover],
+      ["owner-support", "Hỗ trợ khách hàng", "owner-support-inbox.html", ownerIcons.support]
     ];
     return `
       <aside class="admin-sidebar owner-sidebar">
-        <a class="sidebar-brand" href="owner-cars.html"><span class="brand-mark">VC</span><span>VivuCar Owner</span></a>
-        <nav class="sidebar-nav">
-          ${items.map(([key, label, href]) => `<a class="${activeKey === key ? "active" : ""}" href="${href}">${label}</a>`).join("")}
-          <button type="button" data-logout-trigger>Đăng xuất</button>
+        <a class="sidebar-brand" href="owner-dashboard.html"><span class="brand-mark">VC</span><span class="grid leading-tight"><span>VivuCar</span><span class="text-xs font-semibold text-zinc-500">Owner Portal</span></span></a>
+        <nav class="sidebar-nav" aria-label="Owner navigation">
+          ${items.map(([key, label, href, icon]) => {
+            const active = resolvedKey === key;
+            return `<a class="group ${active ? 'admin-nav-active' : ''}" href="${href}">${active ? activeIndicator : ''}${iconBox(icon, active)}${label}</a>`;
+          }).join('')}
+        </nav>
+        <nav class="sidebar-nav mt-auto" aria-label="Owner account">
+          <button class="group" type="button" data-logout-trigger><span class="admin-nav-icon admin-nav-icon-logout">${ownerIcons.logout}</span>Đăng xuất</button>
         </nav>
       </aside>`;
   }
@@ -209,7 +236,8 @@
     if (sidebarMount) sidebarMount.innerHTML = renderAdminSidebar(page);
     if (headerMount) headerMount.innerHTML = renderAdminHeader(user);
   } else if (layout === "owner") {
-    if (headerMount) headerMount.innerHTML = renderAppHeader(page);
+    if (sidebarMount) sidebarMount.innerHTML = renderOwnerSidebar(page);
+    if (headerMount) headerMount.innerHTML = renderOwnerHeader(user);
   } else {
     if (headerMount) headerMount.innerHTML = renderAppHeader(page);
     const profileMount = document.getElementById("profileSidebarMount");
