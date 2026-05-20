@@ -5,7 +5,7 @@
 
   const roleRoutes = {
     user: "home.html",
-    car_owner: "owner-booking-requests.html",
+    car_owner: "owner-dashboard.html",
     admin: "admin-dashboard.html"
   };
 
