@@ -11,25 +11,42 @@
   if (!publicPage && !user) return;
 
   function renderAdminSidebar(activeKey) {
+    const adminIcons = {
+      chartLine: '<svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64v336c0 44.2 35.8 80 80 80h400c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm375 111c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-87 87-39-39c-9.4-9.4-24.6-9.4-33.9 0l-96 96c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l79-79 39 39c9.4 9.4 24.6 9.4 33.9 0l104-104z"/></svg>',
+      users: '<svg aria-hidden="true" viewBox="0 0 640 512" class="h-4 w-4 fill-current"><path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM609.3 512H471.4c5.4-9.4 8.6-20.3 8.6-32.1C480 416.5 448.4 360.6 400.2 327c12.2-4.5 25.3-7 38.9-7h61.4C577.5 320 640 382.5 640 459.5c0 29-23.5 52.5-52.5 52.5zM432 256c-31 0-59-12.6-79.3-32.9C372.4 198.6 384 167.5 384 134.1c0-13.1-1.8-25.8-5.2-37.8C393.1 76.2 416.7 64 442.7 64C504.9 64 555.3 114.4 555.3 176.6S504.9 289.3 442.7 289.3c-3.6 0-7.2-.2-10.7-.5V256z"/></svg>',
+      car: '<svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M135.2 117.4 109.1 192h293.8l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8 74.8 96.3C88.3 57.8 124.6 32 165.4 32h181.2c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5C495.6 207.6 512 231.1 512 258.5V400c0 26.5-21.5 48-48 48h-16v32c0 17.7-14.3 32-32 32h-32c-17.7 0-32-14.3-32-32v-32H160v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32v-32H48c-26.5 0-48-21.5-48-48V258.5c0-27.4 16.4-50.9 39.6-61.7zM128 352a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm256 0a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg>',
+      ticket: '<svg aria-hidden="true" viewBox="0 0 576 512" class="h-4 w-4 fill-current"><path d="M64 64C28.7 64 0 92.7 0 128v80c0 8.8 7.4 15.7 15.7 18.6C34.5 233.1 48 251 48 272s-13.5 38.9-32.3 45.4C7.4 320.3 0 327.2 0 336v80c0 35.3 28.7 64 64 64h448c35.3 0 64-28.7 64-64v-80c0-8.8-7.4-15.7-15.7-18.6C541.5 310.9 528 293 528 272s13.5-38.9 32.3-45.4c8.3-2.9 15.7-9.8 15.7-18.6v-80c0-35.3-28.7-64-64-64H64zm64 112v192h320V176H128z"/></svg>',
+      fileExport: '<svg aria-hidden="true" viewBox="0 0 576 512" class="h-4 w-4 fill-current"><path d="M0 64C0 28.7 28.7 0 64 0h224v128c0 17.7 14.3 32 32 32h128v96h-48c-26.5 0-48 21.5-48 48v32H160c-17.7 0-32 14.3-32 32s14.3 32 32 32h192v32c0 26.5 21.5 48 48 48h48c0 17.7-14.3 32-32 32H64c-35.3 0-64-28.7-64-64V64zm448 64H320V0l128 128zm-32 192v96c0 8.8 7.2 16 16 16h32V304h-32c-8.8 0-16 7.2-16 16zm112-32 43.3 43.3c6.2 6.2 6.2 16.4 0 22.6L528 397.3V368h-64v-32h64v-29.3z"/></svg>',
+      logout: '<svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224H192c-17.7 0-32 14.3-32 32s14.3 32 32 32h210.7l-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96C43 32 0 75 0 128v256c0 53 43 96 96 96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H96c-17.7 0-32-14.3-32-32V128c0-17.7 14.3-32 32-32h64z"/></svg>'
+    };
+    const iconBox = (icon, active = false) => `<span class="admin-nav-icon ${active ? "admin-nav-icon-active" : ""}">${icon}</span>`;
+    const activeIndicator = '<span class="admin-nav-indicator" aria-hidden="true"></span>';
+    const items = [
+      ["dashboard", "Dashboard doanh thu", "admin-dashboard.html", adminIcons.chartLine],
+      ["users", "Người dùng", "admin-users.html", adminIcons.users],
+      ["cars", "Phương tiện", "admin-cars.html", adminIcons.car],
+      ["vouchers", "Voucher", "admin-vouchers.html", adminIcons.ticket],
+      ["reports", "Xuất báo cáo", "admin-export-reports.html", adminIcons.fileExport]
+    ];
     return `
       <aside class="admin-sidebar">
-        <a class="sidebar-brand" href="admin-dashboard.html"><span class="brand-mark">VC</span><span>VivuCar Admin</span></a>
-        <nav class="sidebar-nav">
-          <a class="${activeKey === "dashboard" ? "active" : ""}" href="admin-dashboard.html">Dashboard doanh thu</a>
-          <a class="${activeKey === "users" ? "active" : ""}" href="admin-users.html">Người dùng</a>
-          <a class="${activeKey === "cars" ? "active" : ""}" href="admin-cars.html">Phương tiện</a>
-          <a class="${activeKey === "vouchers" ? "active" : ""}" href="admin-vouchers.html">Voucher</a>
-          <a class="${activeKey === "reports" ? "active" : ""}" href="admin-export-reports.html">Xuất báo cáo</a>
-          <button type="button" data-logout-trigger>Đăng xuất</button>
+        <a class="sidebar-brand" href="admin-dashboard.html"><span class="brand-mark">${adminIcons.car}</span><span class="grid leading-tight"><span>VivuCar</span><span class="text-xs font-semibold text-zinc-500">Admin Console</span></span></a>
+        <nav class="sidebar-nav" aria-label="Admin navigation">
+          ${items.map(([key, label, href, icon]) => {
+            const active = activeKey === key;
+            return `<a class="group ${active ? "admin-nav-active" : ""}" href="${href}">${active ? activeIndicator : ""}${iconBox(icon, active)}${label}</a>`;
+          }).join("")}
+        </nav>
+        <nav class="sidebar-nav mt-auto" aria-label="Admin account">
+          <button class="group" type="button" data-logout-trigger><span class="admin-nav-icon admin-nav-icon-logout">${adminIcons.logout}</span>Đăng xuất</button>
         </nav>
       </aside>`;
   }
-
   function renderAdminHeader(currentUser) {
     const initials = currentUser.full_name.split(" ").slice(-2).map((part) => part[0]).join("").toUpperCase();
     return `
       <header class="admin-header">
-        <button class="icon-button menu-toggle" type="button" data-menu-toggle aria-label="Mở menu">☰</button>
+        <button class="icon-button menu-toggle" type="button" data-menu-toggle aria-label="Mở menu">Menu</button>
         <div class="header-search"><input type="search" placeholder="Tìm xe, người dùng, voucher"></div>
         <div class="header-user">
           <span class="name">${currentUser.full_name}</span>
@@ -38,7 +55,6 @@
         </div>
       </header>`;
   }
-
   function renderLogoutModal() {
     return `
       <div class="modal-backdrop" id="logoutModal" role="dialog" aria-modal="true">

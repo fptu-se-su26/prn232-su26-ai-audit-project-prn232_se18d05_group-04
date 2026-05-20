@@ -61,6 +61,7 @@
 
   document.getElementById("btnFilter").addEventListener("click", applyFilters);
   document.getElementById("btnReset").addEventListener("click", () => { document.querySelectorAll(".toolbar input, .toolbar select").forEach((el) => el.value = ""); applyFilters(); });
+  document.getElementById("btnResetEmptyCars")?.addEventListener("click", () => { document.querySelectorAll(".toolbar input, .toolbar select").forEach((el) => el.value = ""); applyFilters(); });
   document.getElementById("pageSize").addEventListener("change", (event) => { state.pageSize = Number(event.target.value); state.page = 1; renderCars(); });
   document.getElementById("prevPage").addEventListener("click", () => { state.page -= 1; renderCars(); });
   document.getElementById("nextPage").addEventListener("click", () => { state.page += 1; renderCars(); });

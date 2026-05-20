@@ -29,9 +29,9 @@ window.VivuCarUtils = {
     const groups = {
       success: ["available", "success", "completed", "done", "active"],
       warning: ["pending", "processing", "maintenance", "approved", "used_up"],
-      danger: ["blocked", "failed", "rejected", "cancelled", "inactive"],
+      danger: ["blocked", "failed", "rejected", "cancelled", "inactive", "disabled"],
       info: ["rented", "car_owner", "admin"],
-      neutral: ["refunded", "expired", "user"]
+      neutral: ["refunded", "expired", "draft", "user"]
     };
     const bucket = Object.entries(groups).find(([, values]) => values.includes(value))?.[0] || kind || "neutral";
     return `<span class="badge badge-${bucket}">${label || value}</span>`;

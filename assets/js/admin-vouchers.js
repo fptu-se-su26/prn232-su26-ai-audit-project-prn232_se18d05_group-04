@@ -99,8 +99,8 @@
           datasets: [{
             label: "Lượt dùng",
             data: values,
-            borderColor: "#1f1f1f",
-            backgroundColor: "rgba(31,31,31,.08)",
+            borderColor: "#059669",
+            backgroundColor: "rgba(5,150,105,.10)",
             fill: true,
             tension: .35,
             pointRadius: 3
@@ -111,8 +111,8 @@
           maintainAspectRatio: false,
           plugins: { legend: { display: false } },
           scales: {
-            x: { grid: { display: false }, ticks: { color: "#6b6b6b" } },
-            y: { beginAtZero: true, ticks: { precision: 0, color: "#6b6b6b" }, grid: { color: "#e6e4df" } }
+            x: { grid: { display: false }, ticks: { color: "#71717a" } },
+            y: { beginAtZero: true, ticks: { precision: 0, color: "#71717a" }, grid: { color: "#e4e4e7" } }
           }
         }
       });

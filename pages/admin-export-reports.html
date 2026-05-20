@@ -4,17 +4,17 @@
   <title>Xuất báo cáo | VivuCar</title>
 
   <script>
-    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Outfit','Segoe UI','Arial','sans-serif'], mono: ['SFMono-Regular','Consolas','monospace'] }, colors: { notion: { bg: '#f7f7f5', surface: '#ffffff', muted: '#fbfbfa', border: '#e6e4df', text: '#1f1f1f' } } } } };
+    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Be Vietnam Pro','Segoe UI','Arial','sans-serif'], mono: ['SFMono-Regular','Consolas','monospace'] }, colors: { notion: { bg: '#f7f7f5', surface: '#ffffff', muted: '#fbfbfa', border: '#e6e4df', text: '#1f1f1f' } } } } };
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="../assets/css/animations.css">
 
-</head><body data-page="reports" class="min-h-[100dvh] bg-[#f7f7f5] text-[#1f1f1f] font-sans antialiased overflow-x-hidden">
+</head><body data-page="reports" class="min-h-[100dvh] bg-zinc-50 text-zinc-900 font-sans antialiased overflow-x-hidden">
   <div class="app-shell"><div id="sidebarMount"></div><div class="main-shell"><div id="headerMount"></div><main class="content">
     <div class="page-heading"><div><h1>Xuất báo cáo</h1><p>Preview từ bảng `payments`, `users`, `cars`, `daily_revenue_snapshots`; lịch sử export lưu mock vào `export_jobs`.</p></div></div>
     <section class="report-types" id="reportTypes"><label class="radio-card"><input type="radio" name="reportType" value="payments" checked>Giao dịch</label><label class="radio-card"><input type="radio" name="reportType" value="users">Khách hàng</label><label class="radio-card"><input type="radio" name="reportType" value="cars">Danh sách xe</label><label class="radio-card"><input type="radio" name="reportType" value="revenue">Doanh thu</label></section>
     <section class="toolbar toolbar-export"><input id="exportDateFrom" type="date"><input id="exportDateTo" type="date"><select id="paymentStatusFilter"><option value="">Tất cả thanh toán</option><option value="success">Thành công</option><option value="pending">Chờ thanh toán</option><option value="refunded">Đã hoàn tiền</option><option value="failed">Thất bại</option></select><select id="bookingStatusFilter"><option value="">Tất cả đơn</option><option value="completed">Hoàn tất</option><option value="cancelled">Đã hủy</option><option value="approved">Đã xác nhận</option><option value="pending">Chờ xử lý</option><option value="rejected">Đã từ chối</option></select><button class="btn btn-primary" id="btnPreviewReport">Xem trước</button></section>
-    <section class="panel"><div class="panel-head"><h2>Preview dữ liệu</h2><div class="actions"><button class="btn btn-secondary btn-sm" id="btnExportExcel">Xuất Excel</button><button class="btn btn-primary btn-sm" id="btnExportPdf">Xuất PDF</button></div></div><div id="reportPreview" class="table-wrap"></div></section>
+    <section class="panel"><div class="panel-head"><h2>Preview dữ liệu</h2><div class="actions"><button class="btn btn-primary btn-sm" id="btnExportExcel">Xuất Excel</button><button class="btn btn-primary btn-sm" id="btnExportPdf">Xuất PDF</button></div></div><div id="reportPreview" class="table-wrap"></div></section>
     <section class="panel"><div class="panel-head"><h2>Lịch sử export_jobs</h2></div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Loại</th><th>Trạng thái</th><th>File</th><th>Tạo lúc</th></tr></thead><tbody id="exportJobsBody"></tbody></table></div></section>
   </main></div></div>
   <div class="modal-backdrop" id="pdfExportModal"><div class="modal"><div class="modal-header"><h2>Tùy chọn PDF</h2><button class="icon-button" type="button" data-close-modal>×</button></div><label>Tiêu đề báo cáo<input id="pdfTitle" value="Báo cáo VivuCar"></label><label class="check-row"><input id="includeLogo" type="checkbox" checked> Hiển thị logo công ty</label><label class="check-row"><input id="includeFooter" type="checkbox" checked> Hiển thị footer</label><div class="modal-actions"><button class="btn btn-secondary" data-close-modal>Hủy</button><button class="btn btn-primary" id="btnCreatePdf">Tạo PDF</button></div></div></div>

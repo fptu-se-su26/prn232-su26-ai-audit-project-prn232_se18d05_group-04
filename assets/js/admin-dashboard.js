@@ -35,7 +35,7 @@
     const chart = document.getElementById("revenueChart");
     const canvas = document.getElementById("revenueChartCanvas");
     const max = Math.max(...items.map((item) => Number(item.net_revenue)), 1);
-    const palette = ["#2563eb", "#0f766e", "#b45309", "#7c3aed", "#db2777", "#16a34a", "#475569"];
+    const emerald = "#059669";
     document.getElementById("dashboardEmpty").classList.toggle("hidden", items.length > 0);
     if (window.Chart && canvas) {
       chart.classList.add("hidden");
@@ -49,7 +49,8 @@
             {
               label: "Doanh thu thực nhận",
               data: items.map((item) => Number(item.net_revenue)),
-              backgroundColor: items.map((_, index) => palette[index % palette.length]),
+              backgroundColor: emerald,
+              hoverBackgroundColor: "#047857",
               borderRadius: 8,
               barPercentage: 0.82,
               categoryPercentage: 0.78,
@@ -61,7 +62,7 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { labels: { color: "#6b6b6b", boxWidth: 10, boxHeight: 10 } },
+            legend: { labels: { color: "#52525b", boxWidth: 10, boxHeight: 10 } },
             tooltip: {
               callbacks: {
                 label(context) {
@@ -71,8 +72,8 @@
             }
           },
           scales: {
-            x: { grid: { display: false }, ticks: { color: "#6b6b6b" } },
-            y: { grid: { color: "#e6e4df" }, ticks: { color: "#6b6b6b", callback: (value) => `${Number(value) / 1000000}tr` } }
+            x: { grid: { display: false }, ticks: { color: "#71717a" } },
+            y: { grid: { color: "#e4e4e7" }, ticks: { color: "#71717a", callback: (value) => `${Number(value) / 1000000}tr` } }
           }
         }
       });
@@ -80,7 +81,7 @@
     }
     if (canvas) canvas.classList.add("hidden");
     chart.classList.remove("hidden");
-    chart.innerHTML = items.map((item, index) => `<div class="bar-item" data-tooltip="${U.formatDate(item.snapshot_date)} · ${U.formatVnd(item.net_revenue)} · ${item.completed_bookings} đơn"><div class="bar" style="height:${Math.max(8, Number(item.net_revenue) / max * 100)}%;background:${palette[index % palette.length]}"></div><span>${item.snapshot_date.slice(5)}</span></div>`).join("");
+    chart.innerHTML = items.map((item) => `<div class="bar-item" data-tooltip="${U.formatDate(item.snapshot_date)} · ${U.formatVnd(item.net_revenue)} · ${item.completed_bookings} đơn"><div class="bar" style="height:${Math.max(8, Number(item.net_revenue) / max * 100)}%;background:${emerald}"></div><span>${item.snapshot_date.slice(5)}</span></div>`).join("");
   }
 
   function renderRecentOrders(orders) {
