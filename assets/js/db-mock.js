@@ -118,6 +118,36 @@ window.VivuCarDB.incident_images ||= [
 window.VivuCarDB.return_requests ||= [];
 // UI-only field. Not present in current DB schema. Requires migration before backend integration.
 window.VivuCarDB.car_status_history ||= [];
+// UI-only field. Not present in current DB schema. Requires migration before backend integration.
+["users", "cars", "vouchers"].forEach((collectionName) => {
+  window.VivuCarDB[collectionName]?.forEach((item) => {
+    item.deleted_at ||= null;
+  });
+});
+// UI-only admin metadata. Not present in current DB schema. Requires migration before backend integration.
+window.VivuCarDB.users?.forEach((user) => {
+  user.admin_note ||= "";
+  user.lock_history ||= [];
+  user.last_login_at ||= null;
+});
+// UI-only moderation fields. Current DB schema does not include content/document moderation status or rejection reason.
+(window.VivuCarDB.reviews || []).forEach((review) => {
+  review.moderation_status ||= review.rating <= 2 ? "pending" : "approved";
+  review.reported ||= false;
+  review.hidden ||= false;
+  review.deleted_at ||= null;
+});
+(window.VivuCarDB.incident_reports || []).forEach((report) => {
+  report.moderation_status ||= ["open", "in_review"].includes(report.status) ? "reported" : "approved";
+  report.hidden ||= false;
+  report.deleted_at ||= null;
+});
+(window.VivuCarDB.user_documents || []).forEach((document) => {
+  if (["license_front", "license_back"].includes(document.document_type)) {
+    document.moderation_status ||= document.verified ? "approved" : "pending";
+    document.rejection_reason ||= "";
+  }
+});
 window.VivuCarDB.chat_sessions ||= [
   { id: 1, user_id: 4, booking_id: 1, session_type: "ai", status: "escalated", assigned_to: null, escalated_at: "2026-05-20T10:20:00+07:00", closed_at: null, created_at: "2026-05-20T10:05:00+07:00" },
   { id: 2, user_id: 6, booking_id: 2, session_type: "live", status: "open", assigned_to: 2, escalated_at: "2026-05-21T09:10:00+07:00", closed_at: null, created_at: "2026-05-21T09:00:00+07:00" },
