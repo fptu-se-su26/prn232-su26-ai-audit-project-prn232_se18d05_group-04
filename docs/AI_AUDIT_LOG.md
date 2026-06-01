@@ -21,7 +21,7 @@
 
 Đánh dấu các công cụ AI đã sử dụng trong quá trình thực hiện bài tập/project.
 
-- [ ] ChatGPT
+- [ x ] ChatGPT
 - [ x ] Gemini
 - [ ] Claude
 - [ ] GitHub Copilot
@@ -95,7 +95,9 @@ Tạo ra 5 màn hình của Admin cho các trang quản lý, thông kê
 Mô tả rõ phần nào được sử dụng lại từ gợi ý của AI.
 
 ```text
-Viết tại đây...
+Nhóm sử dụng bố cục tổng thể của dashboard Admin gồm sidebar, navbar, cards,
+bảng dữ liệu, bộ lọc, phân trang, status badge và modal xác nhận làm định hướng
+cho giao diện quản trị.
 ```
 
 #### 4.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
@@ -103,26 +105,30 @@ Viết tại đây...
 Mô tả sinh viên/nhóm đã thay đổi, kiểm tra, sửa lỗi hoặc cải tiến gì so với gợi ý ban đầu của AI.
 
 ```text
-Viết tại đây...
+Nhóm rà soát lại các màn hình do Stitch gợi ý, chọn các thành phần phù hợp với
+nghiệp vụ VivuCar và tiếp tục điều chỉnh nội dung, dữ liệu mẫu, luồng thao tác
+theo yêu cầu thực tế của dự án.
 ```
 
 #### 4.5. Minh chứng
 
 | Loại minh chứng | Nội dung |
 |---|---|
-| Link commit |  |
-| File liên quan |  |
-| Screenshot |  |
-| Kết quả chạy/test |  |
+| Link commit | Chưa cập nhật |
+| File liên quan | Giao diện Admin |
+| Screenshot | Chưa cập nhật |
+| Kết quả chạy/test | Đã rà soát layout và khả năng hiển thị responsive |
 | Link video demo |  |
-| Ghi chú khác |  |
+| Ghi chú khác | Người thực hiện: Nguyễn Minh Tuấn - DE180116 |
 
 #### 4.6. Nhận xét cá nhân/nhóm
 
 Sinh viên/nhóm học được gì sau lần sử dụng AI này?
 
 ```text
-Viết tại đây...
+AI hỗ trợ tốt ở bước phác thảo giao diện và giúp nhóm hình dung nhanh các màn
+hình quản trị cần có. Tuy nhiên, nhóm vẫn phải đối chiếu với nghiệp vụ thực tế,
+chọn lọc thành phần phù hợp và tự hoàn thiện luồng sử dụng.
 ```
 
 ---
@@ -131,51 +137,64 @@ Viết tại đây...
 
 | Nội dung | Thông tin |
 |---|---|
-| Ngày sử dụng |  |
-| Công cụ AI | ChatGPT / Gemini / Claude / GitHub Copilot / Cursor / Antigravity / Khác |
-| Mục đích sử dụng |  |
-| Phần việc liên quan | Requirement / Design / Database / Frontend / Backend / Testing / Debug / Report / Presentation / Other |
-| Mức độ sử dụng | Hỗ trợ ý tưởng / Hỗ trợ một phần / Hỗ trợ nhiều / Sinh chính nội dung |
+| Ngày sử dụng | 01/06/2026 |
+| MSSV | DE180116 |
+| Công cụ AI | ChatGPT |
+| Mục đích sử dụng | Khởi tạo cấu trúc backend ASP.NET Core Web API và frontend Razor Pages |
+| Phần việc liên quan | Backend / Frontend / Debug |
+| Mức độ sử dụng | Hỗ trợ nhiều |
 
 #### 4.1. Prompt đã sử dụng
 
 ```text
-Dán nguyên văn prompt đã hỏi AI tại đây.
+Thiết lập dự án VivuCar với backend sử dụng ASP.NET Core Web API và frontend
+sử dụng Razor Pages. Backend gồm các project API, BusinessObjects, DataAccess,
+Repositories và Services. Cài đặt OData, Swagger, Entity Framework Core,
+SQL Server provider và migration support. Thiết lập project reference đúng
+chiều phụ thuộc. Tạo thêm file cần thiết nhưng không xóa file đang có sẵn.
 ```
 
 #### 4.2. Kết quả AI gợi ý
 
 ```text
-Viết tại đây...
+AI tạo hai solution .NET 8 cho backend và frontend; cài đặt package cần thiết;
+thiết lập project reference; cấu hình Swagger, OData, Entity Framework Core,
+SQL Server; tạo VivuCarDbContext và API proxy để Razor Pages gọi backend.
 ```
 
 #### 4.3. Phần sinh viên/nhóm đã sử dụng từ AI
 
 ```text
-Viết tại đây...
+Nhóm sử dụng cấu trúc phân tầng backend, Razor Pages frontend, cấu hình DI,
+Swagger, OData, DbContext SQL Server, API proxy và .gitignore cho bin/obj.
 ```
 
 #### 4.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
 
 ```text
-Viết tại đây...
+Nhóm build và kiểm tra runtime sau khi tạo project. Khi backend phát sinh lỗi
+compile-time liên quan đến UseSqlServer, nhóm chuyển phần đăng ký DbContext về
+tầng DataAccess để đúng trách nhiệm module. Nhóm cũng đối chiếu launch profile
+và sửa URL backend của frontend thành https://localhost:7005/.
 ```
 
 #### 4.5. Minh chứng
 
 | Loại minh chứng | Nội dung |
 |---|---|
-| Link commit |  |
-| File liên quan |  |
+| Link commit | Chưa tạo commit |
+| File liên quan | `VivuCarServer/`, `VivuCarClient/`, `.gitignore` |
 | Screenshot |  |
-| Kết quả chạy/test |  |
+| Kết quả chạy/test | Build backend và frontend thành công: 0 warning, 0 error. Swagger API và Razor Pages trả HTTP 200. |
 | Link video demo |  |
-| Ghi chú khác |  |
+| Ghi chú khác | Người thực hiện: Nguyễn Minh Tuấn - DE180116 |
 
 #### 4.6. Nhận xét cá nhân/nhóm
 
 ```text
-Viết tại đây...
+AI giúp giảm thời gian dựng skeleton dự án nhưng kết quả vẫn cần được kiểm tra
+bằng build và smoke test. Nhóm nhận thấy dependency graph, vị trí đăng ký DI và
+cổng chạy local phải được rà soát trước khi tiếp tục phát triển chức năng.
 ```
 
 ---
