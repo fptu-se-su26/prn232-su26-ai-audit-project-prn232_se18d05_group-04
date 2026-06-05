@@ -10,13 +10,15 @@ public static class ODataConfiguration
         var modelBuilder = new ODataConventionModelBuilder();
 
         // Add EntitySet registrations here after domain models are scaffolded.
-        return mvcBuilder.AddOData(options => options
-            .Select()
-            .Filter()
-            .OrderBy()
-            .Expand()
-            .Count()
-            .SetMaxTop(100)
-            .AddRouteComponents("odata", modelBuilder.GetEdmModel()));
+        return mvcBuilder.AddOData(options =>
+            options
+                .Select()
+                .Filter()
+                .OrderBy()
+                .Expand()
+                .Count()
+                .SetMaxTop(100)
+                .AddRouteComponents("odata", modelBuilder.GetEdmModel())
+        );
     }
 }

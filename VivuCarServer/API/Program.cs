@@ -1,13 +1,14 @@
 using API.Configurations;
 
+EnvironmentConfiguration.LoadEnvFile();
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers()
-    .AddVivuCarOData();
+builder.Services.AddControllers().AddVivuCarOData();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services
-    .AddVivuCarDataAccess(builder.Configuration)
+builder
+    .Services.AddVivuCarDatabase(builder.Configuration)
     .AddVivuCarRepositories()
     .AddVivuCarServices();
 
