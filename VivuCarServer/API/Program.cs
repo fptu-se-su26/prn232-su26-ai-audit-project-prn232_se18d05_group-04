@@ -9,8 +9,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder
     .Services.AddVivuCarDatabase(builder.Configuration)
+    .AddVivuCarAuthentication()
     .AddVivuCarRepositories()
-    .AddVivuCarServices();
+    .AddVivuCarServices()
+    .AddVivuCarRateLimiting()
+    .AddVivuCarJwtAuthentication(builder.Configuration);
 
 var app = builder.Build();
 
@@ -22,6 +25,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseRateLimiter();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -18,6 +18,7 @@ public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
         entity.Property(user => user.AvatarUrl).HasMaxLength(500);
         entity.Property(user => user.Role).HasConversion<string>().HasMaxLength(32).IsRequired();
         entity.Property(user => user.Status).HasConversion<string>().HasMaxLength(32).IsRequired();
+        entity.Property(user => user.TokenVersion).HasDefaultValue(1).IsRequired();
         entity.Property(user => user.Address).HasMaxLength(500);
         entity.Property(user => user.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
     }

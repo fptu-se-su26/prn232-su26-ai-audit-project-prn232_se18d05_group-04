@@ -1,4 +1,3 @@
-using BusinessObjects.Data.Seed;
 using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,11 +22,11 @@ public class VivuCarDbContext(DbContextOptions<VivuCarDbContext> options) : DbCo
     public DbSet<RentalContract> RentalContracts => Set<RentalContract>();
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<IncidentReport> IncidentReports => Set<IncidentReport>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(VivuCarDbContext).Assembly);
-        modelBuilder.SeedData();
     }
 }

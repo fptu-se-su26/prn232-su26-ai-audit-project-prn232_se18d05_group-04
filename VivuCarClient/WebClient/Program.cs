@@ -9,6 +9,10 @@ builder.Services.AddHttpClient("VivuCarApi", client =>
         ?? throw new InvalidOperationException("ApiSettings:BaseUrl is not configured.");
 
     client.BaseAddress = new Uri(baseUrl);
+})
+.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    UseCookies = false,
 });
 
 var app = builder.Build();

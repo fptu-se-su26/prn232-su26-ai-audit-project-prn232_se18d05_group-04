@@ -3,20 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebClient.Controllers;
 
 [ApiController]
-[Route("api/proxy")]
-public class ApiProxyController(IHttpClientFactory httpClientFactory)
+[Route("api/auth")]
+public class AuthProxyController(IHttpClientFactory httpClientFactory)
     : ProxyControllerBase(httpClientFactory)
 {
-    [AcceptVerbs("GET", "POST", "PUT", "PATCH", "DELETE")]
+    [AcceptVerbs("GET", "POST")]
     [Route("{**path}")]
-    public Task<IActionResult> Forward(
+    public Task<IActionResult> ForwardAuth(
         string path,
         CancellationToken cancellationToken
     )
     {
         return ForwardAsync(
-            path + Request.QueryString,
-            forwardCookies: false,
+            $"api/auth/{path}{Request.QueryString}",
+            forwardCookies: true,
             cancellationToken
         );
     }

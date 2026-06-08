@@ -12,6 +12,7 @@ public class AppUser
     public string? AvatarUrl { get; set; }
     public UserRole Role { get; set; }
     public UserStatus Status { get; set; } = UserStatus.Active;
+    public int TokenVersion { get; set; } = 1;
     public DateOnly? DateOfBirth { get; set; }
     public string? Address { get; set; }
     public DateTime CreatedAt { get; set; }
@@ -24,4 +25,5 @@ public class AppUser
     public ICollection<NotificationLog> Notifications { get; set; } = [];
     public ICollection<Review> Reviews { get; set; } = [];
     public ICollection<IncidentReport> IncidentReports { get; set; } = [];
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
 }
