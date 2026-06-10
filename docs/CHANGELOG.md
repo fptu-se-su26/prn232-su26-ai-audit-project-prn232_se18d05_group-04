@@ -19,14 +19,14 @@ Nguyên tắc ghi changelog:
 
 | Thông tin | Nội dung |
 |---|---|
-| Môn học |  |
-| Mã môn học |  |
-| Lớp |  |
-| Học kỳ |  |
-| Tên bài tập / Project |  |
-| Tên sinh viên / Nhóm |  |
-| MSSV / Danh sách MSSV |  |
-| Giảng viên hướng dẫn |  |
+| Môn học | Building Cross-Platform Back-End Application With .NET |
+| Mã môn học | PRN232 |
+| Lớp | SE18D05 |
+| Học kỳ | 8 |
+| Tên bài tập / Project | VivuCar |
+| Tên sinh viên / Nhóm | Nhóm 4 |
+| MSSV / Danh sách MSSV | DE180116 |
+| Giảng viên hướng dẫn | QuangLTN3 |
 | Repository URL |  |
 | Ngày bắt đầu |  |
 | Ngày hoàn thành |  |
@@ -37,7 +37,7 @@ Nguyên tắc ghi changelog:
 
 | Phiên bản/Giai đoạn | Thời gian | Nội dung chính | Trạng thái |
 |---|---|---|---|
-| Phase 01 |  | Khởi tạo project | Not Started / In Progress / Completed |
+| Phase 01 | 01/06/2026 | Khởi tạo project | Completed |
 | Phase 02 |  | Phân tích yêu cầu | Not Started / In Progress / Completed |
 | Phase 03 |  | Thiết kế hệ thống | Not Started / In Progress / Completed |
 | Phase 04 |  | Implementation | Not Started / In Progress / Completed |
@@ -51,52 +51,57 @@ Nguyên tắc ghi changelog:
 ## Ngày thực hiện
 
 ```text
-DD/MM/YYYY
+01/06/2026
 ```
 
 ## Đã hoàn thành
 
-- [ ] Tạo repository
-- [ ] Tạo cấu trúc thư mục project
-- [ ] Tạo file README.md
-- [ ] Tạo thư mục `docs/`
-- [ ] Tạo file `AI_AUDIT_LOG.md`
-- [ ] Tạo file `PROMPTS.md`
-- [ ] Tạo file `REFLECTION.md`
-- [ ] Tạo file `CHANGELOG.md`
-- [ ] Khởi tạo source code ban đầu
-- [ ] Cài đặt thư viện/công cụ cần thiết
-- [ ] Cấu hình môi trường chạy project
+- [ x ] Tạo repository
+- [ x ] Tạo cấu trúc thư mục project
+- [ x ] Tạo file README.md
+- [ x ] Tạo thư mục `docs/`
+- [ x ] Tạo file `AI_AUDIT_LOG.md`
+- [ x ] Tạo file `PROMPTS.md`
+- [ x ] Tạo file `REFLECTION.md`
+- [ x ] Tạo file `CHANGELOG.md`
+- [ x ] Khởi tạo source code ban đầu
+- [ x ] Cài đặt thư viện/công cụ cần thiết
+- [ x ] Cấu hình môi trường chạy project
 
 ## Thay đổi chi tiết
 
 | STT | Nội dung thay đổi | Người thực hiện | File/Module liên quan | Minh chứng |
 |---:|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
+| 1 | Tạo backend solution và các project phân tầng API, BusinessObjects, DataAccess, Repositories, Services | Nguyễn Minh Tuấn - DE180116 | `VivuCarServer/` | Build thành công: 0 warning, 0 error |
+| 2 | Tạo frontend Razor Pages và API proxy gọi backend qua HttpClient | Nguyễn Minh Tuấn - DE180116 | `VivuCarClient/` | Trang Razor Pages trả HTTP 200 |
+| 3 | Thêm Swagger, OData, EF Core, SQL Server, DI, DbContext và `.gitignore` cho bin/obj | Nguyễn Minh Tuấn - DE180116 | `VivuCarServer/`, `.gitignore` | Swagger API trả HTTP 200 |
 
 ## AI có hỗ trợ không?
 
-- [ ] Có
+- [ x ] Có
 - [ ] Không
 
 Nếu có, mô tả AI đã hỗ trợ phần nào:
 
 ```text
-Viết tại đây...
+ChatGPT hỗ trợ dựng skeleton dự án, cài đặt dependency và kiểm tra build.
+Nhóm rà soát lại cấu trúc, chuyển đăng ký DbContext về tầng DataAccess và sửa
+URL backend của frontend thành https://localhost:7005/ theo launch profile.
 ```
 
 ## Commit/Screenshot minh chứng
 
 ```text
-Dán link commit, screenshot hoặc mô tả minh chứng tại đây...
+Chưa tạo commit.
+Build backend và frontend thành công: 0 warning, 0 error.
+Swagger API và trang Razor Pages trả HTTP 200.
 ```
 
 ## Ghi chú
 
 ```text
-Viết tại đây...
+Các file có sẵn trong repository được giữ nguyên. Thư mục bin/ và obj/ được
+loại khỏi Git bằng .gitignore.
 ```
 
 ---
