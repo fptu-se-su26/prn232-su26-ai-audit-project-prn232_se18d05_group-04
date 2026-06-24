@@ -1,0 +1,64 @@
+@page "/admin/cars"
+@model WebClient.Pages.Admin.Cars.IndexModel
+@{
+    ViewData["Title"] = "Phương tiện";
+    ViewData["AdminPage"] = "cars";
+}
+
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Cars</p>
+        <h1>Quản lý phương tiện</h1>
+        <p>Khung danh sách bám bảng `cars`, dùng status: `available`, `rented`, `maintenance`, `blocked`.</p>
+    </div>
+    <a class="button button-primary" asp-page="/Admin/Cars/Form">Thêm xe mới</a>
+</section>
+
+<section class="admin-grid admin-grid-kpi">
+    <article class="admin-card"><span>Tổng số xe</span><strong>0</strong></article>
+    <article class="admin-card"><span>Đang rảnh</span><strong>0</strong></article>
+    <article class="admin-card"><span>Đang thuê</span><strong>0</strong></article>
+    <article class="admin-card"><span>Đã khóa</span><strong>0</strong></article>
+</section>
+
+<section class="admin-toolbar">
+    <input id="searchCarInput" type="search" placeholder="Tìm theo biển số, hãng xe, dòng xe" />
+    <select id="statusFilter">
+        <option value="">Tất cả trạng thái</option>
+        <option value="available">Đang rảnh</option>
+        <option value="rented">Đang thuê</option>
+        <option value="maintenance">Bảo trì</option>
+        <option value="blocked">Đã khóa</option>
+    </select>
+    <select id="fuelFilter">
+        <option value="">Tất cả nhiên liệu</option>
+        <option value="gasoline">Xăng</option>
+        <option value="diesel">Dầu</option>
+        <option value="electric">Điện</option>
+        <option value="hybrid">Hybrid</option>
+    </select>
+    <button class="button button-primary" id="btnFilter" type="button">Lọc</button>
+    <button class="button button-secondary" id="btnReset" type="button">Đặt lại</button>
+</section>
+
+<section class="admin-panel">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Biển số</th>
+                    <th>Hãng / dòng xe</th>
+                    <th>Năm</th>
+                    <th>Số chỗ</th>
+                    <th>Giá/ngày</th>
+                    <th>Trạng thái</th>
+                    <th>Chủ xe</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="carsTableBody">
+                <tr><td colspan="8" class="empty-cell">Chưa gắn dữ liệu xe.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

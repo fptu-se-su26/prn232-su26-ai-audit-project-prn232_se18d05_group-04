@@ -1,0 +1,50 @@
+@page "/admin/vouchers"
+@model WebClient.Pages.Admin.Vouchers.IndexModel
+@{
+    ViewData["Title"] = "Voucher";
+    ViewData["AdminPage"] = "vouchers";
+}
+
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Vouchers</p>
+        <h1>Quản lý khuyến mãi</h1>
+        <p>Khung danh sách bám `vouchers` và tính lượt dùng từ `voucher_usages`.</p>
+    </div>
+    <a class="button button-primary" asp-page="/Admin/Vouchers/Form">Tạo voucher</a>
+</section>
+
+<section class="admin-toolbar">
+    <input id="searchVoucherInput" type="search" placeholder="Tìm theo mã hoặc tên voucher" />
+    <select id="discountTypeFilter">
+        <option value="">Tất cả loại giảm</option>
+        <option value="percentage">Phần trăm</option>
+        <option value="fixed">Số tiền cố định</option>
+    </select>
+    <input id="voucherDateFrom" type="date" />
+    <input id="voucherDateTo" type="date" />
+    <button class="button button-primary" id="btnFilterVoucher" type="button">Lọc</button>
+    <button class="button button-secondary" id="btnResetVoucherFilter" type="button">Đặt lại</button>
+</section>
+
+<section class="admin-panel">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã voucher</th>
+                    <th>Tên</th>
+                    <th>Loại giảm</th>
+                    <th>Giá trị</th>
+                    <th>Đơn tối thiểu</th>
+                    <th>Số lượng</th>
+                    <th>Hết hạn</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="vouchersTableBody">
+                <tr><td colspan="8" class="empty-cell">Chưa gắn dữ liệu voucher.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

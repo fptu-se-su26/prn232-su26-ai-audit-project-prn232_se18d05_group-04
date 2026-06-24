@@ -1,0 +1,23 @@
+@page "/admin"
+@model WebClient.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Admin";
+    ViewData["AdminPage"] = "dashboard";
+}
+
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Admin</p>
+        <h1>Khung quản trị VivuCar</h1>
+        <p>Chọn một module bên dưới để tiếp tục dựng UI và gắn API.</p>
+    </div>
+</section>
+
+<section class="admin-grid admin-grid-compact">
+    <a class="admin-card admin-link-card" asp-page="/Admin/Dashboard">Dashboard doanh thu</a>
+    <a class="admin-card admin-link-card" asp-page="/Admin/Users/Index">Quản lý người dùng</a>
+    <a class="admin-card admin-link-card" asp-page="/Admin/Cars/Index">Quản lý phương tiện</a>
+    <a class="admin-card admin-link-card" asp-page="/Admin/Vouchers/Index">Quản lý voucher</a>
+    <a class="admin-card admin-link-card" asp-page="/Admin/Reports/Export">Xuất báo cáo</a>
+    <a class="admin-card admin-link-card" asp-page="/Admin/Trash/Index">Thùng rác</a>
+</section>

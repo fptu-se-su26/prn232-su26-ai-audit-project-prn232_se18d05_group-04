@@ -1,0 +1,48 @@
+@page "/admin/reports"
+@model WebClient.Pages.Admin.Reports.ExportModel
+@{
+    ViewData["Title"] = "Xuất báo cáo";
+    ViewData["AdminPage"] = "reports";
+}
+
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Reports</p>
+        <h1>Xuất báo cáo</h1>
+        <p>Khung export dùng `export_jobs` cho trạng thái và file kết quả.</p>
+    </div>
+</section>
+
+<section class="admin-panel">
+    <h2>Loại báo cáo</h2>
+    <div class="radio-grid">
+        <label><input type="radio" name="export_type" value="transactions" checked /> Giao dịch</label>
+        <label><input type="radio" name="export_type" value="customers" /> Khách hàng</label>
+        <label><input type="radio" name="export_type" value="cars" /> Danh sách xe</label>
+        <label><input type="radio" name="export_type" value="revenue" /> Doanh thu</label>
+    </div>
+</section>
+
+<section class="admin-toolbar">
+    <input id="exportDateFrom" type="date" />
+    <input id="exportDateTo" type="date" />
+    <select id="paymentStatusFilter">
+        <option value="">Tất cả thanh toán</option>
+        <option value="pending">Chờ thanh toán</option>
+        <option value="success">Thành công</option>
+        <option value="failed">Thất bại</option>
+        <option value="refunded">Đã hoàn tiền</option>
+    </select>
+    <button class="button button-primary" id="btnPreviewReport" type="button">Xem trước</button>
+</section>
+
+<section class="admin-panel">
+    <div class="panel-head">
+        <h2>Preview dữ liệu</h2>
+        <div class="admin-actions">
+            <button class="button button-secondary" id="btnExportExcel" type="button">Xuất Excel</button>
+            <button class="button button-secondary" id="btnExportPdf" type="button">Xuất PDF</button>
+        </div>
+    </div>
+    <div id="reportPreview" class="empty-state">Chọn loại báo cáo và bấm xem trước.</div>
+</section>

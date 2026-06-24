@@ -1,0 +1,76 @@
+@page "/admin/users"
+@model WebClient.Pages.Admin.Users.IndexModel
+@{
+    ViewData["Title"] = "Người dùng";
+    ViewData["AdminPage"] = "users";
+}
+
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Users</p>
+        <h1>Quản lý người dùng</h1>
+        <p>Khung danh sách bám bảng `users`; trạng thái tài khoản dùng `is_blocked`, không tạo field `status` riêng.</p>
+    </div>
+</section>
+
+<section class="admin-toolbar">
+    <input id="searchUserInput" type="search" placeholder="Tìm theo tên hoặc email" />
+    <select id="roleFilter">
+        <option value="">Tất cả vai trò</option>
+        <option value="admin">Quản trị viên</option>
+        <option value="car_owner">Chủ xe</option>
+        <option value="user">Khách thuê</option>
+    </select>
+    <select id="blockedFilter">
+        <option value="">Tất cả trạng thái</option>
+        <option value="false">Đang hoạt động</option>
+        <option value="true">Đã khóa</option>
+    </select>
+    <button class="button button-primary" id="btnApplyFilter" type="button">Lọc</button>
+    <button class="button button-secondary" id="btnResetFilter" type="button">Đặt lại</button>
+</section>
+
+<section class="admin-panel">
+    <div class="panel-head">
+        <h2>Danh sách tài khoản</h2>
+        <span class="status-badge">users</span>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th><input type="checkbox" aria-label="Chọn tất cả người dùng" /></th>
+                    <th>Mã user</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>Vai trò</th>
+                    <th>Tài khoản</th>
+                    <th>Ngày tạo</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="usersTableBody">
+                <tr><td colspan="8" class="empty-cell">Chưa gắn dữ liệu người dùng.</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination">
+        <span id="userPaginationInfo">Hiển thị 0 người dùng</span>
+        <button class="button button-secondary" id="userPrevPage" type="button">Trước</button>
+        <button class="button button-secondary" id="userNextPage" type="button">Sau</button>
+    </div>
+</section>
+
+<div class="admin-modal" id="userStatusModal" aria-hidden="true">
+    <div class="admin-modal-card" role="dialog" aria-modal="true">
+        <div class="admin-modal-head">
+            <h2>Khóa hoặc mở khóa tài khoản</h2>
+            <button class="admin-icon-button" type="button" data-close-modal aria-label="Đóng">×</button>
+        </div>
+        <label>Lý do khóa<textarea id="blockReason" name="blocked_reason"></textarea></label>
+        <div class="admin-actions">
+            <button class="button button-secondary" type="button" data-close-modal>Hủy</button>
+            <button class="button button-primary" id="btnConfirmUserStatus" type="button">Xác nhận</button>
+        </div>
+    </div>
+</div>

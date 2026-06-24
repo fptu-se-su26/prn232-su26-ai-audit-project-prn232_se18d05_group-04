@@ -1,0 +1,43 @@
+@page "/admin/voucher-form/{id:int?}"
+@model WebClient.Pages.Admin.Vouchers.FormModel
+@{
+    ViewData["Title"] = "Form voucher";
+    ViewData["AdminPage"] = "vouchers";
+}
+
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Vouchers</p>
+        <h1>Tạo hoặc cập nhật voucher</h1>
+        <p>Field name bám schema `vouchers`; không dùng `is_active`, `start_date`, `usage_limit_per_user` vì DB hiện chưa có.</p>
+    </div>
+    <a class="button button-secondary" asp-page="/Admin/Vouchers/Index">Quay lại</a>
+</section>
+
+<form class="admin-form" id="voucherForm">
+    <section class="admin-panel">
+        <h2>Thông tin voucher</h2>
+        <div class="form-grid">
+            <label>Tên voucher<input id="name" name="name" required /></label>
+            <label>Mã voucher<input id="code" name="code" required placeholder="SUMMER2026" /></label>
+            <label>Loại giảm<select id="discount_type" name="discount_type"><option value="percentage">Phần trăm</option><option value="fixed">Số tiền cố định</option></select></label>
+            <label>Giá trị giảm<input id="discount_value" name="discount_value" type="number" min="1" required /></label>
+            <label>Đơn tối thiểu<input id="min_order_amount" name="min_order_amount" type="number" min="0" /></label>
+            <label>Giảm tối đa<input id="max_discount" name="max_discount" type="number" min="1" /></label>
+            <label>Số lượng<input id="quantity" name="quantity" type="number" min="0" /></label>
+            <label>Hết hạn<input id="expires_at" name="expires_at" type="datetime-local" /></label>
+        </div>
+    </section>
+
+    <aside class="admin-panel voucher-preview">
+        <h2>Preview</h2>
+        <strong id="voucherPreviewCode">SUMMER2026</strong>
+        <p id="voucherPreviewName">Tên voucher</p>
+        <span id="voucherPreviewValue" class="status-badge status-success">Giảm giá</span>
+    </aside>
+
+    <div class="admin-actions">
+        <a class="button button-secondary" asp-page="/Admin/Vouchers/Index">Hủy</a>
+        <button class="button button-primary" id="btnCreateVoucher" type="submit">Lưu voucher</button>
+    </div>
+</form>

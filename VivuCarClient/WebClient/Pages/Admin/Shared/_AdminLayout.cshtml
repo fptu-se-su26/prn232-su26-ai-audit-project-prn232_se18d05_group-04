@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - VivuCar Admin</title>
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+</head>
+<body class="admin-body" data-admin-page="@ViewData["AdminPage"]">
+    <div class="admin-shell">
+        <aside class="admin-sidebar" aria-label="Admin navigation">
+            <a class="admin-brand" asp-page="/Admin/Dashboard">
+                <span class="admin-brand-mark">VC</span>
+                <span>
+                    <strong>VivuCar</strong>
+                    <small>Admin Console</small>
+                </span>
+            </a>
+
+            <nav class="admin-nav">
+                <a asp-page="/Admin/Dashboard" data-nav="dashboard">Dashboard doanh thu</a>
+                <a asp-page="/Admin/Users/Index" data-nav="users">Người dùng</a>
+                <a asp-page="/Admin/Cars/Index" data-nav="cars">Phương tiện</a>
+                <a asp-page="/Admin/Vouchers/Index" data-nav="vouchers">Voucher</a>
+                <a asp-page="/Admin/Moderation/Content" data-nav="moderation-content">Kiểm duyệt nội dung</a>
+                <a asp-page="/Admin/Moderation/Licenses" data-nav="moderation-licenses">Kiểm duyệt GPLX</a>
+                <a asp-page="/Admin/Reports/Export" data-nav="reports">Xuất báo cáo</a>
+                <a asp-page="/Admin/Trash/Index" data-nav="trash">Thùng rác</a>
+            </nav>
+
+            <button class="admin-logout" type="button" data-open-logout>Đăng xuất</button>
+        </aside>
+
+        <div class="admin-main">
+            <header class="admin-header">
+                <button class="admin-menu-button" type="button" data-admin-menu>Menu</button>
+                <div class="admin-header-search">
+                    <input type="search" placeholder="Tìm kiếm trong admin" aria-label="Tìm kiếm trong admin" />
+                </div>
+                <div class="admin-account">
+                    <span>Admin</span>
+                    <span class="admin-avatar" aria-hidden="true">AD</span>
+                </div>
+            </header>
+
+            <main class="admin-content">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <div class="admin-modal" id="logoutModal" aria-hidden="true">
+        <div class="admin-modal-card" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
+            <div class="admin-modal-head">
+                <h2 id="logoutTitle">Xác nhận đăng xuất</h2>
+                <button class="admin-icon-button" type="button" data-close-modal aria-label="Đóng">×</button>
+            </div>
+            <p>Bạn có chắc chắn muốn đăng xuất khỏi VivuCar?</p>
+            <div class="admin-actions">
+                <button class="button button-secondary" type="button" data-close-modal>Hủy</button>
+                <a class="button button-danger" asp-page="/Index">Đăng xuất</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/admin.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

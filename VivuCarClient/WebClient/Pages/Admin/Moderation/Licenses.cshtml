@@ -1,0 +1,44 @@
+@page "/admin/licenses"
+@model WebClient.Pages.Admin.Moderation.LicensesModel
+@{
+    ViewData["Title"] = "Kiểm duyệt GPLX";
+    ViewData["AdminPage"] = "moderation-licenses";
+}
+
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Licenses</p>
+        <h1>Kiểm duyệt giấy phép lái xe</h1>
+        <p>Khung duyệt ảnh GPLX bám `user_documents.document_type`: `license_front`, `license_back`.</p>
+    </div>
+</section>
+
+<section class="admin-toolbar">
+    <input id="searchLicenseInput" type="search" placeholder="Tìm theo tên hoặc email" />
+    <select id="licenseVerifiedFilter">
+        <option value="">Tất cả</option>
+        <option value="true">Đã xác minh</option>
+        <option value="false">Chưa xác minh</option>
+    </select>
+    <button class="button button-primary" type="button">Lọc</button>
+</section>
+
+<section class="admin-panel">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Người dùng</th>
+                    <th>Loại giấy tờ</th>
+                    <th>Tên file</th>
+                    <th>Xác minh</th>
+                    <th>Ngày tải lên</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="licensesTableBody">
+                <tr><td colspan="6" class="empty-cell">Chưa gắn dữ liệu giấy phép.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

@@ -1,0 +1,45 @@
+@page "/admin/trash"
+@model WebClient.Pages.Admin.Trash.IndexModel
+@{
+    ViewData["Title"] = "Thùng rác";
+    ViewData["AdminPage"] = "trash";
+}
+
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Trash</p>
+        <h1>Thùng rác</h1>
+        <p>Khung phục hồi/xóa mềm. Lưu ý schema hiện tại chưa có cột `deleted_at`; phần này cần backend quyết định trước khi lưu thật.</p>
+    </div>
+</section>
+
+<section class="admin-toolbar">
+    <input id="searchTrashInput" type="search" placeholder="Tìm trong thùng rác" />
+    <select id="trashTypeFilter">
+        <option value="">Tất cả loại dữ liệu</option>
+        <option value="users">Người dùng</option>
+        <option value="cars">Xe</option>
+        <option value="vouchers">Voucher</option>
+        <option value="reviews">Đánh giá</option>
+    </select>
+    <button class="button button-primary" type="button">Lọc</button>
+</section>
+
+<section class="admin-panel">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Loại</th>
+                    <th>Tên dữ liệu</th>
+                    <th>Ngày xóa</th>
+                    <th>Người xóa</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="trashTableBody">
+                <tr><td colspan="5" class="empty-cell">Chưa có dữ liệu thùng rác.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>

@@ -1,0 +1,54 @@
+@page "/admin/car-form/{id:int?}"
+@model WebClient.Pages.Admin.Cars.FormModel
+@{
+    ViewData["Title"] = "Form xe";
+    ViewData["AdminPage"] = "cars";
+}
+
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Cars</p>
+        <h1>Thêm hoặc cập nhật xe</h1>
+        <p>Field name ưu tiên khớp schema `cars` và `car_images`.</p>
+    </div>
+    <a class="button button-secondary" asp-page="/Admin/Cars/Index">Quay lại</a>
+</section>
+
+<form class="admin-form" id="carForm">
+    <section class="admin-panel">
+        <h2>Thông tin cơ bản</h2>
+        <div class="form-grid">
+            <label>Biển số xe<input id="license_plate" name="license_plate" required placeholder="43A-12345" /></label>
+            <label>Hãng xe<input id="brand" name="brand" required placeholder="Toyota" /></label>
+            <label>Dòng xe<input id="model" name="model" required placeholder="Vios" /></label>
+            <label>Năm sản xuất<input id="year" name="year" type="number" min="1900" /></label>
+            <label>Màu xe<input id="color" name="color" /></label>
+            <label>Số chỗ<input id="seats" name="seats" type="number" min="1" /></label>
+        </div>
+    </section>
+
+    <section class="admin-panel">
+        <h2>Thông số và giá thuê</h2>
+        <div class="form-grid">
+            <label>Km đã đi<input id="kilometers_driven" name="kilometers_driven" type="number" min="0" /></label>
+            <label>Hộp số<select id="transmission" name="transmission"><option value="automatic">Tự động</option><option value="manual">Số sàn</option><option value="cvt">CVT</option></select></label>
+            <label>Nhiên liệu<select id="fuel_type" name="fuel_type"><option value="gasoline">Xăng</option><option value="diesel">Dầu</option><option value="electric">Điện</option><option value="hybrid">Hybrid</option></select></label>
+            <label>Giá theo ngày<input id="price_per_day" name="price_per_day" type="number" min="1" /></label>
+            <label>Giá theo giờ<input id="price_per_hours" name="price_per_hours" type="number" min="1" /></label>
+            <label>Trạng thái<select id="status" name="status"><option value="available">Đang rảnh</option><option value="rented">Đang thuê</option><option value="maintenance">Bảo trì</option><option value="blocked">Đã khóa</option></select></label>
+        </div>
+        <label>Địa chỉ nhận xe<input id="address" name="address" required /></label>
+        <label>Mô tả<textarea id="description" name="description"></textarea></label>
+    </section>
+
+    <section class="admin-panel">
+        <h2>Hình ảnh xe</h2>
+        <input id="carImages" name="car_images" type="file" accept="image/*" multiple />
+        <div class="image-preview-grid" id="imagePreviewGrid"></div>
+    </section>
+
+    <div class="admin-actions">
+        <a class="button button-secondary" asp-page="/Admin/Cars/Index">Hủy</a>
+        <button class="button button-primary" id="btnSaveCar" type="submit">Lưu xe</button>
+    </div>
+</form>
