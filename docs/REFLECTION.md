@@ -10,7 +10,7 @@
 | Học kỳ | 8 |
 | Tên bài tập / Project | VivuCar |
 | Tên sinh viên / Nhóm | Nhóm 4 |
-| MSSV / Danh sách MSSV | DE180116 |
+| MSSV / Danh sách MSSV | DE180117 |
 | Giảng viên hướng dẫn | QuangLTN3 |
 | Ngày hoàn thành reflection | 01/06/2026 |
 
@@ -35,10 +35,11 @@ Reflection cần thể hiện:
 Mô tả ngắn gọn quá trình sử dụng AI trong bài tập/project này.
 
 ```text
-Nhóm đã sử dụng Stitch để phác thảo layout UI Admin và sử dụng ChatGPT để
-khởi tạo nền tảng backend ASP.NET Core Web API cùng frontend Razor Pages.
-Kết quả AI được dùng làm điểm khởi đầu, sau đó nhóm rà soát, chỉnh sửa cấu hình,
-build lại hai solution và chạy smoke test trước khi tiếp tục phát triển.
+Nhóm đã sử dụng Stitch để phác thảo layout UI Admin, ChatGPT để khởi tạo
+nền tảng backend ASP.NET Core Web API cùng frontend Razor Pages, và Antigravity
+để tích hợp toàn bộ Backend API (Auth, Booking, Payment) vào Frontend HTML/JS,
+cũng như sửa DB thêm GPLX 2 mặt. Kết quả AI được dùng làm điểm khởi đầu,
+sau đó nhóm rà soát, build kiểm tra và xác nhận runtime trước khi áp dụng.
 ```
 
 Gợi ý:
@@ -60,7 +61,7 @@ Gợi ý:
 - [ ] Claude
 - [ ] GitHub Copilot
 - [ ] Cursor
-- [ ] Antigravity
+- [ x ] Antigravity
 - [ ] Microsoft Copilot
 - [ ] Perplexity
 - [ x ] Công cụ khác: Stitch
@@ -68,14 +69,16 @@ Gợi ý:
 ### Công cụ được sử dụng nhiều nhất
 
 ```text
-ChatGPT
+Antígravity được sử dụng nhiều nhất trong giai đoạn tích hợp API.
 ```
 
 ### Lý do sử dụng công cụ đó
 
 ```text
-ChatGPT được sử dụng để dựng skeleton dự án, cấu hình dependency và hỗ trợ
+ChatGPT được sử dụng để dựng skeleton dự án, cài đặt dependency và hỗ trợ
 debug lỗi build. Stitch được sử dụng ở giai đoạn phác thảo giao diện Admin.
+Antigravity được sử dụng để tích hợp API Backend vào Frontend HTML/JS,
+viết lại các file JS, sửa DB Model, tạo EF Migration và điền tài liệu.
 ```
 
 ---
@@ -126,14 +129,15 @@ Gợi ý:
 - Hiểu bài nhanh hơn.
 - Có thêm ví dụ minh họa.
 - Biết cách debug lỗi.
-- Biết thêm cách tổ chức code.
-- Biết thêm cách thiết kế giải pháp.
-- Biết cách viết test case.
 - Biết cách cải thiện báo cáo hoặc slide.
 
 ### 6.2. Những điểm AI chưa giúp tốt hoặc gây khó khăn
 
 ```text
+AI hỗ trợ nhiều nhất ở 3 giai đoạn: (1) Phác thảo UI Admin qua Stitch,
+(2) Dựng skeleton Backend + Frontend thông qua ChatGPT, (3) Tích hợp toàn bộ
+API và sửa DB qua Antigravity. AI giúp tiết kiệm thời gian phát triển đáng kể.
+
 Kết quả AI ban đầu chưa hoàn toàn phù hợp: đăng ký DbContext đặt ở API khiến
 extension UseSqlServer không khả dụng tại compile time. URL backend frontend
 cũng chưa khớp launch profile. Nhóm phải tự build, kiểm tra và chỉnh sửa.
@@ -223,26 +227,12 @@ Trong quá trình thực hiện, em/nhóm chưa ghi nhận trường hợp AI g�
 
 ## 9. Phần đóng góp thật sự của sinh viên/nhóm
 
-Mô tả rõ phần nào là đóng góp chính của sinh viên/nhóm, không phải chỉ copy từ AI.
-
-```text
-Nhóm tự đối chiếu yêu cầu, chọn cấu trúc phân tầng, rà soát code AI, sửa lỗi
-dependency, kiểm tra launch profile và xác nhận kết quả runtime. Với UI Admin,
-nhóm chỉ dùng bản phác thảo Stitch làm định hướng và tiếp tục điều chỉnh theo
-nghiệp vụ thực tế.
-```
-
-Gợi ý:
-
-- Tự phân tích yêu cầu.
-- Tự chọn giải pháp.
-- Tự chỉnh sửa code.
-- Tự kiểm tra output.
-- Tự thiết kế logic.
-- Tự sửa lỗi.
-- Tự viết báo cáo theo hiểu biết của mình.
-- Tự đánh giá ưu/nhược điểm của sản phẩm.
-- Tự thuyết trình và giải thích sản phẩm.
+| Thành viên | MSSV | Nhiệm vụ chính | Có sử dụng AI không? | Minh chứng đóng góp |
+|---|---|---|---|---|
+| Ngô Sỹ Giá | DE180117 | Backend (Auth, Booking, Payment, DB Migration), Frontend tich hợp API, Tài liệu | Có (Stitch, ChatGPT, Antigravity) | Build thành công, Migration thành công, 6 file JS được cập nhật |
+|  |  |  | Có / Không |  |
+|  |  |  | Có / Không |  |
+|  |  |  | Có / Không |  |
 
 ---
 
@@ -250,13 +240,12 @@ Gợi ý:
 
 | Nội dung | Trước khi dùng AI | Sau khi dùng AI | Cải thiện đạt được |
 |---|---|---|---|
-| Hiểu yêu cầu |  |  |  |
-| Phân tích bài toán |  |  |  |
-| Thiết kế giải pháp |  |  |  |
-| Code/Implementation |  |  |  |
-| Debug/Testing |  |  |  |
-| Báo cáo/Thuyết trình |  |  |  |
-| Làm việc nhóm |  |  |  |
+| Hiểu yêu cầu | Chỉ đọc spec text | Có AI đối chiếu DB schema | Rõ hơn về mapping field và enum |
+| Phân tích bài toán | Thủ công, mất thời gian | AI scan toàn bộ file hiện tại | Nhanh hơn, ít sai sót hơn |
+| Thiết kế giải pháp | Cần nhiều thời gian phác thảo | AI gợi ý skeleton nhanh | Tăng tốc giai đoạn kick-off |
+| Code/Implementation | Tự viết toàn bộ từ đầu | AI sinh code; nhóm review và kiểm tra | Giảm tải viết boilerplate |
+| Debug/Testing | Tự đọc lỗi, mất thời gian | AI gợi ý hướng sửa, nhóm xác nhận | Phat hiện lỗi nhanh hơn |
+| Báo cáo/Thuyết trình | Viết thủ công | AI điền mẫu, nhóm chỉnh nội dung | Tiết kiệm thời gian ghi chép |
 
 ---
 
@@ -265,9 +254,10 @@ Gợi ý:
 Sau bài tập/project này, em/nhóm học được gì về kiến thức môn học?
 
 ```text
-Nhóm hiểu rõ hơn cách tổ chức solution ASP.NET Core theo tầng, cấu hình DI,
-EF Core, SQL Server, OData, Swagger và cách frontend Razor Pages gọi backend.
-Nhóm cũng thực hành quy trình build, đọc lỗi và smoke test endpoint.
+Nhóm hiểu rõ hơn cách cấu hình ASP.NET Core theo tầng, cách đăng ký DI đúng
+Module, EF Core Migration workflow và cách Frontend gọi JWT API qua Bearer Token.
+Nhóm cũng thực hành thiết kế UX/UI: kiểm tra dữ liệu profile trước khi hiển
+form upload, giúp tăng trải nghiệm người dùng rõ rệt.
 ```
 
 Gợi ý:
@@ -373,8 +363,9 @@ Trả lời ngắn gọn các câu hỏi sau.
 ### 16.1. Nếu giảng viên hỏi về phần AI đã hỗ trợ, em/nhóm có giải thích lại được không?
 
 ```text
-Có. Nhóm có thể giải thích mục đích của cấu trúc phân tầng, cách đăng ký DI,
-cách frontend gọi backend và lý do cần kiểm tra lại kết quả AI.
+Chúc. Nhóm có thể giải thích: fetchWithAuth() hoạt động như thế nào, tại sao
+DriverLicenseImageUrl phải đổi thành 2 field, EF Core Migration thay đổi DB
+vật lý như thế nào, và lý do Backend chưa tích hợp API Owner Requests.
 ```
 
 ### 16.2. Nếu không có AI, em/nhóm có thể tự làm lại phần quan trọng nhất không?

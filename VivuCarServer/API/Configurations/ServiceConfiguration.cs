@@ -12,6 +12,9 @@ public static class ServiceConfiguration
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITokenService, JwtTokenService>();
         services.AddScoped<IUserSecurityStateService, UserSecurityStateService>();
+        services.AddScoped<IBookingService, BookingService>();
+        services.AddScoped<IPaymentService, PaymentService>();
+        services.AddHostedService<API.HostedServices.BookingExpirationHostedService>();
 
         return services;
     }

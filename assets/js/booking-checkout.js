@@ -1,17 +1,22 @@
 (function () {
-  const DB = window.VivuCarDB;
+  const DB = window.VivuCarDB; // Vẫn dùng DB cho xe và voucher
+  const C = window.VivuCarConstants;
   const U = window.VivuCarUtils;
   const Auth = window.VivuCarAuth;
   const currentUser = Auth.getCurrentUser();
   if (!currentUser) return;
-  const Pricing = window.VivuCarBookingPricing;
-  const Availability = window.VivuCarBookingAvailability;
   const params = new URLSearchParams(location.search);
   const carId = Number(params.get("carId"));
   const car = DB.cars.find((item) => item.id === carId);
   const root = U.byId("checkoutRoot");
   let appliedVoucher = null;
   const licenseUploads = {};
+  
+  // Tái sử dụng ảnh GPLX từ Profile (Mock bằng DB)
+  const userDocs = DB.user_documents.filter(d => d.user_id === currentUser.id);
+  const profileFront = userDocs.find(d => d.document_type === "license_front")?.file_url;
+  const profileBack = userDocs.find(d => d.document_type === "license_back")?.file_url;
+  const hasProfileLicense = !!(profileFront && profileBack);
 
   function renderError(message) {
     root.innerHTML = U.renderEmptyState({ title: "Không thể đặt xe", text: message, href: "search.html", action: "Tìm xe khác" });
@@ -27,6 +32,24 @@
     ]);
     const tomorrow = new Date(Date.now() + 864e5).toISOString().slice(0, 16);
     const after = new Date(Date.now() + 3 * 864e5).toISOString().slice(0, 16);
+    
+    let licenseSection = "";
+    if (hasProfileLicense) {
+      licenseSection = `
+        <div class="p-4 rounded-xl border border-blue-200 bg-blue-50 text-blue-800 text-sm mb-4">
+          Hệ thống đã tự động lấy ảnh Giấy phép lái xe từ hồ sơ cá nhân của bạn.
+        </div>
+      `;
+    } else {
+      licenseSection = `
+        <div class="form-grid">
+          <label>GPLX mặt trước<input id="licenseFront" type="file" accept="image/png,image/jpeg,image/webp" required></label>
+          <label>GPLX mặt sau<input id="licenseBack" type="file" accept="image/png,image/jpeg,image/webp" required></label>
+        </div>
+        <div class="image-preview-grid" id="licensePreview"></div>
+      `;
+    }
+
     root.innerHTML = `
       <form class="checkout-main" id="checkoutForm">
         <section class="checkout-section">
@@ -46,21 +69,16 @@
           <h2>Thông tin người lái</h2>
           <div class="form-grid">
             <label>Họ tên<input id="driverName" value="${currentUser.full_name}" required></label>
-            <label>Email<input value="${currentUser.email}" disabled></label>
-            <label class="full">Ghi chú bàn giao<textarea id="driverNote" rows="3" placeholder="Thời điểm thuận tiện, yêu cầu giao xe..."></textarea></label>
+            <label>Số điện thoại<input id="driverPhone" value="0901234567" required></label>
+            <label>CCCD/CMND<input id="citizenId" value="048099123456" required></label>
+            <label>Số GPLX<input id="licenseNumber" value="790123456789" required></label>
           </div>
-          <!-- UI-only field. Not present in current DB schema. Requires migration before backend integration. -->
-          <p class="muted">Nếu người lái khác người đặt, backend cần bổ sung driver profile riêng.</p>
         </section>
         <section class="checkout-section">
           <h2>Hồ sơ lái xe</h2>
-          <div class="form-grid">
-            <label>GPLX mặt trước<input id="licenseFront" type="file" accept="image/png,image/jpeg,image/webp"></label>
-            <label>GPLX mặt sau<input id="licenseBack" type="file" accept="image/png,image/jpeg,image/webp"></label>
-          </div>
-          <div class="image-preview-grid" id="licensePreview"></div>
+          ${licenseSection}
         </section>
-        <button class="btn btn-primary btn-full" type="submit">Tạo đơn và tiếp tục thanh toán</button>
+        <button class="btn btn-primary btn-full" type="submit" id="submitBtn">Tạo đơn và tiếp tục thanh toán</button>
       </form>
       <aside class="flex flex-col gap-4 sticky top-24" id="checkoutSidebar">
         <section class="checkout-section">
@@ -69,6 +87,8 @@
             <label class="full">Nhận xe<input id="pickupDatetime" name="pickup_datetime" type="datetime-local" value="${tomorrow}" form="checkoutForm" required></label>
             <label class="full">Trả xe<input id="returnDatetime" name="return_datetime" type="datetime-local" value="${after}" form="checkoutForm" required></label>
             <label class="full">Địa điểm nhận xe<input id="pickupAddress" name="pickup_address" value="${car.address}" form="checkoutForm" required></label>
+            <label class="full">Địa điểm trả xe<input id="returnAddress" name="return_address" value="${car.address}" form="checkoutForm" required></label>
+            <label class="full">Khoảng cách Giao/Nhận (km)<input id="distanceKm" type="number" min="0" value="0" form="checkoutForm" required></label>
           </div>
           <div id="availabilityNote" class="availability-note">Đang kiểm tra lịch xe...</div>
         </section>
@@ -96,37 +116,72 @@
   }
 
   function bind() {
-    ["pickupDatetime", "returnDatetime"].forEach((id) => U.byId(id).addEventListener("change", updateAll));
+    ["pickupDatetime", "returnDatetime", "distanceKm"].forEach((id) => U.byId(id).addEventListener("change", updateAll));
     U.byId("applyVoucher").addEventListener("click", applyVoucher);
     U.byId("voucherSelect").addEventListener("change", (e) => {
       const code = e.target.value;
       U.byId("voucherCode").value = code;
       applyVoucher();
     });
-    ["licenseFront", "licenseBack"].forEach((id) => U.byId(id).addEventListener("change", previewLicense));
+    if (!hasProfileLicense) {
+      ["licenseFront", "licenseBack"].forEach((id) => U.byId(id).addEventListener("change", previewLicense));
+    }
     U.byId("checkoutForm").addEventListener("submit", submitBooking);
   }
 
-  function currentPricing() {
-    return Pricing.calculate(car, U.byId("pickupDatetime").value, U.byId("returnDatetime").value, appliedVoucher);
-  }
+  async function updateAll() {
+    const pickup = new Date(U.byId("pickupDatetime").value).toISOString();
+    const returned = new Date(U.byId("returnDatetime").value).toISOString();
+    
+    // Check Availability API
+    try {
+      const availRes = await Auth.fetchWithAuth(`${C.API_BASE_URL}/bookings/check-availability`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ carId: car.id, startDateTime: pickup, endDateTime: returned })
+      });
+      const availData = await availRes.json();
+      U.byId("availabilityNote").className = \`availability-note \${availData.available ? "success" : "danger"}\`;
+      U.byId("availabilityNote").textContent = availData.available ? "Xe có sẵn trong thời gian này." : "Lịch xe bị trùng, vui lòng chọn thời gian khác.";
+      
+      if (!availData.available) {
+          U.byId("submitBtn").disabled = true;
+          return;
+      }
+      U.byId("submitBtn").disabled = false;
+    } catch (e) {
+      U.byId("availabilityNote").textContent = "Lỗi khi kiểm tra lịch trống.";
+    }
 
-  function updateAll() {
-    const pickup = U.byId("pickupDatetime").value;
-    const returned = U.byId("returnDatetime").value;
-    const availability = Availability.checkAvailability(car.id, pickup, returned);
-    U.byId("availabilityNote").className = `availability-note ${availability.available ? "success" : "danger"}`;
-    U.byId("availabilityNote").textContent = availability.reason;
-    const pricing = currentPricing();
-    U.byId("summaryCard").innerHTML = `
-      <h2>Tóm tắt chi phí</h2>
-      <p class="muted">${U.carTitle(car)} · ${Pricing.rentalDays(pickup, returned)} ngày</p>
-      <div class="summary-row"><span>Giá thuê</span><strong>${U.formatVnd(pricing.subtotal)}</strong></div>
-      <div class="summary-row"><span>Bảo hiểm thuê xe</span><strong>${U.formatVnd(pricing.insuranceFee)}</strong></div>
-      <div class="summary-row"><span>Giao xe</span><strong>${U.formatVnd(pricing.deliveryFee)}</strong></div>
-      <div class="summary-row"><span>Voucher</span><strong>-${U.formatVnd(pricing.discount)}</strong></div>
-      <div class="summary-total"><span>Tổng thanh toán</span><strong>${U.formatVnd(pricing.total)}</strong></div>
-      <p class="muted">Tiền cọc mock: ${U.formatVnd(Math.round(pricing.total * 0.3))}</p>`;
+    // Check Price Preview API
+    try {
+      const priceRes = await Auth.fetchWithAuth(`${C.API_BASE_URL}/bookings/price-preview`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            carId: car.id,
+            startDateTime: pickup,
+            endDateTime: returned,
+            hasInsurance: true,
+            hasDelivery: Number(U.byId("distanceKm").value) > 0,
+            distanceKm: Number(U.byId("distanceKm").value),
+            voucherCode: appliedVoucher?.code || null
+        })
+      });
+      const pricing = await priceRes.json();
+      
+      U.byId("summaryCard").innerHTML = \`
+        <h2>Tóm tắt chi phí</h2>
+        <p class="muted">\${U.carTitle(car)} · \${pricing.rentalDays} ngày</p>
+        <div class="summary-row"><span>Giá thuê gốc</span><strong>\${U.formatVnd(pricing.weekdayCost + pricing.weekendCost)}</strong></div>
+        <div class="summary-row"><span>Bảo hiểm thuê xe</span><strong>\${U.formatVnd(pricing.insuranceFee)}</strong></div>
+        <div class="summary-row"><span>Phí Giao/Nhận xe</span><strong>\${U.formatVnd(pricing.deliveryFee)}</strong></div>
+        \${pricing.discountAmount > 0 ? \`<div class="summary-row text-green-600"><span>Voucher giảm giá</span><strong>-\${U.formatVnd(pricing.discountAmount)}</strong></div>\` : ""}
+        <div class="summary-total mt-4"><span>Tổng thanh toán</span><strong>\${U.formatVnd(pricing.totalAmount)}</strong></div>
+        <p class="muted font-medium mt-2">Cần đặt cọc trước: <span class="text-blue-600">\${U.formatVnd(pricing.depositAmount)}</span></p>\`;
+    } catch (e) {
+        U.byId("summaryCard").innerHTML = "<p class='text-red-500'>Không thể tính giá. Vui lòng thử lại.</p>";
+    }
   }
 
   function applyVoucher() {
@@ -144,12 +199,6 @@
       U.renderToast("Không tìm thấy voucher.", "danger");
       if (U.byId("voucherSelect")) U.byId("voucherSelect").value = "";
       updateAll();
-      return;
-    }
-    const result = Pricing.calculateVoucher(voucher, currentPricing().subtotal);
-    if (result.error) {
-      U.renderToast(result.error, "danger");
-      if (U.byId("voucherSelect")) U.byId("voucherSelect").value = "";
       return;
     }
     appliedVoucher = voucher;
@@ -170,55 +219,71 @@
     reader.onload = () => {
       const type = event.target.id === "licenseFront" ? "license_front" : "license_back";
       licenseUploads[type] = { file_name: file.name, file_url: reader.result };
-      U.byId("licensePreview").insertAdjacentHTML("beforeend", `<img src="${reader.result}" alt="Preview GPLX">`);
+      U.byId("licensePreview").insertAdjacentHTML("beforeend", \`<img src="\${reader.result}" alt="Preview GPLX">\`);
     };
     reader.readAsDataURL(file);
   }
 
-  function submitBooking(event) {
+  async function submitBooking(event) {
     event.preventDefault();
-    const pickup = U.byId("pickupDatetime").value;
-    const returned = U.byId("returnDatetime").value;
-    const availability = Availability.checkAvailability(car.id, pickup, returned);
-    if (!availability.available) return U.renderToast("Không thể tạo booking vì lịch bị trùng.", "danger");
-    const pricing = currentPricing();
-    const id = Math.max(0, ...DB.bookings.map((item) => item.id)) + 1;
-    const booking = {
-      id,
-      user_id: currentUser.id,
-      car_id: car.id,
-      pickup_datetime: new Date(pickup).toISOString(),
-      return_datetime: new Date(returned).toISOString(),
-      pickup_address: U.byId("pickupAddress").value.trim(),
-      total_amount: pricing.total,
-      voucher_id: appliedVoucher?.id || null,
-      status: "pending",
-      created_at: new Date().toISOString()
-    };
-    DB.bookings.push(booking);
-    ["license_front", "license_back"].forEach((documentType) => {
-      if (!licenseUploads[documentType]) return;
-      const existing = DB.user_documents.find((doc) => doc.user_id === booking.user_id && doc.document_type === documentType);
-      if (existing) {
-        existing.file_name = licenseUploads[documentType].file_name;
-        existing.file_url = licenseUploads[documentType].file_url;
-        existing.verified = false;
-        existing.created_at = new Date().toISOString();
-        return;
-      }
-      DB.user_documents.push({ id: Math.max(0, ...DB.user_documents.map((item) => item.id)) + 1, user_id: booking.user_id, document_type: documentType, file_name: licenseUploads[documentType].file_name, file_url: licenseUploads[documentType].file_url, verified: false, created_at: new Date().toISOString() });
-    });
-    if (appliedVoucher) {
-      DB.voucher_usages.push({ id: Math.max(0, ...DB.voucher_usages.map((item) => item.id)) + 1, voucher_id: appliedVoucher.id, user_id: booking.user_id, booking_id: id, used_at: new Date().toISOString() });
+    const pickup = new Date(U.byId("pickupDatetime").value).toISOString();
+    const returned = new Date(U.byId("returnDatetime").value).toISOString();
+
+    let frontUrl = profileFront;
+    let backUrl = profileBack;
+
+    if (!hasProfileLicense) {
+        if (!licenseUploads["license_front"] || !licenseUploads["license_back"]) {
+            return U.renderToast("Vui lòng tải lên ảnh 2 mặt GPLX.", "danger");
+        }
+        // Giả lập API Upload ảnh -> trả về dummy URL
+        frontUrl = "https://dummyimage.com/600x400/2563eb/fff&text=GPLX+Front";
+        backUrl = "https://dummyimage.com/600x400/2563eb/fff&text=GPLX+Back";
     }
-    const method = "vnpay"; // Default to VNPay as payment selector has been removed from UI
-    // UI-only interpretation. payments.amount is used as deposit amount in current frontend mock.
-    DB.payments.push({ id: Math.max(0, ...DB.payments.map((item) => item.id)) + 1, booking_id: id, method, amount: Math.round(pricing.total * 0.3), status: "pending", transaction_code: `PAY${Date.now()}`, paid_at: null });
-    window.VivuCarSaveDB();
-    U.renderToast("Đã tạo đơn thuê.", "success");
-    setTimeout(() => location.href = `payment-deposit.html?bookingId=${id}`, 350);
+
+    U.byId("submitBtn").disabled = true;
+    U.byId("submitBtn").textContent = "Đang tạo đơn...";
+
+    const payload = {
+        carId: car.id,
+        startDateTime: pickup,
+        endDateTime: returned,
+        pickupLocation: U.byId("pickupAddress").value.trim(),
+        returnLocation: U.byId("returnAddress").value.trim(),
+        hasInsurance: true,
+        hasDelivery: Number(U.byId("distanceKm").value) > 0,
+        distanceKm: Number(U.byId("distanceKm").value),
+        voucherCode: appliedVoucher?.code || null,
+        driverInfo: {
+            fullName: U.byId("driverName").value.trim(),
+            phoneNumber: U.byId("driverPhone").value.trim(),
+            citizenIdNumber: U.byId("citizenId").value.trim(),
+            citizenIdFrontImageUrl: null,
+            citizenIdBackImageUrl: null,
+            driverLicenseNumber: U.byId("licenseNumber").value.trim(),
+            driverLicenseFrontImageUrl: frontUrl,
+            driverLicenseBackImageUrl: backUrl
+        }
+    };
+
+    try {
+        const res = await Auth.fetchWithAuth(`${C.API_BASE_URL}/bookings`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        
+        if (!res.ok) throw new Error(data.message || "Tạo đơn thất bại");
+
+        U.renderToast("Đã tạo đơn thuê thành công.", "success");
+        setTimeout(() => location.href = \`payment-deposit.html?bookingId=\${data.id}\`, 350);
+    } catch (e) {
+        U.renderToast(e.message, "danger");
+        U.byId("submitBtn").disabled = false;
+        U.byId("submitBtn").textContent = "Tạo đơn và tiếp tục thanh toán";
+    }
   }
 
   render();
 })();
-

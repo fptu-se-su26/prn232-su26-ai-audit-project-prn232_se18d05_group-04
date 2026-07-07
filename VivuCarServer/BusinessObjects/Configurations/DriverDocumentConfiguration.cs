@@ -17,7 +17,8 @@ public class DriverDocumentConfiguration : IEntityTypeConfiguration<DriverDocume
         entity.Property(document => document.CitizenIdFrontImageUrl).HasMaxLength(500);
         entity.Property(document => document.CitizenIdBackImageUrl).HasMaxLength(500);
         entity.Property(document => document.DriverLicenseNumber).HasMaxLength(30).IsRequired();
-        entity.Property(document => document.DriverLicenseImageUrl).HasMaxLength(500);
+        entity.Property(document => document.DriverLicenseFrontImageUrl).HasMaxLength(500);
+        entity.Property(document => document.DriverLicenseBackImageUrl).HasMaxLength(500);
         entity
             .Property(document => document.VerificationStatus)
             .HasConversion<string>()

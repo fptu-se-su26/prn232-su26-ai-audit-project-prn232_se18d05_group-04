@@ -9,6 +9,7 @@ public static class RepositoryConfiguration
     {
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IBookingRepository, BookingRepository>();
 
         return services;
     }

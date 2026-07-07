@@ -9,6 +9,9 @@ public class CarAvailabilityBlock
     public string Reason { get; set; } = string.Empty;
     public int? BookingId { get; set; }
 
+    [System.ComponentModel.DataAnnotations.Timestamp]
+    public byte[] RowVersion { get; set; } = null!;
+
     public Car Car { get; set; } = null!;
     public Booking? Booking { get; set; }
 }

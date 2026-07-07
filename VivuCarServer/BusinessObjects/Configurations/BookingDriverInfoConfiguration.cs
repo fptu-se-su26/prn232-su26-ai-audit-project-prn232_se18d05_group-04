@@ -16,7 +16,8 @@ public class BookingDriverInfoConfiguration : IEntityTypeConfiguration<BookingDr
         entity.Property(info => info.CitizenIdFrontImageUrl).HasMaxLength(500);
         entity.Property(info => info.CitizenIdBackImageUrl).HasMaxLength(500);
         entity.Property(info => info.DriverLicenseNumber).HasMaxLength(30).IsRequired();
-        entity.Property(info => info.DriverLicenseImageUrl).HasMaxLength(500);
+        entity.Property(info => info.DriverLicenseFrontImageUrl).HasMaxLength(500);
+        entity.Property(info => info.DriverLicenseBackImageUrl).HasMaxLength(500);
 
         entity
             .HasOne(info => info.Booking)

@@ -1,4 +1,5 @@
 window.VivuCarConstants = {
+  API_BASE_URL: "https://localhost:7005/api",
   USER_ROLES: { USER: "user", CAR_OWNER: "car_owner", ADMIN: "admin" },
   USER_ROLE_LABELS: { user: "Khách thuê", car_owner: "Chủ xe", admin: "Quản trị viên" },
   TRANSMISSION_LABELS: { manual: "Số sàn", automatic: "Tự động", cvt: "CVT" },

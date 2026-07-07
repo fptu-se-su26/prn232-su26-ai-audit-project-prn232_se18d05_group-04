@@ -17,5 +17,7 @@ public class CarModelConfiguration : IEntityTypeConfiguration<CarModel>
             .WithMany(brand => brand.CarModels)
             .HasForeignKey(model => model.CarBrandId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        entity.HasData(new CarModel { Id = 1, CarBrandId = 1, Name = "Vios", IsActive = true });
     }
 }
