@@ -14,6 +14,7 @@ public static class ServiceConfiguration
         services.AddScoped<IUserSecurityStateService, UserSecurityStateService>();
         services.AddScoped<IBookingService, BookingService>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<ICarService, CarService>();
         services.AddHostedService<API.HostedServices.BookingExpirationHostedService>();
 
         return services;
