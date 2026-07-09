@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="vi"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Phương tiện | VivuCar</title>
+
+  <script>
+    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Be Vietnam Pro','Segoe UI','Arial','sans-serif'], mono: ['SFMono-Regular','Consolas','monospace'] }, colors: { notion: { bg: '#f7f7f5', surface: '#ffffff', muted: '#fbfbfa', border: '#e6e4df', text: '#1f1f1f' } } } } };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/animations.css">
+
+</head><body data-page="cars" class="min-h-[100dvh] bg-zinc-50 text-zinc-900 font-sans antialiased overflow-x-hidden">
+  <div class="app-shell"><div id="sidebarMount"></div><div class="main-shell"><div id="headerMount"></div><main class="content">
+    <div class="page-heading"><div><h1>Quản lý phương tiện</h1><p>Quản lý bảng `cars`, ảnh chính từ `car_images`, loại xe từ `car_types`.</p></div><a class="btn btn-primary" href="admin-car-form.html">Thêm xe mới</a></div>
+    <section id="carSummary" class="summary-grid"></section>
+    <section class="toolbar toolbar-cars"><input id="searchCarInput" placeholder="Tìm theo biển số, hãng, dòng xe"><select id="statusFilter"><option value="">Tất cả trạng thái</option><option value="available">Đang rảnh</option><option value="rented">Đang thuê</option><option value="maintenance">Bảo trì</option><option value="blocked">Đã khóa</option></select><select id="typeFilter"><option value="">Tất cả loại xe</option></select><select id="fuelFilter"><option value="">Tất cả nhiên liệu</option><option value="gasoline">Xăng</option><option value="diesel">Dầu</option><option value="electric">Điện</option><option value="hybrid">Hybrid</option></select><select id="transmissionFilter"><option value="">Tất cả hộp số</option><option value="manual">Số sàn</option><option value="automatic">Tự động</option><option value="cvt">CVT</option></select><button class="btn btn-primary" id="btnFilter">Lọc</button><button class="btn btn-secondary" id="btnReset">Đặt lại</button></section>
+    <section class="panel"><div id="carsEmpty" class="empty-state hidden"><h3>Không tìm thấy phương tiện</h3><p>Thử đặt lại bộ lọc hoặc kiểm tra trạng thái xe trong hệ thống.</p><button class="btn btn-secondary" id="btnResetEmptyCars" type="button">Đặt lại bộ lọc</button></div><div class="table-wrap"><table><thead><tr><th>Ảnh</th><th>Biển số</th><th>Xe</th><th>Loại</th><th>Năm</th><th>Số chỗ</th><th>Giá/ngày</th><th>Trạng thái</th><th>Chủ xe</th><th>Hành động</th></tr></thead><tbody id="carsTableBody"></tbody></table></div><div class="pagination"><span id="paginationInfo"></span><select id="pageSize"><option>10</option><option>20</option><option>50</option></select><button class="btn btn-secondary btn-sm" id="prevPage">Trước</button><div class="page-buttons" id="pageNumbers"></div><button class="btn btn-secondary btn-sm" id="nextPage">Sau</button></div></section>
+  </main></div></div>
+  <div class="modal-backdrop" id="blockCarModal"><div class="modal"><div class="modal-header"><h2>Khóa phương tiện</h2><button class="icon-button" data-close-modal type="button">×</button></div><p class="muted">Xe này sẽ bị ẩn khỏi kết quả tìm kiếm của khách hàng.</p><div id="blockCarInfo" class="alert"></div><label>Lý do<select id="blockReasonType"><option value="">Chọn lý do</option><option>Bảo dưỡng định kỳ</option><option>Xe gặp sự cố</option><option>Vi phạm chính sách</option><option>Chủ xe yêu cầu tạm dừng</option><option>Khác</option></select></label><label>Ghi chú<textarea id="blockNote" placeholder="Nhập ghi chú chi tiết"></textarea></label><div class="modal-actions"><button class="btn btn-secondary" id="btnCancelBlockCar">Hủy</button><button class="btn btn-danger" id="btnConfirmBlockCar">Xác nhận khóa</button></div></div></div>
+  <div class="modal-backdrop" id="unblockCarModal"><div class="modal"><div class="modal-header"><h2>Mở khóa phương tiện</h2><button class="icon-button" data-close-modal type="button">×</button></div><p class="muted">Xe sẽ được chuyển về trạng thái `available` theo schema hiện tại.</p><label>Ghi chú<textarea id="unblockNote" placeholder="Ghi chú sau khi mở khóa"></textarea></label><div class="modal-actions"><button class="btn btn-secondary" id="btnCancelUnblockCar">Hủy</button><button class="btn btn-primary" id="btnConfirmUnblockCar">Xác nhận mở khóa</button></div></div></div>
+  <div id="modalMount"></div>
+  <script src="../assets/js/tailwind-ui.js"></script><script src="../assets/js/constants.js"></script><script src="../assets/js/utils.js"></script><script src="../assets/js/db-mock.js"></script><script src="../assets/js/auth.js"></script><script src="../assets/js/layout.js"></script><script src="../assets/js/admin-cars.js"></script>
+</body></html>
+

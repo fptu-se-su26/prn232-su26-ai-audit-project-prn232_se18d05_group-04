@@ -215,7 +215,11 @@ namespace BusinessObjects.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<string>("DriverLicenseImageUrl")
+                    b.Property<string>("DriverLicenseBackImageUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("DriverLicenseFrontImageUrl")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -414,6 +418,28 @@ namespace BusinessObjects.Migrations
                     b.HasIndex("Status");
 
                     b.ToTable("Cars", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CarBrandId = 1,
+                            CarModelId = 1,
+                            CreatedAt = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DailyPrice = 600000m,
+                            DeliveryFee = 10000m,
+                            DepositAmount = 1500000m,
+                            Description = "Xe gia đình 5 chỗ sạch sẽ, vận hành êm ái, tiết kiệm nhiên liệu.",
+                            FuelType = "Gasoline",
+                            InsuranceFeePerDay = 50000m,
+                            LicensePlate = "43A-12345",
+                            Location = "Hải Châu, Đà Nẵng",
+                            Name = "Toyota Vios 2022",
+                            OwnerId = 6,
+                            SeatCount = 5,
+                            Status = "Available",
+                            TransmissionType = "Automatic"
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Models.CarAvailabilityBlock", b =>
@@ -437,6 +463,12 @@ namespace BusinessObjects.Migrations
                         .IsRequired()
                         .HasMaxLength(300)
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<DateTime>("StartDateTime")
                         .HasColumnType("datetime2");
@@ -472,6 +504,14 @@ namespace BusinessObjects.Migrations
                         .IsUnique();
 
                     b.ToTable("CarBrands", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsActive = true,
+                            Name = "Toyota"
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Models.CarImage", b =>
@@ -528,6 +568,15 @@ namespace BusinessObjects.Migrations
                         .IsUnique();
 
                     b.ToTable("CarModels", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CarBrandId = 1,
+                            IsActive = true,
+                            Name = "Vios"
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Models.DriverDocument", b =>
@@ -556,7 +605,11 @@ namespace BusinessObjects.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<string>("DriverLicenseImageUrl")
+                    b.Property<string>("DriverLicenseBackImageUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("DriverLicenseFrontImageUrl")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -923,6 +976,22 @@ namespace BusinessObjects.Migrations
                         .IsUnique();
 
                     b.ToTable("Vouchers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "VIVUCAR10",
+                            Description = "Giảm giá 10% tổng hóa đơn",
+                            DiscountType = "Percentage",
+                            DiscountValue = 10m,
+                            EndDateTime = new DateTime(2026, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            IsActive = true,
+                            MinOrderAmount = 500000m,
+                            StartDateTime = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            UsageLimit = 100,
+                            UsedCount = 0
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Models.Booking", b =>

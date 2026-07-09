@@ -1,0 +1,106 @@
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap");
+
+@keyframes shimmer {
+  from {
+    background-position: 120% 0;
+  }
+
+  to {
+    background-position: -120% 0;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes admin-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes admin-nav-in {
+  from {
+    opacity: 0.72;
+    transform: translateX(-2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.1s linear infinite;
+}
+
+.animate-toast-in {
+  animation: toast-in 0.18s ease-out both;
+}
+
+.animate-page-in {
+  animation: page-in 0.22s ease-out both;
+}
+
+.admin-page-enter {
+  animation: admin-page-enter 180ms ease-out both;
+}
+
+.animate-admin-nav-in {
+  animation: admin-nav-in 180ms ease-out both;
+}
+
+@media print {
+  .user-header,
+  .admin-header,
+  .contract-toolbar,
+  .toast-root,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+  }
+
+  .page-shell {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  .contract-page {
+    box-shadow: none !important;
+    border: 0 !important;
+    width: auto !important;
+    min-height: auto !important;
+    padding: 24mm !important;
+  }
+}
