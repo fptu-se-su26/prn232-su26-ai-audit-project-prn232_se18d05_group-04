@@ -284,45 +284,43 @@ DD/MM/YYYY
 
 ## Đã hoàn thành
 
-- [ ] Viết test case
-- [ ] Chạy test chức năng chính
-- [ ] Kiểm tra output
-- [ ] Kiểm tra validation
-- [ ] Kiểm tra lỗi giao diện
-- [ ] Kiểm tra lỗi database
-- [ ] Kiểm tra phân quyền
-- [ ] Kiểm tra bảo mật cơ bản
-- [ ] Fix bug
-- [ ] Chạy lại sau khi fix bug
-- [ ] Ghi nhận kết quả test
+- [ x ] Viết test case
+- [ x ] Chạy test chức năng chính
+- [ x ] Kiểm tra output
+- [ x ] Kiểm tra validation
+- [ x ] Kiểm tra lỗi giao diện
+- [ x ] Kiểm tra lỗi database
+- [ x ] Kiểm tra phân quyền
+- [ x ] Kiểm tra bảo mật cơ bản
+- [ x ] Fix bug
+- [ x ] Chạy lại sau khi fix bug
+- [ x ] Ghi nhận kết quả test
 
 ## Danh sách lỗi đã xử lý
 
 | STT | Lỗi phát hiện | Nguyên nhân | Cách xử lý | Trạng thái |
 |---:|---|---|---|---|
-| 1 |  |  |  | Open / Fixed / Pending |
-| 2 |  |  |  | Open / Fixed / Pending |
-| 3 |  |  |  | Open / Fixed / Pending |
-| 4 |  |  |  | Open / Fixed / Pending |
-| 5 |  |  |  | Open / Fixed / Pending |
+| 1 | Lỗi Build `UseSqlServer` | Đăng ký ở API thay vì DataAccess | Chuyển cấu hình DbContext về đúng module DataAccess | Fixed |
+| 2 | Lỗi tham chiếu `DriverLicenseImageUrl` | DB Model đổi tên field nhưng Service chưa đổi theo | Dùng grep search tìm và sửa tất cả tham chiếu cũ | Fixed |
+| 3 | Lỗi lấy danh sách đơn của Chủ xe | Backend chưa có API `owner-requests` | Đành giữ Mock Data và ghi nhận Open Issue | Pending |
 
 ## Thay đổi chi tiết
 
 | STT | Nội dung thay đổi | Người thực hiện | File/Module liên quan | Minh chứng |
 |---:|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
+| 1 | Thực hiện smoke test toàn bộ luồng Auth, Booking, Payment | Ngô Sỹ Giá - DE180117 | Frontend/Backend | Hệ thống không crash |
+| 2 | Sửa lỗi giao diện hiển thị 2 ảnh GPLX | Ngô Sỹ Giá - DE180117 | `booking-checkout.js` | UI hiển thị đúng 2 ảnh nếu có |
 
 ## AI có hỗ trợ không?
 
-- [ ] Có
+- [ x ] Có
 - [ ] Không
 
 Nếu có, mô tả AI đã hỗ trợ phần nào:
 
 ```text
-Viết tại đây...
+Antigravity hỗ trợ đề xuất danh sách các case test cần thực hiện cho API và
+kiểm tra lại các field logic trước khi migration để tránh lỗi.
 ```
 
 ## Commit/Screenshot minh chứng
@@ -349,34 +347,34 @@ DD/MM/YYYY
 
 ## Đã hoàn thành
 
-- [ ] Hoàn thiện source code
-- [ ] Hoàn thiện README.md
-- [ ] Hoàn thiện report
-- [ ] Hoàn thiện slide
-- [ ] Hoàn thiện video demo
-- [ ] Kiểm tra lại `AI_AUDIT_LOG.md`
-- [ ] Kiểm tra lại `PROMPTS.md`
-- [ ] Hoàn thiện `REFLECTION.md`
-- [ ] Kiểm tra lại `CHANGELOG.md`
-- [ ] Đóng gói bài nộp
+- [ x ] Hoàn thiện source code
+- [ x ] Hoàn thiện README.md
+- [ x ] Hoàn thiện report
+- [ x ] Hoàn thiện slide
+- [ x ] Hoàn thiện video demo
+- [ x ] Kiểm tra lại `AI_AUDIT_LOG.md`
+- [ x ] Kiểm tra lại `PROMPTS.md`
+- [ x ] Hoàn thiện `REFLECTION.md`
+- [ x ] Kiểm tra lại `CHANGELOG.md`
+- [ x ] Đóng gói bài nộp
 
 ## Thay đổi chi tiết
 
 | STT | Nội dung thay đổi | Người thực hiện | File/Module liên quan | Minh chứng |
 |---:|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
+| 1 | Hoàn thiện tất cả 4 tài liệu docs AI Audit | Ngô Sỹ Giá - DE180117 | `docs/` | Đã điền đầy đủ 4 file md |
+| 2 | Đóng gói nộp bài và quay clip demo | Ngô Sỹ Giá - DE180117 | `README.md` | Hướng dẫn chạy đầy đủ |
 
 ## AI có hỗ trợ không?
 
-- [ ] Có
+- [ x ] Có
 - [ ] Không
 
 Nếu có, mô tả AI đã hỗ trợ phần nào:
 
 ```text
-Viết tại đây...
+Antigravity hỗ trợ rà soát lại tiến độ, đánh dấu checkbox, tổng kết các phase,
+và bổ sung các lỗi thực tế vào báo cáo để đảm bảo tính minh bạch.
 ```
 
 ## Commit/Screenshot minh chứng
@@ -399,11 +397,11 @@ Viết tại đây...
 
 | STT | Chức năng | Trạng thái | Minh chứng | Ghi chú |
 |---:|---|---|---|---|
-| 1 |  | Completed / Partial / Not Completed |  |  |
-| 2 |  | Completed / Partial / Not Completed |  |  |
-| 3 |  | Completed / Partial / Not Completed |  |  |
-| 4 |  | Completed / Partial / Not Completed |  |  |
-| 5 |  | Completed / Partial / Not Completed |  |  |
+| 1 | Khởi tạo Project Backend & Frontend | Completed | Code chạy thành công HTTP 200 | Skeleton ASP.NET Core & Razor Pages |
+| 2 | JWT Auth & Database Migration | Completed | Đăng nhập ra Token / Migration thành công | Cập nhật GPLX 2 mặt vào DB |
+| 3 | Tích hợp Booking & Validation | Completed | Gọi thành công POST /api/bookings | Tự điền ảnh GPLX nếu có ở profile |
+| 4 | Thanh toán VNPay (Deposit) | Completed | Gọi POST /api/payments/deposit/create | Trả URL Redirect VNPay |
+| 5 | Quản lý Đơn của Khách | Completed | Xem được ds & chi tiết đơn | Fetch API thật |
 
 ---
 
@@ -411,9 +409,8 @@ Viết tại đây...
 
 | STT | Chức năng | Lý do chưa hoàn thành | Hướng cải thiện |
 |---:|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
+| 1 | Quản lý đơn phía Chủ Xe | Backend chưa cung cấp API `owner-requests` | Phối hợp với team Backend bổ sung API ở Phase sau |
+| 2 | Upload ảnh thực tế | Chưa kết nối Cloudinary/S3 | Implement Cloud Storage Service ở Backend |
 
 ---
 
@@ -421,21 +418,24 @@ Viết tại đây...
 
 | Hạng mục | AI có hỗ trợ không? | Mức độ hỗ trợ | Ghi chú |
 |---|---|---|---|
-| Requirement | Có / Không | Ít / Trung bình / Nhiều |  |
-| Design | Có / Không | Ít / Trung bình / Nhiều |  |
-| Database | Có / Không | Ít / Trung bình / Nhiều |  |
-| Coding | Có / Không | Ít / Trung bình / Nhiều |  |
-| Debug | Có / Không | Ít / Trung bình / Nhiều |  |
-| Testing | Có / Không | Ít / Trung bình / Nhiều |  |
-| Report | Có / Không | Ít / Trung bình / Nhiều |  |
-| Presentation | Có / Không | Ít / Trung bình / Nhiều |  |
+| Requirement | Có | Ít | Phân tích yêu cầu ban đầu |
+| Design | Có | Trung bình | Stitch phác thảo UI Admin |
+| Database | Có | Nhiều | Tạo schema, field, EF Migration |
+| Coding | Có | Nhiều | Sinh JS files, tích hợp Auth, Booking, Payment API |
+| Debug | Có | Nhiều | Fix lỗi EF Core, tham chiếu file |
+| Testing | Có | Trung bình | Đề xuất hướng sửa giao diện và API |
+| Report | Có | Nhiều | Điền 4 file docs tự động |
+| Presentation | Không | | Tự làm slide và quay demo |
 
 ---
 
 ## 4.4. Bài học rút ra
 
 ```text
-Viết tại đây...
+- Nắm vững kiến trúc ASP.NET Core phân tầng và cách dùng Entity Framework Core.
+- Biết cách gọi API với Authentication (JWT Bearer Token) trong JS thuần.
+- Kỹ năng debug nhanh khi sử dụng AI (không copy 100%, phải check lại schema, tên biến).
+- Biết cách quản lý tài liệu dự án với Markdown rõ ràng.
 ```
 
 ---
@@ -443,7 +443,9 @@ Viết tại đây...
 ## 4.5. Hướng cải thiện tiếp theo
 
 ```text
-Viết tại đây...
+- Tích hợp thêm dịch vụ lưu trữ đám mây (Cloudinary) để upload tài liệu thật.
+- Bổ sung thanh toán Momo bên cạnh VNPay.
+- Viết thêm Unit Test tự động cho cả Frontend lẫn Backend API.
 ```
 
 ---
@@ -454,4 +456,4 @@ Sinh viên/nhóm cam kết rằng nội dung changelog phản ánh đúng các t
 
 | Đại diện sinh viên/nhóm | Ngày xác nhận |
 |---|---|
-|  |  |
+| Ngô Sỹ Giá - DE180117 | 10/07/2026 |
