@@ -67,6 +67,13 @@ public class CarRepository(VivuCarDbContext dbContext) : ICarRepository
         var items = await cars
             .OrderByDescending(car => car.CreatedAt)
             .ThenByDescending(car => car.Id)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+
+        return (items, totalItems);
+    }
+
     public async Task<Car?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await dbContext.Cars
@@ -210,7 +217,7 @@ public class CarRepository(VivuCarDbContext dbContext) : ICarRepository
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return (items, totalItems);
+        return (items, totalCount);
     }
 
     public Task<Car?> FindByIdWithDetailsAsync(
@@ -414,7 +421,6 @@ public class CarRepository(VivuCarDbContext dbContext) : ICarRepository
         }
 
         return Enum.TryParse(value, ignoreCase: true, out transmissionType);
-        return (items, totalCount);
     }
 
     public async Task<IReadOnlyList<Car>> GetFeaturedCarsAsync(string? sortBy, int limit, CancellationToken cancellationToken = default)
