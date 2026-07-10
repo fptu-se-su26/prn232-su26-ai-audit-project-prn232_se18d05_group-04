@@ -19,14 +19,14 @@ Nguyên tắc ghi changelog:
 
 | Thông tin | Nội dung |
 |---|---|
-| Môn học |  |
-| Mã môn học |  |
-| Lớp |  |
-| Học kỳ |  |
-| Tên bài tập / Project |  |
-| Tên sinh viên / Nhóm |  |
-| MSSV / Danh sách MSSV |  |
-| Giảng viên hướng dẫn |  |
+| Môn học | Building Cross-Platform Back-End Application With .NET |
+| Mã môn học | PRN232 |
+| Lớp | SE18D05 |
+| Học kỳ | 8 |
+| Tên bài tập / Project | VivuCar |
+| Tên sinh viên / Nhóm | Nhóm 4 |
+| MSSV / Danh sách MSSV | DE180117 |
+| Giảng viên hướng dẫn | QuangLTN3 |
 | Repository URL |  |
 | Ngày bắt đầu |  |
 | Ngày hoàn thành |  |
@@ -37,12 +37,12 @@ Nguyên tắc ghi changelog:
 
 | Phiên bản/Giai đoạn | Thời gian | Nội dung chính | Trạng thái |
 |---|---|---|---|
-| Phase 01 |  | Khởi tạo project | Not Started / In Progress / Completed |
-| Phase 02 |  | Phân tích yêu cầu | Not Started / In Progress / Completed |
-| Phase 03 |  | Thiết kế hệ thống | Not Started / In Progress / Completed |
-| Phase 04 |  | Implementation | Not Started / In Progress / Completed |
-| Phase 05 |  | Testing & Debug | Not Started / In Progress / Completed |
-| Phase 06 |  | Hoàn thiện báo cáo và demo | Not Started / In Progress / Completed |
+| Phase 01 | 01/06/2026 | Khởi tạo project | Completed |
+| Phase 02 | 05/06/2026 | Phân tích yêu cầu & Thiết kế DB | Completed |
+| Phase 03 | 06/06/2026 | Thiết kế hệ thống & API | Completed |
+| Phase 04 | 07/07/2026 | Implementation (Backend API + Frontend) | In Progress |
+| Phase 05 |  | Testing & Debug | Not Started |
+| Phase 06 |  | Hoàn thiện báo cáo và demo | Not Started |
 
 ---
 
@@ -51,52 +51,57 @@ Nguyên tắc ghi changelog:
 ## Ngày thực hiện
 
 ```text
-DD/MM/YYYY
+01/06/2026
 ```
 
 ## Đã hoàn thành
 
-- [ ] Tạo repository
-- [ ] Tạo cấu trúc thư mục project
-- [ ] Tạo file README.md
-- [ ] Tạo thư mục `docs/`
-- [ ] Tạo file `AI_AUDIT_LOG.md`
-- [ ] Tạo file `PROMPTS.md`
-- [ ] Tạo file `REFLECTION.md`
-- [ ] Tạo file `CHANGELOG.md`
-- [ ] Khởi tạo source code ban đầu
-- [ ] Cài đặt thư viện/công cụ cần thiết
-- [ ] Cấu hình môi trường chạy project
+- [ x ] Tạo repository
+- [ x ] Tạo cấu trúc thư mục project
+- [ x ] Tạo file README.md
+- [ x ] Tạo thư mục `docs/`
+- [ x ] Tạo file `AI_AUDIT_LOG.md`
+- [ x ] Tạo file `PROMPTS.md`
+- [ x ] Tạo file `REFLECTION.md`
+- [ x ] Tạo file `CHANGELOG.md`
+- [ x ] Khởi tạo source code ban đầu
+- [ x ] Cài đặt thư viện/công cụ cần thiết
+- [ x ] Cấu hình môi trường chạy project
 
 ## Thay đổi chi tiết
 
 | STT | Nội dung thay đổi | Người thực hiện | File/Module liên quan | Minh chứng |
 |---:|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
+| 1 | Tạo backend solution và các project phân tầng API, BusinessObjects, DataAccess, Repositories, Services | Ngô Sỹ Giá - DE180117 | `VivuCarServer/` | Build thành công: 0 warning, 0 error |
+| 2 | Tạo frontend Razor Pages và API proxy gọi backend qua HttpClient | Ngô Sỹ Giá - DE180117 | `VivuCarClient/` | Trang Razor Pages trả HTTP 200 |
+| 3 | Thêm Swagger, OData, EF Core, SQL Server, DI, DbContext và `.gitignore` cho bin/obj | Ngô Sỹ Giá - DE180117 | `VivuCarServer/`, `.gitignore` | Swagger API trả HTTP 200 |
 
 ## AI có hỗ trợ không?
 
-- [ ] Có
+- [ x ] Có
 - [ ] Không
 
 Nếu có, mô tả AI đã hỗ trợ phần nào:
 
 ```text
-Viết tại đây...
+ChatGPT hỗ trợ dựng skeleton dự án, cài đặt dependency và kiểm tra build.
+Nhóm rà soát lại cấu trúc, chuyển đăng ký DbContext về tầng DataAccess và sửa
+URL backend của frontend thành https://localhost:7005/ theo launch profile.
 ```
 
 ## Commit/Screenshot minh chứng
 
 ```text
-Dán link commit, screenshot hoặc mô tả minh chứng tại đây...
+Chưa tạo commit.
+Build backend và frontend thành công: 0 warning, 0 error.
+Swagger API và trang Razor Pages trả HTTP 200.
 ```
 
 ## Ghi chú
 
 ```text
-Viết tại đây...
+Các file có sẵn trong repository được giữ nguyên. Thư mục bin/ và obj/ được
+loại khỏi Git bằng .gitignore.
 ```
 
 ---
@@ -219,38 +224,40 @@ DD/MM/YYYY
 
 ## Đã hoàn thành
 
-- [ ] Tạo project structure
-- [ ] Cài đặt database connection
-- [ ] Xây dựng backend
-- [ ] Xây dựng frontend
-- [ ] Xây dựng authentication/authorization
-- [ ] Xử lý CRUD
-- [ ] Xử lý validation
-- [ ] Tích hợp API
-- [ ] Xử lý upload/download file
-- [ ] Xử lý lỗi
-- [ ] Tối ưu giao diện
-- [ ] Cập nhật README hướng dẫn chạy
+- [ x ] Tạo project structure
+- [ x ] Cài đặt database connection
+- [ x ] Xây dựng backend
+- [ x ] Xây dựng frontend
+- [ x ] Xây dựng authentication/authorization
+- [ x ] Xử lý CRUD
+- [ x ] Xử lý validation
+- [ x ] Tích hợp API
+- [ ] Xử lý upload/download file (Upload ảnh GPLX thật lên server chưa hoàn thành)
+- [ x ] Xử lý lỗi
+- [ x ] Tối ưu giao diện
+- [ x ] Cập nhật README hướng dẫn chạy
 
 ## Thay đổi chi tiết
 
 | STT | Nội dung thay đổi | Người thực hiện | File/Module liên quan | Minh chứng |
 |---:|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
-| 5 |  |  |  |  |
+| 1 | Tích hợp JWT Auth API | Antigravity AI | `auth.js`, `login.js` | API Login trả về Token và lưu localStorage |
+| 2 | Tích hợp Bookings API (Tính giá, Check trùng lịch, Tạo đơn) | Antigravity AI | `booking-checkout.js`, `my-bookings.js`, `booking-detail.js` | Đặt xe gọi API POST /api/bookings thành công |
+| 3 | Tích hợp Payments API (Thanh toán VNPay) | Antigravity AI | `payment-deposit.js`, `payment-result.js` | Tạo URL thanh toán VNPay và hiển thị kết quả thành công |
+| 4 | Sửa Database hỗ trợ GPLX 2 mặt | Antigravity AI | `DriverDocument.cs`, `BookingDriverInfo.cs` | Migration DB thành công |
+| 5 | Tự động lấy GPLX từ hồ sơ khi đặt xe | Antigravity AI | `booking-checkout.js` | Form đặt xe tự động nhận GPLX 2 mặt |
 
 ## AI có hỗ trợ không?
 
-- [ ] Có
+- [ x ] Có
 - [ ] Không
 
 Nếu có, mô tả AI đã hỗ trợ phần nào:
 
 ```text
-Viết tại đây...
+Antigravity hỗ trợ toàn bộ quá trình tích hợp API Backend vào Frontend,
+bao gồm: scan cấu trúc file Backend, sửa DB Models, tạo EF Core Migration,
+viết lại 6 file JavaScript và điền tài liệu docs/.
 ```
 
 ## Commit/Screenshot minh chứng

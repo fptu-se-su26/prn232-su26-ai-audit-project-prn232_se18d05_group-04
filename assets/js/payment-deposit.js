@@ -1,69 +1,102 @@
 (function () {
-  const DB = window.VivuCarDB;
+  const C = window.VivuCarConstants;
   const U = window.VivuCarUtils;
   const Auth = window.VivuCarAuth;
   const currentUser = Auth.getCurrentUser();
   if (!currentUser) return;
   const bookingId = Number(new URLSearchParams(location.search).get("bookingId"));
-  const booking = DB.bookings.find((item) => item.id === bookingId && item.user_id === currentUser.id);
-  const payment = U.paymentForBooking(bookingId);
-  const car = DB.cars.find((item) => item.id === booking?.car_id);
   const root = U.byId("paymentDepositRoot");
 
+  let bookingData = null;
+
+  async function fetchBooking() {
+    try {
+      const res = await Auth.fetchWithAuth(`${C.API_BASE_URL}/bookings/${bookingId}`);
+      if (!res.ok) throw new Error("Không thể tải chi tiết đơn.");
+      bookingData = await res.json();
+      render();
+    } catch (e) {
+      root.innerHTML = U.renderEmptyState({ title: "Lỗi", text: e.message, href: "my-bookings.html", action: "Về danh sách đơn" });
+    }
+  }
+
   function render() {
+    if (!bookingData) return;
+    const b = bookingData;
     document.getElementById("breadcrumbMount").innerHTML = window.VivuCarLayout.renderBreadcrumb([
       { label: "Đơn thuê", href: "my-bookings.html" },
       { label: `#${bookingId}`, href: `booking-detail.html?bookingId=${bookingId}` },
       { label: "Thanh toán cọc" }
     ]);
-    if (!booking || !car || !payment) {
-      root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy thanh toán", text: "Đường dẫn không hợp lệ.", href: "my-bookings.html", action: "Về danh sách đơn" });
-      return;
+    
+    // Nếu đơn không còn ở trạng thái PendingApproval, không cho phép thanh toán cọc nữa
+    if (b.status !== "PendingApproval") {
+        root.innerHTML = U.renderEmptyState({ title: "Không thể thanh toán", text: `Đơn thuê hiện đang ở trạng thái ${b.status}, không thể thực hiện thanh toán cọc.`, href: `booking-detail.html?bookingId=${bookingId}`, action: "Xem chi tiết" });
+        return;
     }
-    const state = U.resolveBookingUiState(booking, payment, U.inspectionsForBooking(booking.id));
+
+    const uiLabel = "Chờ thanh toán cọc";
+    const uiTone = "warning";
+
     root.innerHTML = `
       <div class="checkout-layout">
         <section class="checkout-main">
           <div class="checkout-section">
             <h1>Thanh toán tiền cọc</h1>
-            <p class="muted">Đơn #${booking.id} · ${U.carTitle(car)} · ${state.label}</p>
-            ${U.renderStatusBadge(state.tone, booking.status)}
+            <p class="muted">Đơn #${b.id} · ${b.carName} · ${uiLabel}</p>
+            ${U.renderStatusBadge(uiTone, b.status)}
           </div>
           <div class="checkout-section">
             <h2>Chọn phương thức</h2>
             <div class="payment-method-grid">
-              ${["vnpay", "momo", "cash"].map((method) => `<label class="method-card"><input type="radio" name="method" value="${method}" ${payment.method === method ? "checked" : ""}><strong>${method === "cash" ? "Tiền mặt" : method === "momo" ? "MoMo" : "VNPay"}</strong><span class="muted">${method === "cash" ? "Thanh toán khi nhận xe" : "Thanh toán online mock"}</span></label>`).join("")}
+              ${["vnpay"].map((method) => `<label class="method-card"><input type="radio" name="method" value="${method}" checked><strong>VNPay</strong><span class="muted">Thanh toán online qua cổng VNPay</span></label>`).join("")}
             </div>
-            <button class="btn btn-primary btn-full" id="payNow" type="button">${payment.status === "success" ? "Đã thanh toán" : "Tiếp tục thanh toán"}</button>
+            <button class="btn btn-primary btn-full" id="payNow" type="button">Tiếp tục thanh toán</button>
           </div>
         </section>
         <aside class="summary-card">
           <h2>Tóm tắt đơn</h2>
-          <div class="summary-row"><span>Tổng tiền thuê</span><strong>${U.formatVnd(booking.total_amount)}</strong></div>
-          <div class="summary-row"><span>Tiền cọc</span><strong>${U.formatVnd(payment.amount)}</strong></div>
-          <div class="summary-row"><span>Trạng thái payment</span><strong>${payment.status}</strong></div>
-          <div class="summary-total"><span>Cần thanh toán</span><strong>${payment.status === "success" ? U.formatVnd(0) : U.formatVnd(payment.amount)}</strong></div>
+          <div class="summary-row"><span>Tổng tiền thuê</span><strong>${U.formatVnd(b.totalAmount)}</strong></div>
+          <div class="summary-row"><span>Cần đặt cọc (30%)</span><strong>${U.formatVnd(b.depositAmount)}</strong></div>
+          <div class="summary-row"><span>Trạng thái thanh toán</span><strong>Chờ thanh toán</strong></div>
+          <div class="summary-total mt-4"><span>Số tiền cần thanh toán</span><strong class="text-blue-600">${U.formatVnd(b.depositAmount)}</strong></div>
         </aside>
       </div>`;
     U.byId("payNow").addEventListener("click", payNow);
   }
 
-  function payNow() {
-    if (payment.status === "success") return location.href = `booking-confirmation.html?bookingId=${booking.id}`;
+  async function payNow() {
     const method = document.querySelector("input[name='method']:checked").value;
-    payment.method = method;
-    payment.transaction_code = `${method.toUpperCase()}${Date.now().toString().slice(-6)}`;
-    if (method === "cash") {
-      payment.status = "pending";
-      payment.paid_at = null;
-      window.VivuCarSaveDB();
-      U.renderToast("Đã chọn thanh toán tiền mặt khi nhận xe.", "success");
-      setTimeout(() => location.href = `booking-detail.html?bookingId=${booking.id}`, 350);
-      return;
+    U.byId("payNow").disabled = true;
+    U.byId("payNow").textContent = "Đang khởi tạo...";
+
+    try {
+        const returnUrl = window.location.origin + window.location.pathname.replace("payment-deposit.html", "payment-result.html");
+        const res = await Auth.fetchWithAuth(`${C.API_BASE_URL}/payments/deposit/create`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                bookingId: bookingId,
+                paymentMethod: method,
+                returnUrl: returnUrl
+            })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Lỗi khởi tạo thanh toán");
+
+        if (data.paymentUrl) {
+            // Redirect to VNPay
+            window.location.href = data.paymentUrl;
+        } else {
+            throw new Error("Không nhận được URL thanh toán từ hệ thống.");
+        }
+    } catch (e) {
+        U.renderToast(e.message, "danger");
+        U.byId("payNow").disabled = false;
+        U.byId("payNow").textContent = "Tiếp tục thanh toán";
     }
-    window.VivuCarSaveDB();
-    location.href = `payment-result.html?bookingId=${booking.id}&status=success`;
   }
 
-  render();
+  root.innerHTML = "<p class='p-8 text-center text-gray-500'>Đang tải dữ liệu...</p>";
+  fetchBooking();
 })();

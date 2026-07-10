@@ -4,16 +4,16 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Môn học |  |
-| Mã môn học |  |
-| Lớp |  |
-| Học kỳ |  |
-| Tên bài tập / Project |  |
-| Tên sinh viên / Nhóm |  |
-| MSSV / Danh sách MSSV |  |
-| Giảng viên hướng dẫn |  |
-| Ngày bắt đầu |  |
-| Ngày cập nhật gần nhất |  |
+| Môn học | Building Cross-Platform Back-End Application With .NET |
+| Mã môn học | PRN232 |
+| Lớp | SE18D05 |
+| Học kỳ | 8 |
+| Tên bài tập / Project | VivuCar |
+| Tên sinh viên / Nhóm | Nhóm 4 |
+| MSSV / Danh sách MSSV | DE180117 |
+| Giảng viên hướng dẫn | QuangLTN3 |
+| Ngày bắt đầu | 16/05/2026 |
+| Ngày cập nhật gần nhất | 01/06/2026 |
 
 ---
 
@@ -36,15 +36,15 @@ Sinh viên/nhóm cần ghi lại:
 
 Đánh dấu các công cụ AI đã sử dụng.
 
-- [ ] ChatGPT
+- [ x ] ChatGPT
 - [ ] Gemini
 - [ ] Claude
 - [ ] GitHub Copilot
 - [ ] Cursor
-- [ ] Antigravity
+- [ x ] Antigravity
 - [ ] Microsoft Copilot
 - [ ] Perplexity
-- [ ] Công cụ khác: ....................................
+- [ x ] Công cụ khác: Stitch
 
 ---
 
@@ -52,9 +52,9 @@ Sinh viên/nhóm cần ghi lại:
 
 | STT | Ngày | Công cụ AI | Mục đích | Prompt tóm tắt | Kết quả chính | Có sử dụng vào bài không? | Minh chứng |
 |---:|---|---|---|---|---|---|---|
-| 1 |  |  |  |  |  | Có / Không |  |
-| 2 |  |  |  |  |  | Có / Không |  |
-| 3 |  |  |  |  |  | Có / Không |  |
+| 1 | 16/05/2026 | Stitch | Thiết kế layout UI Admin | Tạo dashboard quản trị responsive cho hệ thống thuê xe | Gợi ý 5 màn hình Admin | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 1 |
+| 2 | 01/06/2026 | ChatGPT | Khởi tạo cấu trúc dự án | Tạo backend Web API và frontend Razor Pages | Tạo skeleton dự án, cấu hình dependency và kiểm tra build | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 2 |
+| 3 | 07/07/2026 | Antigravity | Tích hợp Backend API Booking, Payment, Auth vào Frontend | Xem backend đã có gì, tích hợp API, thêm GPLX 2 mặt | Sửa DB + Migration; cập nhật 6 file JS tích hợp API thật | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 3 |
 | 4 |  |  |  |  |  | Có / Không |  |
 | 5 |  |  |  |  |  | Có / Không |  |
 | 6 |  |  |  |  |  | Có / Không |  |
@@ -75,16 +75,27 @@ Sinh viên/nhóm cần ghi lại:
 
 | Nội dung | Thông tin |
 |---|---|
-| Ngày sử dụng |  |
-| Công cụ AI | ChatGPT / Gemini / Claude / GitHub Copilot / Cursor / Antigravity / Khác |
-| Mục đích |  |
-| Phần việc liên quan | Requirement / Design / Database / Coding / Testing / Debug / Report / Presentation / Other |
-| Mức độ sử dụng | Hỏi ý tưởng / Hỏi giải thích / Hỏi review / Hỏi debug / Hỏi sinh code / Hỏi tối ưu |
+| Ngày sử dụng | 16/05/2026 |
+| Công cụ AI | Stitch |
+| Mục đích | Thiết kế layout UI cho trang Admin |
+| Phần việc liên quan | Design / Coding |
+| Mức độ sử dụng | Hỏi ý tưởng / Hỏi sinh code |
 
 #### 5.1. Prompt nguyên văn
 
 ```text
-Dán nguyên văn prompt đã hỏi AI tại đây.
+Bạn là Senior Frontend Developer chuyên thiết kế Admin Dashboard bằng HTML5 và
+Tailwind CSS cho hệ thống thuê xe. Hãy tạo giao diện quản trị hiện đại,
+responsive theo phong cách SaaS dashboard chuyên nghiệp như Uber Admin hoặc
+Grab Merchant. Hệ thống bao gồm các chức năng: quản lý danh mục phương tiện với
+CRUD xe, upload và preview hình ảnh, filter, pagination và block/unblock xe;
+dashboard thống kê doanh thu với biểu đồ trực quan và chức năng export
+Excel/PDF; quản lý voucher với tạo mã giảm giá, thiết lập điều kiện áp dụng và
+theo dõi trạng thái, hiệu suất voucher. Giao diện cần có sidebar, navbar, cards,
+tables, modal confirm, status badge, search/filter toolbar và sử dụng mock data
+thực tế. Xuất code bằng HTML5 kết hợp Tailwind CSS CDN, code sạch, có comment,
+hỗ trợ responsive cho mobile, tablet và desktop, sử dụng Heroicons hoặc
+FontAwesome.
 ```
 
 #### 5.2. Bối cảnh khi viết prompt
@@ -92,7 +103,8 @@ Dán nguyên văn prompt đã hỏi AI tại đây.
 Mô tả ngắn gọn vì sao sinh viên/nhóm cần dùng prompt này.
 
 ```text
-Viết tại đây...
+Nhóm cần một bản phác thảo UI Admin để xác định bố cục và các thành phần giao
+diện trước khi phát triển frontend chi tiết.
 ```
 
 #### 5.3. Kết quả AI trả về
@@ -100,7 +112,8 @@ Viết tại đây...
 Tóm tắt nội dung AI đã trả lời hoặc gợi ý.
 
 ```text
-Viết tại đây...
+Stitch gợi ý 5 màn hình Admin cho các trang quản lý và thống kê, sử dụng bố cục
+dashboard responsive với sidebar, navbar, cards, bảng dữ liệu và bộ lọc.
 ```
 
 #### 5.4. Kết quả đã áp dụng vào bài
@@ -108,7 +121,8 @@ Viết tại đây...
 Mô tả phần nào từ kết quả AI đã được sử dụng vào bài tập/project.
 
 ```text
-Viết tại đây...
+Nhóm sử dụng bố cục tổng thể và danh sách thành phần giao diện làm định hướng
+cho khu vực quản trị VivuCar.
 ```
 
 #### 5.5. Phần sinh viên/nhóm đã chỉnh sửa hoặc cải tiến
@@ -116,17 +130,18 @@ Viết tại đây...
 Mô tả sinh viên/nhóm đã thay đổi, kiểm tra, sửa lỗi hoặc cải tiến gì so với kết quả AI trả về.
 
 ```text
-Viết tại đây...
+Nhóm rà soát lại các thành phần, chọn phần phù hợp với nghiệp vụ VivuCar và
+tiếp tục điều chỉnh nội dung, dữ liệu mẫu, luồng thao tác theo yêu cầu thực tế.
 ```
 
 #### 5.6. Đánh giá chất lượng prompt
 
 Đánh dấu các nhận xét phù hợp.
 
-- [ ] Prompt rõ ràng
-- [ ] Prompt có đủ bối cảnh
+- [ x ] Prompt rõ ràng
+- [ x ] Prompt có đủ bối cảnh
 - [ ] Prompt còn thiếu thông tin
-- [ ] Prompt tạo ra kết quả tốt
+- [ x ] Prompt tạo ra kết quả tốt
 - [ ] Prompt tạo ra kết quả chưa phù hợp
 - [ ] Cần hỏi lại AI nhiều lần
 - [ ] Cần tự kiểm tra và chỉnh sửa nhiều
@@ -136,17 +151,17 @@ Viết tại đây...
 
 | Loại minh chứng | Nội dung |
 |---|---|
-| Link commit |  |
-| File liên quan |  |
-| Screenshot |  |
-| Kết quả chạy/test |  |
+| Link commit | Chưa cập nhật |
+| File liên quan | Giao diện Admin |
+| Screenshot | Chưa cập nhật |
+| Kết quả chạy/test | Đã rà soát layout và khả năng hiển thị responsive |
 | Link tài liệu/báo cáo |  |
-| Ghi chú khác |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
 
 #### 5.8. Ghi chú thêm
 
 ```text
-Viết tại đây...
+Kết quả được sử dụng làm định hướng UI, không áp dụng nguyên trạng.
 ```
 
 ---
@@ -155,68 +170,78 @@ Viết tại đây...
 
 | Nội dung | Thông tin |
 |---|---|
-| Ngày sử dụng |  |
-| Công cụ AI | ChatGPT / Gemini / Claude / GitHub Copilot / Cursor / Antigravity / Khác |
-| Mục đích |  |
-| Phần việc liên quan | Requirement / Design / Database / Coding / Testing / Debug / Report / Presentation / Other |
-| Mức độ sử dụng | Hỏi ý tưởng / Hỏi giải thích / Hỏi review / Hỏi debug / Hỏi sinh code / Hỏi tối ưu |
+| Ngày sử dụng | 01/06/2026 |
+| Công cụ AI | ChatGPT |
+| Mục đích | Khởi tạo cấu trúc backend ASP.NET Core Web API và frontend Razor Pages |
+| Phần việc liên quan | Design / Coding / Testing / Debug |
+| Mức độ sử dụng | Hỏi sinh code / Hỏi debug |
 
 #### 5.1. Prompt nguyên văn
 
 ```text
-Dán nguyên văn prompt đã hỏi AI tại đây.
+Thiết lập dự án VivuCar với backend sử dụng ASP.NET Core Web API và frontend
+sử dụng Razor Pages. Backend gồm các project API, BusinessObjects, DataAccess,
+Repositories và Services. Cài đặt OData, Swagger, Entity Framework Core,
+SQL Server provider và migration support. Thiết lập project reference đúng
+chiều phụ thuộc. Tạo thêm file cần thiết nhưng không xóa file đang có sẵn.
 ```
 
 #### 5.2. Bối cảnh khi viết prompt
 
 ```text
-Viết tại đây...
+Repository chưa có source code ứng dụng. Nhóm cần khởi tạo nền tảng .NET 8
+đúng cấu trúc để tiếp tục phát triển backend và frontend.
 ```
 
 #### 5.3. Kết quả AI trả về
 
 ```text
-Viết tại đây...
+ChatGPT tạo hai solution .NET 8; cài package cần thiết; thiết lập project
+reference; cấu hình Swagger, OData, Entity Framework Core, SQL Server; tạo
+VivuCarDbContext và API proxy để Razor Pages gọi backend.
 ```
 
 #### 5.4. Kết quả đã áp dụng vào bài
 
 ```text
-Viết tại đây...
+Nhóm sử dụng cấu trúc phân tầng backend, Razor Pages frontend, cấu hình DI,
+Swagger, OData, DbContext SQL Server, API proxy và .gitignore cho bin/obj.
 ```
 
 #### 5.5. Phần sinh viên/nhóm đã chỉnh sửa hoặc cải tiến
 
 ```text
-Viết tại đây...
+Nhóm build và kiểm tra runtime sau khi tạo project. Khi phát sinh lỗi liên quan
+đến UseSqlServer, nhóm chuyển phần đăng ký DbContext về tầng DataAccess. Nhóm
+cũng đối chiếu launch profile và sửa URL backend thành https://localhost:7005/.
 ```
 
 #### 5.6. Đánh giá chất lượng prompt
 
-- [ ] Prompt rõ ràng
-- [ ] Prompt có đủ bối cảnh
+- [ x ] Prompt rõ ràng
+- [ x ] Prompt có đủ bối cảnh
 - [ ] Prompt còn thiếu thông tin
-- [ ] Prompt tạo ra kết quả tốt
+- [ x ] Prompt tạo ra kết quả tốt
 - [ ] Prompt tạo ra kết quả chưa phù hợp
 - [ ] Cần hỏi lại AI nhiều lần
-- [ ] Cần tự kiểm tra và chỉnh sửa nhiều
-- [ ] Kết quả AI có lỗi hoặc chưa chính xác
+- [ x ] Cần tự kiểm tra và chỉnh sửa nhiều
+- [ x ] Kết quả AI có lỗi hoặc chưa chính xác
 
 #### 5.7. Minh chứng liên quan
 
 | Loại minh chứng | Nội dung |
 |---|---|
-| Link commit |  |
-| File liên quan |  |
+| Link commit | Chưa tạo commit |
+| File liên quan | `VivuCarServer/`, `VivuCarClient/`, `.gitignore` |
 | Screenshot |  |
-| Kết quả chạy/test |  |
+| Kết quả chạy/test | Build backend và frontend thành công: 0 warning, 0 error. Swagger API và Razor Pages trả HTTP 200. |
 | Link tài liệu/báo cáo |  |
-| Ghi chú khác |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
 
 #### 5.8. Ghi chú thêm
 
 ```text
-Viết tại đây...
+Kết quả đã được kiểm tra bằng build và smoke test trước khi ghi nhận.
 ```
 
 ---
@@ -225,11 +250,87 @@ Viết tại đây...
 
 | Nội dung | Thông tin |
 |---|---|
-| Ngày sử dụng |  |
-| Công cụ AI | ChatGPT / Gemini / Claude / GitHub Copilot / Cursor / Antigravity / Khác |
-| Mục đích |  |
-| Phần việc liên quan | Requirement / Design / Database / Coding / Testing / Debug / Report / Presentation / Other |
-| Mức độ sử dụng | Hỏi ý tưởng / Hỏi giải thích / Hỏi review / Hỏi debug / Hỏi sinh code / Hỏi tối ưu |
+| Ngày sử dụng | 07/07/2026 |
+| Công cụ AI | Antigravity |
+| Mục đích | Tích hợp Backend API (Auth, Booking, Payment) vào Frontend; thêm GPLX 2 mặt |
+| Phần việc liên quan | Database / Coding / Debug |
+| Mức độ sử dụng | Hỏi sinh code / Hỏi debug |
+
+#### 5.1. Prompt nguyên văn
+
+```text
+xem backend đã có gì rồi để tích hợp lên giao diện thì làm luôn một thể. sau khi
+hoàn thành hãy điền vào cái doc này sao cho hợp lí cho tôi. sau khi làm xong
+hãy note cho tôi các phần BE đã hoàn thành.
+
+hiện tôi đang muốn nếu người dùng đó đã có ảnh bằng lái trong profile rồi thì lấy ảnh
+bằng lái trong profile. còn nếu chưa có thì trong trang đặt xe thêm cái upload ảnh
+gplx lên 2 mặt để người dùng khỏi phải qua trang profile upload.
+```
+
+#### 5.2. Bối cảnh khi viết prompt
+
+```text
+Backend đã hoàn thành module Booking và Payment nhưng Frontend vẫn dùng Mock Data.
+Nhóm muốn chuyển Frontend sang gọi API thật, đồng thời cải thiện UX
+(tự động lấy ảnh GPLX có sẵn trong profile thay vì buộc upload lại).
+```
+
+#### 5.3. Kết quả AI trả về
+
+```text
+AI thực hiện toàn bộ:
+- Scan các file Backend để xác định API endpoint và DTO shape
+- Sửa 4 file Backend (Models, Configurations, DTO, Service) để support 2 ảnh GPLX
+- Tạo EF Core Migration và chạy dotnet ef database update
+- Viết lại 6 file JS Frontend: auth.js, booking-checkout.js, my-bookings.js,
+  booking-detail.js, payment-deposit.js, payment-result.js
+- Cập nhật constants.js với API_BASE_URL
+```
+
+#### 5.4. Kết quả đã áp dụng vào bài
+
+```text
+Áp dụng toàn bộ. Cần commit lên GitHub để các thành viên khác pull về và
+chạy dotnet ef database update cho đồng bộ DB.
+```
+
+#### 5.5. Phần sinh viên/nhóm đã chỉnh sửa hoặc cải tiến
+
+```text
+Nhóm rà soát tên field trong DTO sau khi AI thực hiện để đảm bảo tham chiếu
+cũ (DriverLicenseImageUrl) đã được cập nhật toàn bộ trong BookingService.cs.
+Nhóm kiểm tra log migration để xác nhận build thành công trước khi gửi code.
+```
+
+#### 5.6. Đánh giá chất lượng prompt
+
+- [ x ] Prompt rõ ràng
+- [ x ] Prompt có đủ bối cảnh
+- [ ] Prompt còn thiếu thông tin
+- [ x ] Prompt tạo ra kết quả tốt
+- [ ] Prompt tạo ra kết quả chưa phù hợp
+- [ ] Cần hỏi lại AI nhiều lần
+- [ x ] Cần tự kiểm tra và chỉnh sửa nhiều
+- [ ] Kết quả AI có lỗi hoặc chưa chính xác
+
+#### 5.7. Minh chứng liên quan
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | Chưa tạo commit |
+| File liên quan | `auth.js`, `booking-checkout.js`, `my-bookings.js`, `booking-detail.js`, `payment-deposit.js`, `payment-result.js`, `DriverDocument.cs`, `BookingDriverInfo.cs`, `BookingDtos.cs` |
+| Screenshot |  |
+| Kết quả chạy/test | EF Migration AddDriverLicenseBackImage: Build succeeded. Backend 0 error. |
+| Link tài liệu/báo cáo |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
+
+#### 5.8. Ghi chú thêm
+
+```text
+Có 1 Open Issue: Backend chưa có API GET /api/bookings/owner-requests nên
+trang owner-booking-requests.js vẫn chạy Mock Data. Cần BE bổ sung sau.
+```
 
 #### 5.1. Prompt nguyên văn
 
@@ -298,7 +399,11 @@ Chọn một prompt có ảnh hưởng lớn nhất đến bài tập/project.
 ### 6.1. Prompt được chọn
 
 ```text
-Dán prompt quan trọng nhất tại đây.
+Tích hợp API Backend vào Frontend (auth.js, booking-checkout.js, my-bookings.js,
+booking-detail.js, payment-deposit.js, payment-result.js). Trong đó:
+- auth.js gọi POST /api/auth/login, lưu JWT Token, có fetchWithAuth() dùng chung
+- booking-checkout.js gọi price-preview, check-availability và POST /api/bookings
+  với logic tự động lấy GPLX từ profile nếu đã có, ngược lại hiển form Upload
 ```
 
 ### 6.2. Vì sao prompt này quan trọng?

@@ -1,0 +1,50 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<section class="auth-shell">
+    <div class="auth-intro">
+        <p class="brand-mark" aria-label="VivuCar">V</p>
+        <p class="eyebrow">VivuCar</p>
+        <h1>Quản lý chuyến đi của bạn</h1>
+        <p>Đăng nhập để đặt xe, theo dõi đơn thuê và làm việc theo đúng vai trò tài khoản.</p>
+    </div>
+
+    <div class="auth-panel">
+        <form id="login-form" class="auth-form">
+            <div>
+                <p class="eyebrow">Tài khoản</p>
+                <h2>Đăng nhập</h2>
+            </div>
+
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="username" required />
+
+            <label for="password">Mật khẩu</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required />
+
+            <p id="auth-message" class="auth-message" role="status"></p>
+            <button id="login-button" type="submit">Đăng nhập</button>
+        </form>
+
+        <div id="session-view" class="session-view" hidden>
+            <div>
+                <p class="eyebrow">Phiên hiện tại</p>
+                <h2 id="user-name"></h2>
+            </div>
+            <dl>
+                <div>
+                    <dt>Email</dt>
+                    <dd id="user-email"></dd>
+                </div>
+                <div>
+                    <dt>Vai trò</dt>
+                    <dd id="user-role"></dd>
+                </div>
+            </dl>
+            <button id="logout-button" class="secondary-button" type="button">Đăng xuất</button>
+        </div>
+    </div>
+</section>

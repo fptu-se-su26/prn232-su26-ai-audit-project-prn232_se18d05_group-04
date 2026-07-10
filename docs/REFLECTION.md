@@ -4,15 +4,15 @@
 
 | Thông tin | Nội dung |
 |---|---|
-| Môn học |  |
-| Mã môn học |  |
-| Lớp |  |
-| Học kỳ |  |
-| Tên bài tập / Project |  |
-| Tên sinh viên / Nhóm |  |
-| MSSV / Danh sách MSSV |  |
-| Giảng viên hướng dẫn |  |
-| Ngày hoàn thành reflection |  |
+| Môn học | Building Cross-Platform Back-End Application With .NET |
+| Mã môn học | PRN232 |
+| Lớp | SE18D05 |
+| Học kỳ | 8 |
+| Tên bài tập / Project | VivuCar |
+| Tên sinh viên / Nhóm | Nhóm 4 |
+| MSSV / Danh sách MSSV | DE180117 |
+| Giảng viên hướng dẫn | QuangLTN3 |
+| Ngày hoàn thành reflection | 01/06/2026 |
 
 ---
 
@@ -35,7 +35,11 @@ Reflection cần thể hiện:
 Mô tả ngắn gọn quá trình sử dụng AI trong bài tập/project này.
 
 ```text
-Viết tại đây...
+Nhóm đã sử dụng Stitch để phác thảo layout UI Admin, ChatGPT để khởi tạo
+nền tảng backend ASP.NET Core Web API cùng frontend Razor Pages, và Antigravity
+để tích hợp toàn bộ Backend API (Auth, Booking, Payment) vào Frontend HTML/JS,
+cũng như sửa DB thêm GPLX 2 mặt. Kết quả AI được dùng làm điểm khởi đầu,
+sau đó nhóm rà soát, build kiểm tra và xác nhận runtime trước khi áp dụng.
 ```
 
 Gợi ý:
@@ -52,26 +56,29 @@ Gợi ý:
 
 Đánh dấu các công cụ AI đã sử dụng.
 
-- [ ] ChatGPT
+- [ x ] ChatGPT
 - [ ] Gemini
 - [ ] Claude
 - [ ] GitHub Copilot
 - [ ] Cursor
-- [ ] Antigravity
+- [ x ] Antigravity
 - [ ] Microsoft Copilot
 - [ ] Perplexity
-- [ ] Công cụ khác: ....................................
+- [ x ] Công cụ khác: Stitch
 
 ### Công cụ được sử dụng nhiều nhất
 
 ```text
-Viết tại đây...
+Antígravity được sử dụng nhiều nhất trong giai đoạn tích hợp API.
 ```
 
 ### Lý do sử dụng công cụ đó
 
 ```text
-Viết tại đây...
+ChatGPT được sử dụng để dựng skeleton dự án, cài đặt dependency và hỗ trợ
+debug lỗi build. Stitch được sử dụng ở giai đoạn phác thảo giao diện Admin.
+Antigravity được sử dụng để tích hợp API Backend vào Frontend HTML/JS,
+viết lại các file JS, sửa DB Model, tạo EF Migration và điền tài liệu.
 ```
 
 ---
@@ -82,25 +89,27 @@ Viết tại đây...
 
 - [ ] Hiểu yêu cầu đề bài
 - [ ] Phân tích bài toán
-- [ ] Tìm ý tưởng giải pháp
+- [ x ] Tìm ý tưởng giải pháp
 - [ ] Thiết kế database
-- [ ] Thiết kế giao diện
-- [ ] Thiết kế kiến trúc hệ thống
-- [ ] Viết code mẫu
-- [ ] Debug lỗi
+- [ x ] Thiết kế giao diện
+- [ x ] Thiết kế kiến trúc hệ thống
+- [ x ] Viết code mẫu
+- [ x ] Debug lỗi
 - [ ] Viết test case
-- [ ] Review code
+- [ x ] Review code
 - [ ] Tối ưu code
 - [ ] Kiểm tra bảo mật
 - [ ] Viết báo cáo
 - [ ] Chuẩn bị thuyết trình
-- [ ] Tìm hiểu công nghệ mới
+- [ x ] Tìm hiểu công nghệ mới
 - [ ] Khác: ....................................
 
 ### Mô tả chi tiết
 
 ```text
-Viết tại đây...
+Stitch hỗ trợ hình dung nhanh các màn hình quản trị, bố cục dashboard và thành
+phần UI cần thiết. ChatGPT hỗ trợ tạo cấu trúc solution, project reference,
+Swagger, OData, EF Core, DbContext SQL Server, Razor Pages và API proxy.
 ```
 
 ---
@@ -110,7 +119,9 @@ Viết tại đây...
 ### 6.1. Những điểm AI giúp em/nhóm học tốt hơn
 
 ```text
-Viết tại đây...
+AI giúp nhóm hiểu rõ hơn cách tổ chức backend theo tầng và quy trình kiểm tra
+một skeleton dự án .NET. Việc xử lý lỗi build giúp nhóm nhận thấy cấu hình DI
+cần được đặt ở module sở hữu dependency tương ứng.
 ```
 
 Gợi ý:
@@ -118,15 +129,18 @@ Gợi ý:
 - Hiểu bài nhanh hơn.
 - Có thêm ví dụ minh họa.
 - Biết cách debug lỗi.
-- Biết thêm cách tổ chức code.
-- Biết thêm cách thiết kế giải pháp.
-- Biết cách viết test case.
 - Biết cách cải thiện báo cáo hoặc slide.
 
 ### 6.2. Những điểm AI chưa giúp tốt hoặc gây khó khăn
 
 ```text
-Viết tại đây...
+AI hỗ trợ nhiều nhất ở 3 giai đoạn: (1) Phác thảo UI Admin qua Stitch,
+(2) Dựng skeleton Backend + Frontend thông qua ChatGPT, (3) Tích hợp toàn bộ
+API và sửa DB qua Antigravity. AI giúp tiết kiệm thời gian phát triển đáng kể.
+
+Kết quả AI ban đầu chưa hoàn toàn phù hợp: đăng ký DbContext đặt ở API khiến
+extension UseSqlServer không khả dụng tại compile time. URL backend frontend
+cũng chưa khớp launch profile. Nhóm phải tự build, kiểm tra và chỉnh sửa.
 ```
 
 Gợi ý:
@@ -142,14 +156,15 @@ Gợi ý:
 ### 6.3. Em/nhóm có bị phụ thuộc vào AI không?
 
 - [ ] Không phụ thuộc
-- [ ] Phụ thuộc ít
+- [ x ] Phụ thuộc ít
 - [ ] Phụ thuộc trung bình
 - [ ] Phụ thuộc nhiều
 
 Giải thích:
 
 ```text
-Viết tại đây...
+Nhóm sử dụng AI để tăng tốc bước phác thảo và khởi tạo, nhưng vẫn tự kiểm tra
+dependency, sửa lỗi cấu hình và xác nhận kết quả bằng build cùng smoke test.
 ```
 
 ---
@@ -158,12 +173,12 @@ Viết tại đây...
 
 Đánh dấu các cách đã sử dụng.
 
-- [ ] Chạy thử chương trình
-- [ ] Kiểm tra output
+- [ x ] Chạy thử chương trình
+- [ x ] Kiểm tra output
 - [ ] Viết test case
-- [ ] So sánh với yêu cầu đề bài
+- [ x ] So sánh với yêu cầu đề bài
 - [ ] Đối chiếu với tài liệu môn học
-- [ ] Review code
+- [ x ] Review code
 - [ ] Hỏi lại giảng viên
 - [ ] Tra cứu tài liệu chính thống
 - [ ] Thảo luận với thành viên nhóm
@@ -174,17 +189,19 @@ Viết tại đây...
 ### Mô tả quá trình kiểm chứng
 
 ```text
-Viết tại đây...
+Nhóm build backend và frontend để phát hiện lỗi compile-time. Sau khi sửa,
+nhóm chạy lại hai solution và kiểm tra HTTP endpoint: Swagger API trả 200 và
+trang Razor Pages trả 200. Cấu hình URL cũng được đối chiếu với launch profile.
 ```
 
 ### Ví dụ cụ thể về một lần kiểm chứng
 
 | Nội dung | Mô tả |
 |---|---|
-| AI đã gợi ý gì? |  |
-| Em/nhóm đã kiểm tra bằng cách nào? |  |
-| Kết quả kiểm tra | Đúng / Sai / Cần chỉnh sửa |
-| Em/nhóm đã xử lý tiếp như thế nào? |  |
+| AI đã gợi ý gì? | Đăng ký DbContext và SQL Server trong bootstrap backend |
+| Em/nhóm đã kiểm tra bằng cách nào? | Build backend solution |
+| Kết quả kiểm tra | Cần chỉnh sửa |
+| Em/nhóm đã xử lý tiếp như thế nào? | Chuyển đăng ký DbContext về tầng DataAccess và build lại thành công |
 
 ---
 
@@ -194,11 +211,11 @@ Ghi lại ít nhất một ví dụ nếu có.
 
 | Nội dung | Mô tả |
 |---|---|
-| AI đã gợi ý gì? |  |
-| Vì sao gợi ý đó sai/chưa phù hợp? |  |
-| Em/nhóm phát hiện bằng cách nào? |  |
-| Em/nhóm đã sửa như thế nào? |  |
-| Bài học rút ra |  |
+| AI đã gợi ý gì? | Đặt phần cấu hình UseSqlServer tại API |
+| Vì sao gợi ý đó sai/chưa phù hợp? | API chưa có dependency compile-time phù hợp và cấu hình này thuộc trách nhiệm DataAccess |
+| Em/nhóm phát hiện bằng cách nào? | Build backend báo lỗi không tìm thấy namespace EntityFrameworkCore |
+| Em/nhóm đã sửa như thế nào? | Tạo extension cấu hình trong DataAccess và để API chỉ gọi extension DI |
+| Bài học rút ra | Cần kiểm tra dependency graph và ownership của từng tầng |
 
 Nếu không có trường hợp AI gợi ý sai, hãy ghi rõ:
 
@@ -210,23 +227,12 @@ Trong quá trình thực hiện, em/nhóm chưa ghi nhận trường hợp AI g�
 
 ## 9. Phần đóng góp thật sự của sinh viên/nhóm
 
-Mô tả rõ phần nào là đóng góp chính của sinh viên/nhóm, không phải chỉ copy từ AI.
-
-```text
-Viết tại đây...
-```
-
-Gợi ý:
-
-- Tự phân tích yêu cầu.
-- Tự chọn giải pháp.
-- Tự chỉnh sửa code.
-- Tự kiểm tra output.
-- Tự thiết kế logic.
-- Tự sửa lỗi.
-- Tự viết báo cáo theo hiểu biết của mình.
-- Tự đánh giá ưu/nhược điểm của sản phẩm.
-- Tự thuyết trình và giải thích sản phẩm.
+| Thành viên | MSSV | Nhiệm vụ chính | Có sử dụng AI không? | Minh chứng đóng góp |
+|---|---|---|---|---|
+| Ngô Sỹ Giá | DE180117 | Backend (Auth, Booking, Payment, DB Migration), Frontend tich hợp API, Tài liệu | Có (Stitch, ChatGPT, Antigravity) | Build thành công, Migration thành công, 6 file JS được cập nhật |
+|  |  |  | Có / Không |  |
+|  |  |  | Có / Không |  |
+|  |  |  | Có / Không |  |
 
 ---
 
@@ -234,13 +240,12 @@ Gợi ý:
 
 | Nội dung | Trước khi dùng AI | Sau khi dùng AI | Cải thiện đạt được |
 |---|---|---|---|
-| Hiểu yêu cầu |  |  |  |
-| Phân tích bài toán |  |  |  |
-| Thiết kế giải pháp |  |  |  |
-| Code/Implementation |  |  |  |
-| Debug/Testing |  |  |  |
-| Báo cáo/Thuyết trình |  |  |  |
-| Làm việc nhóm |  |  |  |
+| Hiểu yêu cầu | Chỉ đọc spec text | Có AI đối chiếu DB schema | Rõ hơn về mapping field và enum |
+| Phân tích bài toán | Thủ công, mất thời gian | AI scan toàn bộ file hiện tại | Nhanh hơn, ít sai sót hơn |
+| Thiết kế giải pháp | Cần nhiều thời gian phác thảo | AI gợi ý skeleton nhanh | Tăng tốc giai đoạn kick-off |
+| Code/Implementation | Tự viết toàn bộ từ đầu | AI sinh code; nhóm review và kiểm tra | Giảm tải viết boilerplate |
+| Debug/Testing | Tự đọc lỗi, mất thời gian | AI gợi ý hướng sửa, nhóm xác nhận | Phat hiện lỗi nhanh hơn |
+| Báo cáo/Thuyết trình | Viết thủ công | AI điền mẫu, nhóm chỉnh nội dung | Tiết kiệm thời gian ghi chép |
 
 ---
 
@@ -249,7 +254,10 @@ Gợi ý:
 Sau bài tập/project này, em/nhóm học được gì về kiến thức môn học?
 
 ```text
-Viết tại đây...
+Nhóm hiểu rõ hơn cách cấu hình ASP.NET Core theo tầng, cách đăng ký DI đúng
+Module, EF Core Migration workflow và cách Frontend gọi JWT API qua Bearer Token.
+Nhóm cũng thực hành thiết kế UX/UI: kiểm tra dữ liệu profile trước khi hiển
+form upload, giúp tăng trải nghiệm người dùng rõ rệt.
 ```
 
 Gợi ý:
@@ -271,7 +279,9 @@ Gợi ý:
 Sau bài tập/project này, em/nhóm học được gì về việc sử dụng AI một cách minh bạch, có trách nhiệm?
 
 ```text
-Viết tại đây...
+AI cần được sử dụng như công cụ hỗ trợ. Mọi kết quả quan trọng phải được ghi
+nhận, kiểm tra và chỉnh sửa trước khi áp dụng. Nhóm cần hiểu được cấu trúc code
+và chịu trách nhiệm với sản phẩm cuối cùng.
 ```
 
 Gợi ý:
@@ -290,17 +300,18 @@ Gợi ý:
 
 Đánh dấu các cam kết phù hợp.
 
-- [ ] Không dùng AI để làm toàn bộ bài mà không hiểu nội dung.
-- [ ] Không nộp nguyên văn kết quả AI nếu chưa kiểm tra.
-- [ ] Không che giấu việc sử dụng AI trong các phần quan trọng.
-- [ ] Không dùng AI để tạo nội dung sai lệch hoặc gian lận.
-- [ ] Không dùng AI thay thế hoàn toàn quá trình học.
-- [ ] Không bỏ qua yêu cầu, rubric hoặc hướng dẫn của giảng viên.
+- [ x ] Không dùng AI để làm toàn bộ bài mà không hiểu nội dung.
+- [ x ] Không nộp nguyên văn kết quả AI nếu chưa kiểm tra.
+- [ x ] Không che giấu việc sử dụng AI trong các phần quan trọng.
+- [ x ] Không dùng AI để tạo nội dung sai lệch hoặc gian lận.
+- [ x ] Không dùng AI thay thế hoàn toàn quá trình học.
+- [ x ] Không bỏ qua yêu cầu, rubric hoặc hướng dẫn của giảng viên.
 
 ### Giải thích thêm nếu có
 
 ```text
-Viết tại đây...
+Nhóm cam kết sử dụng AI minh bạch, có kiểm chứng và chỉ xem AI là công cụ hỗ
+trợ. Thành viên thực hiện phải hiểu và giải thích được nội dung đã áp dụng.
 ```
 
 ---
@@ -310,7 +321,9 @@ Viết tại đây...
 Lần sau em/nhóm sẽ sử dụng AI tốt hơn bằng cách nào?
 
 ```text
-Viết tại đây...
+Nhóm sẽ cung cấp context cụ thể hơn, ghi log ngay sau mỗi lần sử dụng AI và
+liên kết minh chứng với commit hoặc screenshot. Các gợi ý kỹ thuật sẽ tiếp tục
+được kiểm tra bằng build, test và tài liệu chính thức.
 ```
 
 Gợi ý:
@@ -333,13 +346,13 @@ Sinh viên/nhóm tự đánh giá theo thang 1-5.
 
 | Tiêu chí | Điểm tự đánh giá 1-5 | Ghi chú |
 |---|:---:|---|
-| Ghi nhận việc dùng AI trung thực |  |  |
-| Prompt có mục tiêu rõ ràng |  |  |
-| Kiểm chứng kết quả AI |  |  |
-| Tự chỉnh sửa/cải tiến |  |  |
-| Hiểu nội dung đã nộp |  |  |
-| Reflection có chiều sâu |  |  |
-| Sử dụng AI có trách nhiệm |  |  |
+| Ghi nhận việc dùng AI trung thực | 5 | Đã ghi lại hai lần sử dụng AI |
+| Prompt có mục tiêu rõ ràng | 4 | Có nêu công nghệ, cấu trúc và đầu ra mong muốn |
+| Kiểm chứng kết quả AI | 4 | Đã build và smoke test; chưa có test tự động |
+| Tự chỉnh sửa/cải tiến | 4 | Đã sửa dependency và URL backend |
+| Hiểu nội dung đã nộp | 4 | Đã rà soát cấu trúc và trách nhiệm từng tầng |
+| Reflection có chiều sâu | 4 | Đã ghi nhận lỗi, cách sửa và bài học |
+| Sử dụng AI có trách nhiệm | 5 | Không áp dụng nguyên trạng kết quả AI |
 
 ---
 
@@ -350,25 +363,30 @@ Trả lời ngắn gọn các câu hỏi sau.
 ### 16.1. Nếu giảng viên hỏi về phần AI đã hỗ trợ, em/nhóm có giải thích lại được không?
 
 ```text
-Viết tại đây...
+Chúc. Nhóm có thể giải thích: fetchWithAuth() hoạt động như thế nào, tại sao
+DriverLicenseImageUrl phải đổi thành 2 field, EF Core Migration thay đổi DB
+vật lý như thế nào, và lý do Backend chưa tích hợp API Owner Requests.
 ```
 
 ### 16.2. Nếu không có AI, em/nhóm có thể tự làm lại phần quan trọng nhất không?
 
 ```text
-Viết tại đây...
+Có. AI giúp tăng tốc bước khởi tạo nhưng nhóm đã tự build, đọc lỗi, điều chỉnh
+dependency và xác nhận kết quả runtime nên có thể thực hiện lại theo quy trình.
 ```
 
 ### 16.3. Phần nào trong bài thể hiện rõ nhất năng lực thật sự của em/nhóm?
 
 ```text
-Viết tại đây...
+Khả năng rà soát cấu trúc dự án, sửa lỗi dependency và kiểm chứng kết quả bằng
+build cùng smoke test thể hiện rõ nhất năng lực thực tế của nhóm.
 ```
 
 ### 16.4. Em/nhóm muốn cải thiện kỹ năng nào sau bài này?
 
 ```text
-Viết tại đây...
+Nhóm muốn cải thiện kỹ năng thiết kế database, viết test tự động, kiểm tra bảo
+mật và liên kết minh chứng AI với commit hoặc screenshot đầy đủ hơn.
 ```
 
 ---

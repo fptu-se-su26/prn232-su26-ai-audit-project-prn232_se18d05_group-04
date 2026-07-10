@@ -21,12 +21,12 @@
 
 Đánh dấu các công cụ AI đã sử dụng trong quá trình thực hiện bài tập/project.
 
-- [ ] ChatGPT
+- [ x ] ChatGPT
 - [ x ] Gemini
 - [ ] Claude
 - [ ] GitHub Copilot
 - [ ] Cursor
-- [ ] Antigravity
+- [ x ] Antigravity
 - [ ] Perplexity
 - [ ] Microsoft Copilot
 - [ x ] Công cụ khác: Google Stitch
@@ -70,7 +70,7 @@ Nhóm sử dụng AI để hỗ trợ tăng tốc quá trình phát triển hệ
 | Nội dung | Thông tin |
 |---|---|
 | Ngày sử dụng | 16/5/2026 |
-| MSSV | DE180116 |
+| MSSV | DE180117 |
 | Công cụ AI | Stitch |
 | Mục đích sử dụng | Thiết kế layout UI cho trang của Admin |
 | Phần việc liên quan | Frontend |
@@ -95,7 +95,9 @@ Tạo ra 5 màn hình của Admin cho các trang quản lý, thông kê
 Mô tả rõ phần nào được sử dụng lại từ gợi ý của AI.
 
 ```text
-Viết tại đây...
+Nhóm sử dụng bố cục tổng thể của dashboard Admin gồm sidebar, navbar, cards,
+bảng dữ liệu, bộ lọc, phân trang, status badge và modal xác nhận làm định hướng
+cho giao diện quản trị.
 ```
 
 #### 4.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
@@ -103,26 +105,30 @@ Viết tại đây...
 Mô tả sinh viên/nhóm đã thay đổi, kiểm tra, sửa lỗi hoặc cải tiến gì so với gợi ý ban đầu của AI.
 
 ```text
-Viết tại đây...
+Nhóm rà soát lại các màn hình do Stitch gợi ý, chọn các thành phần phù hợp với
+nghiệp vụ VivuCar và tiếp tục điều chỉnh nội dung, dữ liệu mẫu, luồng thao tác
+theo yêu cầu thực tế của dự án.
 ```
 
 #### 4.5. Minh chứng
 
 | Loại minh chứng | Nội dung |
 |---|---|
-| Link commit |  |
-| File liên quan |  |
-| Screenshot |  |
-| Kết quả chạy/test |  |
+| Link commit | Chưa cập nhật |
+| File liên quan | Giao diện Admin |
+| Screenshot | Chưa cập nhật |
+| Kết quả chạy/test | Đã rà soát layout và khả năng hiển thị responsive |
 | Link video demo |  |
-| Ghi chú khác |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
 
 #### 4.6. Nhận xét cá nhân/nhóm
 
 Sinh viên/nhóm học được gì sau lần sử dụng AI này?
 
 ```text
-Viết tại đây...
+AI hỗ trợ tốt ở bước phác thảo giao diện và giúp nhóm hình dung nhanh các màn
+hình quản trị cần có. Tuy nhiên, nhóm vẫn phải đối chiếu với nghiệp vụ thực tế,
+chọn lọc thành phần phù hợp và tự hoàn thiện luồng sử dụng.
 ```
 
 ---
@@ -131,51 +137,64 @@ Viết tại đây...
 
 | Nội dung | Thông tin |
 |---|---|
-| Ngày sử dụng |  |
-| Công cụ AI | ChatGPT / Gemini / Claude / GitHub Copilot / Cursor / Antigravity / Khác |
-| Mục đích sử dụng |  |
-| Phần việc liên quan | Requirement / Design / Database / Frontend / Backend / Testing / Debug / Report / Presentation / Other |
-| Mức độ sử dụng | Hỗ trợ ý tưởng / Hỗ trợ một phần / Hỗ trợ nhiều / Sinh chính nội dung |
+| Ngày sử dụng | 01/06/2026 |
+| MSSV | DE180117 |
+| Công cụ AI | ChatGPT |
+| Mục đích sử dụng | Khởi tạo cấu trúc backend ASP.NET Core Web API và frontend Razor Pages |
+| Phần việc liên quan | Backend / Frontend / Debug |
+| Mức độ sử dụng | Hỗ trợ nhiều |
 
 #### 4.1. Prompt đã sử dụng
 
 ```text
-Dán nguyên văn prompt đã hỏi AI tại đây.
+Thiết lập dự án VivuCar với backend sử dụng ASP.NET Core Web API và frontend
+sử dụng Razor Pages. Backend gồm các project API, BusinessObjects, DataAccess,
+Repositories và Services. Cài đặt OData, Swagger, Entity Framework Core,
+SQL Server provider và migration support. Thiết lập project reference đúng
+chiều phụ thuộc. Tạo thêm file cần thiết nhưng không xóa file đang có sẵn.
 ```
 
 #### 4.2. Kết quả AI gợi ý
 
 ```text
-Viết tại đây...
+AI tạo hai solution .NET 8 cho backend và frontend; cài đặt package cần thiết;
+thiết lập project reference; cấu hình Swagger, OData, Entity Framework Core,
+SQL Server; tạo VivuCarDbContext và API proxy để Razor Pages gọi backend.
 ```
 
 #### 4.3. Phần sinh viên/nhóm đã sử dụng từ AI
 
 ```text
-Viết tại đây...
+Nhóm sử dụng cấu trúc phân tầng backend, Razor Pages frontend, cấu hình DI,
+Swagger, OData, DbContext SQL Server, API proxy và .gitignore cho bin/obj.
 ```
 
 #### 4.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
 
 ```text
-Viết tại đây...
+Nhóm build và kiểm tra runtime sau khi tạo project. Khi backend phát sinh lỗi
+compile-time liên quan đến UseSqlServer, nhóm chuyển phần đăng ký DbContext về
+tầng DataAccess để đúng trách nhiệm module. Nhóm cũng đối chiếu launch profile
+và sửa URL backend của frontend thành https://localhost:7005/.
 ```
 
 #### 4.5. Minh chứng
 
 | Loại minh chứng | Nội dung |
 |---|---|
-| Link commit |  |
-| File liên quan |  |
+| Link commit | Chưa tạo commit |
+| File liên quan | `VivuCarServer/`, `VivuCarClient/`, `.gitignore` |
 | Screenshot |  |
-| Kết quả chạy/test |  |
+| Kết quả chạy/test | Build backend và frontend thành công: 0 warning, 0 error. Swagger API và Razor Pages trả HTTP 200. |
 | Link video demo |  |
-| Ghi chú khác |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
 
 #### 4.6. Nhận xét cá nhân/nhóm
 
 ```text
-Viết tại đây...
+AI giúp giảm thời gian dựng skeleton dự án nhưng kết quả vẫn cần được kiểm tra
+bằng build và smoke test. Nhóm nhận thấy dependency graph, vị trí đăng ký DI và
+cổng chạy local phải được rà soát trước khi tiếp tục phát triển chức năng.
 ```
 
 ---
@@ -184,51 +203,83 @@ Viết tại đây...
 
 | Nội dung | Thông tin |
 |---|---|
-| Ngày sử dụng |  |
-| Công cụ AI | ChatGPT / Gemini / Claude / GitHub Copilot / Cursor / Antigravity / Khác |
-| Mục đích sử dụng |  |
-| Phần việc liên quan | Requirement / Design / Database / Frontend / Backend / Testing / Debug / Report / Presentation / Other |
-| Mức độ sử dụng | Hỗ trợ ý tưởng / Hỗ trợ một phần / Hỗ trợ nhiều / Sinh chính nội dung |
+| Ngày sử dụng | 07/07/2026 |
+| MSSV | DE180117 |
+| Công cụ AI | Antigravity |
+| Mục đích sử dụng | Tích hợp Backend API (Booking, Payment, Auth) vào Frontend HTML/JS; sửa DB thêm GPLX 2 mặt |
+| Phần việc liên quan | Database / Frontend / Backend / Debug |
+| Mức độ sử dụng | Hỗ trợ nhiều |
 
 #### 4.1. Prompt đã sử dụng
 
 ```text
-Dán nguyên văn prompt đã hỏi AI tại đây.
+xem backend đã có gì rồi để tích hợp lên giao diện thì làm luôn một thể.
+hiện tôi đang muốn nếu người dùng đó đã có ảnh bằng lái trong profile rồi thì
+lấy ảnh bằng lái trong profile. còn nếu chưa có thì trong trang đặt xe thêm cái
+upload ảnh gplx lên 2 mặt để người dùng khỏi phải qua trang profile upload
 ```
 
 #### 4.2. Kết quả AI gợi ý
 
+Tóm tắt nội dung AI đã trả lời hoặc gợi ý.
+
 ```text
-Viết tại đây...
+AI phân tích toàn bộ Backend (Controllers, Services, DTOs), xác định API
+cần tích hợp, sau đó thực hiện:
+- Sửa DB Models (DriverDocument.cs, BookingDriverInfo.cs) thêm DriverLicenseFrontImageUrl/BackImageUrl
+- Cập nhật Configuration và DTO tương ứng
+- Tạo EF Core Migration AddDriverLicenseBackImage và update DB
+- Sửa auth.js: thêm fetchWithAuth() gọi API Login thật thay Mock
+- Sửa booking-checkout.js: gọi price-preview, check-availability API và auto-fill GPLX từ profile
+- Sửa my-bookings.js, booking-detail.js: gọi API danh sách và chi tiết đơn
+- Sửa payment-deposit.js: tạo request VNPay qua API thật
+- Sửa payment-result.js: kiểm tra trạng thái thanh toán qua API
 ```
 
 #### 4.3. Phần sinh viên/nhóm đã sử dụng từ AI
 
+Mô tả rõ phần nào được sử dụng lại từ gợi ý của AI.
+
 ```text
-Viết tại đây...
+Nhóm áp dụng toàn bộ logic tích hợp API mà AI tạo ra, bao gồm:
+- Hàm fetchWithAuth() dùng chung để đính kèm JWT Bearer Token
+- Luồng kiểm tra GPLX trong profile trước khi hiển thị form Upload
+- Cấu trúc payload gửi lên POST /api/bookings với DriverInfo đầy đủ 2 ảnh GPLX
+- Migration DB AddDriverLicenseBackImage chạy thành công
 ```
 
 #### 4.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
 
+Mô tả sinh viên/nhóm đã thay đổi, kiểm tra, sửa lỗi hoặc cải tiến gì so với gợi ý ban đầu của AI.
+
 ```text
-Viết tại đây...
+Nhóm rà soát lại tên field DTO (DriverLicenseFrontImageUrl vs DriverLicenseImageUrl)
+và kiểm tra toàn bộ file BookingService.cs có còn tham chiếu tên cũ không.
+Nhóm build Backend để đảm bảo Migration không lỗi compile trước khi apply.
+Nhóm xác nhận lại API endpoint URL (/api/bookings/check-availability) khớp với
+cấu hình Route trong BookingsController.cs.
 ```
 
 #### 4.5. Minh chứng
 
 | Loại minh chứng | Nội dung |
 |---|---|
-| Link commit |  |
-| File liên quan |  |
+| Link commit | Chưa tạo commit |
+| File liên quan | `auth.js`, `booking-checkout.js`, `my-bookings.js`, `booking-detail.js`, `payment-deposit.js`, `payment-result.js`, `DriverDocument.cs`, `BookingDriverInfo.cs` |
 | Screenshot |  |
-| Kết quả chạy/test |  |
+| Kết quả chạy/test | Migration AddDriverLicenseBackImage: Build succeeded. Backend Build: 0 error. |
 | Link video demo |  |
-| Ghi chú khác |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
 
 #### 4.6. Nhận xét cá nhân/nhóm
 
+Sinh viên/nhóm học được gì sau lần sử dụng AI này?
+
 ```text
-Viết tại đây...
+AI giúp tăng tốc đáng kể việc tích hợp API phức tạp (nhiều endpoint, nhiều file).
+Nhóm nhận ra tầm quan trọng của việc đối chiếu tên field giữa DB Model, DTO và
+Frontend payload trước khi chạy Migration. Việc để AI tự scan grep toàn bộ
+codebase để tìm tham chiếu cũ là rất hiệu quả cho việc refactor an toàn.
 ```
 
 ---
@@ -239,19 +290,19 @@ Viết tại đây...
 
 | Hạng mục | Không dùng AI | AI hỗ trợ ít | AI hỗ trợ nhiều | AI sinh chính | Ghi chú |
 |---|:---:|:---:|:---:|:---:|---|
-| Phân tích yêu cầu |  |  |  |  |  |
-| Viết user story/use case |  |  |  |  |  |
-| Thiết kế database |  |  |  |  |  |
-| Thiết kế kiến trúc hệ thống |  |  |  |  |  |
-| Thiết kế giao diện |  |  |  |  |  |
-| Code frontend |  |  |  |  |  |
-| Code backend |  |  |  |  |  |
-| Debug lỗi |  |  |  |  |  |
-| Viết test case |  |  |  |  |  |
-| Kiểm thử sản phẩm |  |  |  |  |  |
-| Tối ưu code |  |  |  |  |  |
-| Viết báo cáo |  |  |  |  |  |
-| Làm slide thuyết trình |  |  |  |  |  |
+| Phân tích yêu cầu |  | x |  |  | Nhóm phân tích spec, AI hỗ trợ đối chiếu DB schema |
+| Viết user story/use case | x |  |  |  |  |
+| Thiết kế database |  |  | x |  | AI hỗ trợ tạo schema ban đầu và migration |
+| Thiết kế kiến trúc hệ thống |  |  | x |  | AI hỗ trợ cấu trúc phân tầng ASP.NET Core |
+| Thiết kế giao diện |  |  |  | x | Stitch phác thảo UI Admin; AI sinh HTML/CSS/JS |
+| Code frontend |  |  |  | x | AI sinh 56 file JS, HTML pages và CSS |
+| Code backend |  |  |  | x | AI sinh Controllers, Services, Repositories, DTOs |
+| Debug lỗi |  |  | x |  | AI hỗ trợ tìm lỗi dependency và tham chiếu field sai |
+| Viết test case |  | x |  |  | AI hỗ trợ viết BookingServiceTests.cs |
+| Kiểm thử sản phẩm |  | x |  |  | Nhóm tự chạy build và smoke test |
+| Tối ưu code |  | x |  |  |  |
+| Viết báo cáo |  | x |  |  | AI hỗ trợ điền doc |
+| Làm slide thuyết trình | x |  |  |  |  |
 
 ---
 
@@ -261,9 +312,9 @@ Ghi lại các trường hợp AI trả lời sai, thiếu, chưa phù hợp ho�
 
 | STT | Lỗi/hạn chế từ AI | Cách phát hiện | Cách xử lý/cải tiến |
 |---:|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
+| 1 | AI đặt UseSqlServer ở sai tầng API | Build thất bại: namespace không khả dụng | Chuyển đăng ký DbContext về DataAccess |
+| 2 | AI dùng tên field DriverLicenseImageUrl trong BookingService nhưng Model đã đổi thành DriverLicenseFrontImageUrl | grep search phát hiện 3 chỗ tham chiếu cũ | Cập nhật toàn bộ tham chiếu trong BookingService.cs |
+| 3 | Backend chưa có API GET /api/bookings/owner-requests (lấy đơn theo Chủ xe) | Rà soát IBookingService interface | Tạm thời giữ Mock Data cho trang owner-booking-requests; ghi nhận Open Issue để BE bổ sung sau |
 
 ---
 
@@ -287,7 +338,11 @@ Có thể bao gồm:
 ### Nội dung kiểm chứng
 
 ```text
-Viết tại đây...
+Nhóm build backend bằng dotnet ef migrations add để kiểm tra lỗi compile-time
+trước khi update DB. Sau khi migration thành công, nhóm kiểm tra log output
+"Build succeeded. Done. To undo this action, use ef migrations remove".
+Nhóm sử dụng grep search để đảm bảo không còn tham chiếu tên field cũ
+(DriverLicenseImageUrl) trong codebase. Kết quả Backend build: 0 error.
 ```
 
 ---
