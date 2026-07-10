@@ -1,0 +1,49 @@
+﻿@page "/admin/moderation/content"
+@model WebClient.Pages.Admin.Moderation.ContentModel
+@{
+    ViewData["Title"] = "Kiểm duyệt nội dung";
+    ViewData["AdminPage"] = "moderation-content";
+}
+
+<div class="page-heading">
+          <div>
+            <h1>Kiểm duyệt nội dung</h1>
+            <p>Xử lý đánh giá và nội dung bị báo cáo, tách riêng khỏi quản lý người dùng.</p>
+          </div>
+        </div>
+
+        <section id="contentModerationSummary" class="summary-grid"></section>
+        <section id="contentModerationFilters" class="mb-5 flex gap-2 overflow-x-auto whitespace-nowrap"></section>
+
+        <section class="panel">
+          <div id="contentModerationEmpty" class="empty-state hidden">
+            <h3>Không có nội dung cần xử lý</h3>
+            <p>Các nội dung chờ duyệt hoặc bị báo cáo sẽ xuất hiện tại đây.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Loại</th>
+                  <th>Nội dung</th>
+                  <th>Người gửi</th>
+                  <th>Ngày gửi</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="contentModerationTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+<div class="modal-backdrop" id="contentModerationDetailModal">
+    <div class="modal">
+      <div class="modal-header"><h2>Chi tiết nội dung</h2><button class="icon-button" type="button" data-close-modal>×</button></div>
+      <div id="contentModerationDetail"></div>
+      <div class="modal-actions"><button class="btn btn-secondary" type="button" data-close-modal>Đóng</button></div>
+    </div>
+  </div>
+@section Scripts {
+    <script src="~/js/html/admin-moderation-content.js" asp-append-version="true"></script>
+}

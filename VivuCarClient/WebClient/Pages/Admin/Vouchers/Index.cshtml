@@ -1,0 +1,16 @@
+﻿@page "/admin/vouchers"
+@model WebClient.Pages.Admin.Vouchers.IndexModel
+@{
+    ViewData["Title"] = "Khuyến mãi";
+    ViewData["AdminPage"] = "vouchers";
+}
+
+<div class="page-heading"><div><h1>Quản lý khuyến mãi</h1><p>Tính lượt dùng từ `voucher_usages`, số lượng còn lại từ `vouchers.quantity`.</p></div><a class="btn btn-primary" href="admin-voucher-form.html">Tạo voucher</a></div>
+    <section id="voucherSummary" class="summary-grid"></section>
+    <section class="toolbar toolbar-vouchers"><input id="searchVoucherInput" placeholder="Tìm theo code hoặc tên"><select id="voucherStatusFilter"><option value="">Tất cả trạng thái</option><option value="active">Đang hoạt động</option><option value="expired">Đã hết hạn</option><option value="used_up">Đã dùng hết lượt</option></select><select id="discountTypeFilter"><option value="">Tất cả loại</option><option value="percentage">Phần trăm</option><option value="fixed">Cố định</option></select><input id="voucherDateFrom" type="date"><input id="voucherDateTo" type="date"><button class="btn btn-primary" id="btnFilterVoucher">Lọc</button><button class="btn btn-secondary" id="btnResetVoucherFilter">Đặt lại</button></section>
+    <section class="panel"><div id="voucherEmpty" class="empty-state hidden"><h3>Chưa có voucher phù hợp</h3><p>Thử đổi bộ lọc hoặc tạo một voucher mới cho chiến dịch tiếp theo.</p><a class="btn btn-primary" href="admin-voucher-form.html">Tạo voucher mới</a></div><div class="table-wrap"><table><thead><tr><th>Code</th><th>Tên</th><th>Loại</th><th>Giá trị</th><th>Tối thiểu</th><th>Hết hạn</th><th>Lượt dùng</th><th>Trạng thái</th><th>Hành động</th></tr></thead><tbody id="voucherTableBody"></tbody></table></div></section>
+
+<aside class="drawer" id="voucherPerformanceDrawer"><div class="drawer-head"><h2>Hiệu suất voucher</h2><button class="icon-button" id="btnClosePerformance" type="button">×</button></div><div id="performanceContent"></div></aside><div id="drawerOverlay" class="drawer-overlay"></div>
+@section Scripts {
+    <script src="~/js/html/admin-vouchers.js" asp-append-version="true"></script>
+}

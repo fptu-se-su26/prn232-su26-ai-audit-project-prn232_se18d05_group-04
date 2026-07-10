@@ -1,0 +1,64 @@
+﻿@page "/admin/car-form/{id:int?}"
+@model WebClient.Pages.Admin.Cars.FormModel
+@{
+    ViewData["Title"] = "Car form";
+    ViewData["AdminPage"] = "cars";
+}
+
+<section class="page-heading">
+    <div>
+        <p class="eyebrow">Cars</p>
+        <h1>Add or update a car</h1>
+        <p>Fields follow the Admin Cars API contract and are persisted through the backend schema.</p>
+    </div>
+    <a class="button button-secondary" asp-page="/Admin/Cars/Index">Back</a>
+</section>
+
+<form class="admin-form" id="carForm" data-admin-car-form data-car-id="@Model.Id">
+    <section class="admin-panel">
+        <h2>Ownership and identity</h2>
+        <div class="form-grid">
+            <label>Owner<select id="owner_id" name="owner_id" required><option value="">Loading owners...</option></select></label>
+            <label>Car type<select id="type_id" name="type_id"><option value="">Loading types...</option></select></label>
+            <label>Car model<select id="car_model_id" name="car_model_id"><option value="">Loading models...</option></select></label>
+            <label>License plate<input id="license_plate" name="license_plate" required placeholder="43A-12345" /></label>
+            <label>Brand<input id="brand" name="brand" required placeholder="Toyota" /></label>
+            <label>Model<input id="model" name="model" required placeholder="Vios" /></label>
+            <label>Production year<input id="year" name="year" type="number" min="1900" /></label>
+            <label>Color<input id="color" name="color" maxlength="50" /></label>
+            <label>Seats<input id="seats" name="seats" type="number" min="1" /></label>
+        </div>
+    </section>
+
+    <section class="admin-panel">
+        <h2>Specs and pricing</h2>
+        <div class="form-grid">
+            <label>Kilometers driven<input id="kilometers_driven" name="kilometers_driven" type="number" min="0" /></label>
+            <label>Transmission<select id="transmission" name="transmission"><option value="automatic">Automatic</option><option value="manual">Manual</option><option value="cvt">CVT</option></select></label>
+            <label>Fuel type<select id="fuel_type" name="fuel_type"><option value="gasoline">Gasoline</option><option value="diesel">Diesel</option><option value="electric">Electric</option><option value="hybrid">Hybrid</option></select></label>
+            <label>Daily price<input id="price_per_day" name="price_per_day" type="number" min="1" /></label>
+            <label>Hourly price<input id="price_per_hours" name="price_per_hours" type="number" min="1" /></label>
+            <label>Status<select id="status" name="status"><option value="available">Available</option><option value="rented">Rented</option><option value="maintenance">Maintenance</option><option value="blocked">Blocked</option><option value="unavailable">Unavailable</option></select></label>
+        </div>
+        <label>Pickup address<input id="address" name="address" required /></label>
+        <label>Description<textarea id="description" name="description"></textarea></label>
+    </section>
+
+    <section class="admin-panel">
+        <h2>Car images</h2>
+        <input id="carImages" name="car_images" type="file" accept="image/jpeg,image/png,image/webp" multiple />
+        <div class="image-preview-grid" id="imagePreviewGrid"></div>
+    </section>
+
+    <div class="admin-actions">
+        <a class="button button-secondary" asp-page="/Admin/Cars/Index">Cancel</a>
+        <button class="button button-primary" id="btnSaveCar" type="submit">Save car</button>
+    </div>
+</form>
+@section Scripts {
+    <script
+        type="module"
+        src="~/js/admin/cars/form.js"
+        asp-append-version="true">
+    </script>
+}

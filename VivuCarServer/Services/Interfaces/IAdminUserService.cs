@@ -1,10 +1,11 @@
-using Services.Models.Admin;
+﻿using Services.Models.Admin;
 
 namespace Services.Interfaces;
 
 public interface IAdminUserService
 {
     Task<IReadOnlyList<AdminUserResponse>> GetUsersAsync(
+        string? role = null,
         CancellationToken cancellationToken = default
     );
 

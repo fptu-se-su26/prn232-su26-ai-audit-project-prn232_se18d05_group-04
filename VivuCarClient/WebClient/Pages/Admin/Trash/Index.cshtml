@@ -1,0 +1,69 @@
+﻿@page "/admin/trash"
+@model WebClient.Pages.Admin.Trash.IndexModel
+@{
+    ViewData["Title"] = "Thùng rác";
+    ViewData["AdminPage"] = "trash";
+}
+
+<div class="page-heading">
+          <div>
+            <h1>Thùng rác</h1>
+            <p>Quản lý các người dùng, phương tiện và voucher đã bị xoá mềm bằng trường `deleted_at`.</p>
+          </div>
+        </div>
+
+        <section id="trashSummary" class="summary-grid"></section>
+
+        <section class="toolbar toolbar-trash">
+          <input id="trashSearchInput" placeholder="Tìm theo tên, email, biển số, voucher">
+          <select id="trashTypeFilter">
+            <option value="">Tất cả đối tượng</option>
+            <option value="users">Người dùng</option>
+            <option value="cars">Phương tiện</option>
+            <option value="vouchers">Voucher</option>
+            <option value="reviews">Đánh giá</option>
+            <option value="incident_reports">Báo cáo</option>
+          </select>
+          <button class="btn btn-primary" id="btnFilterTrash" type="button">Lọc</button>
+          <button class="btn btn-secondary" id="btnResetTrash" type="button">Đặt lại</button>
+        </section>
+
+        <section class="panel">
+          <div id="trashEmpty" class="empty-state hidden">
+            <h3>Thùng rác trống</h3>
+            <p>Các đối tượng bị xoá mềm sẽ xuất hiện tại đây.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Loại</th>
+                  <th>Đối tượng</th>
+                  <th>Thông tin</th>
+                  <th>Ngày tạo</th>
+                  <th>Đã xoá lúc</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="trashTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+<div class="modal-backdrop" id="trashForceDeleteModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Xóa vĩnh viễn</h2>
+        <button class="icon-button" type="button" data-close-modal>×</button>
+      </div>
+      <p class="muted">Hành động này không thể hoàn tác. Dữ liệu sẽ bị xóa khỏi mock database hiện tại.</p>
+      <div id="trashForceDeleteInfo" class="alert"></div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btnCancelTrashForceDelete" type="button">Hủy</button>
+        <button class="btn btn-danger" id="btnConfirmTrashForceDelete" type="button">Xóa vĩnh viễn</button>
+      </div>
+    </div>
+  </div>
+@section Scripts {
+    <script src="~/js/html/admin-trash.js" asp-append-version="true"></script>
+}

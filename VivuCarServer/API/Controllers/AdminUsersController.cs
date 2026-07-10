@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using BusinessObjects.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +16,11 @@ public class AdminUsersController(IAdminUserService adminUserService)
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<AdminUserResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<AdminUserResponse>>> GetUsers(
+        [FromQuery] string? role,
         CancellationToken cancellationToken
     )
     {
-        return Ok(await adminUserService.GetUsersAsync(cancellationToken));
+        return Ok(await adminUserService.GetUsersAsync(role, cancellationToken));
     }
 
     [HttpPatch("{userId:int}/lock")]
