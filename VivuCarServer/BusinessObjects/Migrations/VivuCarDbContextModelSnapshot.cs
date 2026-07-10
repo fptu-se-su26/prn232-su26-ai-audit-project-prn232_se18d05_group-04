@@ -22,6 +22,52 @@ namespace BusinessObjects.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("BusinessObjects.Models.AdminAuditLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<int>("AdminUserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<int>("EntityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EntityType")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("NewValues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldValues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Action");
+
+                    b.HasIndex("AdminUserId");
+
+                    b.HasIndex("EntityType", "EntityId");
+
+                    b.ToTable("AdminAuditLogs", (string)null);
+                });
+
             modelBuilder.Entity("BusinessObjects.Models.AppUser", b =>
                 {
                     b.Property<int>("Id")
@@ -334,11 +380,22 @@ namespace BusinessObjects.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("BlockedReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<int>("CarBrandId")
                         .HasColumnType("int");
 
                     b.Property<int>("CarModelId")
                         .HasColumnType("int");
+
+                    b.Property<int?>("CarTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Color")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -370,6 +427,11 @@ namespace BusinessObjects.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("KilometersDriven")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.Property<string>("LicensePlate")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -388,6 +450,16 @@ namespace BusinessObjects.Migrations
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
+                    b.Property<string>("PreviousStatus")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<decimal>("PricePerHour")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
                     b.Property<int>("SeatCount")
                         .HasColumnType("int");
 
@@ -404,11 +476,16 @@ namespace BusinessObjects.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<short?>("Year")
+                        .HasColumnType("smallint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CarBrandId");
 
                     b.HasIndex("CarModelId");
+
+                    b.HasIndex("CarTypeId");
 
                     b.HasIndex("LicensePlate")
                         .IsUnique();
@@ -425,20 +502,25 @@ namespace BusinessObjects.Migrations
                             Id = 1,
                             CarBrandId = 1,
                             CarModelId = 1,
+                            CarTypeId = 1,
+                            Color = "White",
                             CreatedAt = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             DailyPrice = 600000m,
                             DeliveryFee = 10000m,
                             DepositAmount = 1500000m,
-                            Description = "Xe gia đình 5 chỗ sạch sẽ, vận hành êm ái, tiết kiệm nhiên liệu.",
+                            Description = "Clean 5-seat family car with stable handling and efficient fuel usage.",
                             FuelType = "Gasoline",
                             InsuranceFeePerDay = 50000m,
+                            KilometersDriven = 28000,
                             LicensePlate = "43A-12345",
-                            Location = "Hải Châu, Đà Nẵng",
+                            Location = "Hai Chau, Da Nang",
                             Name = "Toyota Vios 2022",
                             OwnerId = 6,
+                            PricePerHour = 90000m,
                             SeatCount = 5,
                             Status = "Available",
-                            TransmissionType = "Automatic"
+                            TransmissionType = "Automatic",
+                            Year = (short)2022
                         });
                 });
 
@@ -576,6 +658,58 @@ namespace BusinessObjects.Migrations
                             CarBrandId = 1,
                             IsActive = true,
                             Name = "Vios"
+                        });
+                });
+
+            modelBuilder.Entity("BusinessObjects.Models.CarType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("CarTypes", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsActive = true,
+                            Name = "Sedan"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsActive = true,
+                            Name = "SUV"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsActive = true,
+                            Name = "Hatchback"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsActive = true,
+                            Name = "MPV"
                         });
                 });
 
@@ -994,6 +1128,17 @@ namespace BusinessObjects.Migrations
                         });
                 });
 
+            modelBuilder.Entity("BusinessObjects.Models.AdminAuditLog", b =>
+                {
+                    b.HasOne("BusinessObjects.Models.AppUser", "AdminUser")
+                        .WithMany()
+                        .HasForeignKey("AdminUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AdminUser");
+                });
+
             modelBuilder.Entity("BusinessObjects.Models.Booking", b =>
                 {
                     b.HasOne("BusinessObjects.Models.Car", "Car")
@@ -1075,6 +1220,11 @@ namespace BusinessObjects.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("BusinessObjects.Models.CarType", "CarType")
+                        .WithMany("Cars")
+                        .HasForeignKey("CarTypeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("BusinessObjects.Models.AppUser", "Owner")
                         .WithMany("Cars")
                         .HasForeignKey("OwnerId")
@@ -1084,6 +1234,8 @@ namespace BusinessObjects.Migrations
                     b.Navigation("CarBrand");
 
                     b.Navigation("CarModel");
+
+                    b.Navigation("CarType");
 
                     b.Navigation("Owner");
                 });
@@ -1295,6 +1447,11 @@ namespace BusinessObjects.Migrations
                 });
 
             modelBuilder.Entity("BusinessObjects.Models.CarModel", b =>
+                {
+                    b.Navigation("Cars");
+                });
+
+            modelBuilder.Entity("BusinessObjects.Models.CarType", b =>
                 {
                     b.Navigation("Cars");
                 });

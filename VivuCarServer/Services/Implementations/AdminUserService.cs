@@ -1,4 +1,4 @@
-using BusinessObjects.Enums;
+﻿using BusinessObjects.Enums;
 using Repositories.Interfaces;
 using Services.Interfaces;
 using Services.Models.Admin;
@@ -12,12 +12,15 @@ public class AdminUserService(
 ) : IAdminUserService
 {
     public async Task<IReadOnlyList<AdminUserResponse>> GetUsersAsync(
+        string? role = null,
         CancellationToken cancellationToken = default
     )
     {
         var users = await userRepository.GetAllAsync(cancellationToken);
+        var expectedRole = ParseRole(role);
 
         return users
+            .Where(user => !expectedRole.HasValue || user.Role == expectedRole.Value)
             .Select(user => new AdminUserResponse(
                 user.Id,
                 user.Email,
@@ -94,5 +97,17 @@ public class AdminUserService(
         userSecurityStateService.Invalidate(userId);
 
         return true;
+    }
+
+    private static UserRole? ParseRole(string? role)
+    {
+        return role?.Trim().ToLowerInvariant() switch
+        {
+            null or "" => null,
+            "user" or "customer" => UserRole.Customer,
+            "car_owner" or "carowner" => UserRole.CarOwner,
+            "admin" => UserRole.Admin,
+            _ => null
+        };
     }
 }

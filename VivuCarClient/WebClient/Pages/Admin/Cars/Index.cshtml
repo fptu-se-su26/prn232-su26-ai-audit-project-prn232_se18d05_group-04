@@ -1,44 +1,54 @@
-@page "/admin/cars"
+﻿@page "/admin/cars"
 @model WebClient.Pages.Admin.Cars.IndexModel
 @{
-    ViewData["Title"] = "Phương tiện";
+    ViewData["Title"] = "Cars";
     ViewData["AdminPage"] = "cars";
 }
 
-<section class="page-heading">
+<section class="page-heading" data-admin-cars-page>
     <div>
         <p class="eyebrow">Cars</p>
-        <h1>Quản lý phương tiện</h1>
-        <p>Khung danh sách bám bảng `cars`, dùng status: `available`, `rented`, `maintenance`, `blocked`.</p>
+        <h1>Car management</h1>
+        <p>Manage car records, real car types, uploaded images, and moderation status through the Admin Cars API.</p>
     </div>
-    <a class="button button-primary" asp-page="/Admin/Cars/Form">Thêm xe mới</a>
+    <a class="button button-primary" asp-page="/Admin/Cars/Form">Add car</a>
 </section>
 
 <section class="admin-grid admin-grid-kpi">
-    <article class="admin-card"><span>Tổng số xe</span><strong>0</strong></article>
-    <article class="admin-card"><span>Đang rảnh</span><strong>0</strong></article>
-    <article class="admin-card"><span>Đang thuê</span><strong>0</strong></article>
-    <article class="admin-card"><span>Đã khóa</span><strong>0</strong></article>
+    <article class="admin-card"><span>Total cars</span><strong>0</strong></article>
+    <article class="admin-card"><span>Available on page</span><strong>0</strong></article>
+    <article class="admin-card"><span>Maintenance on page</span><strong>0</strong></article>
+    <article class="admin-card"><span>Blocked on page</span><strong>0</strong></article>
 </section>
 
 <section class="admin-toolbar">
-    <input id="searchCarInput" type="search" placeholder="Tìm theo biển số, hãng xe, dòng xe" />
+    <input id="searchCarInput" type="search" placeholder="Search license plate, brand, model, type, or owner" />
     <select id="statusFilter">
-        <option value="">Tất cả trạng thái</option>
-        <option value="available">Đang rảnh</option>
-        <option value="rented">Đang thuê</option>
-        <option value="maintenance">Bảo trì</option>
-        <option value="blocked">Đã khóa</option>
+        <option value="">All statuses</option>
+        <option value="available">Available</option>
+        <option value="rented">Rented</option>
+        <option value="maintenance">Maintenance</option>
+        <option value="blocked">Blocked</option>
+        <option value="unavailable">Unavailable</option>
+    </select>
+    <select id="typeFilter">
+        <option value="">All types</option>
     </select>
     <select id="fuelFilter">
-        <option value="">Tất cả nhiên liệu</option>
-        <option value="gasoline">Xăng</option>
-        <option value="diesel">Dầu</option>
-        <option value="electric">Điện</option>
+        <option value="">All fuels</option>
+        <option value="gasoline">Gasoline</option>
+        <option value="diesel">Diesel</option>
+        <option value="electric">Electric</option>
         <option value="hybrid">Hybrid</option>
     </select>
-    <button class="button button-primary" id="btnFilter" type="button">Lọc</button>
-    <button class="button button-secondary" id="btnReset" type="button">Đặt lại</button>
+    <select id="transmissionFilter">
+        <option value="">All transmissions</option>
+        <option value="manual">Manual</option>
+        <option value="automatic">Automatic</option>
+        <option value="cvt">CVT</option>
+    </select>
+    <button class="button button-primary" id="btnFilter" type="button">Filter</button>
+    <button class="button button-secondary" id="btnReset" type="button">Reset</button>
 </section>
 
 <section class="admin-panel">
@@ -46,19 +56,38 @@
         <table>
             <thead>
                 <tr>
-                    <th>Biển số</th>
-                    <th>Hãng / dòng xe</th>
-                    <th>Năm</th>
-                    <th>Số chỗ</th>
-                    <th>Giá/ngày</th>
-                    <th>Trạng thái</th>
-                    <th>Chủ xe</th>
-                    <th>Hành động</th>
+                    <th>Image</th>
+                    <th>License plate</th>
+                    <th>Brand / model</th>
+                    <th>Type</th>
+                    <th>Year</th>
+                    <th>Seats</th>
+                    <th>Daily price</th>
+                    <th>Status</th>
+                    <th>Owner</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="carsTableBody">
-                <tr><td colspan="8" class="empty-cell">Chưa gắn dữ liệu xe.</td></tr>
+                <tr><td colspan="10" class="empty-cell">Cars have not been loaded yet.</td></tr>
             </tbody>
         </table>
     </div>
+    <div class="pagination">
+        <span id="paginationInfo">Page 0 / 0</span>
+        <select id="pageSize" aria-label="Page size">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+        </select>
+        <button class="button button-secondary" id="prevPage" type="button">Previous</button>
+        <button class="button button-secondary" id="nextPage" type="button">Next</button>
+    </div>
 </section>
+@section Scripts {
+    <script
+        type="module"
+        src="~/js/admin/cars/index.js"
+        asp-append-version="true">
+    </script>
+}

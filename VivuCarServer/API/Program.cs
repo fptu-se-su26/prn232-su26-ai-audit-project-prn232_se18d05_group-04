@@ -1,4 +1,4 @@
-using API.Configurations;
+﻿using API.Configurations;
 
 EnvironmentConfiguration.LoadEnvFile();
 
@@ -24,6 +24,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseRateLimiter();
@@ -32,3 +33,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

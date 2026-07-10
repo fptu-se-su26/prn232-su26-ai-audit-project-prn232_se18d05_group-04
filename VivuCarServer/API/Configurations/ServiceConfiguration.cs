@@ -1,3 +1,4 @@
+﻿using API.Services.Storage;
 using Services.Implementations;
 using Services.Interfaces;
 
@@ -14,8 +15,13 @@ public static class ServiceConfiguration
         services.AddScoped<IUserSecurityStateService, UserSecurityStateService>();
         services.AddScoped<IBookingService, BookingService>();
         services.AddScoped<IPaymentService, PaymentService>();
+        services.AddScoped<IAdminCarService, AdminCarService>();
+        services.AddScoped<IFileStorageService, LocalFileStorageService>();
         services.AddHostedService<API.HostedServices.BookingExpirationHostedService>();
+        services.AddHostedService<API.HostedServices.MiotoCarSeedHostedService>();
 
         return services;
     }
 }
+
+

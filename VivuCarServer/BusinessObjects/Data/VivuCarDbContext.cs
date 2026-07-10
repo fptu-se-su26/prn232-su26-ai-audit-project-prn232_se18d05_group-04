@@ -1,4 +1,4 @@
-using BusinessObjects.Models;
+﻿using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusinessObjects.Data;
@@ -9,6 +9,7 @@ public class VivuCarDbContext(DbContextOptions<VivuCarDbContext> options) : DbCo
     public DbSet<DriverDocument> DriverDocuments => Set<DriverDocument>();
     public DbSet<CarBrand> CarBrands => Set<CarBrand>();
     public DbSet<CarModel> CarModels => Set<CarModel>();
+    public DbSet<CarType> CarTypes => Set<CarType>();
     public DbSet<Car> Cars => Set<Car>();
     public DbSet<CarImage> CarImages => Set<CarImage>();
     public DbSet<CarAvailabilityBlock> CarAvailabilityBlocks => Set<CarAvailabilityBlock>();
@@ -23,6 +24,7 @@ public class VivuCarDbContext(DbContextOptions<VivuCarDbContext> options) : DbCo
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<IncidentReport> IncidentReports => Set<IncidentReport>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<AdminAuditLog> AdminAuditLogs => Set<AdminAuditLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
