@@ -57,6 +57,16 @@ window.VivuCarUtils = {
     const action = config.href ? `<a class="btn btn-primary" href="${config.href}">${config.action || "Tiếp tục"}</a>` : "";
     return `<div class="empty-state"><h3>${config.title}</h3><p>${config.text || ""}</p>${action}</div>`;
   },
+  renderActionMenu(items) {
+    const rows = items.filter(Boolean).map((item) => {
+      const attrs = Object.entries(item.attrs || {}).map(([key, value]) => `${key}="${value}"`).join(" ");
+      const variant = item.variant === "danger" ? "action-menu-danger" : "action-menu-item";
+      const disabled = item.disabled ? "disabled" : "";
+      if (item.href) return `<a class="${variant}" href="${item.href}" ${attrs}>${item.label}</a>`;
+      return `<button class="${variant}" type="button" ${attrs} ${disabled}>${item.label}</button>`;
+    }).join("");
+    return `<details class="action-menu"><summary aria-label="Mở menu hành động"><span>...</span></summary><div class="action-menu-panel">${rows}</div></details>`;
+  },
   carTitle(car) {
     return `${car.brand} ${car.model} ${car.year}`;
   },

@@ -2,11 +2,37 @@
   const DB = window.VivuCarDB;
   const C = window.VivuCarConstants;
   const U = window.VivuCarUtils;
-  const state = { keyword: "", status: "", discount_type: "", from: "", to: "" };
+  const state = { keyword: "", status: "", discount_type: "", from: "", to: "", tab: "all" };
   let voucherChartInstance = null;
+  let forceDeleteVoucherId = null;
 
   function usageCount(voucherId) {
     return DB.voucher_usages.filter((usage) => usage.voucher_id === voucherId).length;
+  }
+
+  function activeVouchers() {
+    return DB.vouchers.filter((voucher) => !voucher.deleted_at);
+  }
+
+  function trashVouchers() {
+    return DB.vouchers.filter((voucher) => voucher.deleted_at);
+  }
+
+  function ensureTrashUi() {
+    if (!document.getElementById("voucherForceDeleteModal")) {
+      document.body.insertAdjacentHTML("beforeend", `
+        <div class="modal-backdrop" id="voucherForceDeleteModal">
+          <div class="modal">
+            <div class="modal-header"><h2>Xóa vĩnh viễn voucher</h2><button class="icon-button" type="button" data-close-modal>×</button></div>
+            <p class="muted">Hành động này không thể hoàn tác. Voucher sẽ bị xóa khỏi dữ liệu mock hiện tại.</p>
+            <div class="modal-actions">
+              <button class="btn btn-secondary" id="btnCancelForceDeleteVoucher" type="button">Hủy</button>
+              <button class="btn btn-danger" id="btnConfirmForceDeleteVoucher" type="button">Xóa vĩnh viễn</button>
+            </div>
+          </div>
+        </div>
+      `);
+    }
   }
 
   function resolveVoucherStatus(voucher) {
@@ -15,11 +41,27 @@
     return "active";
   }
 
+  function tabCount(key) {
+    if (key === "trash") return trashVouchers().length;
+    if (key === "active") return activeVouchers().filter((voucher) => resolveVoucherStatus(voucher) === "active").length;
+    if (key === "hidden") return activeVouchers().filter((voucher) => ["expired", "used_up"].includes(resolveVoucherStatus(voucher))).length;
+    return activeVouchers().length;
+  }
+
+  function renderTabs() {
+    return tabCount("trash");
+  }
+
   function filteredVouchers() {
-    return DB.vouchers.filter((voucher) => {
+    const source = state.tab === "trash" ? trashVouchers() : activeVouchers();
+    return source.filter((voucher) => {
       const keyword = `${voucher.code} ${voucher.name}`.toLowerCase();
       const status = resolveVoucherStatus(voucher);
-      return (!state.keyword || keyword.includes(state.keyword.toLowerCase()))
+      const tabMatch = state.tab === "all" || state.tab === "trash"
+        || (state.tab === "active" && status === "active")
+        || (state.tab === "hidden" && ["expired", "used_up"].includes(status));
+      return tabMatch
+        && (!state.keyword || keyword.includes(state.keyword.toLowerCase()))
         && (!state.status || status === state.status)
         && (!state.discount_type || voucher.discount_type === state.discount_type)
         && (!state.from || !voucher.expires_at || voucher.expires_at.slice(0, 10) >= state.from)
@@ -28,27 +70,48 @@
   }
 
   function renderSummary() {
+    const vouchers = activeVouchers();
     const rows = [
-      ["Tổng voucher", DB.vouchers.length],
-      ["Đang hoạt động", DB.vouchers.filter((v) => resolveVoucherStatus(v) === "active").length],
-      ["Đã hết hạn", DB.vouchers.filter((v) => resolveVoucherStatus(v) === "expired").length],
-      ["Đã dùng hết lượt", DB.vouchers.filter((v) => resolveVoucherStatus(v) === "used_up").length],
+      ["Tổng voucher", vouchers.length],
+      ["Đang hoạt động", vouchers.filter((v) => resolveVoucherStatus(v) === "active").length],
+      ["Đã hết hạn", vouchers.filter((v) => resolveVoucherStatus(v) === "expired").length],
+      ["Đã dùng hết lượt", vouchers.filter((v) => resolveVoucherStatus(v) === "used_up").length],
       ["Tổng lượt sử dụng", DB.voucher_usages.length]
     ];
     document.getElementById("voucherSummary").innerHTML = rows.map(([label, value]) => `<article class="summary-card"><span>${label}</span><strong>${value}</strong></article>`).join("");
   }
 
   function renderVouchers() {
+    renderTabs();
     const vouchers = filteredVouchers();
     renderSummary();
-    document.getElementById("voucherEmpty").classList.toggle("hidden", vouchers.length > 0);
+    const empty = document.getElementById("voucherEmpty");
+    empty.classList.toggle("hidden", vouchers.length > 0);
+    empty.querySelector("h3").textContent = state.tab === "trash" ? "Thùng rác trống" : "Chưa có voucher phù hợp";
+    empty.querySelector("p").textContent = state.tab === "trash"
+      ? "Các đối tượng bị xoá mềm sẽ xuất hiện tại đây."
+      : "Thử đổi bộ lọc hoặc tạo một voucher mới cho chiến dịch tiếp theo.";
+    const emptyAction = empty.querySelector("a");
+    if (emptyAction) emptyAction.classList.toggle("hidden", state.tab === "trash");
+    document.querySelector(".table-wrap").classList.toggle("hidden", vouchers.length === 0);
     document.getElementById("voucherTableBody").innerHTML = vouchers.map((voucher) => {
       const used = usageCount(voucher.id);
       const percent = voucher.quantity ? Math.min(100, Math.round(used / voucher.quantity * 100)) : 100;
       const status = resolveVoucherStatus(voucher);
       const statusLabel = { active: "Đang hoạt động", expired: "Đã hết hạn", used_up: "Đã dùng hết lượt" }[status];
       const kind = status === "active" ? "success" : status === "used_up" ? "warning" : "neutral";
-      return `<tr><td class="mono">${voucher.code}</td><td>${voucher.name}</td><td>${C.DISCOUNT_TYPE_LABELS[voucher.discount_type]}</td><td>${voucher.discount_type === "percentage" ? `${voucher.discount_value}%` : U.formatVnd(voucher.discount_value)}</td><td>${U.formatVnd(voucher.min_order_amount)}</td><td>${U.formatDate(voucher.expires_at)}</td><td>${used} / ${voucher.quantity}<div class="progress"><span style="width:${percent}%"></span></div></td><td>${U.statusBadge(kind, status, statusLabel)}</td><td class="actions"><button class="btn btn-secondary btn-sm btn-view-performance" data-id="${voucher.id}">Xem hiệu suất</button><a class="btn btn-secondary btn-sm" href="admin-voucher-form.html?id=${voucher.id}">Sửa</a>${used === 0 ? `<button class="btn btn-danger btn-sm btn-delete-voucher" data-id="${voucher.id}">Xóa</button>` : ""}</td></tr>`;
+      const actions = state.tab === "trash"
+        ? U.renderActionMenu([
+          { label: "Khôi phục", attrs: { "data-restore-voucher": voucher.id } },
+          { label: "Xóa vĩnh viễn", attrs: { "data-force-delete-voucher": voucher.id }, variant: "danger" }
+        ])
+        : U.renderActionMenu([
+          { label: "Xem chi tiết", attrs: { "data-view-performance": voucher.id } },
+          { label: "Chỉnh sửa", href: `admin-voucher-form.html?id=${voucher.id}` },
+          { label: status === "active" ? "Tạm dừng" : "Kích hoạt", attrs: { "data-toggle-voucher": voucher.id } },
+          { label: "Xóa mềm", attrs: { "data-soft-delete-voucher": voucher.id }, variant: "danger" }
+        ]);
+      return `<tr><td class="mono">${voucher.code}</td><td>${voucher.name}</td><td>${C.DISCOUNT_TYPE_LABELS[voucher.discount_type]}</td><td>${voucher.discount_type === "percentage" ? `${voucher.discount_value}%` : U.formatVnd(voucher.discount_value)}</td><td>${U.formatVnd(voucher.min_order_amount)}</td><td>${U.formatDate(voucher.expires_at)}</td><td>${used} / ${voucher.quantity}<div class="progress"><span style="width:${percent}%"></span></div></td><td>${U.statusBadge(kind, status, statusLabel)}</td><td class="actions">${actions}</td></tr>`;
     }).join("");
   }
 
@@ -58,6 +121,37 @@
     state.discount_type = document.getElementById("discountTypeFilter").value;
     state.from = document.getElementById("voucherDateFrom").value;
     state.to = document.getElementById("voucherDateTo").value;
+    renderVouchers();
+  }
+
+  function softDeleteItem(id) {
+    const voucher = DB.vouchers.find((item) => item.id === Number(id));
+    if (!voucher) return;
+    voucher.deleted_at = new Date().toISOString();
+    window.VivuCarSaveDB?.();
+    window.VivuCarLayout?.refreshAdminSidebar?.();
+    U.showToast("Đã chuyển voucher vào thùng rác.");
+    renderVouchers();
+  }
+
+  function restoreItem(id) {
+    const voucher = DB.vouchers.find((item) => item.id === Number(id));
+    if (!voucher) return;
+    voucher.deleted_at = null;
+    window.VivuCarSaveDB?.();
+    window.VivuCarLayout?.refreshAdminSidebar?.();
+    U.showToast("Đã khôi phục voucher.");
+    renderVouchers();
+  }
+
+  function forceDeleteItem(id) {
+    const voucherId = Number(id);
+    DB.vouchers = DB.vouchers.filter((voucher) => voucher.id !== voucherId);
+    DB.voucher_usages = DB.voucher_usages.filter((usage) => usage.voucher_id !== voucherId);
+    window.VivuCarSaveDB?.();
+    window.VivuCarLayout?.refreshAdminSidebar?.();
+    U.closeModal("voucherForceDeleteModal");
+    U.showToast("Đã xóa vĩnh viễn voucher.");
     renderVouchers();
   }
 
@@ -129,21 +223,27 @@
     );
   }
 
+  ensureTrashUi();
   document.getElementById("btnFilterVoucher").addEventListener("click", applyFilter);
   document.getElementById("btnResetVoucherFilter").addEventListener("click", () => { document.querySelectorAll(".toolbar input, .toolbar select").forEach((el) => el.value = ""); applyFilter(); });
   document.getElementById("btnClosePerformance").addEventListener("click", closeDrawer);
   document.getElementById("drawerOverlay").addEventListener("click", closeDrawer);
+  document.getElementById("btnCancelForceDeleteVoucher").addEventListener("click", () => U.closeModal("voucherForceDeleteModal"));
+  document.getElementById("btnConfirmForceDeleteVoucher").addEventListener("click", () => forceDeleteItem(forceDeleteVoucherId));
   document.addEventListener("click", (event) => {
-    const performance = event.target.closest(".btn-view-performance");
-    const del = event.target.closest(".btn-delete-voucher");
-    if (performance) openPerformance(Number(performance.dataset.id));
-    if (del) {
-      const id = Number(del.dataset.id);
-      DB.vouchers = DB.vouchers.filter((voucher) => voucher.id !== id);
-      U.showToast("Đã xóa voucher chưa có lượt dùng.");
-      renderVouchers();
+    const performance = event.target.closest("[data-view-performance]");
+    const toggle = event.target.closest("[data-toggle-voucher]");
+    const softDelete = event.target.closest("[data-soft-delete-voucher]");
+    const restore = event.target.closest("[data-restore-voucher]");
+    const forceDelete = event.target.closest("[data-force-delete-voucher]");
+    if (performance) return openPerformance(Number(performance.dataset.viewPerformance));
+    if (toggle) return U.showToast("Trạng thái kích hoạt voucher là UI-only trong schema hiện tại.");
+    if (softDelete) return softDeleteItem(softDelete.dataset.softDeleteVoucher);
+    if (restore) return restoreItem(restore.dataset.restoreVoucher);
+    if (forceDelete) {
+      forceDeleteVoucherId = Number(forceDelete.dataset.forceDeleteVoucher);
+      return U.openModal("voucherForceDeleteModal");
     }
   });
   renderVouchers();
 })();
-
