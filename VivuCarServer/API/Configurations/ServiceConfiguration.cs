@@ -17,6 +17,7 @@ public static class ServiceConfiguration
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IAdminCarService, AdminCarService>();
         services.AddScoped<IFileStorageService, LocalFileStorageService>();
+        services.AddScoped<ICarService, CarService>();
         services.AddHostedService<API.HostedServices.BookingExpirationHostedService>();
         services.AddHostedService<API.HostedServices.MiotoCarSeedHostedService>();
 
