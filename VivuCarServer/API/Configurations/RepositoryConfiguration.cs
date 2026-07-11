@@ -11,6 +11,7 @@ public static class RepositoryConfiguration
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IBookingRepository, BookingRepository>();
         services.AddScoped<ICarRepository, CarRepository>();
+        services.AddScoped<IAdminReportRepository, AdminReportRepository>();
 
         return services;
     }

@@ -4,6 +4,7 @@ using BusinessObjects.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusinessObjects.Migrations
 {
     [DbContext(typeof(VivuCarDbContext))]
-    partial class VivuCarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260711031252_AddDailyRevenueSnapshots")]
+    partial class AddDailyRevenueSnapshots
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,20 +139,6 @@ namespace BusinessObjects.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 6,
-                            CreatedAt = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "seed_owner@vivucar.local",
-                            FullName = "Seed Car Owner",
-                            PasswordHash = "dummy_hash_for_seed",
-                            PhoneNumber = "0900000006",
-                            Role = "CarOwner",
-                            Status = "Active",
-                            TokenVersion = 1
-                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Models.Booking", b =>
