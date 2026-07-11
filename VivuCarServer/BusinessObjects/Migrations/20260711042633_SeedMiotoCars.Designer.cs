@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusinessObjects.Migrations
 {
     [DbContext(typeof(VivuCarDbContext))]
-    [Migration("20260710144011_SeedMiotoCars")]
+    [Migration("20260711042633_SeedMiotoCars")]
     partial class SeedMiotoCars
     {
         /// <inheritdoc />
@@ -139,6 +139,20 @@ namespace BusinessObjects.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "seed_owner@vivucar.local",
+                            FullName = "Seed Car Owner",
+                            PasswordHash = "dummy_hash_for_seed",
+                            PhoneNumber = "0900000006",
+                            Role = "CarOwner",
+                            Status = "Active",
+                            TokenVersion = 1
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Models.Booking", b =>
