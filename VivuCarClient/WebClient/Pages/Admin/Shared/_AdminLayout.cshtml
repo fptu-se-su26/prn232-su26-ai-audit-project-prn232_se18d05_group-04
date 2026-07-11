@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -9,6 +9,7 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="~/css/animations.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="min-h-[100dvh] bg-zinc-50 text-zinc-900 font-sans antialiased overflow-x-hidden" data-admin-page="@ViewData["AdminPage"]">
     <div class="app-shell">
@@ -18,7 +19,7 @@
                     <span class="brand-mark"><svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M135.2 117.4 109.1 192h293.8l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8 74.8 96.3C88.3 57.8 124.6 32 165.4 32h181.2c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5C495.6 207.6 512 231.1 512 258.5V400c0 26.5-21.5 48-48 48h-16v32c0 17.7-14.3 32-32 32h-32c-17.7 0-32-14.3-32-32v-32H160v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32v-32H48c-26.5 0-48-21.5-48-48V258.5c0-27.4 16.4-50.9 39.6-61.7zM128 352a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm256 0a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg></span>
                     <span class="admin-sidebar-title"><span>VivuCar</span><span class="text-xs font-semibold text-zinc-500">Admin Console</span></span>
                 </a>
-                <button class="admin-sidebar-toggle" type="button" data-sidebar-collapse-toggle aria-label="Thu gọn sidebar" title="Thu gọn sidebar">
+                <button class="admin-sidebar-toggle" type="button" data-sidebar-collapse-toggle aria-label="Thu gá»n sidebar" title="Thu gá»n sidebar">
                     <svg aria-hidden="true" viewBox="0 0 320 512" class="h-3.5 w-3.5 fill-current"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>
                 </button>
             </div>
@@ -27,7 +28,7 @@
                 <span class="admin-search-icon">
                     <svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0s208 93.1 208 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
                 </span>
-                <input class="pl-9" type="search" placeholder="Tìm kiếm..." aria-label="Tìm kiếm trong admin">
+                <input class="pl-9" type="search" placeholder="TÃ¬m kiáº¿m..." aria-label="TÃ¬m kiáº¿m trong admin">
             </div>
 
             <nav class="sidebar-nav" aria-label="Admin navigation">
@@ -36,15 +37,15 @@
                     <span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString() == "dashboard" ? "admin-nav-icon-active" : "")"><svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64v336c0 44.2 35.8 80 80 80h400c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm375 111c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-87 87-39-39c-9.4-9.4-24.6-9.4-33.9 0l-96 96c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l79-79 39 39c9.4 9.4 24.6 9.4 33.9 0l104-104z"/></svg></span>
                     <span class="admin-nav-label">Dashboard doanh thu</span>
                 </a>
-                <a class="group @(ViewData["AdminPage"]?.ToString() == "users" ? "admin-nav-active" : "")" asp-page="/Admin/Users/Index" title="Người dùng">
+                <a class="group @(ViewData["AdminPage"]?.ToString() == "users" ? "admin-nav-active" : "")" asp-page="/Admin/Users/Index" title="NgÆ°á»i dÃ¹ng">
                     @if(ViewData["AdminPage"]?.ToString() == "users") { <span class="admin-nav-indicator" aria-hidden="true"></span> }
                     <span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString() == "users" ? "admin-nav-icon-active" : "")"><svg aria-hidden="true" viewBox="0 0 640 512" class="h-4 w-4 fill-current"><path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM609.3 512H471.4c5.4-9.4 8.6-20.3 8.6-32.1C480 416.5 448.4 360.6 400.2 327c12.2-4.5 25.3-7 38.9-7h61.4C577.5 320 640 382.5 640 459.5c0 29-23.5 52.5-52.5 52.5zM432 256c-31 0-59-12.6-79.3-32.9C372.4 198.6 384 167.5 384 134.1c0-13.1-1.8-25.8-5.2-37.8C393.1 76.2 416.7 64 442.7 64C504.9 64 555.3 114.4 555.3 176.6S504.9 289.3 442.7 289.3c-3.6 0-7.2-.2-10.7-.5V256z"/></svg></span>
-                    <span class="admin-nav-label">Người dùng</span>
+                    <span class="admin-nav-label">NgÆ°á»i dÃ¹ng</span>
                 </a>
-                <a class="group @(ViewData["AdminPage"]?.ToString() == "cars" ? "admin-nav-active" : "")" asp-page="/Admin/Cars/Index" title="Phương tiện">
+                <a class="group @(ViewData["AdminPage"]?.ToString() == "cars" ? "admin-nav-active" : "")" asp-page="/Admin/Cars/Index" title="PhÆ°Æ¡ng tiá»‡n">
                     @if(ViewData["AdminPage"]?.ToString() == "cars") { <span class="admin-nav-indicator" aria-hidden="true"></span> }
                     <span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString() == "cars" ? "admin-nav-icon-active" : "")"><svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M135.2 117.4 109.1 192h293.8l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8 74.8 96.3C88.3 57.8 124.6 32 165.4 32h181.2c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5C495.6 207.6 512 231.1 512 258.5V400c0 26.5-21.5 48-48 48h-16v32c0 17.7-14.3 32-32 32h-32c-17.7 0-32-14.3-32-32v-32H160v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32v-32H48c-26.5 0-48-21.5-48-48V258.5c0-27.4 16.4-50.9 39.6-61.7zM128 352a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm256 0a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"/></svg></span>
-                    <span class="admin-nav-label">Phương tiện</span>
+                    <span class="admin-nav-label">PhÆ°Æ¡ng tiá»‡n</span>
                 </a>
                 <a class="group @(ViewData["AdminPage"]?.ToString() == "vouchers" ? "admin-nav-active" : "")" asp-page="/Admin/Vouchers/Index" title="Voucher">
                     @if(ViewData["AdminPage"]?.ToString() == "vouchers") { <span class="admin-nav-indicator" aria-hidden="true"></span> }
@@ -52,27 +53,27 @@
                     <span class="admin-nav-label">Voucher</span>
                 </a>
                 
-                <div class="admin-nav-label mt-3 px-3 text-xs font-semibold uppercase tracking-wide text-zinc-400">Kiểm duyệt</div>
-                <a class="group admin-nav-child @(ViewData["AdminPage"]?.ToString() == "moderation-content" ? "admin-nav-active" : "")" asp-page="/Admin/Moderation/Content" title="Kiểm duyệt nội dung">
+                <div class="admin-nav-label mt-3 px-3 text-xs font-semibold uppercase tracking-wide text-zinc-400">Kiá»ƒm duyá»‡t</div>
+                <a class="group admin-nav-child @(ViewData["AdminPage"]?.ToString() == "moderation-content" ? "admin-nav-active" : "")" asp-page="/Admin/Moderation/Content" title="Kiá»ƒm duyá»‡t ná»™i dung">
                     @if(ViewData["AdminPage"]?.ToString() == "moderation-content") { <span class="admin-nav-indicator" aria-hidden="true"></span> }
                     <span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString() == "moderation-content" ? "admin-nav-icon-active" : "")"><svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M64 32C28.7 32 0 60.7 0 96v256c0 35.3 28.7 64 64 64h96v80c0 6.1 3.4 11.6 8.8 14.3s11.9 2.1 16.8-1.5L309.3 416H448c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm192 96c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16s-16-7.2-16-16v-96c0-8.8 7.2-16 16-16zm-20 180a20 20 0 1 1 40 0 20 20 0 1 1-40 0z"/></svg></span>
-                    <span class="admin-nav-label">Kiểm duyệt nội dung</span>
+                    <span class="admin-nav-label">Kiá»ƒm duyá»‡t ná»™i dung</span>
                 </a>
-                <a class="group admin-nav-child @(ViewData["AdminPage"]?.ToString() == "moderation-licenses" ? "admin-nav-active" : "")" asp-page="/Admin/Moderation/Licenses" title="Kiểm duyệt GPLX">
+                <a class="group admin-nav-child @(ViewData["AdminPage"]?.ToString() == "moderation-licenses" ? "admin-nav-active" : "")" asp-page="/Admin/Moderation/Licenses" title="Kiá»ƒm duyá»‡t GPLX">
                     @if(ViewData["AdminPage"]?.ToString() == "moderation-licenses") { <span class="admin-nav-indicator" aria-hidden="true"></span> }
                     <span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString() == "moderation-licenses" ? "admin-nav-icon-active" : "")"><svg aria-hidden="true" viewBox="0 0 576 512" class="h-4 w-4 fill-current"><path d="M0 96C0 60.7 28.7 32 64 32h448c35.3 0 64 28.7 64 64v320c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zm96 80v64h160v-64H96zm0 112v32h256v-32H96zm0 64v32h192v-32H96zm320-176a64 64 0 1 0 0 128 64 64 0 1 0 0-128zm-96 224h192c0-44.2-43-80-96-80s-96 35.8-96 80z"/></svg></span>
-                    <span class="admin-nav-label">Kiểm duyệt GPLX</span>
+                    <span class="admin-nav-label">Kiá»ƒm duyá»‡t GPLX</span>
                 </a>
                 
-                <a class="group @(ViewData["AdminPage"]?.ToString() == "reports" ? "admin-nav-active" : "")" asp-page="/Admin/Reports/Export" title="Xuất báo cáo">
+                <a class="group @(ViewData["AdminPage"]?.ToString() == "reports" ? "admin-nav-active" : "")" asp-page="/Admin/Reports/Export" title="Xuáº¥t bÃ¡o cÃ¡o">
                     @if(ViewData["AdminPage"]?.ToString() == "reports") { <span class="admin-nav-indicator" aria-hidden="true"></span> }
                     <span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString() == "reports" ? "admin-nav-icon-active" : "")"><svg aria-hidden="true" viewBox="0 0 576 512" class="h-4 w-4 fill-current"><path d="M0 64C0 28.7 28.7 0 64 0h224v128c0 17.7 14.3 32 32 32h128v96h-48c-26.5 0-48 21.5-48 48v32H160c-17.7 0-32 14.3-32 32s14.3 32 32 32h192v32c0 26.5 21.5 48 48 48h48c0 17.7-14.3 32-32 32H64c-35.3 0-64-28.7-64-64V64zm448 64H320V0l128 128zm-32 192v96c0 8.8 7.2 16 16 16h32V304h-32c-8.8 0-16 7.2-16 16zm112-32 43.3 43.3c6.2 6.2 6.2 16.4 0 22.6L528 397.3V368h-64v-32h64v-29.3z"/></svg></span>
-                    <span class="admin-nav-label">Xuất báo cáo</span>
+                    <span class="admin-nav-label">Xuáº¥t bÃ¡o cÃ¡o</span>
                 </a>
-                <a class="group @(ViewData["AdminPage"]?.ToString() == "trash" ? "admin-nav-active" : "")" asp-page="/Admin/Trash/Index" title="Thùng rác">
+                <a class="group @(ViewData["AdminPage"]?.ToString() == "trash" ? "admin-nav-active" : "")" asp-page="/Admin/Trash/Index" title="ThÃ¹ng rÃ¡c">
                     @if(ViewData["AdminPage"]?.ToString() == "trash") { <span class="admin-nav-indicator" aria-hidden="true"></span> }
                     <span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString() == "trash" ? "admin-nav-icon-active" : "")"><svg aria-hidden="true" viewBox="0 0 448 512" class="h-4 w-4 fill-current"><path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0h120.4c12.1 0 23.2 6.8 28.6 17.7L328 48h88c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 112 0 97.7 0 80s14.3-32 32-32h88l15.2-30.3zM32 144h384l-21.2 339.3C393.2 499.4 379.8 512 363.6 512H84.4c-16.2 0-29.6-12.6-31.2-28.7L32 144zm96 64c-8.8 0-16 7.2-16 16v208c0 8.8 7.2 16 16 16s16-7.2 16-16V224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16v208c0 8.8 7.2 16 16 16s16-7.2 16-16V224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16v208c0 8.8 7.2 16 16 16s16-7.2 16-16V224c0-8.8-7.2-16-16-16z"/></svg></span>
-                    <span class="admin-nav-label">Thùng rác</span>
+                    <span class="admin-nav-label">ThÃ¹ng rÃ¡c</span>
                 </a>
             </nav>
 
@@ -84,9 +85,9 @@
                         <div class="text-xs text-zinc-500">Admin</div>
                     </div>
                 </div>
-                <button class="group" type="button" data-logout-trigger title="Đăng xuất">
+                <button class="group" type="button" data-logout-trigger title="ÄÄƒng xuáº¥t">
                     <span class="admin-nav-icon admin-nav-icon-logout"><svg aria-hidden="true" viewBox="0 0 512 512" class="h-4 w-4 fill-current"><path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224H192c-17.7 0-32 14.3-32 32s14.3 32 32 32h210.7l-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32H96C43 32 0 75 0 128v256c0 53 43 96 96 96h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H96c-17.7 0-32-14.3-32-32V128c0-17.7 14.3-32 32-32h64z"/></svg></span>
-                    <span class="admin-nav-label">Đăng xuất</span>
+                    <span class="admin-nav-label">ÄÄƒng xuáº¥t</span>
                 </button>
             </nav>
         </aside>
@@ -102,11 +103,11 @@
 
     <div class="modal-backdrop" id="logoutModal" role="dialog" aria-modal="true">
         <div class="modal">
-            <div class="modal-header"><h2>Xác nhận đăng xuất</h2><button class="icon-button" type="button" data-close-modal>×</button></div>
-            <p class="muted">Bạn có chắc chắn muốn đăng xuất khỏi VivuCar?</p>
+            <div class="modal-header"><h2>XÃ¡c nháº­n Ä‘Äƒng xuáº¥t</h2><button class="icon-button" type="button" data-close-modal>Ã—</button></div>
+            <p class="muted">Báº¡n cÃ³ cháº¯c cháº¯n muá»‘n Ä‘Äƒng xuáº¥t khá»i VivuCar?</p>
             <div class="modal-actions">
-                <button class="btn btn-secondary" id="btnCancelLogout" type="button" data-close-modal>Hủy</button>
-                <a class="btn btn-danger" asp-page="/Index" id="btnDoLogout">Đăng xuất</a>
+                <button class="btn btn-secondary" id="btnCancelLogout" type="button" data-close-modal>Há»§y</button>
+                <a class="btn btn-danger" asp-page="/Index" id="btnDoLogout">ÄÄƒng xuáº¥t</a>
             </div>
         </div>
     </div>
@@ -123,4 +124,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
