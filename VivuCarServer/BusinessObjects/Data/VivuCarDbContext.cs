@@ -25,6 +25,7 @@ public class VivuCarDbContext(DbContextOptions<VivuCarDbContext> options) : DbCo
     public DbSet<IncidentReport> IncidentReports => Set<IncidentReport>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<AdminAuditLog> AdminAuditLogs => Set<AdminAuditLog>();
+    public DbSet<DailyRevenueSnapshot> DailyRevenueSnapshots => Set<DailyRevenueSnapshot>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,0 +1,1775 @@
+{
+  "generated_at": 1783740351,
+  "car_count": 59,
+  "image_count": 271,
+  "cars": [
+    {
+      "source_order": 2,
+      "car_id": 3,
+      "slug": "chevrolet-spark-2012",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740136/Vivucar/seed/cars/chevrolet-spark-2012/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740138/Vivucar/seed/cars/chevrolet-spark-2012/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740157/Vivucar/seed/cars/chevrolet-spark-2012/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740159/Vivucar/seed/cars/chevrolet-spark-2012/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740161/Vivucar/seed/cars/chevrolet-spark-2012/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 6,
+      "car_id": 7,
+      "slug": "kia-k3-premium-2022",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740163/Vivucar/seed/cars/kia-k3-premium-2022/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740165/Vivucar/seed/cars/kia-k3-premium-2022/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740167/Vivucar/seed/cars/kia-k3-premium-2022/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740169/Vivucar/seed/cars/kia-k3-premium-2022/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 10,
+      "car_id": 11,
+      "slug": "chevrolet-cruze-2015",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740171/Vivucar/seed/cars/chevrolet-cruze-2015/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740173/Vivucar/seed/cars/chevrolet-cruze-2015/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740175/Vivucar/seed/cars/chevrolet-cruze-2015/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740177/Vivucar/seed/cars/chevrolet-cruze-2015/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 11,
+      "car_id": 12,
+      "slug": "vinfast-lux-sa-2021",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740180/Vivucar/seed/cars/vinfast-lux-sa-2021/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740182/Vivucar/seed/cars/vinfast-lux-sa-2021/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740184/Vivucar/seed/cars/vinfast-lux-sa-2021/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740186/Vivucar/seed/cars/vinfast-lux-sa-2021/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 20,
+      "car_id": 21,
+      "slug": "chevrolet-captiva-2016",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740188/Vivucar/seed/cars/chevrolet-captiva-2016/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740190/Vivucar/seed/cars/chevrolet-captiva-2016/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740192/Vivucar/seed/cars/chevrolet-captiva-2016/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740194/Vivucar/seed/cars/chevrolet-captiva-2016/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 23,
+      "car_id": 24,
+      "slug": "mazda-3-luxury-2020",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740196/Vivucar/seed/cars/mazda-3-luxury-2020/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740199/Vivucar/seed/cars/mazda-3-luxury-2020/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740202/Vivucar/seed/cars/mazda-3-luxury-2020/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740204/Vivucar/seed/cars/mazda-3-luxury-2020/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740207/Vivucar/seed/cars/mazda-3-luxury-2020/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 24,
+      "car_id": 25,
+      "slug": "chevrolet-colorado-4x2-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740210/Vivucar/seed/cars/chevrolet-colorado-4x2-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740212/Vivucar/seed/cars/chevrolet-colorado-4x2-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740214/Vivucar/seed/cars/chevrolet-colorado-4x2-2018/03.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 26,
+      "car_id": 27,
+      "slug": "omoda-c5-flagship-turbo-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740216/Vivucar/seed/cars/omoda-c5-flagship-turbo-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740218/Vivucar/seed/cars/omoda-c5-flagship-turbo-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740220/Vivucar/seed/cars/omoda-c5-flagship-turbo-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740223/Vivucar/seed/cars/omoda-c5-flagship-turbo-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740225/Vivucar/seed/cars/omoda-c5-flagship-turbo-2025/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 29,
+      "car_id": 30,
+      "slug": "mitsubishi-attrage-2020",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740227/Vivucar/seed/cars/mitsubishi-attrage-2020/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740229/Vivucar/seed/cars/mitsubishi-attrage-2020/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740231/Vivucar/seed/cars/mitsubishi-attrage-2020/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740233/Vivucar/seed/cars/mitsubishi-attrage-2020/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740235/Vivucar/seed/cars/mitsubishi-attrage-2020/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 31,
+      "car_id": 32,
+      "slug": "toyota-fortuner-2009",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740237/Vivucar/seed/cars/toyota-fortuner-2009/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740239/Vivucar/seed/cars/toyota-fortuner-2009/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740241/Vivucar/seed/cars/toyota-fortuner-2009/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740244/Vivucar/seed/cars/toyota-fortuner-2009/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740246/Vivucar/seed/cars/toyota-fortuner-2009/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 36,
+      "car_id": 37,
+      "slug": "mitsubishi-outlander-2019",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740248/Vivucar/seed/cars/mitsubishi-outlander-2019/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740250/Vivucar/seed/cars/mitsubishi-outlander-2019/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740253/Vivucar/seed/cars/mitsubishi-outlander-2019/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740257/Vivucar/seed/cars/mitsubishi-outlander-2019/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740260/Vivucar/seed/cars/mitsubishi-outlander-2019/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 38,
+      "car_id": 39,
+      "slug": "toyota-avanza-2023",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740262/Vivucar/seed/cars/toyota-avanza-2023/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740264/Vivucar/seed/cars/toyota-avanza-2023/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740266/Vivucar/seed/cars/toyota-avanza-2023/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740268/Vivucar/seed/cars/toyota-avanza-2023/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740270/Vivucar/seed/cars/toyota-avanza-2023/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 42,
+      "car_id": 43,
+      "slug": "hyundai-veloser-hatchback-2011",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740272/Vivucar/seed/cars/hyundai-veloser-hatchback-2011/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740275/Vivucar/seed/cars/hyundai-veloser-hatchback-2011/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740277/Vivucar/seed/cars/hyundai-veloser-hatchback-2011/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740279/Vivucar/seed/cars/hyundai-veloser-hatchback-2011/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740281/Vivucar/seed/cars/hyundai-veloser-hatchback-2011/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 43,
+      "car_id": 44,
+      "slug": "suzuki-swift-hatchback-2016",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740283/Vivucar/seed/cars/suzuki-swift-hatchback-2016/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740285/Vivucar/seed/cars/suzuki-swift-hatchback-2016/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740287/Vivucar/seed/cars/suzuki-swift-hatchback-2016/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740289/Vivucar/seed/cars/suzuki-swift-hatchback-2016/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740291/Vivucar/seed/cars/suzuki-swift-hatchback-2016/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 51,
+      "car_id": 52,
+      "slug": "kia-sorento-premium-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740293/Vivucar/seed/cars/kia-sorento-premium-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740295/Vivucar/seed/cars/kia-sorento-premium-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740297/Vivucar/seed/cars/kia-sorento-premium-2018/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740299/Vivucar/seed/cars/kia-sorento-premium-2018/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 54,
+      "car_id": 55,
+      "slug": "honda-city-2016",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740301/Vivucar/seed/cars/honda-city-2016/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740303/Vivucar/seed/cars/honda-city-2016/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740305/Vivucar/seed/cars/honda-city-2016/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740307/Vivucar/seed/cars/honda-city-2016/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740309/Vivucar/seed/cars/honda-city-2016/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 58,
+      "car_id": 59,
+      "slug": "hyundai-accent-2020",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740311/Vivucar/seed/cars/hyundai-accent-2020/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740314/Vivucar/seed/cars/hyundai-accent-2020/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740318/Vivucar/seed/cars/hyundai-accent-2020/03.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 60,
+      "car_id": 61,
+      "slug": "kia-soluto-2021",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740320/Vivucar/seed/cars/kia-soluto-2021/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740321/Vivucar/seed/cars/kia-soluto-2021/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740323/Vivucar/seed/cars/kia-soluto-2021/03.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 71,
+      "car_id": 72,
+      "slug": "mercedes-c200-2008",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740325/Vivucar/seed/cars/mercedes-c200-2008/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740328/Vivucar/seed/cars/mercedes-c200-2008/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740330/Vivucar/seed/cars/mercedes-c200-2008/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740332/Vivucar/seed/cars/mercedes-c200-2008/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740334/Vivucar/seed/cars/mercedes-c200-2008/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 74,
+      "car_id": 75,
+      "slug": "mitsubishi-mirage-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740336/Vivucar/seed/cars/mitsubishi-mirage-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740338/Vivucar/seed/cars/mitsubishi-mirage-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740340/Vivucar/seed/cars/mitsubishi-mirage-2018/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740558/Vivucar/seed/cars/mitsubishi-mirage-2018/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 76,
+      "car_id": 77,
+      "slug": "kia-sonet-luxury-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740560/Vivucar/seed/cars/kia-sonet-luxury-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740563/Vivucar/seed/cars/kia-sonet-luxury-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740566/Vivucar/seed/cars/kia-sonet-luxury-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740570/Vivucar/seed/cars/kia-sonet-luxury-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740572/Vivucar/seed/cars/kia-sonet-luxury-2025/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 77,
+      "car_id": 78,
+      "slug": "mitsubishi-outlander-2022",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740574/Vivucar/seed/cars/mitsubishi-outlander-2022/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740576/Vivucar/seed/cars/mitsubishi-outlander-2022/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740578/Vivucar/seed/cars/mitsubishi-outlander-2022/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740581/Vivucar/seed/cars/mitsubishi-outlander-2022/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740584/Vivucar/seed/cars/mitsubishi-outlander-2022/05.jpg"
+        },
+        {
+          "display_order": 6,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740586/Vivucar/seed/cars/mitsubishi-outlander-2022/06.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 80,
+      "car_id": 81,
+      "slug": "mazda-3-premium-2017",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740588/Vivucar/seed/cars/mazda-3-premium-2017/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740591/Vivucar/seed/cars/mazda-3-premium-2017/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740593/Vivucar/seed/cars/mazda-3-premium-2017/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740595/Vivucar/seed/cars/mazda-3-premium-2017/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740597/Vivucar/seed/cars/mazda-3-premium-2017/05.jpg"
+        },
+        {
+          "display_order": 6,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740600/Vivucar/seed/cars/mazda-3-premium-2017/06.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 84,
+      "car_id": 85,
+      "slug": "peugeot-3008-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740602/Vivucar/seed/cars/peugeot-3008-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740605/Vivucar/seed/cars/peugeot-3008-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740607/Vivucar/seed/cars/peugeot-3008-2018/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740609/Vivucar/seed/cars/peugeot-3008-2018/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740612/Vivucar/seed/cars/peugeot-3008-2018/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 85,
+      "car_id": 86,
+      "slug": "hyundai-creta-luxury-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740614/Vivucar/seed/cars/hyundai-creta-luxury-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740617/Vivucar/seed/cars/hyundai-creta-luxury-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740620/Vivucar/seed/cars/hyundai-creta-luxury-2025/03.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 87,
+      "car_id": 88,
+      "slug": "ford-territory-titanium-2023",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740622/Vivucar/seed/cars/ford-territory-titanium-2023/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740626/Vivucar/seed/cars/ford-territory-titanium-2023/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740628/Vivucar/seed/cars/ford-territory-titanium-2023/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740631/Vivucar/seed/cars/ford-territory-titanium-2023/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740634/Vivucar/seed/cars/ford-territory-titanium-2023/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 95,
+      "car_id": 96,
+      "slug": "mazda-cx8-premium-2023",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740636/Vivucar/seed/cars/mazda-cx8-premium-2023/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740638/Vivucar/seed/cars/mazda-cx8-premium-2023/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740641/Vivucar/seed/cars/mazda-cx8-premium-2023/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740643/Vivucar/seed/cars/mazda-cx8-premium-2023/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740646/Vivucar/seed/cars/mazda-cx8-premium-2023/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 100,
+      "car_id": 101,
+      "slug": "mitsubishi-outlander-premium-2020",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740648/Vivucar/seed/cars/mitsubishi-outlander-premium-2020/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740651/Vivucar/seed/cars/mitsubishi-outlander-premium-2020/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740653/Vivucar/seed/cars/mitsubishi-outlander-premium-2020/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740655/Vivucar/seed/cars/mitsubishi-outlander-premium-2020/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740658/Vivucar/seed/cars/mitsubishi-outlander-premium-2020/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 101,
+      "car_id": 102,
+      "slug": "hyundai-venue-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740660/Vivucar/seed/cars/hyundai-venue-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740662/Vivucar/seed/cars/hyundai-venue-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740664/Vivucar/seed/cars/hyundai-venue-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740667/Vivucar/seed/cars/hyundai-venue-2025/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 107,
+      "car_id": 108,
+      "slug": "ford-ranger-xls-4x4-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740669/Vivucar/seed/cars/ford-ranger-xls-4x4-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740671/Vivucar/seed/cars/ford-ranger-xls-4x4-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740674/Vivucar/seed/cars/ford-ranger-xls-4x4-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740676/Vivucar/seed/cars/ford-ranger-xls-4x4-2025/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 108,
+      "car_id": 109,
+      "slug": "suzuki-ciaz-2017",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740679/Vivucar/seed/cars/suzuki-ciaz-2017/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740681/Vivucar/seed/cars/suzuki-ciaz-2017/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740684/Vivucar/seed/cars/suzuki-ciaz-2017/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740687/Vivucar/seed/cars/suzuki-ciaz-2017/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 111,
+      "car_id": 112,
+      "slug": "honda-city-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740689/Vivucar/seed/cars/honda-city-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740691/Vivucar/seed/cars/honda-city-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740693/Vivucar/seed/cars/honda-city-2018/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740695/Vivucar/seed/cars/honda-city-2018/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 118,
+      "car_id": 119,
+      "slug": "mazda-2-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740697/Vivucar/seed/cars/mazda-2-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740700/Vivucar/seed/cars/mazda-2-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740702/Vivucar/seed/cars/mazda-2-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740706/Vivucar/seed/cars/mazda-2-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740708/Vivucar/seed/cars/mazda-2-2025/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 120,
+      "car_id": 121,
+      "slug": "kia-sportage-signature-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740710/Vivucar/seed/cars/kia-sportage-signature-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740712/Vivucar/seed/cars/kia-sportage-signature-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740714/Vivucar/seed/cars/kia-sportage-signature-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740716/Vivucar/seed/cars/kia-sportage-signature-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740718/Vivucar/seed/cars/kia-sportage-signature-2025/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 129,
+      "car_id": 130,
+      "slug": "hyundai-venue-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740720/Vivucar/seed/cars/hyundai-venue-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740722/Vivucar/seed/cars/hyundai-venue-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740725/Vivucar/seed/cars/hyundai-venue-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740727/Vivucar/seed/cars/hyundai-venue-2024/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740729/Vivucar/seed/cars/hyundai-venue-2024/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 134,
+      "car_id": 135,
+      "slug": "kia-carens-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740732/Vivucar/seed/cars/kia-carens-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740734/Vivucar/seed/cars/kia-carens-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740737/Vivucar/seed/cars/kia-carens-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740739/Vivucar/seed/cars/kia-carens-2024/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740742/Vivucar/seed/cars/kia-carens-2024/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 135,
+      "car_id": 136,
+      "slug": "nissan-almera-el-2022",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740744/Vivucar/seed/cars/nissan-almera-el-2022/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740746/Vivucar/seed/cars/nissan-almera-el-2022/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740749/Vivucar/seed/cars/nissan-almera-el-2022/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740751/Vivucar/seed/cars/nissan-almera-el-2022/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 153,
+      "car_id": 154,
+      "slug": "honda-jazz-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740754/Vivucar/seed/cars/honda-jazz-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740758/Vivucar/seed/cars/honda-jazz-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740760/Vivucar/seed/cars/honda-jazz-2018/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740763/Vivucar/seed/cars/honda-jazz-2018/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 155,
+      "car_id": 156,
+      "slug": "honda-crv-l-awd-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740765/Vivucar/seed/cars/honda-crv-l-awd-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740767/Vivucar/seed/cars/honda-crv-l-awd-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740769/Vivucar/seed/cars/honda-crv-l-awd-2018/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740771/Vivucar/seed/cars/honda-crv-l-awd-2018/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 162,
+      "car_id": 163,
+      "slug": "mitsubishi-xpander-2026",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740775/Vivucar/seed/cars/mitsubishi-xpander-2026/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740778/Vivucar/seed/cars/mitsubishi-xpander-2026/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740780/Vivucar/seed/cars/mitsubishi-xpander-2026/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740782/Vivucar/seed/cars/mitsubishi-xpander-2026/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740785/Vivucar/seed/cars/mitsubishi-xpander-2026/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 164,
+      "car_id": 165,
+      "slug": "ford-focus-2017",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740789/Vivucar/seed/cars/ford-focus-2017/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740791/Vivucar/seed/cars/ford-focus-2017/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740793/Vivucar/seed/cars/ford-focus-2017/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740795/Vivucar/seed/cars/ford-focus-2017/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740797/Vivucar/seed/cars/ford-focus-2017/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 177,
+      "car_id": 178,
+      "slug": "hyundai-creta-luxury-2023",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740799/Vivucar/seed/cars/hyundai-creta-luxury-2023/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740802/Vivucar/seed/cars/hyundai-creta-luxury-2023/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740804/Vivucar/seed/cars/hyundai-creta-luxury-2023/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740809/Vivucar/seed/cars/hyundai-creta-luxury-2023/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740812/Vivucar/seed/cars/hyundai-creta-luxury-2023/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 183,
+      "car_id": 184,
+      "slug": "mazda-6-premium-2021",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740815/Vivucar/seed/cars/mazda-6-premium-2021/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740817/Vivucar/seed/cars/mazda-6-premium-2021/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740820/Vivucar/seed/cars/mazda-6-premium-2021/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740822/Vivucar/seed/cars/mazda-6-premium-2021/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740825/Vivucar/seed/cars/mazda-6-premium-2021/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 184,
+      "car_id": 185,
+      "slug": "mitsubishi-xforce-ultimate-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740827/Vivucar/seed/cars/mitsubishi-xforce-ultimate-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740830/Vivucar/seed/cars/mitsubishi-xforce-ultimate-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740832/Vivucar/seed/cars/mitsubishi-xforce-ultimate-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740834/Vivucar/seed/cars/mitsubishi-xforce-ultimate-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740836/Vivucar/seed/cars/mitsubishi-xforce-ultimate-2025/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 185,
+      "car_id": 186,
+      "slug": "toyota-corolla-cross-v-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740839/Vivucar/seed/cars/toyota-corolla-cross-v-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740841/Vivucar/seed/cars/toyota-corolla-cross-v-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740843/Vivucar/seed/cars/toyota-corolla-cross-v-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740845/Vivucar/seed/cars/toyota-corolla-cross-v-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740847/Vivucar/seed/cars/toyota-corolla-cross-v-2025/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 187,
+      "car_id": 188,
+      "slug": "geely-coolray-standard-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740850/Vivucar/seed/cars/geely-coolray-standard-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740852/Vivucar/seed/cars/geely-coolray-standard-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740855/Vivucar/seed/cars/geely-coolray-standard-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740857/Vivucar/seed/cars/geely-coolray-standard-2025/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 189,
+      "car_id": 190,
+      "slug": "mitsubishi-pajero-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740860/Vivucar/seed/cars/mitsubishi-pajero-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740862/Vivucar/seed/cars/mitsubishi-pajero-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740866/Vivucar/seed/cars/mitsubishi-pajero-2018/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740868/Vivucar/seed/cars/mitsubishi-pajero-2018/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740870/Vivucar/seed/cars/mitsubishi-pajero-2018/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 190,
+      "car_id": 191,
+      "slug": "honda-hrv-g-2023",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740873/Vivucar/seed/cars/honda-hrv-g-2023/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740876/Vivucar/seed/cars/honda-hrv-g-2023/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740878/Vivucar/seed/cars/honda-hrv-g-2023/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740881/Vivucar/seed/cars/honda-hrv-g-2023/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740883/Vivucar/seed/cars/honda-hrv-g-2023/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 191,
+      "car_id": 192,
+      "slug": "honda-crv-l-2022",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740885/Vivucar/seed/cars/honda-crv-l-2022/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740888/Vivucar/seed/cars/honda-crv-l-2022/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740890/Vivucar/seed/cars/honda-crv-l-2022/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740892/Vivucar/seed/cars/honda-crv-l-2022/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 203,
+      "car_id": 204,
+      "slug": "kia-cerato-2020",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740894/Vivucar/seed/cars/kia-cerato-2020/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740897/Vivucar/seed/cars/kia-cerato-2020/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740900/Vivucar/seed/cars/kia-cerato-2020/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740902/Vivucar/seed/cars/kia-cerato-2020/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740904/Vivucar/seed/cars/kia-cerato-2020/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 204,
+      "car_id": 205,
+      "slug": "vinfast-limo-green-2026",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740906/Vivucar/seed/cars/vinfast-limo-green-2026/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740908/Vivucar/seed/cars/vinfast-limo-green-2026/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740910/Vivucar/seed/cars/vinfast-limo-green-2026/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740912/Vivucar/seed/cars/vinfast-limo-green-2026/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 206,
+      "car_id": 207,
+      "slug": "suzuki-ertiga-2020",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740914/Vivucar/seed/cars/suzuki-ertiga-2020/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740919/Vivucar/seed/cars/suzuki-ertiga-2020/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740921/Vivucar/seed/cars/suzuki-ertiga-2020/03.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 214,
+      "car_id": 215,
+      "slug": "kia-carnival-premium-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740923/Vivucar/seed/cars/kia-carnival-premium-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740925/Vivucar/seed/cars/kia-carnival-premium-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740927/Vivucar/seed/cars/kia-carnival-premium-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740929/Vivucar/seed/cars/kia-carnival-premium-2024/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740932/Vivucar/seed/cars/kia-carnival-premium-2024/05.jpg"
+        },
+        {
+          "display_order": 6,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740934/Vivucar/seed/cars/kia-carnival-premium-2024/06.jpg"
+        },
+        {
+          "display_order": 7,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740936/Vivucar/seed/cars/kia-carnival-premium-2024/07.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 215,
+      "car_id": 216,
+      "slug": "vinfast-vf6-plus-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740938/Vivucar/seed/cars/vinfast-vf6-plus-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740941/Vivucar/seed/cars/vinfast-vf6-plus-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740944/Vivucar/seed/cars/vinfast-vf6-plus-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740946/Vivucar/seed/cars/vinfast-vf6-plus-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740948/Vivucar/seed/cars/vinfast-vf6-plus-2025/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 229,
+      "car_id": 230,
+      "slug": "vinfast-vf7-plus-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740950/Vivucar/seed/cars/vinfast-vf7-plus-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740952/Vivucar/seed/cars/vinfast-vf7-plus-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740955/Vivucar/seed/cars/vinfast-vf7-plus-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741039/Vivucar/seed/cars/vinfast-vf7-plus-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741041/Vivucar/seed/cars/vinfast-vf7-plus-2025/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 234,
+      "car_id": 235,
+      "slug": "mercedes-c200-exclusive-2023",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741044/Vivucar/seed/cars/mercedes-c200-exclusive-2023/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741046/Vivucar/seed/cars/mercedes-c200-exclusive-2023/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741050/Vivucar/seed/cars/mercedes-c200-exclusive-2023/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741052/Vivucar/seed/cars/mercedes-c200-exclusive-2023/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741054/Vivucar/seed/cars/mercedes-c200-exclusive-2023/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 235,
+      "car_id": 236,
+      "slug": "mercedes-c250-2016",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741057/Vivucar/seed/cars/mercedes-c250-2016/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741059/Vivucar/seed/cars/mercedes-c250-2016/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741061/Vivucar/seed/cars/mercedes-c250-2016/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741063/Vivucar/seed/cars/mercedes-c250-2016/04.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 237,
+      "car_id": 238,
+      "slug": "toyota-yaris-cross-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741065/Vivucar/seed/cars/toyota-yaris-cross-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741067/Vivucar/seed/cars/toyota-yaris-cross-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741069/Vivucar/seed/cars/toyota-yaris-cross-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741071/Vivucar/seed/cars/toyota-yaris-cross-2024/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741073/Vivucar/seed/cars/toyota-yaris-cross-2024/05.jpg"
+        }
+      ]
+    },
+    {
+      "source_order": 239,
+      "car_id": 240,
+      "slug": "hyundai-accent-2012",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741076/Vivucar/seed/cars/hyundai-accent-2012/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741078/Vivucar/seed/cars/hyundai-accent-2012/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741082/Vivucar/seed/cars/hyundai-accent-2012/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741084/Vivucar/seed/cars/hyundai-accent-2012/04.jpg"
+        }
+      ]
+    }
+  ]
+}
