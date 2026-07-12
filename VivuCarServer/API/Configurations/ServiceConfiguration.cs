@@ -1,4 +1,4 @@
-﻿using API.Services.Storage;
+using API.Services.Storage;
 using Services.Implementations;
 using Services.Interfaces;
 
@@ -19,7 +19,11 @@ public static class ServiceConfiguration
         services.AddScoped<IAdminReportService, AdminReportService>();
         services.AddScoped<IFileStorageService, LocalFileStorageService>();
         services.AddScoped<ICarService, CarService>();
+        services.AddScoped<IOwnerCarService, OwnerCarService>();
+        services.AddScoped<IOwnerBookingService, OwnerBookingService>();
+        services.AddScoped<IIncidentService, IncidentService>();
         services.AddHostedService<API.HostedServices.BookingExpirationHostedService>();
+        services.AddHostedService<API.HostedServices.AppDbSeederHostedService>();
         services.AddHostedService<API.HostedServices.MiotoCarSeedHostedService>();
 
         return services;

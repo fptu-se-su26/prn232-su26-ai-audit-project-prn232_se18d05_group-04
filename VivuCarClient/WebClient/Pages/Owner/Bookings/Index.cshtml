@@ -1,0 +1,373 @@
+@page
+@model WebClient.Pages.Owner.Bookings.IndexModel
+@{
+    ViewData["Title"] = "Quản lý Đặt xe";
+    ViewData["OwnerPage"] = "bookings";
+}
+
+<div class="space-y-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 class="text-xl font-bold text-zinc-900">Danh sách yêu cầu đặt xe</h2>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white rounded-xl border border-zinc-200 p-4 shadow-sm flex flex-col sm:flex-row gap-4">
+        <div class="w-full sm:w-64">
+            <select id="statusFilter" class="block w-full py-2 pl-3 pr-10 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm">
+                <option value="">Tất cả trạng thái</option>
+                <option value="pendingapproval">Chờ duyệt</option>
+                <option value="waitingdeposit">Chờ đặt cọc</option>
+                <option value="waitingpickup">Chờ nhận xe</option>
+                <option value="inprogress">Đang thuê</option>
+                <option value="returnrequested">Yêu cầu trả xe</option>
+                <option value="completed">Đã hoàn thành</option>
+                <option value="cancelled">Đã hủy</option>
+                <option value="rejected">Từ chối</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Data Grid -->
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left whitespace-nowrap">
+                <thead class="text-xs text-zinc-500 uppercase bg-zinc-50 border-b border-zinc-200">
+                    <tr>
+                        <th scope="col" class="px-6 py-4 font-semibold">Mã đơn</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Xe</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Khách hàng</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Thời gian thuê</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Tổng tiền</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Trạng thái</th>
+                        <th scope="col" class="px-6 py-4 text-right font-semibold">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingsTbody" class="divide-y divide-zinc-100">
+                    <tr>
+                        <td colspan="7" class="px-6 py-8 text-center text-zinc-500">
+                            <div class="flex justify-center mb-2">
+                                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                            </div>
+                            Đang tải dữ liệu...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination -->
+        <div id="pagination" class="px-6 py-4 border-t border-zinc-200 bg-zinc-50 flex items-center justify-between">
+            <div class="text-sm text-zinc-500" id="paginationInfo">Hiển thị 0 - 0 của 0 đơn</div>
+            <div class="flex gap-2" id="paginationControls"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Duyệt đơn -->
+<div id="modalApprove" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-zinc-900">Xác nhận duyệt đơn</h3>
+                <p class="text-sm text-zinc-500" id="approveBookingCode"></p>
+            </div>
+        </div>
+        <p class="text-sm text-zinc-600 mb-6">Bạn có chắc muốn <strong class="text-green-700">duyệt</strong> đơn đặt xe này không? Khách hàng sẽ được thông báo và tiến hành thanh toán cọc.</p>
+        <div class="flex justify-end gap-3">
+            <button onclick="closeModal('modalApprove')" class="px-4 py-2 rounded-lg border border-zinc-300 text-sm font-medium text-zinc-700 bg-white hover:bg-zinc-50">Hủy</button>
+            <button id="btnConfirmApprove" onclick="confirmApprove()" class="px-4 py-2 rounded-lg bg-green-600 text-sm font-medium text-white hover:bg-green-700 transition-colors">Duyệt đơn</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Từ chối đơn -->
+<div id="modalReject" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-zinc-900">Từ chối đơn đặt xe</h3>
+                <p class="text-sm text-zinc-500" id="rejectBookingCode"></p>
+            </div>
+        </div>
+        <div class="mb-4">
+            <label for="rejectReason" class="block text-sm font-medium text-zinc-700 mb-1.5">Lý do từ chối <span class="text-zinc-400 font-normal">(tùy chọn)</span></label>
+            <textarea id="rejectReason" rows="3" class="block w-full border border-zinc-300 rounded-lg px-3 py-2 text-sm focus:ring-red-500 focus:border-red-500 resize-none" placeholder="Ví dụ: Xe đang bận, không đủ điều kiện cho thuê..."></textarea>
+        </div>
+        <div class="flex justify-end gap-3">
+            <button onclick="closeModal('modalReject')" class="px-4 py-2 rounded-lg border border-zinc-300 text-sm font-medium text-zinc-700 bg-white hover:bg-zinc-50">Hủy</button>
+            <button id="btnConfirmReject" onclick="confirmReject()" class="px-4 py-2 rounded-lg bg-red-600 text-sm font-medium text-white hover:bg-red-700 transition-colors">Xác nhận từ chối</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 z-[100] hidden">
+    <div id="toastContent" class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white transition-all">
+        <svg class="w-5 h-5 shrink-0" id="toastIcon" fill="none" viewBox="0 0 24 24" stroke="currentColor"></svg>
+        <span id="toastMsg"></span>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentPage = 1;
+        let pendingActionId = null;
+
+        // ── Toast ──────────────────────────────────────────────────────────────
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const content = document.getElementById('toastContent');
+            const icon = document.getElementById('toastIcon');
+            document.getElementById('toastMsg').textContent = message;
+
+            if (type === 'success') {
+                content.className = 'flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white bg-green-600';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />';
+            } else {
+                content.className = 'flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white bg-red-600';
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+            }
+
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3500);
+        }
+
+        // ── Modal ──────────────────────────────────────────────────────────────
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function openApproveModal(bookingId, bookingCode) {
+            pendingActionId = bookingId;
+            document.getElementById('approveBookingCode').textContent = bookingCode;
+            document.getElementById('rejectReason').value = '';
+            openModal('modalApprove');
+        }
+
+        function openRejectModal(bookingId, bookingCode) {
+            pendingActionId = bookingId;
+            document.getElementById('rejectBookingCode').textContent = bookingCode;
+            document.getElementById('rejectReason').value = '';
+            openModal('modalReject');
+        }
+
+        // ── Actions ────────────────────────────────────────────────────────────
+        async function confirmApprove() {
+            if (!pendingActionId) return;
+            const btn = document.getElementById('btnConfirmApprove');
+            btn.disabled = true;
+            btn.textContent = 'Đang xử lý...';
+
+            try {
+                const res = await fetch(`/api/proxy/owner/bookings/${pendingActionId}/approve`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.message || 'Không thể duyệt đơn.');
+                }
+                closeModal('modalApprove');
+                showToast('Đơn đặt xe đã được duyệt thành công!', 'success');
+                loadBookings(currentPage);
+            } catch (e) {
+                showToast(e.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Duyệt đơn';
+            }
+        }
+
+        async function confirmReject() {
+            if (!pendingActionId) return;
+            const btn = document.getElementById('btnConfirmReject');
+            btn.disabled = true;
+            btn.textContent = 'Đang xử lý...';
+
+            const reason = document.getElementById('rejectReason').value.trim();
+
+            try {
+                const res = await fetch(`/api/proxy/owner/bookings/${pendingActionId}/reject`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ reason: reason || null })
+                });
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.message || 'Không thể từ chối đơn.');
+                }
+                closeModal('modalReject');
+                showToast('Đã từ chối đơn đặt xe.', 'success');
+                loadBookings(currentPage);
+            } catch (e) {
+                showToast(e.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Xác nhận từ chối';
+            }
+        }
+
+        // ── Load ───────────────────────────────────────────────────────────────
+        async function loadBookings(page = 1) {
+            currentPage = page;
+            const status = document.getElementById('statusFilter').value;
+            
+            const tbody = document.getElementById('bookingsTbody');
+            tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-zinc-500"><div class="flex justify-center mb-2"><div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div></div>Đang tải...</td></tr>`;
+            
+            try {
+                const params = new URLSearchParams({ page, pageSize: 10 });
+                if (status) params.append('status', status);
+
+                const response = await fetch(`/api/proxy/owner/bookings?${params.toString()}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) return window.location.href = '/Index';
+                    throw new Error('Failed to load bookings');
+                }
+
+                const data = await response.json();
+                const items = Array.isArray(data) ? data : (data.items || []);
+                const totalCount = Array.isArray(data) ? data.length : (data.totalCount || items.length);
+                const totalPages = Array.isArray(data) ? 1 : (data.totalPages || 1);
+                
+                renderTable(items);
+                renderPagination(page, totalPages, totalCount);
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-red-500">Lỗi khi tải dữ liệu.</td></tr>`;
+            }
+        }
+
+        // ── Render ─────────────────────────────────────────────────────────────
+        function renderStatusBadge(status) {
+            const map = {
+                'pendingapproval': ['bg-amber-100 text-amber-800', 'Chờ duyệt'],
+                'waitingdeposit':  ['bg-blue-100 text-blue-800',   'Chờ đặt cọc'],
+                'waitingpickup':   ['bg-indigo-100 text-indigo-800','Chờ nhận xe'],
+                'inprogress':      ['bg-green-100 text-green-800',  'Đang thuê'],
+                'returnrequested': ['bg-purple-100 text-purple-800','Yêu cầu trả xe'],
+                'completed':       ['bg-zinc-100 text-zinc-700',    'Hoàn thành'],
+                'cancelled':       ['bg-red-100 text-red-800',      'Đã hủy'],
+                'rejected':        ['bg-red-100 text-red-800',      'Đã từ chối'],
+            };
+            const s = status?.toLowerCase() ?? '';
+            const [cls, label] = map[s] ?? ['bg-zinc-100 text-zinc-700', status];
+            return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${cls}">${label}</span>`;
+        }
+
+        function renderActions(b) {
+            const s = b.status?.toLowerCase();
+            let html = `<a href="/Owner/Bookings/Detail?id=${b.id}" class="text-sm font-medium text-primary hover:underline">Chi tiết</a>`;
+            if (s === 'pendingapproval') {
+                html += ` <button onclick="openApproveModal(${b.id}, '${b.bookingCode}')" class="text-sm font-medium text-green-600 hover:underline">Duyệt</button>`;
+                html += ` <button onclick="openRejectModal(${b.id}, '${b.bookingCode}')" class="text-sm font-medium text-red-500 hover:underline">Từ chối</button>`;
+            }
+            return html;
+        }
+
+        function renderTable(items) {
+            const tbody = document.getElementById('bookingsTbody');
+            if (items.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center justify-center text-zinc-400">
+                                <svg class="h-12 w-12 mb-3 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+                                <p>Không tìm thấy đơn đặt xe nào.</p>
+                            </div>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = items.map(b => `
+                <tr class="hover:bg-zinc-50 transition-colors group">
+                    <td class="px-6 py-4 font-medium text-zinc-900">${b.bookingCode}</td>
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            ${b.carImageUrl 
+                                ? `<img src="${b.carImageUrl}" class="w-10 h-10 rounded object-cover" />`
+                                : `<div class="w-10 h-10 rounded bg-zinc-200 flex items-center justify-center"><svg class="w-5 h-5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L28 20M6 12a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>`
+                            }
+                            <div>
+                                <div class="font-medium text-zinc-900">${b.carName}</div>
+                                <div class="text-xs text-zinc-500">${b.licensePlate}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="font-medium text-zinc-900">${b.customerName}</div>
+                        <div class="text-xs text-zinc-500">${b.customerPhone}</div>
+                    </td>
+                    <td class="px-6 py-4 text-xs text-zinc-500">
+                        <div>Bắt đầu: <span class="font-medium text-zinc-700">${new Date(b.startDateTime).toLocaleString('vi-VN')}</span></div>
+                        <div class="mt-0.5">Kết thúc: <span class="font-medium text-zinc-700">${new Date(b.endDateTime).toLocaleString('vi-VN')}</span></div>
+                    </td>
+                    <td class="px-6 py-4 font-semibold text-zinc-900">
+                        ${b.totalAmount?.toLocaleString('vi-VN')}đ
+                    </td>
+                    <td class="px-6 py-4">${renderStatusBadge(b.status)}</td>
+                    <td class="px-6 py-4 text-right space-x-2">${renderActions(b)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPagination(page, totalPages, totalCount) {
+            const info = document.getElementById('paginationInfo');
+            const controls = document.getElementById('paginationControls');
+
+            if (totalCount === 0) {
+                info.textContent = 'Không có dữ liệu';
+                controls.innerHTML = '';
+                return;
+            }
+
+            info.textContent = `Tổng cộng ${totalCount} đơn`;
+
+            if (totalPages > 1) {
+                let html = '';
+                html += `<button onclick="loadBookings(${page - 1})" ${page === 1 ? 'disabled class="px-3 py-1.5 rounded-md border border-zinc-200 text-sm font-medium text-zinc-400 bg-zinc-50 cursor-not-allowed"' : 'class="px-3 py-1.5 rounded-md border border-zinc-300 text-sm font-medium text-zinc-700 bg-white hover:bg-zinc-50"'}>Trước</button>`;
+                html += `<button onclick="loadBookings(${page + 1})" ${page >= totalPages ? 'disabled class="px-3 py-1.5 rounded-md border border-zinc-200 text-sm font-medium text-zinc-400 bg-zinc-50 cursor-not-allowed"' : 'class="px-3 py-1.5 rounded-md border border-zinc-300 text-sm font-medium text-zinc-700 bg-white hover:bg-zinc-50"'}>Sau</button>`;
+                controls.innerHTML = html;
+            } else {
+                controls.innerHTML = '';
+            }
+        }
+
+        // ── Init ───────────────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const status = urlParams.get('status');
+            if (status) {
+                document.getElementById('statusFilter').value = status.toLowerCase();
+            }
+
+            loadBookings(1);
+            document.getElementById('statusFilter').addEventListener('change', () => loadBookings(1));
+
+            // Close modals when clicking backdrop
+            ['modalApprove', 'modalReject'].forEach(id => {
+                document.getElementById(id).addEventListener('click', function(e) {
+                    if (e.target === this) closeModal(id);
+                });
+            });
+        });
+    </script>
+}

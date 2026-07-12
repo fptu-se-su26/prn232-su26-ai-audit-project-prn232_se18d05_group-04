@@ -63,6 +63,11 @@ public class CarRepository(VivuCarDbContext dbContext) : ICarRepository
             cars = cars.Where(car => car.TransmissionType == transmissionType);
         }
 
+        if (query.OwnerId.HasValue)
+        {
+            cars = cars.Where(car => car.OwnerId == query.OwnerId.Value);
+        }
+
         var totalItems = await cars.CountAsync(cancellationToken);
         var items = await cars
             .OrderByDescending(car => car.CreatedAt)

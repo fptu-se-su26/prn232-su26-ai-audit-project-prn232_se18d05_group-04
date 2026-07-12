@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using BusinessObjects.Data;
 using BusinessObjects.Enums;
@@ -14,7 +14,7 @@ public class MiotoCarSeedHostedService(
     ILogger<MiotoCarSeedHostedService> logger
 ) : IHostedService
 {
-    private const string SeedOwnerEmail = "mioto-seed-owner@vivucar.local";
+    private const string SeedOwnerEmail = "owner02@vivucar.local";
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     public async Task StartAsync(CancellationToken cancellationToken)

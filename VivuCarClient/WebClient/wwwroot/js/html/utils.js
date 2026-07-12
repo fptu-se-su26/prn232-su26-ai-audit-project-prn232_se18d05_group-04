@@ -50,6 +50,48 @@ window.VivuCarUtils = {
     };
     return this.statusBadge(type, value, labels[value] || value);
   },
+  // Convenience: render badge specifically for car status
+  renderCarStatusBadge(status) {
+    const map = {
+      Available:   { label: "Sẵn sàng",  cls: "bg-green-100 text-green-800" },
+      available:   { label: "Sẵn sàng",  cls: "bg-green-100 text-green-800" },
+      Rented:      { label: "Đang thuê", cls: "bg-blue-100 text-blue-800" },
+      rented:      { label: "Đang thuê", cls: "bg-blue-100 text-blue-800" },
+      Maintenance: { label: "Bảo trì",   cls: "bg-yellow-100 text-yellow-800" },
+      maintenance: { label: "Bảo trì",   cls: "bg-yellow-100 text-yellow-800" },
+      Blocked:     { label: "Đã khóa",   cls: "bg-red-100 text-red-800" },
+      blocked:     { label: "Đã khóa",   cls: "bg-red-100 text-red-800" },
+      Unavailable: { label: "Tạm ngưng", cls: "bg-zinc-100 text-zinc-600" },
+      unavailable: { label: "Tạm ngưng", cls: "bg-zinc-100 text-zinc-600" }
+    };
+    const entry = map[status] || { label: status, cls: "bg-zinc-100 text-zinc-600" };
+    return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${entry.cls}">${entry.label}</span>`;
+  },
+  // Convenience: render badge specifically for booking status
+  renderBookingStatusBadge(status) {
+    const map = {
+      PendingApproval:  { label: "Chờ xác nhận",    cls: "bg-amber-100 text-amber-800" },
+      pendingApproval:  { label: "Chờ xác nhận",    cls: "bg-amber-100 text-amber-800" },
+      Rejected:         { label: "Đã từ chối",       cls: "bg-red-100 text-red-800" },
+      rejected:         { label: "Đã từ chối",       cls: "bg-red-100 text-red-800" },
+      WaitingDeposit:   { label: "Chờ đặt cọc",     cls: "bg-amber-100 text-amber-800" },
+      waitingDeposit:   { label: "Chờ đặt cọc",     cls: "bg-amber-100 text-amber-800" },
+      WaitingPickup:    { label: "Chờ giao xe",     cls: "bg-blue-100 text-blue-800" },
+      waitingPickup:    { label: "Chờ giao xe",     cls: "bg-blue-100 text-blue-800" },
+      InProgress:       { label: "Đang thuê",        cls: "bg-indigo-100 text-indigo-800" },
+      inProgress:       { label: "Đang thuê",        cls: "bg-indigo-100 text-indigo-800" },
+      ReturnRequested:  { label: "Yêu cầu trả xe",  cls: "bg-orange-100 text-orange-800" },
+      returnRequested:  { label: "Yêu cầu trả xe",  cls: "bg-orange-100 text-orange-800" },
+      Completed:        { label: "Hoàn thành",       cls: "bg-green-100 text-green-800" },
+      completed:        { label: "Hoàn thành",       cls: "bg-green-100 text-green-800" },
+      Cancelled:        { label: "Đã hủy",           cls: "bg-red-100 text-red-800" },
+      cancelled:        { label: "Đã hủy",           cls: "bg-red-100 text-red-800" },
+      Expired:          { label: "Hết hạn",          cls: "bg-zinc-100 text-zinc-600" },
+      expired:          { label: "Hết hạn",          cls: "bg-zinc-100 text-zinc-600" }
+    };
+    const entry = map[status] || { label: status, cls: "bg-zinc-100 text-zinc-600" };
+    return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${entry.cls}">${entry.label}</span>`;
+  },
   renderToast(message, type) {
     this.showToast(message, type);
   },
