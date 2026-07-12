@@ -1,18 +1,17 @@
-import { apiFetch, fetchJson, sendJson } from "../../shared/api-client.js";
+﻿import { apiFetch, fetchJson, sendJson } from "../../shared/api-client.js";
 
-export async function getVouchers(params = {}) {
+export function getVouchers(params = {}) {
     const query = new URLSearchParams();
-    Object.entries(params).forEach(([key, value]) => {
-        if (value) query.set(key, value);
-    });
-    return fetchJson(`api/admin/vouchers${query.size ? `?${query}` : ""}`);
+    Object.entries(params).forEach(([key, value]) => { if (value !== "" && value != null) query.set(key, value); });
+    return fetchJson(`api/admin/vouchers${query}`);
 }
-
-export async function saveVoucher(data, id = null) {
-    return sendJson(id ? `api/admin/vouchers/${id}` : "api/admin/vouchers", data, { method: id ? "PUT" : "POST" });
-}
-
+export function getVoucher(id) { return fetchJson(`api/admin/vouchers/${id}`); }
+export function getVoucherPerformance(id) { return fetchJson(`api/admin/vouchers/${id}/performance`); }
+export function saveVoucher(data, id) { return sendJson(id ? `api/admin/vouchers/${id}` : "api/admin/vouchers", data, { method: id ? "PUT" : "POST" }); }
 export async function deleteVoucher(id) {
     const response = await apiFetch(`api/admin/vouchers/${id}`, { method: "DELETE" });
-    if (!response.ok) throw new Error(`Unable to delete voucher ${id}.`);
+    if (!response.ok) { const payload = await response.json().catch(() => null); throw new Error(payload.message || "Khong th xa voucher."); }
 }
+
+
+

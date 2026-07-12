@@ -548,3 +548,23 @@ th {
   cursor: not-allowed;
   opacity: 0.48;
 }
+
+/* Admin voucher management */
+.voucher-toolbar { display:grid; grid-template-columns:minmax(240px,1fr) 180px 190px auto; gap:12px; align-items:end; margin-bottom:16px; }
+.voucher-toolbar .field, .voucher-form-layout .field { display:grid; gap:7px; color:var(--admin-muted); font-size:.86rem; font-weight:650; }
+.voucher-toolbar input, .voucher-toolbar select, .voucher-form-layout input { min-height:42px; border:1px solid var(--admin-border-strong); border-radius:var(--admin-radius); background:#fff; padding:9px 11px; font:inherit; }
+.voucher-toolbar input:focus, .voucher-toolbar select:focus, .voucher-form-layout input:focus { outline:3px solid rgba(37,99,235,.14); border-color:var(--admin-primary); }
+.summary-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin:18px 0; }
+.summary-card { background:var(--admin-surface); border:1px solid var(--admin-border); border-radius:var(--admin-radius); padding:16px; }
+.summary-card span, td small, .usage-row small { display:block; color:var(--admin-muted); }
+.summary-card strong { display:block; margin-top:8px; font-size:1.65rem; }
+.table-actions { white-space:nowrap; text-align:right; }
+.btn-ghost { min-height:34px; padding:6px 9px; background:transparent; border:0; color:var(--admin-primary); }
+.btn-ghost.danger { color:var(--admin-danger); }
+.status-active { background:#ecfdf3; color:#15803d; }.status-expired { background:#f4f4f5; color:#52525b; }.status-used_up { background:#fff7ed; color:#b45309; }
+.pagination-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px; }
+.drawer { position:fixed; top:0; right:0; width:min(480px,100%); height:100vh; padding:22px; background:#fff; border-left:1px solid var(--admin-border); transform:translateX(105%); transition:transform 180ms ease; z-index:31; overflow:auto; }
+.drawer.is-open { transform:translateX(0); }.drawer-overlay { position:fixed; inset:0; background:rgba(24,24,27,.36); z-index:30; }.drawer-head,.usage-row { display:flex; justify-content:space-between; align-items:center; gap:12px; }.icon-button { border:1px solid var(--admin-border); background:#fff; border-radius:10px; width:40px; height:40px; font-size:1.4rem; cursor:pointer; }
+.performance-kpis { display:grid; gap:10px; margin:20px 0; }.performance-kpis article,.usage-row { border:1px solid var(--admin-border); border-radius:var(--admin-radius); padding:13px; }.performance-kpis span { display:block; color:var(--admin-muted); font-size:.84rem; }.performance-kpis strong { display:block; margin-top:4px; }.usage-row { margin-top:8px; }
+.voucher-form-layout { display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:20px; align-items:start; }.form-stack { display:grid; gap:16px; }.form-card { background:#fff; border:1px solid var(--admin-border); border-radius:var(--admin-radius); padding:20px; }.form-card h2 { margin-top:0; }.report-types { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }.radio-card { display:flex; gap:9px; padding:13px; border:1px solid var(--admin-border); border-radius:var(--admin-radius); }.radio-card:has(input:checked) { border-color:var(--admin-primary); background:#eff6ff; }.sticky-actions { display:flex; justify-content:flex-end; gap:10px; position:sticky; bottom:12px; padding:12px; background:rgba(247,247,245,.92); backdrop-filter:blur(8px); border-radius:var(--admin-radius); }.voucher-preview { position:sticky; top:88px; min-height:230px; overflow:hidden; }.voucher-preview::after { content:""; position:absolute; width:150px; height:150px; right:-55px; bottom:-55px; border-radius:50%; background:#eff6ff; }.alert-error { padding:12px; border:1px solid #fecaca; border-radius:var(--admin-radius); background:#fef2f2; color:#b91c1c; }
+@media (max-width:900px){.voucher-toolbar,.voucher-form-layout{grid-template-columns:1fr}.voucher-preview{position:static}.summary-grid{grid-template-columns:1fr}.report-types{grid-template-columns:1fr}}

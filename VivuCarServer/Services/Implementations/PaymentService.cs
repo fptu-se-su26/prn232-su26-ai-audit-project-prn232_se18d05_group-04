@@ -1,4 +1,4 @@
-using BusinessObjects.Enums;
+﻿using BusinessObjects.Enums;
 using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
@@ -140,7 +140,7 @@ public class PaymentService(IBookingRepository bookingRepository) : IPaymentServ
                         {
                             var overlapOldStatus = overlap.Status;
                             overlap.Status = BookingStatus.Rejected;
-                            overlap.CancellationReason = "Tự động từ chối do trùng lịch với đơn đặt xe khác đã đặt cọc.";
+                            overlap.CancellationReason = "Tá»± Ä‘á»™ng tá»« chá»‘i do trÃ¹ng lá»‹ch vá»›i Ä‘Æ¡n Ä‘áº·t xe khÃ¡c Ä‘Ã£ Ä‘áº·t cá»c.";
                             overlap.UpdatedAt = DateTime.UtcNow;
 
                             overlap.StatusHistories.Add(new BookingStatusHistory
@@ -156,10 +156,6 @@ public class PaymentService(IBookingRepository bookingRepository) : IPaymentServ
                             if (overlap.BookingVoucher != null)
                             {
                                 var voucher = await bookingRepository.GetVoucherByCodeAsync(overlap.BookingVoucher.Code, cancellationToken);
-                                if (voucher != null && voucher.UsedCount > 0)
-                                {
-                                    voucher.UsedCount--;
-                                }
                             }
                         }
                     }
@@ -219,3 +215,4 @@ public class PaymentService(IBookingRepository bookingRepository) : IPaymentServ
         return await ((BookingRepository)bookingRepository).GetByTransactionCodeAsync(code, cancellationToken);
     }
 }
+

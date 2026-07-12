@@ -6,8 +6,8 @@ Trang thai: chua bat dau. Khong dung phase nay de bu endpoint cua Phase 04-06.
 
 - [x] Phase 03 da dong; browser smoke test skipped by request.
 - [x] Revenue endpoint va dashboard da hoan tat; browser smoke test skipped by request.
-- [ ] Export job lifecycle da hoan tat.
-- [ ] Voucher CRUD/performance da hoan tat.
+- [x] Export job lifecycle da hoan tat; browser smoke test skipped by request.
+- [x] Voucher CRUD/performance da hoan tat; browser smoke test skipped by request.
 
 ## QA
 
@@ -27,3 +27,4 @@ Trang thai: chua bat dau. Khong dung phase nay de bu endpoint cua Phase 04-06.
 - Khong con endpoint frontend goi ma backend khong co.
 - Test/build pass, browser QA desktop/mobile pass.
 - Bao cao cuoi liet ke endpoint, page, known limitation va mock con lai.
+

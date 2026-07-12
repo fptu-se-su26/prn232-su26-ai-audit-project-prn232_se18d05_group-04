@@ -1,4 +1,4 @@
-using BusinessObjects.Enums;
+﻿using BusinessObjects.Enums;
 using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
@@ -82,22 +82,22 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         {
             // We run synchronously since this helper is called from async wrappers
             var voucher = bookingRepository.GetVoucherByCodeAsync(voucherCode).GetAwaiter().GetResult();
-            if (voucher != null && voucher.IsActive && voucher.StartDateTime <= DateTime.UtcNow && voucher.EndDateTime >= DateTime.UtcNow)
+            if (voucher != null && (!voucher.ExpiresAt.HasValue || voucher.ExpiresAt.Value >= DateTime.UtcNow))
             {
-                if (voucher.UsageLimit == null || voucher.UsedCount < voucher.UsageLimit)
+                if (voucher.Quantity > voucher.BookingVouchers.Count)
                 {
-                    if (voucher.MinOrderAmount == null || basePrice >= voucher.MinOrderAmount.Value)
+                    if (basePrice >= voucher.MinOrderAmount)
                     {
                         appliedVoucher = voucher;
                         if (voucher.DiscountType == DiscountType.Percentage)
                         {
                             discountAmount = basePrice * (voucher.DiscountValue / 100m);
-                            if (voucher.MaxDiscountAmount.HasValue && discountAmount > voucher.MaxDiscountAmount.Value)
+                            if (voucher.MaxDiscount > 0 && discountAmount > voucher.MaxDiscount)
                             {
-                                discountAmount = voucher.MaxDiscountAmount.Value;
+                                discountAmount = voucher.MaxDiscount;
                             }
                         }
-                        else if (voucher.DiscountType == DiscountType.FixedAmount)
+                        else if (voucher.DiscountType == DiscountType.Fixed)
                         {
                             discountAmount = voucher.DiscountValue;
                         }
@@ -222,9 +222,6 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
                     DiscountAmount = pricing.DiscountAmount,
                     AppliedAt = DateTime.UtcNow
                 };
-                
-                // Track usage count
-                voucher.UsedCount++;
             }
 
             // Track Status History
@@ -342,10 +339,6 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             if (booking.BookingVoucher != null)
             {
                 var voucher = await bookingRepository.GetVoucherByCodeAsync(booking.BookingVoucher.Code, cancellationToken);
-                if (voucher != null && voucher.UsedCount > 0)
-                {
-                    voucher.UsedCount--;
-                }
             }
 
             await bookingRepository.SaveChangesAsync(cancellationToken);
@@ -464,10 +457,6 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         if (booking.BookingVoucher != null)
         {
             var voucher = await bookingRepository.GetVoucherByCodeAsync(booking.BookingVoucher.Code, cancellationToken);
-            if (voucher != null && voucher.UsedCount > 0)
-            {
-                voucher.UsedCount--;
-            }
         }
 
         await bookingRepository.SaveChangesAsync(cancellationToken);
@@ -549,3 +538,4 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         };
     }
 }
+

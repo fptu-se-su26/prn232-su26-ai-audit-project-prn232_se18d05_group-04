@@ -34,5 +34,23 @@ Cap nhat: 2026-07-11.
 - Dashboard Razor dung API that, co range filter, chart HTML/CSS, loading, empty, error va retry.
 - 4 test reporting moi; tong 22/22 test pass.
 - Browser smoke test duoc bo qua theo yeu cau ngay 2026-07-11.
+## Phase 05 - Export reports
 
+- Da them `ExportJobs` entity, EF configuration va migration.
+- Da them preview cho payments, users, cars va revenue.
+- Da them lifecycle create/list/detail/download theo authenticated admin.
+- CSV la file CSV UTF-8 that; PDF la file PDF backend that, khong gia duoi file.
+- File download duoc doc qua file store co path validation.
+- Razor page dung API that, co preview, history, loading, empty, error va download.
+- 3 test export moi; tong 25/25 test pass.
+- Migration `AddExportJobs` da apply; browser smoke test skipped by request.
 
+## Phase 06 - Admin voucher management
+
+- Voucher model va EF schema da can chinh theo `draw-db.sql`; migration bao toan du lieu cot cu.
+- Da them CRUD, filter/pagination, validation, delete conflict va performance API cho admin.
+- Usage count duoc tinh tu `BookingVouchers`, khong con `UsedCount` thu cong.
+- Razor list/form goi API that, co loading, empty, error, pagination va performance drawer.
+- 4 test voucher moi; tong 29/29 test pass.
+- Migration `AlignVoucherSchemaAndAdminManagement` da apply; server/client build pass.
+- Browser smoke test duoc bo qua theo yeu cau.

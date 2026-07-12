@@ -10,11 +10,11 @@ Cap nhat: 2026-07-11.
 | 02 - Admin users | Completed | List, lock/unlock va FE API client da noi backend. |
 | 03 - Admin cars | Completed | Browser smoke test skipped by request. |
 | 04 - Revenue dashboard | Completed | Snapshot model/migration, API, dashboard va tests da co. |
-| 05 - Export reports | Next | FE da co khung, backend export job chua ton tai. |
-| 06 - Vouchers | Pending | FE da co khung, backend voucher API chua ton tai. |
-| 07 - Hardening/QA | Blocked by 05-06 | Chi bat dau sau khi endpoint con lai hoan tat. |
+| 05 - Export reports | Completed | Preview, persisted jobs, CSV/PDF va download da co. |
+| 06 - Vouchers | Completed | CRUD, validation, performance, migration va frontend API da hoan tat. |
+| 07 - Hardening/QA | Next | San sang regression, accessibility, responsive va encoding cleanup. |
 
-Phase 01-04 da duoc rut khoi backlog va luu tai `completed-phases.md`.
+Phase 01-06 da duoc rut khoi backlog va luu tai `completed-phases.md`.
 
 ## Kien truc bat buoc
 
@@ -33,7 +33,7 @@ Razor Pages/admin JS -> /api/proxy/api/... -> WebClient proxy -> API -> Service 
 2. Phase 06: voucher CRUD + performance.
 3. Phase 07: regression, accessibility, responsive, encoding va dependency cleanup.
 
-## Definition of Done Phase 05-06
+## Definition of Done Phase 06
 
 - Contract, DTO, controller, service va repository/query hoan tat.
 - Endpoint co authorization Admin.
@@ -43,8 +43,9 @@ Razor Pages/admin JS -> /api/proxy/api/... -> WebClient proxy -> API -> Service 
 
 ## Verify 2026-07-11
 
-- Server tests: 22 passed, 0 failed.
+- Server tests: 29 passed, 0 failed.
 - API build pass; con 1 warning `CS1998` tai `BookingsController.cs`.
 - WebClient build pass, 0 warning.
 - Con 2 warning nullable `CS8602` trong `BookingRepository.cs` khi chay test.
-- Browser E2E duoc bo qua theo yeu cau; Phase 03-04 dong o muc code/test/build.
+- Browser E2E duoc bo qua theo yeu cau; Phase 03-05 dong o muc code/test/build.
+

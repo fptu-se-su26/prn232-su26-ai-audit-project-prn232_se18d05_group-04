@@ -1,16 +1,33 @@
 ﻿@page "/admin/vouchers"
 @model WebClient.Pages.Admin.Vouchers.IndexModel
 @{
-    ViewData["Title"] = "Khuyến mãi";
+    ViewData["Title"] = "Quan ly voucher";
     ViewData["AdminPage"] = "vouchers";
 }
 
-<div class="page-heading"><div><h1>Quản lý khuyến mãi</h1><p>Tính lượt dùng từ `voucher_usages`, số lượng còn lại từ `vouchers.quantity`.</p></div><a class="btn btn-primary" href="admin-voucher-form.html">Tạo voucher</a></div>
-    <section id="voucherSummary" class="summary-grid"></section>
-    <section class="toolbar toolbar-vouchers"><input id="searchVoucherInput" placeholder="Tìm theo code hoặc tên"><select id="voucherStatusFilter"><option value="">Tất cả trạng thái</option><option value="active">Đang hoạt động</option><option value="expired">Đã hết hạn</option><option value="used_up">Đã dùng hết lượt</option></select><select id="discountTypeFilter"><option value="">Tất cả loại</option><option value="percentage">Phần trăm</option><option value="fixed">Cố định</option></select><input id="voucherDateFrom" type="date"><input id="voucherDateTo" type="date"><button class="btn btn-primary" id="btnFilterVoucher">Lọc</button><button class="btn btn-secondary" id="btnResetVoucherFilter">Đặt lại</button></section>
-    <section class="panel"><div id="voucherEmpty" class="empty-state hidden"><h3>Chưa có voucher phù hợp</h3><p>Thử đổi bộ lọc hoặc tạo một voucher mới cho chiến dịch tiếp theo.</p><a class="btn btn-primary" href="admin-voucher-form.html">Tạo voucher mới</a></div><div class="table-wrap"><table><thead><tr><th>Code</th><th>Tên</th><th>Loại</th><th>Giá trị</th><th>Tối thiểu</th><th>Hết hạn</th><th>Lượt dùng</th><th>Trạng thái</th><th>Hành động</th></tr></thead><tbody id="voucherTableBody"></tbody></table></div></section>
+<div data-admin-vouchers-page>
+    <header class="page-heading">
+        <div><p class="eyebrow">VOUCHER MANAGEMENT</p><h1>Quan ly voucher</h1><p>Theo di hnDa dung, s lut cn li v hiu qu tng chin dch.</p></div>
+        <a class="btn btn-primary" href="/admin/vouchers/form">To voucher</a>
+    </header>
 
-<aside class="drawer" id="voucherPerformanceDrawer"><div class="drawer-head"><h2>Hiệu suất voucher</h2><button class="icon-button" id="btnClosePerformance" type="button">×</button></div><div id="performanceContent"></div></aside><div id="drawerOverlay" class="drawer-overlay"></div>
-@section Scripts {
-    <script src="~/js/html/admin-vouchers.js" asp-append-version="true"></script>
-}
+    <section id="voucherSummary" class="summary-grid" aria-label="Tong quan voucher"></section>
+    <section class="panel voucher-toolbar" aria-label="B lc voucher">
+        <label class="field"><span>Tim kiem</span><input id="searchVoucherInput" placeholder="M hoc tn voucher" /></label>
+        <label class="field"><span>Trang thai</span><select id="voucherStatusFilter"><option value="">Tat ca</option><option value="active">Dang hoat dong</option><option value="expired">Da het han</option><option value="used_up">Da dung het</option></select></label>
+        <label class="field"><span>Loai giam</span><select id="discountTypeFilter"><option value="">Tat ca</option><option value="percentage">Phan tram</option><option value="fixed">S tin c dnh</option></select></label>
+        <button class="btn btn-secondary" id="btnResetVoucherFilter" type="button">Dat lai</button>
+    </section>
+
+    <section class="panel">
+        <div class="table-wrap"><table><thead><tr><th>Voucher</th><th>Loi</th><th>Gia tri</th><th>Dieu kien toi thieu</th><th>Da dung</th><th>Het han</th><th>Trang thai</th><th class="table-actions">Thao tac</th></tr></thead><tbody id="voucherTableBody"><tr><td colspan="8" class="empty-cell">Dang tai voucher</td></tr></tbody></table></div>
+        <div class="pagination-bar"><p id="voucherPageInfo"></p><div><button class="btn btn-secondary" id="voucherPrev" type="button">Truoc</button><button class="btn btn-secondary" id="voucherNext" type="button">Suau</button></div></div>
+    </section>
+
+    <div id="drawerOverlay" class="drawer-overlay" hidden></div>
+    <aside class="drawer" id="voucherPerformanceDrawer" aria-hidden="true"><div class="drawer-head"><div><p class="eyebrow">PERFORMANCE</p><h2>Hieu qua voucher</h2></div><button class="icon-button" id="btnClosePerformance" type="button" aria-label="ng"></button></div><div id="performanceContent"></div></aside>
+</div>
+
+@section Scripts { <script type="module" src="~/js/admin/vouchers/index.js" asp-append-version="true"></script> }
+
+
