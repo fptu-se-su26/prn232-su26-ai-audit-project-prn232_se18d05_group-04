@@ -209,6 +209,15 @@ public class PaymentService(IBookingRepository bookingRepository) : IPaymentServ
         };
     }
 
+    public async Task DeletePaymentByBookingIdAsync(int bookingId, CancellationToken cancellationToken = default)
+    {
+        var booking = await bookingRepository.GetByIdAsync(bookingId, cancellationToken);
+        if (booking == null) return;
+        
+        booking.PaymentTransactions.Clear();
+        await bookingRepository.SaveChangesAsync(cancellationToken);
+    }
+
     // Temporary helper inside service until added to repository
     private async Task<Booking?> GetBookingByTransactionCodeInternalAsync(string code, CancellationToken cancellationToken)
     {

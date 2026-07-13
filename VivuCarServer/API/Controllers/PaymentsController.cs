@@ -92,4 +92,18 @@ public class PaymentsController(IPaymentService paymentService) : ControllerBase
             return Unauthorized(new { message = ex.Message });
         }
     }
+    [HttpDelete("by-booking/{bookingId:int}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeletePaymentByBookingId(int bookingId, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await paymentService.DeletePaymentByBookingIdAsync(bookingId, cancellationToken);
+            return Ok(new { message = "Payments for booking deleted successfully." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = "Failed to delete payments.", error = ex.Message });
+        }
+    }
 }
