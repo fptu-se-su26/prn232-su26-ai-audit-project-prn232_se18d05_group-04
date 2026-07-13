@@ -19,6 +19,10 @@ public class Booking
     public decimal DepositAmount { get; set; }
     public decimal TotalAmount { get; set; }
     public decimal RemainingAmount { get; set; }
+
+    /// <summary>Phí phạt trả xe trễ (nếu có). Tính theo số giờ/ngày trễ × giá thuê.</summary>
+    public decimal? OverdueFee { get; set; }
+
     public BookingStatus Status { get; set; } = BookingStatus.PendingApproval;
     public string? CancellationReason { get; set; }
     public DateTime? CancelledAt { get; set; }

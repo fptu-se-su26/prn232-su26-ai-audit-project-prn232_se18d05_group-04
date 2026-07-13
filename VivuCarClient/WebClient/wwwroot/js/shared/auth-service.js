@@ -10,6 +10,13 @@ async function readJson(response) {
 function setSession(session) {
     accessToken = session?.accessToken ?? null;
     currentUser = session?.user ?? null;
+    
+    if (accessToken) {
+        localStorage.setItem('vivucar_token', accessToken);
+    } else {
+        localStorage.removeItem('vivucar_token');
+    }
+
     document.dispatchEvent(
         new CustomEvent("vivucar:auth-changed", {
             detail: currentUser

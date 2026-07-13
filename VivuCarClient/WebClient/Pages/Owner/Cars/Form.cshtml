@@ -1,0 +1,410 @@
+@page
+@model WebClient.Pages.Owner.Cars.FormModel
+@{
+    var isEdit = Model.Id.HasValue;
+    ViewData["Title"] = isEdit ? "Cập nhật thông tin xe" : "Đăng xe mới";
+    ViewData["OwnerPage"] = "cars";
+    
+}
+
+<div class="max-w-4xl mx-auto space-y-6 pb-12">
+    <div class="flex items-center gap-4">
+        <a href="/Owner/Cars/Index" class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-white border border-zinc-200 text-zinc-600 hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-colors">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        </a>
+        <h2 class="text-xl font-bold text-zinc-900">@ViewData["Title"]</h2>
+    </div>
+
+    <form id="carForm" class="space-y-8">
+        @Html.AntiForgeryToken()
+        
+        <!-- Status control (Edit only) -->
+        @if (isEdit)
+        {
+            <div class="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm">
+                <h3 class="text-base font-semibold text-zinc-900 mb-4">Trạng thái xe</h3>
+                <div class="flex items-center gap-4">
+                    <select id="status" name="status" class="block w-48 py-2 px-3 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm bg-zinc-50">
+                        <option value="available">Sẵn sàng (Rảnh)</option>
+                        <option value="maintenance">Bảo trì</option>
+                        <option value="unavailable">Tạm ngưng</option>
+                    </select>
+                    <button type="button" id="btnUpdateStatus" class="inline-flex items-center justify-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 focus:outline-none transition-colors">
+                        Cập nhật trạng thái
+                    </button>
+                    <span id="statusMessage" class="text-sm font-medium ml-2"></span>
+                </div>
+                <p class="mt-2 text-sm text-zinc-500">Lưu ý: Không thể chuyển sang trạng thái Tạm ngưng nếu xe đang có chuyến thuê chưa hoàn tất.</p>
+            </div>
+        }
+
+        <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50">
+                <h3 class="text-base font-semibold text-zinc-900">Thông tin cơ bản</h3>
+                <p class="text-sm text-zinc-500 mt-1">Thông tin nhận diện và phân loại xe.</p>
+            </div>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="col-span-2 md:col-span-1">
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Tên xe <span class="text-red-500">*</span></label>
+                    <input type="text" id="name" name="name" required class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="VD: Toyota Vios 2022" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Biển số <span class="text-red-500">*</span></label>
+                    <input type="text" id="licensePlate" name="licensePlate" required class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm font-mono uppercase" placeholder="VD: 43A-123.45" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Hãng xe <span class="text-red-500">*</span></label>
+                    <input type="text" id="brandName" name="brandName" required class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="VD: Toyota, Honda..." list="brandList" />
+                    <datalist id="brandList"></datalist>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Dòng xe <span class="text-red-500">*</span></label>
+                    <input type="text" id="modelName" name="modelName" required class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="VD: Vios, Civic..." list="modelList" />
+                    <datalist id="modelList"></datalist>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Năm sản xuất</label>
+                    <input type="number" id="year" name="year" min="2000" max="2030" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="VD: 2022" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Màu sắc</label>
+                    <input type="text" id="color" name="color" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="VD: Trắng, Đen..." />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Loại xe</label>
+                    <select id="carTypeId" name="carTypeId" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm">
+                        <option value="">-- Chọn loại xe --</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50">
+                <h3 class="text-base font-semibold text-zinc-900">Thông số kỹ thuật</h3>
+            </div>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Số chỗ <span class="text-red-500">*</span></label>
+                    <input type="number" id="seatCount" name="seatCount" min="2" max="60" required class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" value="5" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Truyền động <span class="text-red-500">*</span></label>
+                    <select id="transmissionType" name="transmissionType" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm">
+                        <option value="Automatic">Tự động</option>
+                        <option value="Manual">Số sàn</option>
+                        <option value="Cvt">CVT</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Nhiên liệu <span class="text-red-500">*</span></label>
+                    <select id="fuelType" name="fuelType" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm">
+                        <option value="Gasoline">Xăng</option>
+                        <option value="Diesel">Dầu Diesel</option>
+                        <option value="Electric">Điện</option>
+                        <option value="Hybrid">Hybrid</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Số KM đã đi</label>
+                    <input type="number" id="kilometersDriven" name="kilometersDriven" min="0" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" value="0" />
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50">
+                <h3 class="text-base font-semibold text-zinc-900">Chi phí thuê xe</h3>
+            </div>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Giá thuê 1 ngày (VNĐ) <span class="text-red-500">*</span></label>
+                    <input type="number" id="dailyPrice" name="dailyPrice" min="100000" step="10000" required class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Tiền cọc (VNĐ)</label>
+                    <input type="number" id="depositAmount" name="depositAmount" min="0" step="10000" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" value="0" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Giá phụ trội quá giờ (VNĐ/giờ)</label>
+                    <input type="number" id="pricePerHour" name="pricePerHour" min="0" step="1000" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" value="0" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Phí giao nhận xe (VNĐ)</label>
+                    <input type="number" id="deliveryFee" name="deliveryFee" min="0" step="10000" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" value="0" />
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50">
+                <h3 class="text-base font-semibold text-zinc-900">Vị trí & Mô tả</h3>
+            </div>
+            <div class="p-6 space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Địa điểm giao nhận xe <span class="text-red-500">*</span></label>
+                    <input type="text" id="location" name="location" required class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="VD: 123 Đường ABC, Quận Hải Châu, Đà Nẵng" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Mô tả thêm</label>
+                    <textarea id="description" name="description" rows="4" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="Điểm nổi bật của xe, quy định riêng..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4 pt-4 border-t border-zinc-200">
+            <button type="submit" id="btnSubmit" class="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors shadow-sm">
+                @(isEdit ? "Lưu thay đổi" : "Tạo mới & Đăng xe")
+            </button>
+            <a href="/Owner/Cars/Index" class="inline-flex items-center justify-center rounded-lg bg-white border border-zinc-300 px-6 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:outline-none transition-colors">
+                Hủy bỏ
+            </a>
+            @if (isEdit)
+            {
+                <a href="/Owner/Cars/Images?id=@Model.Id" class="inline-flex items-center justify-center rounded-lg bg-white border border-zinc-300 px-6 py-2.5 text-sm font-medium text-primary border-primary/30 hover:bg-primary/5 focus:outline-none transition-colors ml-auto">
+                    Quản lý hình ảnh &rarr;
+                </a>
+            }
+        </div>
+        
+        <div id="formError" class="hidden rounded-md bg-red-50 p-4">
+            <div class="flex">
+                <div class="flex-shrink-0"><svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg></div>
+                <div class="ml-3"><p class="text-sm font-medium text-red-800" id="formErrorMsg"></p></div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        const isEdit = @(isEdit.ToString().ToLower());
+        const carId = @(Model.Id ?? 0);
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            await Promise.all([
+                loadCarTypes(),
+                loadBrandsAndModels()
+            ]);
+
+            if (isEdit) {
+                await loadCarData();
+                setupStatusUpdate();
+            }
+
+            document.getElementById('carForm').addEventListener('submit', handleFormSubmit);
+        });
+
+        async function loadCarTypes() {
+            try {
+                const res = await fetch('/api/proxy/owner/cars/meta/types', {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
+                });
+                if (!res.ok) return;
+                const types = await res.json();
+                const select = document.getElementById('carTypeId');
+                types.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t.id;
+                    opt.textContent = t.name;
+                    select.appendChild(opt);
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadBrandsAndModels() {
+            try {
+                const res = await fetch('/api/proxy/owner/cars/meta/models', {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
+                });
+                if (!res.ok) return;
+                const models = await res.json();
+                
+                const brands = [...new Set(models.map(m => m.brandName))];
+                
+                const brandList = document.getElementById('brandList');
+                brands.forEach(b => {
+                    const opt = document.createElement('option');
+                    opt.value = b;
+                    brandList.appendChild(opt);
+                });
+
+                const modelList = document.getElementById('modelList');
+                models.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m.name;
+                    modelList.appendChild(opt);
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        async function loadCarData() {
+            try {
+                const res = await fetch(`/api/proxy/owner/cars/${carId}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
+                });
+                if (!res.ok) {
+                    if(res.status === 401) window.location.href = '/Index';
+                    throw new Error('Lỗi tải dữ liệu xe');
+                }
+                const car = await res.json();
+                
+                document.getElementById('name').value = car.name || '';
+                document.getElementById('licensePlate').value = car.licensePlate || '';
+                document.getElementById('brandName').value = car.brand || '';
+                document.getElementById('modelName').value = car.model || '';
+                document.getElementById('year').value = car.year || '';
+                document.getElementById('color').value = car.color || '';
+                document.getElementById('carTypeId').value = car.carTypeId || '';
+                
+                document.getElementById('seatCount').value = car.seatCount || 5;
+                document.getElementById('transmissionType').value = capitalize(car.transmissionType || 'automatic');
+                document.getElementById('fuelType').value = capitalize(car.fuelType || 'gasoline');
+                document.getElementById('kilometersDriven').value = car.kilometersDriven || 0;
+                
+                document.getElementById('dailyPrice').value = car.dailyPrice || 0;
+                document.getElementById('depositAmount').value = car.depositAmount || 0;
+                document.getElementById('pricePerHour').value = car.pricePerHour || 0;
+                document.getElementById('deliveryFee').value = car.deliveryFee || 0;
+                
+                document.getElementById('location').value = car.location || '';
+                document.getElementById('description').value = car.description || '';
+                
+                const statusSelect = document.getElementById('status');
+                if (statusSelect) {
+                    const validStatus = ['available', 'maintenance', 'unavailable'];
+                    if (validStatus.includes(car.status)) {
+                        statusSelect.value = car.status;
+                    } else {
+                        // If it's blocked, rented, etc. add it as disabled option just to show
+                        const opt = document.createElement('option');
+                        opt.value = car.status;
+                        opt.textContent = car.status === 'rented' ? 'Đang thuê' : car.status === 'blocked' ? 'Đã khóa' : car.status;
+                        statusSelect.appendChild(opt);
+                        statusSelect.value = car.status;
+                        statusSelect.disabled = true;
+                        document.getElementById('btnUpdateStatus').disabled = true;
+                    }
+                }
+            } catch (e) {
+                showError(e.message);
+            }
+        }
+
+        function capitalize(s) {
+            if (typeof s !== 'string') return '';
+            return s.charAt(0).toUpperCase() + s.slice(1);
+        }
+
+        function setupStatusUpdate() {
+            const btn = document.getElementById('btnUpdateStatus');
+            if (!btn) return;
+            btn.addEventListener('click', async () => {
+                const status = document.getElementById('status').value;
+                const msg = document.getElementById('statusMessage');
+                
+                btn.disabled = true;
+                btn.textContent = 'Đang xử lý...';
+                
+                try {
+                    const res = await fetch(`/api/proxy/owner/cars/${carId}/status`, {
+                        method: 'PATCH',
+                        headers: { 
+                            'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ status })
+                    });
+                    
+                    if (!res.ok) {
+                        const data = await res.json();
+                        throw new Error(data.message || 'Lỗi cập nhật');
+                    }
+                    
+                    msg.textContent = 'Cập nhật thành công!';
+                    msg.className = 'text-sm font-medium ml-2 text-green-600';
+                } catch(e) {
+                    msg.textContent = e.message;
+                    msg.className = 'text-sm font-medium ml-2 text-red-600';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Cập nhật trạng thái';
+                    setTimeout(() => msg.textContent = '', 3000);
+                }
+            });
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const btnSubmit = document.getElementById('btnSubmit');
+            const errorDiv = document.getElementById('formError');
+            const errorMsg = document.getElementById('formErrorMsg');
+            
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = 'Đang xử lý...';
+            errorDiv.classList.add('hidden');
+            
+            const payload = {
+                name: document.getElementById('name').value,
+                licensePlate: document.getElementById('licensePlate').value,
+                brandName: document.getElementById('brandName').value,
+                modelName: document.getElementById('modelName').value,
+                year: document.getElementById('year').value ? parseInt(document.getElementById('year').value) : null,
+                color: document.getElementById('color').value,
+                carTypeId: document.getElementById('carTypeId').value ? parseInt(document.getElementById('carTypeId').value) : null,
+                seatCount: parseInt(document.getElementById('seatCount').value),
+                transmissionType: document.getElementById('transmissionType').value,
+                fuelType: document.getElementById('fuelType').value,
+                kilometersDriven: parseInt(document.getElementById('kilometersDriven').value),
+                dailyPrice: parseFloat(document.getElementById('dailyPrice').value),
+                depositAmount: parseFloat(document.getElementById('depositAmount').value),
+                pricePerHour: parseFloat(document.getElementById('pricePerHour').value),
+                deliveryFee: parseFloat(document.getElementById('deliveryFee').value),
+                insuranceFeePerDay: 0,
+                location: document.getElementById('location').value,
+                description: document.getElementById('description').value
+            };
+
+            const url = isEdit ? `/api/proxy/owner/cars/${carId}` : '/api/proxy/owner/cars';
+            const method = isEdit ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) {
+                    if (res.status === 401) return window.location.href = '/Index';
+                    const err = await res.json();
+                    throw new Error(err.message || 'Có lỗi xảy ra khi lưu dữ liệu');
+                }
+
+                const result = await res.json();
+                
+                if (isEdit) {
+                    window.VivuCarUtils.showToast('Cập nhật thông tin thành công', 'success');
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    window.VivuCarUtils.showToast('Đăng xe mới thành công. Hãy tải lên hình ảnh xe.', 'success');
+                    setTimeout(() => window.location.href = `/Owner/Cars/Images?id=${result.id}`, 1500);
+                }
+            } catch (error) {
+                showError(error.message);
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = isEdit ? 'Lưu thay đổi' : 'Tạo mới & Đăng xe';
+            }
+        }
+
+        function showError(msg) {
+            const errorDiv = document.getElementById('formError');
+            const errorMsg = document.getElementById('formErrorMsg');
+            errorMsg.textContent = msg;
+            errorDiv.classList.remove('hidden');
+        }
+    </script>
+}

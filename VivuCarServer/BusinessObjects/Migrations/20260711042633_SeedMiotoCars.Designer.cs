@@ -4,6 +4,7 @@ using BusinessObjects.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusinessObjects.Migrations
 {
     [DbContext(typeof(VivuCarDbContext))]
-    partial class VivuCarDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260711042633_SeedMiotoCars")]
+    partial class SeedMiotoCars
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,6 +139,20 @@ namespace BusinessObjects.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Email = "seed_owner@vivucar.local",
+                            FullName = "Seed Car Owner",
+                            PasswordHash = "dummy_hash_for_seed",
+                            PhoneNumber = "0900000006",
+                            Role = "CarOwner",
+                            Status = "Active",
+                            TokenVersion = 1
+                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Models.Booking", b =>
@@ -190,9 +207,6 @@ namespace BusinessObjects.Migrations
 
                     b.Property<decimal>("InsuranceFee")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal?>("OverdueFee")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("PickupLocation")
@@ -716,51 +730,6 @@ namespace BusinessObjects.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BusinessObjects.Models.DailyRevenueSnapshot", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CancelledBookings")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CompletedBookings")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("DepositCollected")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("GeneratedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
-
-                    b.Property<decimal>("GrossRevenue")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("NetRevenue")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateOnly>("SnapshotDate")
-                        .HasColumnType("date");
-
-                    b.Property<int>("TotalBookings")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SnapshotDate")
-                        .IsUnique();
-
-                    b.ToTable("DailyRevenueSnapshots", (string)null);
-                });
-
             modelBuilder.Entity("BusinessObjects.Models.DriverDocument", b =>
                 {
                     b.Property<int>("Id")
@@ -846,9 +815,6 @@ namespace BusinessObjects.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<decimal?>("PenaltyAmount")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("ReporterId")
                         .HasColumnType("int");
 
@@ -859,10 +825,6 @@ namespace BusinessObjects.Migrations
                         .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

@@ -1,4 +1,4 @@
-﻿namespace Repositories.Models;
+namespace Repositories.Models;
 
 public class AdminCarSearchCriteria
 {
@@ -9,4 +9,5 @@ public class AdminCarSearchCriteria
     public int? TypeId { get; set; }
     public string? FuelType { get; set; }
     public string? Transmission { get; set; }
+    public int? OwnerId { get; set; }
 }
