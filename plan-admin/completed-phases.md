@@ -54,3 +54,17 @@ Cap nhat: 2026-07-11.
 - 4 test voucher moi; tong 29/29 test pass.
 - Migration `AlignVoucherSchemaAndAdminManagement` da apply; server/client build pass.
 - Browser smoke test duoc bo qua theo yeu cau.
+
+## Phase 07 - Admin hardening and QA
+
+- Admin layout da bo GSAP, legacy layout scripts va `VivuCarDB`; Tailwind duoc tai qua CDN theo quyet dinh cua nhom, JavaScript van la module thuan.
+- Navigation chi con cac module co backend that: dashboard, users, cars, vouchers va export reports.
+- Admin Users API map role ve `user/car_owner/admin` va expose `is_blocked` dung schema.
+- Users page da chuyen tu script legacy sang module API; modal co Escape, backdrop, focus va status text.
+- Da sua mojibake tren layout, Users va export module; bo warning nullable/async.
+- Contract PDF khong con anonymous; service kiem tra quyen booking truoc khi render.
+- Server va WebClient build pass 0 warning; 30/30 tests pass; JavaScript syntax pass.
+- Browser desktop/mobile va Network smoke test duoc bo qua theo yeu cau.
+- Known limitation: moderation/trash prototype van ton tai ngoai navigation va chua co backend; khong duoc tinh la module admin da tich hop.
+
+

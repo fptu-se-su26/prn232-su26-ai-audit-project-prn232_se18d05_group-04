@@ -1,6 +1,6 @@
 ﻿# Admin BE/FE Integration Roadmap
 
-Cap nhat: 2026-07-11.
+Cap nhat: 2026-07-12.
 
 ## Trang thai hien tai
 
@@ -12,9 +12,9 @@ Cap nhat: 2026-07-11.
 | 04 - Revenue dashboard | Completed | Snapshot model/migration, API, dashboard va tests da co. |
 | 05 - Export reports | Completed | Preview, persisted jobs, CSV/PDF va download da co. |
 | 06 - Vouchers | Completed | CRUD, validation, performance, migration va frontend API da hoan tat. |
-| 07 - Hardening/QA | Next | San sang regression, accessibility, responsive va encoding cleanup. |
+| 07 - Hardening/QA | Completed | Tailwind CDN admin UI, contract cleanup, accessibility va regression pass. |
 
-Phase 01-06 da duoc rut khoi backlog va luu tai `completed-phases.md`.
+Phase 01-07 da duoc rut khoi backlog va luu tai `completed-phases.md`.
 
 ## Kien truc bat buoc
 
@@ -43,9 +43,12 @@ Razor Pages/admin JS -> /api/proxy/api/... -> WebClient proxy -> API -> Service 
 
 ## Verify 2026-07-11
 
-- Server tests: 29 passed, 0 failed.
+- Server tests: 30 passed, 0 failed.
 - API build pass; con 1 warning `CS1998` tai `BookingsController.cs`.
 - WebClient build pass, 0 warning.
 - Con 2 warning nullable `CS8602` trong `BookingRepository.cs` khi chay test.
 - Browser E2E duoc bo qua theo yeu cau; Phase 03-05 dong o muc code/test/build.
+
+
+
 

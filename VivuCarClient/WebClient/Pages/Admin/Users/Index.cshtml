@@ -1,119 +1,18 @@
 ﻿@page "/admin/users"
 @model WebClient.Pages.Admin.Users.IndexModel
 @{
-    ViewData["Title"] = "Người dùng";
+    ViewData["Title"] = "Users";
     ViewData["AdminPage"] = "users";
 }
-
-<div class="page-heading">
-          <div>
-            <h1>Quản lý người dùng</h1>
-            <p>Dữ liệu bám bảng `users`, trạng thái xác minh lấy từ `user_documents` GPLX.</p>
-          </div>
-        </div>
-
-        <section id="userStats" class="mb-5 grid grid-cols-6 gap-3 max-2xl:grid-cols-3 max-lg:grid-cols-2 max-sm:grid-cols-1"></section>
-        <section id="userQuickTabs" class="mb-4 flex gap-2 overflow-x-auto whitespace-nowrap"></section>
-
-        <section class="toolbar toolbar-admin-users">
-          <input id="searchUserInput" placeholder="Tìm theo tên, email, số điện thoại">
-          <select id="roleFilter">
-            <option value="">Tất cả vai trò</option>
-            <option value="admin">Quản trị viên</option>
-            <option value="car_owner">Chủ xe</option>
-            <option value="user">Khách thuê</option>
-          </select>
-          <select id="blockedFilter">
-            <option value="">Tất cả trạng thái</option>
-            <option value="false">Đang hoạt động</option>
-            <option value="true">Đã khóa</option>
-          </select>
-          <select id="verificationFilter">
-            <option value="">Tất cả xác minh</option>
-            <option value="verified">Đã xác minh</option>
-            <option value="pending">Chờ GPLX</option>
-            <option value="rejected">Từ chối GPLX</option>
-            <option value="unverified">Chưa xác minh</option>
-          </select>
-          <button class="btn btn-primary" id="btnApplyFilter" type="button">Lọc</button>
-          <button class="btn btn-secondary" id="btnResetFilter" type="button">Đặt lại</button>
-        </section>
-
-        <section id="userBulkBar" class="mb-4 hidden items-center justify-between gap-3 rounded-2xl border border-emerald-100 bg-emerald-50 p-3 text-sm text-emerald-800 shadow-sm max-sm:grid">
-          <strong id="userBulkCount">Đã chọn 0 người dùng</strong>
-          <div class="flex flex-wrap gap-2">
-            <button class="btn btn-secondary btn-sm" id="btnBulkBlock" type="button">Khóa đã chọn</button>
-            <button class="btn btn-secondary btn-sm" id="btnBulkUnblock" type="button">Mở khóa đã chọn</button>
-            <button class="btn btn-danger btn-sm" id="btnBulkSoftDelete" type="button">Xóa mềm đã chọn</button>
-            <button class="btn btn-ghost btn-sm" id="btnBulkClear" type="button">Bỏ chọn</button>
-          </div>
-        </section>
-
-        <section class="panel">
-          <div id="usersEmpty" class="empty-state hidden">
-            <h3>Không tìm thấy người dùng</h3>
-            <p>Thử đổi từ khóa, vai trò, trạng thái tài khoản hoặc trạng thái xác minh.</p>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th><input id="userSelectAll" type="checkbox" aria-label="Chọn tất cả người dùng"></th>
-                  <th>Người dùng</th>
-                  <th>Vai trò</th>
-                  <th>Tài khoản</th>
-                  <th>Xác minh</th>
-                  <th>Lần đăng nhập</th>
-                  <th>Số đơn</th>
-                  <th>Số xe</th>
-                  <th>Ngày tạo</th>
-                  <th>Hành động</th>
-                </tr>
-              </thead>
-              <tbody id="usersTableBody"></tbody>
-            </table>
-          </div>
-          <div class="pagination">
-            <span id="userPaginationInfo"></span>
-            <select id="userPageSize"><option>10</option><option>20</option><option>50</option></select>
-            <button class="btn btn-secondary btn-sm" id="userPrevPage" type="button">Trước</button>
-            <div class="page-buttons" id="userPageNumbers"></div>
-            <button class="btn btn-secondary btn-sm" id="userNextPage" type="button">Sau</button>
-          </div>
-        </section>
-
-<aside class="drawer" id="userDetailDrawer">
-    <div class="drawer-head">
-      <h2>Chi tiết người dùng</h2>
-      <button class="icon-button" id="btnCloseUserDrawer" type="button">×</button>
-    </div>
-    <div id="userDetailContent"></div>
-  </aside>
-  <div id="userDrawerOverlay" class="drawer-overlay"></div>
-
-  <div class="modal-backdrop" id="userStatusModal">
-    <div class="modal">
-      <div class="modal-header"><h2 id="userStatusTitle"></h2><button class="icon-button" type="button" data-close-modal>×</button></div>
-      <p id="userStatusText" class="muted"></p>
-      <label id="blockReasonWrap">Lý do khóa<textarea id="blockReason" placeholder="Nhập lý do khóa tài khoản"></textarea></label>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" id="btnCancelUserStatus" type="button">Hủy</button>
-        <button class="btn btn-primary" id="btnConfirmUserStatus" type="button">Xác nhận</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-backdrop" id="userSoftDeleteModal">
-    <div class="modal">
-      <div class="modal-header"><h2>Xóa mềm người dùng</h2><button class="icon-button" type="button" data-close-modal>×</button></div>
-      <p class="muted">Người dùng sẽ được chuyển vào Thùng rác. Hành động này không xóa vĩnh viễn.</p>
-      <div id="userSoftDeleteInfo" class="alert"></div>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" id="btnCancelSoftDeleteUser" type="button">Hủy</button>
-        <button class="btn btn-danger" id="btnConfirmSoftDeleteUser" type="button">Xóa mềm</button>
-      </div>
-    </div>
-  </div>
-@section Scripts {
-    <script src="~/js/html/admin-users.js" asp-append-version="true"></script>
-}
+<div data-admin-users-page>
+    <header class="page-heading"><div><p class="eyebrow">ACCOUNT MANAGEMENT</p><h1>Qu&#7843;n l&#253; ng&#432;&#7901;i d&#249;ng</h1><p>L&#7885;c theo vai tr&#242; v&#224; tr&#7841;ng th&#225;i t&#224;i kho&#7843;n; kh&#243;a ho&#7863;c m&#7903; kh&#243;a qua API admin.</p></div></header>
+    <section class="toolbar toolbar-admin-users" aria-label="B&#7897; l&#7885;c ng&#432;&#7901;i d&#249;ng">
+        <label class="field"><span>T&#236;m ki&#7871;m</span><input id="searchUserInput" type="search" placeholder="T&#234;n ho&#7863;c email" /></label>
+        <label class="field"><span>Vai tr&#242;</span><select id="roleFilter"><option value="">T&#7845;t c&#7843;</option><option value="admin">Admin</option><option value="car_owner">Ch&#7911; xe</option><option value="user">Kh&#225;ch thu&#234;</option></select></label>
+        <label class="field"><span>Tr&#7841;ng th&#225;i</span><select id="blockedFilter"><option value="">T&#7845;t c&#7843;</option><option value="false">&#272;ang ho&#7841;t &#273;&#7897;ng</option><option value="true">&#272;&#227; kh&#243;a</option></select></label>
+        <button class="btn btn-primary" id="btnApplyFilter" type="button">L&#7885;c</button><button class="btn btn-secondary" id="btnResetFilter" type="button">&#272;&#7863;t l&#7841;i</button>
+    </section>
+    <section class="panel"><div class="table-wrap"><table><thead><tr><th scope="col">Ch&#7885;n</th><th scope="col">ID</th><th scope="col">Ng&#432;&#7901;i d&#249;ng</th><th scope="col">Email</th><th scope="col">Vai tr&#242;</th><th scope="col">T&#224;i kho&#7843;n</th><th scope="col">Ng&#224;y t&#7841;o</th><th scope="col">H&#224;nh &#273;&#7897;ng</th></tr></thead><tbody id="usersTableBody"><tr><td colspan="8" class="empty-cell">&#272;ang t&#7843;i...</td></tr></tbody></table></div><div class="pagination"><span id="userPaginationInfo"></span><button class="btn btn-secondary btn-sm" id="userPrevPage" type="button">Tr&#432;&#7899;c</button><button class="btn btn-secondary btn-sm" id="userNextPage" type="button">Sau</button></div></section>
+    <div class="modal-backdrop" id="userStatusModal" role="dialog" aria-modal="true" aria-labelledby="userStatusTitle" aria-hidden="true"><div class="modal" tabindex="-1"><div class="modal-header"><h2 id="userStatusTitle">X&#225;c nh&#7853;n thay &#273;&#7893;i</h2><button class="icon-button" type="button" data-close-user-modal aria-label="&#272;&#243;ng">&#215;</button></div><p id="userStatusText">Thay &#273;&#7893;i tr&#7841;ng th&#225;i t&#224;i kho&#7843;n n&#224;y?</p><div class="modal-actions"><button class="btn btn-secondary" type="button" data-close-user-modal>H&#7911;y</button><button class="btn btn-primary" id="btnConfirmUserStatus" type="button">X&#225;c nh&#7853;n</button></div></div></div>
+</div>
+@section Scripts { <script type="module" src="~/js/admin/users/index.js" asp-append-version="true"></script> }

@@ -1,54 +1,53 @@
 ﻿@page "/admin/cars"
 @model WebClient.Pages.Admin.Cars.IndexModel
 @{
-    ViewData["Title"] = "Cars";
+    ViewData["Title"] = "Phuong tien";
     ViewData["AdminPage"] = "cars";
 }
 
 <section class="page-heading" data-admin-cars-page>
     <div>
-        <p class="eyebrow">Cars</p>
-        <h1>Car management</h1>
-        <p>Manage car records, real car types, uploaded images, and moderation status through the Admin Cars API.</p>
+        <p class="eyebrow">Fleet management</p>
+        <h1>Qu&#7843;n l&#253; ph&#432;&#417;ng ti&#7879;n</h1>
+        <p>Qu&#7843;n l&#253; h&#7891; s&#417; xe, h&#236;nh &#7843;nh, lo&#7841;i xe v&#224; tr&#7841;ng th&#225;i qua Admin Cars API.</p>
     </div>
-    <a class="button button-primary" asp-page="/Admin/Cars/Form">Add car</a>
+    <a class="button button-primary" asp-page="/Admin/Cars/Form">Th&#234;m xe</a>
 </section>
 
 <section class="admin-grid admin-grid-kpi">
-    <article class="admin-card"><span>Total cars</span><strong>0</strong></article>
-    <article class="admin-card"><span>Available on page</span><strong>0</strong></article>
-    <article class="admin-card"><span>Maintenance on page</span><strong>0</strong></article>
-    <article class="admin-card"><span>Blocked on page</span><strong>0</strong></article>
+    <article class="admin-card"><span>T&#7893;ng s&#7889; xe</span><strong>0</strong></article>
+    <article class="admin-card"><span>Xe s&#7861;n s&#224;ng</span><strong>0</strong></article>
+    <article class="admin-card"><span>Xe b&#7843;o tr&#236;</span><strong>0</strong></article>
+    <article class="admin-card"><span>Xe b&#7883; kh&#243;a</span><strong>0</strong></article>
 </section>
 
 <section class="admin-toolbar">
-    <input id="searchCarInput" type="search" placeholder="Search license plate, brand, model, type, or owner" />
+    <input id="searchCarInput" type="search" placeholder="T&#236;m bi&#7875;n s&#7889;, h&#227;ng, m&#7851;u xe ho&#7863;c ch&#7911; xe" />
     <select id="statusFilter">
-        <option value="">All statuses</option>
+        <option value="">T&#7845;t c&#7843; tr&#7841;ng th&#225;i</option>
         <option value="available">Available</option>
         <option value="rented">Rented</option>
         <option value="maintenance">Maintenance</option>
         <option value="blocked">Blocked</option>
-        <option value="unavailable">Unavailable</option>
     </select>
     <select id="typeFilter">
-        <option value="">All types</option>
+        <option value="">T&#7845;t c&#7843; lo&#7841;i xe</option>
     </select>
     <select id="fuelFilter">
-        <option value="">All fuels</option>
+        <option value="">T&#7845;t c&#7843; nhi&#234;n li&#7879;u</option>
         <option value="gasoline">Gasoline</option>
         <option value="diesel">Diesel</option>
         <option value="electric">Electric</option>
         <option value="hybrid">Hybrid</option>
     </select>
     <select id="transmissionFilter">
-        <option value="">All transmissions</option>
+        <option value="">T&#7845;t c&#7843; h&#7897;p s&#7889;</option>
         <option value="manual">Manual</option>
         <option value="automatic">Automatic</option>
         <option value="cvt">CVT</option>
     </select>
-    <button class="button button-primary" id="btnFilter" type="button">Filter</button>
-    <button class="button button-secondary" id="btnReset" type="button">Reset</button>
+    <button class="button button-primary" id="btnFilter" type="button">L&#7885;c</button>
+    <button class="button button-secondary" id="btnReset" type="button">&#272;&#7863;t l&#7841;i</button>
 </section>
 
 <section class="admin-panel">
@@ -80,8 +79,8 @@
             <option value="20">20</option>
             <option value="50">50</option>
         </select>
-        <button class="button button-secondary" id="prevPage" type="button">Previous</button>
-        <button class="button button-secondary" id="nextPage" type="button">Next</button>
+        <button class="button button-secondary" id="prevPage" type="button">Tr&#432;&#7899;c</button>
+        <button class="button button-secondary" id="nextPage" type="button">Sau</button>
     </div>
 </section>
 @section Scripts {
@@ -91,3 +90,4 @@
         asp-append-version="true">
     </script>
 }
+

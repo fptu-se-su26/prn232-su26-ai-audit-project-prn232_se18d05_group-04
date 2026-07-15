@@ -1,24 +1,16 @@
 ﻿@page "/admin/vouchers/form"
 @model WebClient.Pages.Admin.Vouchers.FormModel
-@{
-    ViewData["Title"] = Model.Id.HasValue ? "Sua voucher" : "To voucher";
-    ViewData["AdminPage"] = "vouchers";
-}
-
-<div data-admin-voucher-form-page>
-    <header class="page-heading"><div><p class="breadcrumb"><a href="/admin/vouchers">Voucher</a> / @(Model.Id.HasValue ? "Chnh sa" : "To mi")</p><h1>@(Model.Id.HasValue ? "Chnh sa voucher" : "To voucher")</h1><p>M voucher duc chun ha vit hoa; lut sDa dung duc tnh t lch s pDa dung.</p></div></header>
-    <form id="voucherForm" class="voucher-form-layout" data-admin-voucher-form data-voucher-id="@Model.Id" novalidate>
-        <div class="form-stack">
-            <section class="form-card"><h2>Thng tin co bn</h2><div class="form-grid"><label class="field"><span>Tn chuong trnh</span><input id="name" name="name" maxlength="100" required placeholder="Khuyn mi ma h" /></label><label class="field"><span>M voucher</span><input id="code" name="code" maxlength="50" required placeholder="SUMMER2026" autocomplete="off" /></label></div></section>
-            <section class="form-card"><h2>Mc gim</h2><div class="report-types"><label class="radio-card"><input name="discount_type" value="percentage" type="radio" checked />Theo phn tram</label><label class="radio-card"><input name="discount_type" value="fixed" type="radio" />S tin c dnh</label></div><div class="form-grid"><label class="field"><span>Gia tri gim</span><input id="discount_value" name="discount_value" type="number" min="0.01" step="0.01" required /></label><label class="field"><span>Gim ti da</span><input id="max_discount" name="max_discount" type="number" min="1" step="1000" required /></label></div></section>
-            <section class="form-card"><h2>iu kin sDa dung</h2><div class="form-grid"><label class="field"><span>Gia tri don ti thiu</span><input id="min_order_amount" name="min_order_amount" type="number" min="0" step="1000" value="0" required /></label><label class="field"><span>Tong s lung</span><input id="quantity" name="quantity" type="number" min="0" step="1" required /></label><label class="field"><span>NgyDa het han</span><input id="expires_at" name="expires_at" type="datetime-local" /><small> trng nu khng gii hn thi gian.</small></label></div></section>
-            <div id="voucherError" class="alert alert-error" hidden role="alert"></div><div class="sticky-actions"><a class="btn btn-secondary" href="/admin/vouchers">Huy</a><button class="btn btn-primary" id="btnSuaveVoucher" type="submit">Luu voucher</button></div>
-        </div>
-        <aside class="voucher-preview panel"><p class="eyebrow">LIVE PREVIEW</p><strong id="voucherPreviewCode">SUMMER2026</strong><h2 id="voucherPreviewValue">Gim 10%</h2><p id="voucherPreviewName">Khuyn mi ma h</p><p id="voucherPreviewCondition">on ti thiu 0 </p></aside>
-    </form>
+@{ ViewData["Title"] = Model.Id.HasValue ? "Sua voucher" : "Tao voucher"; ViewData["AdminPage"] = "vouchers"; }
+<div class="grid gap-5" data-admin-voucher-form-page>
+  <header class="page-heading"><div><p class="mb-2 text-sm font-medium text-zinc-500"><a class="hover:text-emerald-700" href="/admin/vouchers">Voucher</a> / @(Model.Id.HasValue ? "Chinh sua" : "Tao moi")</p><h1>@(Model.Id.HasValue ? "Chinh sua voucher" : "Tao voucher")</h1><p>M&#227; voucher &#273;&#432;&#7907;c chu&#7849;n h&#243;a vi&#7871;t hoa; l&#432;&#7907;t s&#7917; d&#7909;ng &#273;&#432;&#7907;c t&#237;nh t&#7915; l&#7883;ch s&#7917; &#225;p d&#7909;ng.</p></div></header>
+  <form id="voucherForm" class="voucher-form-layout" data-admin-voucher-form data-voucher-id="@Model.Id" novalidate>
+    <div class="form-stack">
+      <section class="form-card"><h2>Th&#244;ng tin c&#417; b&#7843;n</h2><div class="form-grid"><label class="field"><span>T&#234;n ch&#432;&#417;ng tr&#236;nh</span><input id="name" name="name" maxlength="100" required placeholder="Khuy&#7871;n m&#227;i m&#249;a h&#232;"></label><label class="field"><span>M&#227; voucher</span><input id="code" name="code" maxlength="50" required placeholder="SUMMER2026" autocomplete="off"></label></div></section>
+      <section class="form-card"><h2>M&#7913;c gi&#7843;m</h2><div class="report-types"><label class="radio-card"><input name="discount_type" value="percentage" type="radio" checked> Theo ph&#7847;n tr&#259;m</label><label class="radio-card"><input name="discount_type" value="fixed" type="radio"> S&#7889; ti&#7873;n c&#7889; &#273;&#7883;nh</label></div><div class="form-grid"><label class="field"><span>Gi&#225; tr&#7883; gi&#7843;m</span><input id="discount_value" name="discount_value" type="number" min="0.01" step="0.01" required></label><label class="field"><span>Gi&#7843;m t&#7889;i &#273;a</span><input id="max_discount" name="max_discount" type="number" min="1" step="1000" required></label></div></section>
+      <section class="form-card"><h2>&#272;i&#7873;u ki&#7879;n s&#7917; d&#7909;ng</h2><div class="form-grid"><label class="field"><span>Gi&#225; tr&#7883; &#273;&#417;n t&#7889;i thi&#7875;u</span><input id="min_order_amount" name="min_order_amount" type="number" min="0" step="1000" value="0" required></label><label class="field"><span>T&#7893;ng s&#7889; l&#432;&#7907;ng</span><input id="quantity" name="quantity" type="number" min="0" step="1" required></label><label class="field"><span>Ng&#224;y h&#7871;t h&#7841;n</span><input id="expires_at" name="expires_at" type="datetime-local"><small>&#272;&#7875; tr&#7889;ng n&#7871;u kh&#244;ng gi&#7899;i h&#7841;n th&#7901;i gian.</small></label></div></section>
+      <div id="voucherError" class="alert-error" hidden role="alert"></div><div class="sticky-actions"><a class="btn btn-secondary" href="/admin/vouchers">H&#7911;y</a><button class="btn btn-primary" id="btnSaveVoucher" type="submit">L&#432;u voucher</button></div>
+    </div>
+    <aside class="voucher-preview"><p class="eyebrow">Live preview</p><strong id="voucherPreviewCode" class="font-mono text-2xl">SUMMER2026</strong><h2 id="voucherPreviewValue" class="my-5 text-4xl font-extrabold tracking-tight text-emerald-700">Gi&#7843;m 10%</h2><p id="voucherPreviewName">Khuy&#7871;n m&#227;i m&#249;a h&#232;</p><p id="voucherPreviewCondition">&#272;&#417;n t&#7889;i thi&#7875;u 0 &#8363;</p></aside>
+  </form>
 </div>
-
 @section Scripts { <script type="module" src="~/js/admin/vouchers/form.js" asp-append-version="true"></script> }
-
-
-

@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
@@ -157,9 +157,11 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
     }
 
     [HttpGet("{id:int}/contract/pdf")]
-    [AllowAnonymous] // Allow viewing PDF contract by print url
     public async Task<IActionResult> GetContractPdf(int id, CancellationToken cancellationToken)
     {
+        var customerId = GetCurrentUserId();
+        var contract = await bookingService.GetContractAsync(customerId, id, cancellationToken);
+        if (contract is null) return NotFound(new { message = "Booking contract not found or access denied." });
         // For demonstration, retrieve detail under system authority (since anonymous viewing is allowed for printing)
         // Let's retrieve booking from service using customerId 0 (which bypasses customer check in custom logic if needed,
         // or we just query direct from service with admin/owner bypass. To keep it simple, we can retrieve
@@ -176,7 +178,7 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
 <html>
 <head>
     <meta charset='utf-8' />
-    <title>Hợp đồng thuê xe tự lái VivuCar</title>
+    <title>Há»£p Ä‘á»“ng thuÃª xe tá»± lÃ¡i VivuCar</title>
     <style>
         body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; color: #333; line-height: 1.6; }}
         .header {{ text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }}
@@ -195,67 +197,67 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
 </head>
 <body>
     <div class='header'>
-        <div class='title'>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
-        <div class='sub-title'>Độc lập - Tự do - Hạnh phúc</div>
-        <div class='title' style='margin-top: 20px; font-size: 20px;'>HỢP ĐỒNG THUÊ XE TỰ LÁI</div>
-        <div class='sub-title'>Số hợp đồng: HD-BK{id}</div>
+        <div class='title'>Cá»˜NG HÃ’A XÃƒ Há»˜I CHá»¦ NGHÄ¨A VIá»†T NAM</div>
+        <div class='sub-title'>Äá»™c láº­p - Tá»± do - Háº¡nh phÃºc</div>
+        <div class='title' style='margin-top: 20px; font-size: 20px;'>Há»¢P Äá»’NG THUÃŠ XE Tá»° LÃI</div>
+        <div class='sub-title'>Sá»‘ há»£p Ä‘á»“ng: HD-BK{id}</div>
     </div>
 
     <div class='section'>
-        <div class='section-title'>1. Bên Cho Thuê (Bên A - Chủ xe)</div>
-        <p>Họ tên: Hệ thống VivuCar Partner</p>
-        <p>Địa chỉ: Hải Châu, Đà Nẵng</p>
+        <div class='section-title'>1. BÃªn Cho ThuÃª (BÃªn A - Chá»§ xe)</div>
+        <p>Há» tÃªn: Há»‡ thá»‘ng VivuCar Partner</p>
+        <p>Äá»‹a chá»‰: Háº£i ChÃ¢u, ÄÃ  Náºµng</p>
     </div>
 
     <div class='section'>
-        <div class='section-title'>2. Bên Thuê (Bên B - Khách hàng)</div>
-        <p>Thông tin được đăng ký trên hồ sơ trực tuyến điện tử của VivuCar.</p>
+        <div class='section-title'>2. BÃªn ThuÃª (BÃªn B - KhÃ¡ch hÃ ng)</div>
+        <p>ThÃ´ng tin Ä‘Æ°á»£c Ä‘Äƒng kÃ½ trÃªn há»“ sÆ¡ trá»±c tuyáº¿n Ä‘iá»‡n tá»­ cá»§a VivuCar.</p>
     </div>
 
     <div class='section'>
-        <div class='section-title'>3. Chi tiết Phương tiện & Giá thuê</div>
+        <div class='section-title'>3. Chi tiáº¿t PhÆ°Æ¡ng tiá»‡n & GiÃ¡ thuÃª</div>
         <table>
             <tr>
-                <th>Mã Đơn Đặt</th>
+                <th>MÃ£ ÄÆ¡n Äáº·t</th>
                 <td>BK-{id}</td>
-                <th>Phương tiện</th>
-                <td>Xe tự lái VivuCar</td>
+                <th>PhÆ°Æ¡ng tiá»‡n</th>
+                <td>Xe tá»± lÃ¡i VivuCar</td>
             </tr>
             <tr>
-                <th>Thời gian Nhận</th>
-                <td>Vui lòng xem chi tiết đơn hàng</td>
-                <th>Thời gian Trả</th>
-                <td>Vui lòng xem chi tiết đơn hàng</td>
+                <th>Thá»i gian Nháº­n</th>
+                <td>Vui lÃ²ng xem chi tiáº¿t Ä‘Æ¡n hÃ ng</td>
+                <th>Thá»i gian Tráº£</th>
+                <td>Vui lÃ²ng xem chi tiáº¿t Ä‘Æ¡n hÃ ng</td>
             </tr>
             <tr>
-                <th>Tổng số tiền thuê</th>
-                <td>Theo bảng tính chi tiết</td>
-                <th>Tiền cọc giữ xe</th>
-                <td>Đã thanh toán (30%)</td>
+                <th>Tá»•ng sá»‘ tiá»n thuÃª</th>
+                <td>Theo báº£ng tÃ­nh chi tiáº¿t</td>
+                <th>Tiá»n cá»c giá»¯ xe</th>
+                <td>ÄÃ£ thanh toÃ¡n (30%)</td>
             </tr>
         </table>
     </div>
 
     <div class='section'>
-        <div class='section-title'>4. Điều khoản thỏa thuận</div>
-        <p>Bên B cam kết vận hành xe đúng luật giao thông đường bộ Việt Nam. Không sử dụng xe vào mục đích phạm pháp. Trả xe đúng thời hạn và hiện trạng ban đầu như lúc nhận bàn giao.</p>
+        <div class='section-title'>4. Äiá»u khoáº£n thá»a thuáº­n</div>
+        <p>BÃªn B cam káº¿t váº­n hÃ nh xe Ä‘Ãºng luáº­t giao thÃ´ng Ä‘Æ°á»ng bá»™ Viá»‡t Nam. KhÃ´ng sá»­ dá»¥ng xe vÃ o má»¥c Ä‘Ã­ch pháº¡m phÃ¡p. Tráº£ xe Ä‘Ãºng thá»i háº¡n vÃ  hiá»‡n tráº¡ng ban Ä‘áº§u nhÆ° lÃºc nháº­n bÃ n giao.</p>
     </div>
 
     <div class='signatures'>
         <div class='signature-box'>
-            <strong>Đại diện Bên A</strong><br/>
-            (Ký và ghi rõ họ tên)
+            <strong>Äáº¡i diá»‡n BÃªn A</strong><br/>
+            (KÃ½ vÃ  ghi rÃµ há» tÃªn)
             <div class='signature-line'></div>
         </div>
         <div class='signature-box'>
-            <strong>Đại diện Bên B</strong><br/>
-            (Ký và ghi rõ họ tên)
+            <strong>Äáº¡i diá»‡n BÃªn B</strong><br/>
+            (KÃ½ vÃ  ghi rÃµ há» tÃªn)
             <div class='signature-line'></div>
         </div>
     </div>
 
     <div class='footer'>
-        Hợp đồng điện tử được khởi tạo tự động bởi VivuCar. Đà Nẵng, năm 2026.
+        Há»£p Ä‘á»“ng Ä‘iá»‡n tá»­ Ä‘Æ°á»£c khá»Ÿi táº¡o tá»± Ä‘á»™ng bá»Ÿi VivuCar. ÄÃ  Náºµng, nÄƒm 2026.
     </div>
 </body>
 </html>
@@ -263,3 +265,5 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         return Content(htmlContent, "text/html");
     }
 }
+
+
