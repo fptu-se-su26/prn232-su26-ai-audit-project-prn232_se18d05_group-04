@@ -9,14 +9,36 @@ public partial class CurateMiotoCarsCloudinary : Migration
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         // Seed cleanup is intentionally scoped to Mioto seed IDs 2..241.
+        // Some developer databases may already have test bookings/reviews for these
+        // cars, so only remove unreferenced seed cars and preserve referenced rows.
         migrationBuilder.Sql(
             """
-            DELETE FROM [CarImages]
-            WHERE [CarId] BETWEEN 2 AND 241;
+            DECLARE @KeptMiotoCars TABLE ([Id] INT NOT NULL PRIMARY KEY);
+
+            INSERT INTO @KeptMiotoCars ([Id])
+            VALUES
+                (3), (7), (11), (12), (21), (24), (25), (27), (30), (32),
+                (37), (39), (43), (44), (52), (55), (59), (61), (72), (75),
+                (77), (78), (81), (85), (86), (88), (96), (101), (102), (108),
+                (109), (112), (119), (121), (130), (135), (136), (154), (156), (163),
+                (165), (178), (184), (185), (186), (188), (190), (191), (192), (204),
+                (205), (207), (215), (216), (230), (235), (236), (238), (240);
+
+            DECLARE @DeletableMiotoCars TABLE ([Id] INT NOT NULL PRIMARY KEY);
+
+            INSERT INTO @DeletableMiotoCars ([Id])
+            SELECT [Id]
+            FROM [Cars]
+            WHERE [Id] BETWEEN 2 AND 241
+              AND [Id] NOT IN (SELECT [Id] FROM @KeptMiotoCars)
+              AND NOT EXISTS (SELECT 1 FROM [Bookings] WHERE [Bookings].[CarId] = [Cars].[Id])
+              AND NOT EXISTS (SELECT 1 FROM [Reviews] WHERE [Reviews].[CarId] = [Cars].[Id]);
 
             DELETE FROM [Cars]
-            WHERE [Id] BETWEEN 2 AND 241
-              AND [Id] NOT IN (3, 7, 11, 12, 21, 24, 25, 27, 30, 32, 37, 39, 43, 44, 52, 55, 59, 61, 72, 75, 77, 78, 81, 85, 86, 88, 96, 101, 102, 108, 109, 112, 119, 121, 130, 135, 136, 154, 156, 163, 165, 178, 184, 185, 186, 188, 190, 191, 192, 204, 205, 207, 215, 216, 230, 235, 236, 238, 240);
+            WHERE [Id] IN (SELECT [Id] FROM @DeletableMiotoCars);
+
+            DELETE FROM [CarImages]
+            WHERE [CarId] IN (SELECT [Id] FROM @KeptMiotoCars);
             """
         );
 
@@ -320,3 +342,4 @@ public partial class CurateMiotoCarsCloudinary : Migration
         );
     }
 }
+
