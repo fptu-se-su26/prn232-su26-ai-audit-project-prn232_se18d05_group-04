@@ -1,0 +1,367 @@
+@page "/cars/search"
+@model WebClient.Pages.Cars.SearchModel
+@{
+    ViewData["Title"] = "Search Cars - VivuCar";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <meta name="description" content="Search and filter self-drive rental cars in Da Nang by brand, price, area, transmission, fuel, and more." />
+    <script>
+        tailwind = { config: { theme: { extend: { colors: { primary: { DEFAULT:'#16a34a',50:'#f0fdf4',100:'#dcfce7',700:'#15803d' } }, fontFamily: { sans:['Be Vietnam Pro','Segoe UI','Arial','sans-serif'] } } } } };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        .car-card { transition: transform .2s, box-shadow .2s; }
+        .car-card:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(0,0,0,.09); }
+        .price-chip { cursor:pointer; border:1px solid #e5e7eb; border-radius:9999px; padding:4px 12px; font-size:.75rem; font-weight:600; transition:all .15s; background:#fff; color:#3f3f46; }
+        .price-chip.active,.price-chip:hover { background:#16a34a; border-color:#16a34a; color:#fff; }
+        .skeleton { background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:12px; height:280px; }
+        @@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 font-sans antialiased">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-zinc-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="/cars" class="flex items-center gap-2 font-bold text-xl text-primary">
+                <svg viewBox="0 0 512 512" class="h-7 w-7 fill-primary"><path d="M135.2 117.4 109.1 192h293.8l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8 74.8 96.3C88.3 57.8 124.6 32 165.4 32h181.2c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5C495.6 207.6 512 231.1 512 258.5V400c0 26.5-21.5 48-48 48h-16v32c0 17.7-14.3 32-32 32h-32c-17.7 0-32-14.3-32-32v-32H160v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32v-32H48c-26.5 0-48-21.5-48-48V258.5c0-27.4 16.4-50.9 39.6-61.7z"/></svg>
+                VivuCar
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-600">
+                <a href="/cars" class="hover:text-zinc-900 transition-colors">Home</a>
+                <a href="/cars/search" class="text-primary font-semibold">Search Cars</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <span id="navUserName" class="hidden text-sm font-medium text-zinc-700"></span>
+                <a id="navLoginBtn" href="/" class="px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-green-700 transition-colors">Sign In</a>
+                <button id="navLogoutBtn" class="hidden px-4 py-2 rounded-lg border border-zinc-200 text-sm text-zinc-700 hover:bg-zinc-50 transition-colors">Sign Out</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Bar -->
+    <div class="bg-white border-b border-zinc-200 py-4 px-4 shadow-sm">
+        <div class="max-w-7xl mx-auto flex gap-3 items-center">
+            <div class="relative flex-1 max-w-xl">
+                <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input id="searchInput" type="text" value="@Model.SearchTerm"
+                       placeholder="Search by car name, brand, or model..."
+                       class="w-full border border-zinc-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                <div id="suggestionsBox" class="hidden absolute top-full left-0 right-0 bg-white border border-zinc-200 rounded-xl mt-1 shadow-lg z-50 overflow-hidden"></div>
+            </div>
+            <button id="btnSearch" class="px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-green-700 transition-colors shrink-0">Search</button>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="flex gap-6">
+
+            <!-- Filter Sidebar -->
+            <aside id="filterPanel" class="hidden md:block w-64 shrink-0 sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pb-6 space-y-4">
+                <div class="bg-white rounded-2xl border border-zinc-200 p-5 space-y-5">
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-bold text-zinc-900">Filters</h2>
+                        <button id="btnResetFilter" class="text-xs text-red-500 font-medium hover:underline">Clear all</button>
+                    </div>
+
+                    <!-- Brand -->
+                    <fieldset>
+                        <legend class="text-xs font-bold text-zinc-500 uppercase tracking-wide mb-3">Brand</legend>
+                        <div id="brandFilters" class="space-y-2 max-h-48 overflow-y-auto text-sm">
+                            <div class="h-4 bg-zinc-100 rounded animate-pulse"></div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Price -->
+                    <fieldset>
+                        <legend class="text-xs font-bold text-zinc-500 uppercase tracking-wide mb-3">Daily Price (VND)</legend>
+                        <div class="flex gap-2">
+                            <input id="minPrice" type="number" placeholder="From" min="0"
+                                   class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary" />
+                            <input id="maxPrice" type="number" placeholder="To" min="0"
+                                   class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary" />
+                        </div>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <button class="price-chip" data-price="0,300000">Under 300k</button>
+                            <button class="price-chip" data-price="300000,600000">300k–600k</button>
+                            <button class="price-chip" data-price="600000,1000000">600k–1M</button>
+                            <button class="price-chip" data-price="1000000,99999999">Over 1M</button>
+                        </div>
+                    </fieldset>
+
+                    <!-- Area -->
+                    <fieldset>
+                        <legend class="text-xs font-bold text-zinc-500 uppercase tracking-wide mb-3">Area</legend>
+                        <div class="space-y-2 text-sm">
+                            @foreach (var loc in new[]{"Hai Chau","Thanh Khe","Son Tra","Ngu Hanh Son","Lien Chieu","Cam Le","Hoa Vang"})
+                            {
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" name="location" value="@loc" class="rounded accent-green-600" />
+                                    <span class="text-zinc-700">@loc</span>
+                                </label>
+                            }
+                        </div>
+                    </fieldset>
+
+                    <!-- Seats -->
+                    <fieldset>
+                        <legend class="text-xs font-bold text-zinc-500 uppercase tracking-wide mb-3">Seats</legend>
+                        <select id="seatFilter" class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-white">
+                            <option value="">All</option>
+                            <option value="4">4 seats</option>
+                            <option value="5">5 seats</option>
+                            <option value="7">7 seats</option>
+                        </select>
+                    </fieldset>
+
+                    <!-- Transmission -->
+                    <fieldset>
+                        <legend class="text-xs font-bold text-zinc-500 uppercase tracking-wide mb-3">Transmission</legend>
+                        <div class="space-y-2 text-sm">
+                            @foreach (var (lbl, val) in new[]{("All",""),("Automatic","2"),("Manual","1")})
+                            {
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="transmission" value="@val" @(val == "" ? "checked" : "") class="accent-green-600" />
+                                    <span>@lbl</span>
+                                </label>
+                            }
+                        </div>
+                    </fieldset>
+
+                    <!-- Fuel -->
+                    <fieldset>
+                        <legend class="text-xs font-bold text-zinc-500 uppercase tracking-wide mb-3">Fuel Type</legend>
+                        <div class="space-y-2 text-sm">
+                            @foreach (var (lbl, val) in new[]{("Gasoline","1"),("Diesel","2"),("Electric","3"),("Hybrid","4")})
+                            {
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" name="fuel" value="@val" class="rounded accent-green-600" />
+                                    <span class="text-zinc-700">@lbl</span>
+                                </label>
+                            }
+                        </div>
+                    </fieldset>
+
+                    <button id="btnApplyFilter" class="w-full bg-primary text-white font-bold py-2.5 rounded-xl text-sm hover:bg-green-700 transition-colors">Apply Filters</button>
+                </div>
+            </aside>
+
+            <!-- Results -->
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
+                    <div>
+                        <h1 id="resultCount" class="font-bold text-zinc-900 text-lg">Loading...</h1>
+                        <p id="resultSubtitle" class="text-xs text-zinc-500 mt-0.5 hidden">Available cars only</p>
+                    </div>
+                    <select id="sortCars" class="border border-zinc-200 rounded-xl px-4 py-2 text-sm text-zinc-700 focus:outline-none focus:ring-2 focus:ring-primary bg-white">
+                        <option value="">Most Relevant</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                        <option value="rating_desc">Highest Rated</option>
+                        <option value="bookings_desc">Most Booked</option>
+                        <option value="newest">Newest</option>
+                    </select>
+                </div>
+
+                <div id="carsGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+                </div>
+
+                <div id="pagination" class="flex justify-center gap-2 mt-8 flex-wrap"></div>
+            </div>
+        </div>
+    </div>
+
+    @section Scripts {
+    <script type="module">
+        import { authService } from '/js/shared/auth-service.js';
+        authService.refresh().then(s => {
+            const u = s?.user ?? null;
+            if (u) {
+                document.getElementById('navUserName').textContent = u.fullName;
+                document.getElementById('navUserName').classList.remove('hidden');
+                document.getElementById('navLoginBtn').classList.add('hidden');
+                document.getElementById('navLogoutBtn').classList.remove('hidden');
+            }
+        });
+        document.getElementById('navLogoutBtn').addEventListener('click', async () => { await authService.logout(); window.location.href = '/'; });
+    </script>
+    <script>
+        const STATE = { page:1, pageSize:12, searchTerm:'@Model.SearchTerm', location:'@Model.Location', sortBy:'@Model.SortBy', seatCount:'@(Model.SeatCount?.ToString()??"")', brandId:null, minPrice:null, maxPrice:null, transmissionType:null, fuelTypes:[] };
+
+        const fmt   = n => (n || 0).toLocaleString('vi-VN') + '₫';
+        const stars = r => { const f = Math.floor(r || 0); return `<span class="text-amber-400">${'★'.repeat(f)}${'☆'.repeat(5-f)}</span>`; };
+        const fuelMap = { Gasoline:'Gasoline', Electric:'Electric', Diesel:'Diesel', Hybrid:'Hybrid' };
+
+        function carCard(car) {
+            const img = car.primaryImageUrl
+                ? `<img src="${car.primaryImageUrl}" alt="${car.name}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">`
+                : `<div class="w-full h-48 bg-zinc-200 flex items-center justify-center text-zinc-300 text-5xl">🚗</div>`;
+            return `<article class="car-card group bg-white rounded-2xl border border-zinc-200 overflow-hidden flex flex-col">
+                <div class="relative overflow-hidden">${img}<span class="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">Available</span></div>
+                <div class="p-4 flex flex-col flex-1">
+                    <p class="text-xs text-zinc-400 font-medium mb-1">${car.brandName||''}</p>
+                    <h3 class="font-bold text-zinc-900 text-sm leading-snug mb-2">${car.name}</h3>
+                    <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs text-zinc-500 mb-2">
+                        <span>📍 ${car.location||'Da Nang'}</span>
+                        <span>🪑 ${car.seatCount} seats</span>
+                        <span>⚙️ ${car.transmission==='Automatic'?'Auto':'Manual'}</span>
+                        <span>⛽ ${fuelMap[car.fuel]||car.fuel||''}</span>
+                    </div>
+                    <div class="flex items-center gap-1 text-xs mb-3">
+                        ${stars(car.averageRating)}
+                        <span class="text-zinc-500 ml-1">${(car.averageRating||0).toFixed(1)} · ${car.totalBookings||0} rentals</span>
+                    </div>
+                    <div class="mt-auto flex items-center justify-between">
+                        <div><span class="font-bold text-zinc-900 text-base">${fmt(car.dailyPrice)}</span><span class="text-xs text-zinc-400">/day</span></div>
+                        <a href="/cars/detail?id=${car.id}" class="text-xs font-semibold bg-primary/10 text-primary hover:bg-primary hover:text-white px-4 py-2 rounded-lg transition-colors">View Details</a>
+                    </div>
+                </div>
+            </article>`;
+        }
+
+        function empty(msg) {
+            return `<div class="col-span-3 py-20 text-center text-zinc-400">${msg}</div>`;
+        }
+
+        function qs() {
+            const p = new URLSearchParams();
+            if (STATE.searchTerm) p.set('searchTerm', STATE.searchTerm);
+            if (STATE.brandId) p.set('brandId', STATE.brandId);
+            if (STATE.minPrice) p.set('minPrice', STATE.minPrice);
+            if (STATE.maxPrice) p.set('maxPrice', STATE.maxPrice);
+            if (STATE.location) p.set('location', STATE.location);
+            if (STATE.transmissionType) p.set('transmissionType', STATE.transmissionType);
+            STATE.fuelTypes.forEach(f => p.append('fuelType', f));
+            if (STATE.seatCount) p.set('seatCount', STATE.seatCount);
+            if (STATE.sortBy) p.set('sortBy', STATE.sortBy);
+            p.set('page', STATE.page); p.set('pageSize', STATE.pageSize);
+            return p.toString();
+        }
+
+        async function load() {
+            const grid = document.getElementById('carsGrid');
+            grid.innerHTML = '<div class="skeleton col-span-3 h-64"></div>';
+            try {
+                const r = await fetch(`/api/proxy/cars?${qs()}`);
+                const data = await r.json();
+                const items = data.items ?? [];
+                grid.innerHTML = items.length ? items.map(carCard).join('') : empty('No cars match your search.');
+                document.getElementById('resultCount').textContent = `Found ${data.totalCount||0} car(s)`;
+                document.getElementById('resultSubtitle').classList.remove('hidden');
+                renderPagination(data.totalCount||0);
+            } catch { grid.innerHTML = empty('Failed to load. Please try again.'); }
+        }
+
+        async function loadBrands() {
+            try {
+                const r = await fetch('/api/proxy/owner/cars/meta/models');
+                const models = await r.json();
+                const brands = {};
+                (models||[]).forEach(m => { if (m.brandName) brands[m.brandName] = true; });
+                document.getElementById('brandFilters').innerHTML = Object.keys(brands).sort().map(b =>
+                    `<label class="flex items-center gap-2 cursor-pointer text-sm">
+                        <input type="radio" name="brand" value="${b}" class="accent-green-600" /><span class="text-zinc-700">${b}</span>
+                     </label>`
+                ).join('');
+            } catch { document.getElementById('brandFilters').innerHTML = '<p class="text-xs text-zinc-400">Could not load brands.</p>'; }
+        }
+
+        async function loadSuggestions(q) {
+            const box = document.getElementById('suggestionsBox');
+            if (!q || q.length < 2) { box.classList.add('hidden'); return; }
+            try {
+                const r = await fetch(`/api/proxy/cars/suggestions?q=${encodeURIComponent(q)}`);
+                const items = await r.json();
+                if (!items?.length) { box.classList.add('hidden'); return; }
+                box.innerHTML = items.map(s => `<button class="w-full text-left px-4 py-2.5 text-sm hover:bg-zinc-50 transition-colors text-zinc-700" data-suggest="${s}">${s}</button>`).join('');
+                box.classList.remove('hidden');
+            } catch {}
+        }
+
+        function renderPagination(total) {
+            const pages = Math.ceil(total / STATE.pageSize);
+            const el = document.getElementById('pagination');
+            if (pages <= 1) { el.innerHTML = ''; return; }
+            el.innerHTML = Array.from({length:pages},(_,i) => i+1).map(i =>
+                `<button data-p="${i}" class="px-3.5 py-2 rounded-xl text-sm font-medium transition-colors ${i===STATE.page?'bg-primary text-white shadow-sm':'bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50'}">${i}</button>`
+            ).join('');
+        }
+
+        function collectFilters() {
+            STATE.searchTerm       = document.getElementById('searchInput').value.trim();
+            STATE.sortBy           = document.getElementById('sortCars').value;
+            STATE.seatCount        = document.getElementById('seatFilter').value;
+            STATE.minPrice         = document.getElementById('minPrice').value || null;
+            STATE.maxPrice         = document.getElementById('maxPrice').value || null;
+            const loc              = [...document.querySelectorAll('[name=location]:checked')].map(x=>x.value);
+            STATE.location         = loc[0] || '';
+            const trans            = document.querySelector('[name=transmission]:checked');
+            STATE.transmissionType = trans?.value || null;
+            STATE.fuelTypes        = [...document.querySelectorAll('[name=fuel]:checked')].map(x=>x.value);
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('minPrice').value = '';
+            document.getElementById('maxPrice').value = '';
+            document.getElementById('seatFilter').value = '';
+            document.querySelectorAll('[name=transmission]')[0].checked = true;
+            document.querySelectorAll('[name=location],[name=fuel],[name=brand]').forEach(x=>x.checked=false);
+            document.querySelectorAll('.price-chip').forEach(x=>x.classList.remove('active'));
+            Object.assign(STATE, {brandId:null,minPrice:null,maxPrice:null,transmissionType:null,fuelTypes:[],seatCount:'',location:'',searchTerm:'',page:1});
+            load();
+        }
+
+        // Init from URL
+        const p = new URLSearchParams(location.search);
+        STATE.searchTerm = p.get('searchTerm') || '';
+        STATE.location   = p.get('location') || '';
+        STATE.sortBy     = p.get('sortBy') || '';
+        STATE.seatCount  = p.get('seatCount') || '';
+        if (STATE.searchTerm) document.getElementById('searchInput').value = STATE.searchTerm;
+        if (STATE.sortBy)     document.getElementById('sortCars').value = STATE.sortBy;
+        if (STATE.seatCount)  document.getElementById('seatFilter').value = STATE.seatCount;
+        if (STATE.location) {
+            const cb = [...document.querySelectorAll('[name=location]')].find(x=>x.value===STATE.location);
+            if (cb) cb.checked = true;
+        }
+
+        // Event bindings
+        document.getElementById('btnSearch').addEventListener('click', () => { collectFilters(); STATE.page=1; load(); });
+        document.getElementById('searchInput').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('btnSearch').click(); });
+        document.getElementById('searchInput').addEventListener('input', e => loadSuggestions(e.target.value.trim()));
+        document.getElementById('suggestionsBox').addEventListener('click', e => {
+            const s = e.target.closest('[data-suggest]');
+            if (s) { document.getElementById('searchInput').value=s.dataset.suggest; document.getElementById('suggestionsBox').classList.add('hidden'); document.getElementById('btnSearch').click(); }
+        });
+        document.addEventListener('click', e => { if(!e.target.closest('#searchInput')&&!e.target.closest('#suggestionsBox')) document.getElementById('suggestionsBox').classList.add('hidden'); });
+        document.getElementById('sortCars').addEventListener('change', () => { collectFilters(); STATE.page=1; load(); });
+        document.getElementById('btnApplyFilter').addEventListener('click', () => { collectFilters(); STATE.page=1; load(); });
+        document.getElementById('btnResetFilter').addEventListener('click', resetFilters);
+        document.querySelectorAll('[data-price]').forEach(btn =>
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.price-chip').forEach(b=>b.classList.remove('active'));
+                btn.classList.add('active');
+                const [min,max] = btn.dataset.price.split(',');
+                document.getElementById('minPrice').value = +min>0?min:'';
+                document.getElementById('maxPrice').value = +max<99999999?max:'';
+            })
+        );
+        document.getElementById('pagination').addEventListener('click', e => {
+            const btn = e.target.closest('[data-p]');
+            if (btn) { STATE.page=+btn.dataset.p; load(); window.scrollTo({top:0,behavior:'smooth'}); }
+        });
+
+        loadBrands(); load();
+    </script>
+    }
+</body>
+</html>
