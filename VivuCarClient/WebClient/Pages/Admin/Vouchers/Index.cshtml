@@ -1,16 +1,16 @@
-﻿@page "/admin/vouchers"
+@page "/admin/vouchers"
 @model WebClient.Pages.Admin.Vouchers.IndexModel
-@{ ViewData["Title"] = "Voucher"; ViewData["AdminPage"] = "vouchers"; }
-<div class="grid gap-5" data-admin-vouchers-page>
-  <header class="page-heading"><div><p class="eyebrow">Voucher management</p><h1>Qu&#7843;n l&#253; voucher</h1><p>Theo d&#245;i h&#7841;n d&#249;ng, s&#7889; l&#432;&#7907;t c&#242;n l&#7841;i v&#224; hi&#7879;u qu&#7843; t&#7915;ng chi&#7871;n d&#7883;ch.</p></div><a class="btn btn-primary" href="/admin/vouchers/form">T&#7841;o voucher</a></header>
-  <section id="voucherSummary" class="summary-grid" aria-label="T&#7893;ng quan voucher"></section>
-  <section class="toolbar toolbar-admin-users" aria-label="B&#7897; l&#7885;c voucher">
-    <label class="field"><span>T&#236;m ki&#7871;m</span><input id="searchVoucherInput" type="search" placeholder="M&#227; ho&#7863;c t&#234;n voucher"></label>
-    <label class="field"><span>Tr&#7841;ng th&#225;i</span><select id="voucherStatusFilter"><option value="">T&#7845;t c&#7843;</option><option value="active">&#272;ang ho&#7841;t &#273;&#7897;ng</option><option value="expired">&#272;&#227; h&#7871;t h&#7841;n</option><option value="used_up">&#272;&#227; d&#249;ng h&#7871;t</option></select></label>
-    <label class="field"><span>Lo&#7841;i gi&#7843;m</span><select id="discountTypeFilter"><option value="">T&#7845;t c&#7843;</option><option value="percentage">Ph&#7847;n tr&#259;m</option><option value="fixed">S&#7889; ti&#7873;n c&#7889; &#273;&#7883;nh</option></select></label>
-    <button class="btn btn-secondary self-end" id="btnResetVoucherFilter" type="button">&#272;&#7863;t l&#7841;i</button>
-  </section>
-  <section class="panel"><div class="table-wrap"><table><thead><tr><th>Voucher</th><th>Lo&#7841;i</th><th>Gi&#225; tr&#7883;</th><th>&#272;&#417;n t&#7889;i thi&#7875;u</th><th>&#272;&#227; d&#249;ng</th><th>H&#7871;t h&#7841;n</th><th>Tr&#7841;ng th&#225;i</th><th>Thao t&#225;c</th></tr></thead><tbody id="voucherTableBody"><tr><td colspan="8" class="empty-cell">&#272;ang t&#7843;i voucher...</td></tr></tbody></table></div><div class="pagination-bar"><p id="voucherPageInfo"></p><div class="flex gap-2"><button class="btn btn-secondary" id="voucherPrev" type="button">Tr&#432;&#7899;c</button><button class="btn btn-secondary" id="voucherNext" type="button">Sau</button></div></div></section>
-  <div id="drawerOverlay" class="drawer-overlay" hidden></div><aside class="drawer" id="voucherPerformanceDrawer" aria-hidden="true"><div class="mb-5 flex items-center justify-between border-b border-zinc-200 pb-4"><div><p class="eyebrow">Performance</p><h2 class="m-0 text-lg font-semibold">Hi&#7879;u qu&#7843; voucher</h2></div><button class="icon-button" id="btnClosePerformance" type="button" aria-label="&#272;&#243;ng">&#215;</button></div><div id="performanceContent"></div></aside>
+@{
+    ViewData["Title"] = "Voucher";
+    ViewData["AdminPage"] = "vouchers";
+}
+<div data-admin-vouchers-page>
+
+<div class="page-heading"><div><h1>Quản lý khuyến mãi</h1><p>Tính lượt dùng từ `voucher_usages`, số lượng còn lại từ `vouchers.quantity`.</p></div><a class="btn btn-primary" href="/admin/vouchers/form">Tạo voucher</a></div>
+    <section id="voucherSummary" class="summary-grid"></section>
+    <section class="toolbar toolbar-vouchers"><input id="searchVoucherInput" placeholder="Tìm theo code hoặc tên"><select id="voucherStatusFilter"><option value="">Tất cả trạng thái</option><option value="active">Đang hoạt động</option><option value="expired">Đã hết hạn</option><option value="used_up">Đã dùng hết lượt</option></select><select id="discountTypeFilter"><option value="">Tất cả loại</option><option value="percentage">Phần trăm</option><option value="fixed">Cố định</option></select><input id="voucherDateFrom" type="date"><input id="voucherDateTo" type="date"><button class="btn btn-primary" id="btnFilterVoucher">Lọc</button><button class="btn btn-secondary" id="btnResetVoucherFilter">Đặt lại</button></section>
+    <section class="panel"><div id="voucherEmpty" class="empty-state hidden"><h3>Chưa có voucher phù hợp</h3><p>Thử đổi bộ lọc hoặc tạo một voucher mới cho chiến dịch tiếp theo.</p><a class="btn btn-primary" href="/admin/vouchers/form">Tạo voucher mới</a></div><div class="table-wrap"><table><thead><tr><th>Code</th><th>Tên</th><th>Loại</th><th>Giá trị</th><th>Tối thiểu</th><th>Hết hạn</th><th>Lượt dùng</th><th>Trạng thái</th><th>Hành động</th></tr></thead><tbody id="voucherTableBody"></tbody></table></div></section>
+
+<aside class="drawer" id="voucherPerformanceDrawer"><div class="drawer-head"><h2>Hiệu suất voucher</h2><button class="icon-button" id="btnClosePerformance" type="button">×</button></div><div id="performanceContent"></div></aside><div id="drawerOverlay" class="drawer-overlay"></div>
 </div>
 @section Scripts { <script type="module" src="~/js/admin/vouchers/index.js" asp-append-version="true"></script> }

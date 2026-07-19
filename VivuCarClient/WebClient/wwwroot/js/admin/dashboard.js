@@ -1,69 +1,17 @@
-﻿import { fetchJson } from "../shared/api-client.js";
+import { fetchJson } from "../shared/api-client.js";
 import { escapeHtml } from "../shared/dom.js";
 import { formatVnd } from "../shared/utils.js";
-
-const root = document.querySelector("[data-admin-dashboard-page]");
-const state = { from: null, to: null };
-const fullDate = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
-const shortDate = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit" });
-
-function isoDate(date) { const offset = date.getTimezoneOffset(); return new Date(date.getTime() - offset * 60000).toISOString().slice(0, 10); }
-function rangeFor(key) {
-  const now = new Date(); const end = new Date(now.getFullYear(), now.getMonth(), now.getDate()); let start = new Date(end);
-  if (key === "7days") start.setDate(end.getDate() - 6);
-  if (key === "month") start = new Date(end.getFullYear(), end.getMonth(), 1);
-  if (key === "year") start = new Date(end.getFullYear(), 0, 1);
-  return { from: isoDate(start), to: isoDate(end) };
-}
-function setText(id, value) { const el = document.getElementById(id); if (el) el.textContent = value; }
-function setLoading(value) {
-  root?.classList.toggle("is-loading", value);
-  document.getElementById("chartSkeleton").hidden = !value;
-  if (value) document.getElementById("revenueChart").hidden = true;
-  document.querySelectorAll("#revenuePresets button, #customRangeForm button").forEach(button => button.disabled = value);
-}
-function showError(error) { setText("dashboardErrorMessage", error?.message || "Đã xảy ra lỗi không xác định."); document.getElementById("dashboardError").hidden = false; }
-function renderSummary(summary = {}) {
-  setText("grossRevenue", formatVnd(summary.grossRevenue ?? 0)); setText("netRevenue", formatVnd(summary.netRevenue ?? 0));
-  setText("depositCollected", formatVnd(summary.depositCollected ?? 0)); setText("averageOrderValue", formatVnd(summary.averageOrderValue ?? 0));
-  setText("completedSummary", `${summary.completedBookings ?? 0} đơn hoàn tất`); setText("totalBookingSummary", `${summary.totalBookings ?? 0} đơn trong kỳ`);
-  setText("cancelRateSummary", `Tỷ lệ hủy ${Number(summary.cancelRate ?? 0).toLocaleString("vi-VN")}%`);
-}
-function renderChart(items = []) {
-  const chart = document.getElementById("revenueChart"); const empty = document.getElementById("chartEmpty");
-  setText("snapshotCount", `${items.length} ngày dữ liệu`); chart.hidden = !items.length; empty.hidden = !!items.length;
-  if (!items.length) { chart.replaceChildren(); return; }
-  const max = Math.max(...items.map(item => Number(item.grossRevenue || 0)), 1);
-  chart.innerHTML = items.map(item => {
-    const amount = Number(item.grossRevenue || 0); const scale = amount === 0 ? 0.02 : Math.max(0.08, amount / max); const date = new Date(`${item.date}T00:00:00`);
-    return `<div class="revenue-bar-item" tabindex="0" aria-label="${escapeHtml(fullDate.format(date))}: ${escapeHtml(formatVnd(amount))}"><div class="revenue-bar-value">${escapeHtml(formatVnd(amount))}</div><div class="revenue-bar-track"><span style="--bar-scale:${scale}"></span></div><small>${escapeHtml(shortDate.format(date))}</small></div>`;
-  }).join("");
-}
-function badge(value, type) {
-  const key = String(value || "pending").toLowerCase();
-  const labels = type === "payment" ? { pending:"Chờ thanh toán", success:"Thành công", failed:"Thất bại", refunded:"Đã hoàn tiền" } : { pending:"Chờ xử lý", approved:"Đã xác nhận", rejected:"Đã từ chối", completed:"Hoàn tất", cancelled:"Đã hủy" };
-  return `<span class="revenue-badge revenue-badge-${escapeHtml(key)}">${escapeHtml(labels[key] || key)}</span>`;
-}
-function renderBookings(items = []) {
-  const body = document.getElementById("recentBookingsBody"); const wrap = body.closest(".revenue-table-wrap"); const empty = document.getElementById("recentEmpty");
-  setText("recentCount", `${items.length} đơn`); wrap.hidden = !items.length; empty.hidden = !!items.length;
-  body.innerHTML = items.map(item => `<tr><td><strong>${escapeHtml(item.bookingCode || `#${item.id}`)}</strong></td><td>${escapeHtml(item.customerName)}</td><td>${escapeHtml(item.carName)}</td><td>${escapeHtml(fullDate.format(new Date(item.pickupDate)))}</td><td class="revenue-money">${escapeHtml(formatVnd(item.totalAmount))}</td><td>${badge(item.bookingStatus,"booking")}</td><td>${badge(item.paymentStatus,"payment")}</td></tr>`).join("");
-}
-async function loadDashboard() {
-  setLoading(true); document.getElementById("dashboardError").hidden = true;
-  setText("selectedPeriod", `${fullDate.format(new Date(`${state.from}T00:00:00`))} – ${fullDate.format(new Date(`${state.to}T00:00:00`))}`);
-  try { const data = await fetchJson(`api/admin/reports/revenue?${new URLSearchParams(state)}`); renderSummary(data.summary); renderChart(data.daily); renderBookings(data.recentBookings); }
-  catch (error) { showError(error); renderSummary(); renderChart([]); renderBookings([]); }
-  finally { setLoading(false); }
-}
-function choosePreset(button) {
-  document.querySelectorAll("#revenuePresets button").forEach(item => item.classList.toggle("is-active", item === button));
-  const key = button.dataset.range; document.getElementById("customRangeForm").hidden = key !== "custom";
-  if (key !== "custom") { Object.assign(state, rangeFor(key)); loadDashboard(); }
-}
-if (root) {
-  Object.assign(state, rangeFor("month"));
-  document.getElementById("revenuePresets").addEventListener("click", event => { const button = event.target.closest("button[data-range]"); if (button) choosePreset(button); });
-  document.getElementById("customRangeForm").addEventListener("submit", event => { event.preventDefault(); const from = document.getElementById("dateFrom").value; const to = document.getElementById("dateTo").value; if (!from || !to || from > to) return showError(new Error("Khoảng ngày không hợp lệ.")); Object.assign(state,{from,to}); loadDashboard(); });
-  document.getElementById("retryDashboard").addEventListener("click", loadDashboard); loadDashboard();
-}
+const root=document.querySelector("[data-admin-dashboard-page]"),byId=id=>document.getElementById(id);
+const presets=[["YESTERDAY","Hôm qua"],["TODAY","Hôm nay"],["THIS_WEEK","Tuần này"],["THIS_MONTH","Tháng này"],["LAST_MONTH","Tháng trước"],["THIS_YEAR","Năm nay"],["LAST_YEAR","Năm trước"],["CUSTOM","Tùy chỉnh"]];
+const state={preset:"THIS_MONTH",from:"",to:""};
+function iso(date){const offset=date.getTimezoneOffset();return new Date(date.getTime()-offset*60000).toISOString().slice(0,10)}
+function rangeFor(key){const today=new Date();today.setHours(0,0,0,0);let start=new Date(today),end=new Date(today);if(key==="YESTERDAY"){start.setDate(start.getDate()-1);end=new Date(start)}else if(key==="THIS_WEEK"){const day=start.getDay()||7;start.setDate(start.getDate()-day+1)}else if(key==="THIS_MONTH")start=new Date(today.getFullYear(),today.getMonth(),1);else if(key==="LAST_MONTH"){start=new Date(today.getFullYear(),today.getMonth()-1,1);end=new Date(today.getFullYear(),today.getMonth(),0)}else if(key==="THIS_YEAR")start=new Date(today.getFullYear(),0,1);else if(key==="LAST_YEAR"){start=new Date(today.getFullYear()-1,0,1);end=new Date(today.getFullYear()-1,11,31)}return{from:iso(start),to:iso(end)}}
+function label(){return(presets.find(item=>item[0]===state.preset)||["","Tùy chỉnh"])[1]}
+function renderPresets(){byId("revenueRangeButtons").innerHTML=presets.map(item=>{const active=item[0]===state.preset,cls=active?"border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700":"border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-100";return'<button class="rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 ease-out '+cls+'" type="button" data-range-preset="'+item[0]+'">'+item[1]+(item[0]==="CUSTOM"?'<span class="ml-1 text-xs">▾</span>':'')+'</button>'}).join("");byId("customRangePanel").classList.toggle("hidden",state.preset!=="CUSTOM")}
+function badge(value,type){const key=String(value||"pending").toLowerCase(),labels=type==="payment"?{pending:"Chờ thanh toán",success:"Thành công",failed:"Thất bại",refunded:"Đã hoàn tiền"}:{pending:"Chờ xử lý",approved:"Đã xác nhận",rejected:"Đã từ chối",completed:"Hoàn tất",cancelled:"Đã hủy"},tone=["success","completed","approved"].includes(key)?"success":["failed","rejected"].includes(key)?"danger":["cancelled","refunded"].includes(key)?"warning":"info";return'<span class="status-badge status-'+tone+'">'+escapeHtml(labels[key]||key)+'</span>'}
+function renderSummary(data){const s=data.summary||{},pending=Math.max(0,(s.totalBookings||0)-(s.completedBookings||0)-(s.cancelledBookings||0));byId("revenueCardRangeTitle").textContent="Tổng doanh thu "+label().toLowerCase();byId("completedOrdersTitle").textContent="Tổng đơn hoàn thành "+label().toLowerCase();byId("successfulRevenue").textContent=formatVnd(s.grossRevenue||0);byId("successfulOrderCount").textContent=(s.completedBookings||0)+" đơn đã thanh toán";byId("totalOrders").textContent=s.totalBookings||0;byId("revenueRangeBadge").textContent=label();const stats=[["#059669","Đã thanh toán",s.completedBookings||0],["#fbbf24","Hủy",s.cancelledBookings||0],["#38bdf8","Chờ thanh toán",pending]];let current=0;const segments=stats.map(item=>{const start=s.totalBookings?current/s.totalBookings*100:0;current+=item[2];const end=s.totalBookings?current/s.totalBookings*100:0;return item[0]+" "+start+"% "+end+"%"});byId("orderStatusDonut").style.background=s.totalBookings?"conic-gradient("+segments.join(",")+")":"conic-gradient(#e4e4e7 0 100%)";byId("orderStatusLegend").innerHTML=stats.map(item=>'<span class="inline-flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full" style="background:'+item[0]+'"></span><span>'+item[1]+'</span><strong class="font-semibold text-zinc-900">'+item[2]+'</strong></span>').join("")}
+function renderChart(items){byId("revenueChartTitle").textContent="Doanh thu theo ngày";const max=Math.max(1000000,...items.map(item=>Number(item.grossRevenue||0))),ticks=Array.from({length:6},(_,i)=>Math.round(max-max/5*i));byId("monthlyRevenueChart").innerHTML='<div class="grid min-h-[380px] grid-cols-[86px_minmax(0,1fr)] gap-4"><div class="grid h-[320px] grid-rows-6 text-right text-xs text-zinc-500">'+ticks.map(t=>'<div class="flex items-center justify-end">'+formatVnd(t)+'</div>').join("")+'</div><div class="relative h-[320px] overflow-x-auto border-l border-zinc-200"><div class="relative h-full min-w-[720px]">'+ticks.map((_,i)=>'<div class="absolute left-0 right-0 border-t border-zinc-200" style="top:'+(i*20)+'%"></div>').join("")+'<div class="relative z-10 grid h-full items-end gap-3 px-3" style="grid-template-columns:repeat('+Math.max(items.length,1)+',minmax(34px,1fr))">'+items.map(item=>{const h=Math.min(100,Number(item.grossRevenue||0)/max*100),date=new Intl.DateTimeFormat("vi-VN",{day:"2-digit",month:"2-digit"}).format(new Date(item.date+"T00:00:00"));return'<div class="group grid h-full grid-rows-[1fr_auto] gap-3"><div class="relative flex items-end justify-center"><div class="w-full max-w-10 rounded-t-xl bg-emerald-600 transition hover:bg-emerald-700" style="height:'+(h?Math.max(3,h):0)+'%"></div></div><span class="text-center text-xs font-medium text-zinc-500">'+escapeHtml(date)+'</span></div>'}).join("")+'</div></div></div></div>'}
+function renderOrders(items){byId("orderDetailCount").textContent=items.length+" đơn";if(!items.length){byId("orderDetailTable").innerHTML='<div class="empty-state"><h3>Chưa có đơn hàng trong khoảng thời gian này</h3><p>Chọn một mốc thời gian khác để xem danh sách chi tiết.</p></div>';return}const df=new Intl.DateTimeFormat("vi-VN");byId("orderDetailTable").innerHTML='<div class="overflow-x-auto rounded-2xl border border-zinc-200 bg-white shadow-sm"><table class="min-w-full text-left text-sm"><thead class="bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500"><tr><th class="px-5 py-3">Mã đơn</th><th class="px-5 py-3">Khách hàng</th><th class="px-5 py-3">Phương tiện</th><th class="px-5 py-3">Ngày thuê</th><th class="px-5 py-3 text-right">Tổng tiền</th><th class="px-5 py-3">Trạng thái</th><th class="px-5 py-3">Thanh toán</th></tr></thead><tbody class="divide-y divide-zinc-100">'+items.map(item=>'<tr class="transition hover:bg-zinc-50"><td class="px-5 py-4 font-semibold">#'+escapeHtml(item.bookingCode||item.id)+'</td><td class="px-5 py-4">'+escapeHtml(item.customerName)+'</td><td class="px-5 py-4">'+escapeHtml(item.carName)+'</td><td class="px-5 py-4">'+escapeHtml(df.format(new Date(item.pickupDate)))+'</td><td class="px-5 py-4 text-right font-semibold">'+escapeHtml(formatVnd(item.totalAmount))+'</td><td class="px-5 py-4">'+badge(item.bookingStatus,"booking")+'</td><td class="px-5 py-4">'+badge(item.paymentStatus,"payment")+'</td></tr>').join("")+'</tbody></table></div>'}
+async function load(){byId("monthlyRevenueChart").innerHTML='<div class="skeleton h-[380px] rounded-xl"></div>';try{const data=await fetchJson("api/admin/reports/revenue?"+new URLSearchParams({from:state.from,to:state.to}));renderSummary(data);renderChart(data.daily||[]);renderOrders(data.recentBookings||[])}catch(error){byId("monthlyRevenueChart").innerHTML='<div class="empty-state"><h3>Không tải được báo cáo</h3><p>'+escapeHtml(error.message)+'</p><button class="btn btn-primary" id="retryDashboard" type="button">Thử lại</button></div>';byId("retryDashboard")?.addEventListener("click",load);renderSummary({summary:{}});renderOrders([])}}
+function selectPreset(key){state.preset=key;if(key!=="CUSTOM")Object.assign(state,rangeFor(key));else{if(!state.from)Object.assign(state,rangeFor("THIS_MONTH"));byId("customStartDate").value=state.from;byId("customEndDate").value=state.to}renderPresets();if(key!=="CUSTOM")load()}
+if(root){byId("revenueRangeButtons").addEventListener("click",event=>{const button=event.target.closest("[data-range-preset]");if(button)selectPreset(button.dataset.rangePreset)});byId("applyCustomRange").addEventListener("click",()=>{const from=byId("customStartDate").value,to=byId("customEndDate").value;if(!from||!to||from>to)return;state.preset="CUSTOM";state.from=from;state.to=to;renderPresets();load()});Object.assign(state,rangeFor("THIS_MONTH"));renderPresets();load()}

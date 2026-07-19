@@ -23,12 +23,8 @@ public class AdminReportService(IAdminReportRepository repository) : IAdminRepor
             throw new AdminReportValidationException($"Date range cannot exceed {MaximumRangeDays} days.");
         }
 
-        var snapshotsTask = repository.GetRevenueSnapshotsAsync(from, to, cancellationToken);
-        var bookingsTask = repository.GetRecentBookingsAsync(from, to, 10, cancellationToken);
-        await Task.WhenAll(snapshotsTask, bookingsTask);
-
-        var snapshots = await snapshotsTask;
-        var recentBookings = await bookingsTask;
+        var snapshots = await repository.GetRevenueSnapshotsAsync(from, to, cancellationToken);
+        var recentBookings = await repository.GetRecentBookingsAsync(from, to, 10, cancellationToken);
         var totalBookings = snapshots.Sum(item => item.TotalBookings);
         var completedBookings = snapshots.Sum(item => item.CompletedBookings);
         var cancelledBookings = snapshots.Sum(item => item.CancelledBookings);

@@ -495,33 +495,6 @@ namespace BusinessObjects.Migrations
                     b.HasIndex("Status");
 
                     b.ToTable("Cars", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CarBrandId = 1,
-                            CarModelId = 1,
-                            CarTypeId = 1,
-                            Color = "White",
-                            CreatedAt = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyPrice = 600000m,
-                            DeliveryFee = 10000m,
-                            DepositAmount = 1500000m,
-                            Description = "Clean 5-seat family car with stable handling and efficient fuel usage.",
-                            FuelType = "Gasoline",
-                            InsuranceFeePerDay = 50000m,
-                            KilometersDriven = 28000,
-                            LicensePlate = "43A-12345",
-                            Location = "Hai Chau, Da Nang",
-                            Name = "Toyota Vios 2022",
-                            OwnerId = 6,
-                            PricePerHour = 90000m,
-                            SeatCount = 5,
-                            Status = "Available",
-                            TransmissionType = "Automatic",
-                            Year = (short)2022
-                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Models.CarAvailabilityBlock", b =>
@@ -1218,7 +1191,7 @@ namespace BusinessObjects.Migrations
                             ExpiresAt = new DateTime(2026, 12, 31, 23, 59, 59, 0, DateTimeKind.Utc),
                             MaxDiscount = 250000m,
                             MinOrderAmount = 500000m,
-                            Name = "Giảm giá VivuCar",
+                            Name = "VivuCar 10%",
                             Quantity = 100
                         });
                 });

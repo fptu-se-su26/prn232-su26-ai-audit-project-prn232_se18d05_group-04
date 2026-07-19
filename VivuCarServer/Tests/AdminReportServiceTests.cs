@@ -65,6 +65,32 @@ public class AdminReportServiceTests
     }
 
     [Fact]
+    public async Task GetRevenueAsync_WaitsForSnapshotsBeforeQueryingRecentBookings()
+    {
+        var from = new DateOnly(2026, 7, 1);
+        var to = new DateOnly(2026, 7, 31);
+        var snapshotsCompletion = new TaskCompletionSource<IReadOnlyList<DailyRevenueSnapshot>>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        var recentBookingsStarted = false;
+
+        repository.Setup(item => item.GetRevenueSnapshotsAsync(from, to, It.IsAny<CancellationToken>()))
+            .Returns(snapshotsCompletion.Task);
+        repository.Setup(item => item.GetRecentBookingsAsync(from, to, 10, It.IsAny<CancellationToken>()))
+            .Callback(() => recentBookingsStarted = true)
+            .ReturnsAsync([]);
+
+        var reportTask = service.GetRevenueAsync(from, to);
+        await Task.Yield();
+
+        Assert.False(recentBookingsStarted);
+
+        snapshotsCompletion.SetResult([]);
+        await reportTask;
+
+        Assert.True(recentBookingsStarted);
+    }
+
+    [Fact]
     public async Task GetRevenueAsync_WhenFromAfterTo_ThrowsValidationError()
     {
         await Assert.ThrowsAsync<AdminReportValidationException>(() =>

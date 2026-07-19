@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusinessObjects.Migrations
 {
     [DbContext(typeof(VivuCarDbContext))]
-    [Migration("20260710144011_SeedMiotoCars")]
-    partial class SeedMiotoCars
+    [Migration("20260719154411_InitialVivuCarSchema")]
+    partial class InitialVivuCarSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -498,33 +498,6 @@ namespace BusinessObjects.Migrations
                     b.HasIndex("Status");
 
                     b.ToTable("Cars", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CarBrandId = 1,
-                            CarModelId = 1,
-                            CarTypeId = 1,
-                            Color = "White",
-                            CreatedAt = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            DailyPrice = 600000m,
-                            DeliveryFee = 10000m,
-                            DepositAmount = 1500000m,
-                            Description = "Clean 5-seat family car with stable handling and efficient fuel usage.",
-                            FuelType = "Gasoline",
-                            InsuranceFeePerDay = 50000m,
-                            KilometersDriven = 28000,
-                            LicensePlate = "43A-12345",
-                            Location = "Hai Chau, Da Nang",
-                            Name = "Toyota Vios 2022",
-                            OwnerId = 6,
-                            PricePerHour = 90000m,
-                            SeatCount = 5,
-                            Status = "Available",
-                            TransmissionType = "Automatic",
-                            Year = (short)2022
-                        });
                 });
 
             modelBuilder.Entity("BusinessObjects.Models.CarAvailabilityBlock", b =>
@@ -716,6 +689,51 @@ namespace BusinessObjects.Migrations
                         });
                 });
 
+            modelBuilder.Entity("BusinessObjects.Models.DailyRevenueSnapshot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CancelledBookings")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompletedBookings")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("DepositCollected")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("GeneratedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<decimal>("GrossRevenue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("NetRevenue")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateOnly>("SnapshotDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("TotalBookings")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SnapshotDate")
+                        .IsUnique();
+
+                    b.ToTable("DailyRevenueSnapshots", (string)null);
+                });
+
             modelBuilder.Entity("BusinessObjects.Models.DriverDocument", b =>
                 {
                     b.Property<int>("Id")
@@ -778,6 +796,56 @@ namespace BusinessObjects.Migrations
                         .IsUnique();
 
                     b.ToTable("DriverDocuments", (string)null);
+                });
+
+            modelBuilder.Entity("BusinessObjects.Models.ExportJob", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("ExportType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("FileUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ParamsJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RequestedBy")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestedBy");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("ExportJobs", (string)null);
                 });
 
             modelBuilder.Entity("BusinessObjects.Models.IncidentReport", b =>
@@ -1071,41 +1139,42 @@ namespace BusinessObjects.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("DiscountType")
                         .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<decimal>("DiscountValue")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("EndDateTime")
+                    b.Property<DateTime?>("ExpiresAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal?>("MaxDiscountAmount")
+                    b.Property<decimal>("MaxDiscount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal?>("MinOrderAmount")
+                    b.Property<decimal>("MinOrderAmount")
+                        .ValueGeneratedOnAdd()
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
 
-                    b.Property<DateTime>("StartDateTime")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("UsageLimit")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsedCount")
-                        .HasColumnType("int");
+                    b.Property<int>("Quantity")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.HasKey("Id");
 
@@ -1119,15 +1188,14 @@ namespace BusinessObjects.Migrations
                         {
                             Id = 1,
                             Code = "VIVUCAR10",
-                            Description = "Giảm giá 10% tổng hóa đơn",
-                            DiscountType = "Percentage",
+                            CreatedAt = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DiscountType = "percentage",
                             DiscountValue = 10m,
-                            EndDateTime = new DateTime(2026, 7, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            IsActive = true,
+                            ExpiresAt = new DateTime(2026, 12, 31, 23, 59, 59, 0, DateTimeKind.Utc),
+                            MaxDiscount = 250000m,
                             MinOrderAmount = 500000m,
-                            StartDateTime = new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            UsageLimit = 100,
-                            UsedCount = 0
+                            Name = "VivuCar 10%",
+                            Quantity = 100
                         });
                 });
 
@@ -1292,6 +1360,17 @@ namespace BusinessObjects.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BusinessObjects.Models.ExportJob", b =>
+                {
+                    b.HasOne("BusinessObjects.Models.AppUser", "Requester")
+                        .WithMany()
+                        .HasForeignKey("RequestedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Requester");
                 });
 
             modelBuilder.Entity("BusinessObjects.Models.IncidentReport", b =>

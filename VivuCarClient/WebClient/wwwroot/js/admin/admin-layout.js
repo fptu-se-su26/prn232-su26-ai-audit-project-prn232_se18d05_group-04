@@ -1,39 +1,15 @@
-﻿import { authService } from "../shared/auth-service.js";
-
-const sidebar = document.getElementById("adminSidebar");
-const menuButton = document.getElementById("adminMenuButton");
-const modal = document.getElementById("logoutModal");
-const modalCard = modal?.querySelector(".modal");
-let lastFocused = null;
-
-function setSidebar(open) {
-    sidebar?.classList.toggle("is-open", open);
-    menuButton?.setAttribute("aria-expanded", String(open));
-}
-function openLogout() {
-    lastFocused = document.activeElement;
-    modal?.classList.add("is-open");
-    modal?.setAttribute("aria-hidden", "false");
-    modalCard?.focus();
-}
-function closeLogout() {
-    modal?.classList.remove("is-open");
-    modal?.setAttribute("aria-hidden", "true");
-    lastFocused?.focus();
-}
-menuButton?.addEventListener("click", () => setSidebar(!sidebar.classList.contains("is-open")));
-document.querySelector("[data-menu-toggle]")?.addEventListener("click", () => setSidebar(!sidebar.classList.contains("is-open")));
-document.querySelector("[data-logout-trigger]")?.addEventListener("click", openLogout);
-document.querySelectorAll("[data-close-logout]").forEach(button => button.addEventListener("click", closeLogout));
-modal?.addEventListener("click", event => { if (event.target === modal) closeLogout(); });
-document.addEventListener("keydown", event => { if (event.key === "Escape") { closeLogout(); setSidebar(false); } });
-document.getElementById("confirmLogout")?.addEventListener("click", async () => {
-    const button = document.getElementById("confirmLogout");
-    button.disabled = true;
-    try { await authService.logout(); window.location.assign("/"); }
-    finally { button.disabled = false; }
-});
-document.getElementById("adminPageSearch")?.addEventListener("input", event => {
-    document.dispatchEvent(new CustomEvent("vivucar:admin-search", { detail: event.target.value.trim() }));
-});
-
+import { authService } from "../shared/auth-service.js";
+const sidebar=document.getElementById("adminSidebar"),shell=document.querySelector(".app-shell"),toggle=document.getElementById("adminMenuButton"),mobileToggle=document.querySelector("[data-menu-toggle]"),modal=document.getElementById("logoutModal");
+let collapsed=localStorage.getItem("vivucar_admin_sidebar_collapsed")==="true",lastFocused=null;
+function desktop(){return matchMedia("(min-width:1024px)").matches}
+function applySidebar(){if(!sidebar||!shell)return;const compact=desktop()&&collapsed,width=compact?"76px":"300px";sidebar.style.width=width;shell.style.paddingLeft=desktop()?width:"";document.body.style.setProperty("--admin-transition-sidebar-offset",desktop()?width:"0px");sidebar.querySelectorAll(".admin-nav-label,.admin-sidebar-title").forEach(el=>{el.style.opacity=compact?"0":"1";el.style.width=compact?"0":"";el.style.overflow="hidden";el.style.pointerEvents=compact?"none":""});sidebar.querySelector(".admin-sidebar-search").style.display=compact?"none":"";sidebar.querySelectorAll(".sidebar-nav a,.sidebar-nav button").forEach(el=>el.style.justifyContent=compact?"center":"");sidebar.querySelectorAll(".sidebar-nav .ml-auto").forEach(el=>el.style.display=compact?"none":"");toggle.style.display=compact?"none":"inline-grid";toggle.setAttribute("aria-label",compact?"Mở rộng sidebar":"Thu gọn sidebar")}
+function toggleSidebar(){if(desktop()){collapsed=!collapsed;localStorage.setItem("vivucar_admin_sidebar_collapsed",String(collapsed));applySidebar()}else sidebar.classList.toggle("is-open")}
+function openLogout(){lastFocused=document.activeElement;modal.classList.add("is-open");modal.setAttribute("aria-hidden","false");modal.querySelector(".modal")?.focus()}
+function closeLogout(){modal.classList.remove("is-open");modal.setAttribute("aria-hidden","true");lastFocused?.focus()}
+toggle?.addEventListener("click",toggleSidebar);mobileToggle?.addEventListener("click",toggleSidebar);window.addEventListener("resize",applySidebar);
+document.querySelector("[data-sidebar-logo]")?.addEventListener("click",event=>{if(desktop()&&collapsed){event.preventDefault();collapsed=false;localStorage.setItem("vivucar_admin_sidebar_collapsed","false");applySidebar()}});
+document.querySelector("[data-logout-trigger]")?.addEventListener("click",openLogout);document.querySelectorAll("[data-close-logout]").forEach(button=>button.addEventListener("click",closeLogout));modal?.addEventListener("click",event=>{if(event.target===modal)closeLogout()});document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeLogout();sidebar?.classList.remove("is-open")}});
+document.getElementById("confirmLogout")?.addEventListener("click",async()=>{const button=document.getElementById("confirmLogout");button.disabled=true;try{await authService.logout();location.assign("/")}finally{button.disabled=false}});
+document.getElementById("adminPageSearch")?.addEventListener("input",event=>document.dispatchEvent(new CustomEvent("vivucar:admin-search",{detail:event.target.value.trim()})));
+authService.refresh().then(session=>{const user=session?.user||authService.getUser();if(!user)return;const name=user.fullName||user.full_name||user.email,initials=name.split(" ").slice(-2).map(part=>part[0]).join("").toUpperCase();const panel=document.querySelector(".admin-user-panel");if(panel){panel.querySelector(".avatar").textContent=initials;panel.querySelector(".truncate").textContent=name}}).catch(()=>{});
+applySidebar();

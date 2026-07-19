@@ -43,6 +43,25 @@
   height: 100dvh;
 }
 
+.brand-mark {
+  align-items: center;
+  background: transparent;
+  border-radius: 12px;
+  color: #ffffff;
+  display: grid;
+  flex: 0 0 40px;
+  height: 40px;
+  justify-content: center;
+  object-fit: contain;
+  width: 40px;
+}
+
+.brand-mark svg {
+  display: block;
+  fill: currentColor;
+  height: 16px;
+  width: 16px;
+}
 .admin-brand {
   align-items: center;
   color: var(--admin-text);
@@ -585,3 +604,15 @@ th {
 .admin-nav-icon { align-items:center; background:#fff; border:1px solid #e4e4e7; border-radius:8px; color:#71717a; display:grid; flex:0 0 32px; height:32px; place-items:center; transition:border-color .2s ease,color .2s ease; width:32px; }
 .admin-nav-icon svg { fill:currentColor; height:16px; width:16px; }
 .admin-nav a:hover .admin-nav-icon,.admin-nav a.is-active .admin-nav-icon { border-color:#d1fae5; color:#059669; }
+/* Fixed overlays must stay outside page-transition transforms. */
+.drawer {
+  visibility: hidden;
+}
+
+.drawer.is-open {
+  visibility: visible;
+}
+
+.drawer-overlay.is-open {
+  display: block;
+}

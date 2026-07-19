@@ -1,4 +1,4 @@
-﻿import { createCar, getCarById, getCarModels, getCarOwners, getCarTypes, updateCar, uploadCarImages } from "./car-api.js";
+import { createCar, getCarById, getCarModels, getCarOwners, getCarTypes, updateCar, uploadCarImages } from "./car-api.js";
 import { escapeHtml } from "../../shared/dom.js";
 import { toNumber } from "../../shared/utils.js";
 import { showToast } from "../../shared/toast.js";
@@ -126,6 +126,7 @@ async function loadLookups() {
     try {
         const [owners, types, models] = await Promise.all([getCarOwners(), getCarTypes(), getCarModels()]);
         renderOwnerOptions(owners);
+        if (!state.carId && owners.length) elements.owner.value = String(owners[0].id);
         renderTypeOptions(types);
         renderModelOptions(models);
     } catch (error) {
@@ -141,6 +142,7 @@ async function loadExistingCar() {
 
     try {
         const car = await getCarById(state.carId);
+        document.getElementById("carFormTitle").textContent = "Chỉnh sửa phương tiện";
         populateForm(car);
     } catch (error) {
         showToast(error.message, "error");
@@ -188,6 +190,8 @@ function bindEvents() {
     elements.images?.addEventListener("change", handleImageChange);
     elements.carModel?.addEventListener("change", syncBrandModelFromModel);
     elements.form.addEventListener("submit", handleSubmit);
+    document.getElementById("btnClearImages")?.addEventListener("click", () => { state.selectedImages = []; state.compressedImages = []; elements.images.value = ""; renderImagePreview([]); });
+    document.getElementById("btnSaveDraft")?.addEventListener("click", () => showToast("Bản nháp chỉ được giữ trên UI vì DB chưa có trạng thái draft.", "info"));
 }
 
 async function init() {
