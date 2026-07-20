@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using API.Models;
 using API.Services.Storage;
 using BusinessObjects.Security;
@@ -147,7 +147,7 @@ public class AdminCarsController(
     [ProducesResponseType<ApiErrorResponse>(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<IReadOnlyList<AdminCarImageResponse>>> AddImages(
         int carId,
-        [FromForm] List<IFormFile> files,
+        List<IFormFile> files,
         [FromForm] bool isPrimary,
         CancellationToken cancellationToken
     )

@@ -16,8 +16,8 @@ public class UploadsController(IFileStorageService fileStorageService) : Control
     [ProducesResponseType<StoredFileResult>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiErrorResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<StoredFileResult>> Upload(
-        [FromForm] IFormFile file,
-        [FromForm] string? folder,
+        IFormFile file,
+        string? folder,
         CancellationToken cancellationToken
     )
     {
