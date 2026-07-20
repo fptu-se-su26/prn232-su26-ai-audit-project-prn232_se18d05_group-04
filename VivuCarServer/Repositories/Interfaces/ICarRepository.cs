@@ -74,6 +74,7 @@ public interface ICarRepository
     
     Task<(IReadOnlyList<Car> Items, int TotalCount)> SearchCarsAsync(
         string? searchTerm,
+        string? brands,
         int? brandId,
         decimal? minPrice,
         decimal? maxPrice,

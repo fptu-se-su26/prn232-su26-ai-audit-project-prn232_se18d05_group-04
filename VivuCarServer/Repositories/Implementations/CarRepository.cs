@@ -94,6 +94,7 @@ public class CarRepository(VivuCarDbContext dbContext) : ICarRepository
 
     public async Task<(IReadOnlyList<Car> Items, int TotalCount)> SearchCarsAsync(
         string? searchTerm,
+        string? brands,
         int? brandId,
         decimal? minPrice,
         decimal? maxPrice,
@@ -118,6 +119,18 @@ public class CarRepository(VivuCarDbContext dbContext) : ICarRepository
             .Include(c => c.Reviews)
             .Include(c => c.Owner)
             .Where(c => c.Status == CarStatus.Available);
+
+        // Brands filter (comma-separated list)
+        if (!string.IsNullOrWhiteSpace(brands))
+        {
+            var brandList = brands.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                  .Select(b => b.Trim().ToLower())
+                                  .ToList();
+            if (brandList.Any())
+            {
+                query = query.Where(c => brandList.Contains(c.CarBrand.Name.ToLower()));
+            }
+        }
 
         // Filters
         if (!string.IsNullOrWhiteSpace(searchTerm))
