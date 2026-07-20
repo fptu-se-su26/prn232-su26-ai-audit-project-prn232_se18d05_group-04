@@ -87,6 +87,20 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         return Ok(list);
     }
 
+    [HttpGet("owner-requests")]
+    public async Task<ActionResult<IReadOnlyList<BookingDetailResponse>>> GetOwnerRequests(
+        [FromQuery] string? status,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var ownerId = GetCurrentUserId();
+        var filter = new BookingListFilter { Status = status, Page = page, PageSize = pageSize };
+        var list = await bookingService.GetOwnerBookingsAsync(ownerId, filter, cancellationToken);
+        return Ok(list);
+    }
+
     [HttpPost("{id:int}/cancel")]
     public async Task<ActionResult<CancelBookingResponse>> CancelBooking(int id, [FromBody] CancelBookingRequest request, CancellationToken cancellationToken)
     {

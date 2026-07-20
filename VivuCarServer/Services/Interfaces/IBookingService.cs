@@ -14,6 +14,8 @@ public interface IBookingService
 
     Task<IReadOnlyList<BookingDetailResponse>> GetMyBookingsAsync(int customerId, BookingListFilter filter, CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyList<BookingDetailResponse>> GetOwnerBookingsAsync(int ownerId, BookingListFilter filter, CancellationToken cancellationToken = default);
+
     Task<CancelBookingResponse> CancelBookingAsync(int customerId, int bookingId, CancelBookingRequest request, CancellationToken cancellationToken = default);
 
     Task<BookingDetailResponse?> ApproveBookingRequestAsync(int ownerId, int bookingId, CancellationToken cancellationToken = default);

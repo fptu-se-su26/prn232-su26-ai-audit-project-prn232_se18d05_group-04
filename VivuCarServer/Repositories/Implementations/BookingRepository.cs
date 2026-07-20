@@ -69,6 +69,35 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<IReadOnlyList<Booking>> GetOwnerListAsync(
+        int ownerId,
+        string? status,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var query = dbContext.Bookings
+            .Include(b => b.Car)
+                .ThenInclude(c => c.Images)
+            .Include(b => b.Customer)
+            .Where(b => b.Car.OwnerId == ownerId);
+
+        if (!string.IsNullOrWhiteSpace(status) && status.ToUpper() != "ALL")
+        {
+            if (Enum.TryParse<BookingStatus>(status, true, out var bookingStatus))
+            {
+                query = query.Where(b => b.Status == bookingStatus);
+            }
+        }
+
+        return await query
+            .OrderByDescending(b => b.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task AddAsync(Booking booking, CancellationToken cancellationToken = default)
     {
         await dbContext.Bookings.AddAsync(booking, cancellationToken);
