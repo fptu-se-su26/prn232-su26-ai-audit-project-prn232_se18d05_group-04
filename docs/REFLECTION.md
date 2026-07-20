@@ -229,7 +229,7 @@ Trong quá trình thực hiện, em/nhóm chưa ghi nhận trường hợp AI g�
 
 | Thành viên | MSSV | Nhiệm vụ chính | Có sử dụng AI không? | Minh chứng đóng góp |
 |---|---|---|---|---|
-| Ngô Sỹ Giá | DE180117 | Backend (Auth, Booking, Payment, DB Migration), Frontend tich hợp API, Tài liệu | Có (Stitch, ChatGPT, Antigravity) | Build thành công, Migration thành công, 6 file JS được cập nhật |
+| Ngô Sỹ Giá | DE180117 | Backend (Auth, Booking, Payment, Cloudinary), Frontend tich hợp API, Tài liệu | Có (Stitch, ChatGPT, Antigravity) | Build thành công, Tích hợp Cloudinary thành công |
 |  |  |  | Có / Không |  |
 |  |  |  | Có / Không |  |
 |  |  |  | Có / Không |  |
@@ -346,7 +346,7 @@ Sinh viên/nhóm tự đánh giá theo thang 1-5.
 
 | Tiêu chí | Điểm tự đánh giá 1-5 | Ghi chú |
 |---|:---:|---|
-| Ghi nhận việc dùng AI trung thực | 5 | Đã ghi lại bốn lần sử dụng AI |
+| Ghi nhận việc dùng AI trung thực | 5 | Đã ghi lại năm lần sử dụng AI |
 | Prompt có mục tiêu rõ ràng | 4 | Có nêu công nghệ, cấu trúc và đầu ra mong muốn |
 | Kiểm chứng kết quả AI | 4 | Đã build và smoke test; chưa có test tự động |
 | Tự chỉnh sửa/cải tiến | 4 | Đã sửa dependency và URL backend |

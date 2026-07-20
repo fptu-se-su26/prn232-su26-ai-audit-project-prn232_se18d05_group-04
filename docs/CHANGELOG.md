@@ -250,6 +250,7 @@ DD/MM/YYYY
 | 7 | Fix: Gỡ bỏ UserSeedHostedService dùng schema cũ | Antigravity AI + DE180117 | `API/Configurations/AuthenticationConfiguration.cs` | Seed data chạy đúng với AppDbSeederHostedService mới |
 | 8 | Add: Razor Pages Booking + Payment + UserLayout | Ngô Sỹ Giá - DE180117 | `Pages/Booking/`, `Pages/Payment/`, `Pages/Shared/_UserLayout.cshtml` | Commit bdd1248, push feature/de180117-booking |
 | 9 | Add: Migration AddPayOSProvider | Ngô Sỹ Giá - DE180117 | `Migrations/20260711084739_AddPayOSProvider.*` | Migration applied thành công |
+| 10 | Tích hợp Cloudinary Upload Service | Antigravity AI | `CloudinaryStorageService.cs`, `UploadsController.cs`, `booking-checkout.js` | Tải ảnh GPLX thành công, có URL public |
 
 ## AI có hỗ trợ không?
 
@@ -307,6 +308,7 @@ DD/MM/YYYY
 | 1 | Lỗi Build `UseSqlServer` | Đăng ký ở API thay vì DataAccess | Chuyển cấu hình DbContext về đúng module DataAccess | Fixed |
 | 2 | Lỗi tham chiếu `DriverLicenseImageUrl` | DB Model đổi tên field nhưng Service chưa đổi theo | Dùng grep search tìm và sửa tất cả tham chiếu cũ | Fixed |
 | 3 | Lỗi lấy danh sách đơn của Chủ xe | Backend chưa có API `owner-requests` | Viết bổ sung `GetOwnerBookingsAsync` API | Fixed |
+| 4 | Chưa có API upload ảnh thực tế | Thiếu implementation Cloud Storage | Tạo `CloudinaryStorageService` và `UploadsController` | Fixed |
 
 ## Thay đổi chi tiết
 
@@ -413,7 +415,7 @@ Viết tại đây...
 
 | STT | Chức năng | Lý do chưa hoàn thành | Hướng cải thiện |
 |---:|---|---|---|
-| 1 | Upload ảnh thực tế | Chưa kết nối Cloudinary/S3 | Implement Cloud Storage Service ở Backend |
+|  | Toàn bộ Phase 4 đã hoàn thành | N/A | N/A |
 
 ---
 
