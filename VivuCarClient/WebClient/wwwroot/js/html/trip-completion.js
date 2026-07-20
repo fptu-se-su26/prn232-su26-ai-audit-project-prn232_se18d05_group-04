@@ -30,3 +30,4 @@
   }
   window.VivuCarTripCompletion = { canCompleteTrip, openCompleteTripModal };
 })();
+

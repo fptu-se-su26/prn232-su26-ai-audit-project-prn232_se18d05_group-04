@@ -20,7 +20,7 @@
 
   function render() {
     if (!booking || !payment) {
-      root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy kết quả", text: "Booking hoặc payment không tồn tại.", href: "my-bookings.html", action: "Về danh sách đơn" });
+      root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy kết quả", text: "Booking hoặc payment không tồn tại.", href: "/Booking/MyBookings", action: "Về danh sách đơn" });
       return;
     }
     const map = {
@@ -38,8 +38,8 @@
         <div class="summary-row"><span>Mã giao dịch</span><strong>${payment.transaction_code}</strong></div>
         <div class="summary-row"><span>Số tiền</span><strong>${U.formatVnd(payment.amount)}</strong></div>
         <div class="modal-actions">
-          <a class="btn btn-primary" href="${payment.status === "success" ? `booking-confirmation.html?bookingId=${booking.id}` : `payment-deposit.html?bookingId=${booking.id}`}">${payment.status === "success" ? "Xem xác nhận" : "Thử thanh toán lại"}</a>
-          <a class="btn btn-secondary" href="my-bookings.html">Về đơn thuê</a>
+          <a class="btn btn-primary" href="${payment.status === "success" ? `booking-confirmation.html?bookingId=${booking.id}` : `/Payment/Deposit?bookingId=${booking.id}`}">${payment.status === "success" ? "Xem xác nhận" : "Thử thanh toán lại"}</a>
+          <a class="btn btn-secondary" href="/Booking/MyBookings">Về đơn thuê</a>
           <a class="btn btn-ghost" href="home.html">Trang chủ</a>
         </div>
       </article>`;
@@ -48,3 +48,4 @@
 
   render();
 })();
+

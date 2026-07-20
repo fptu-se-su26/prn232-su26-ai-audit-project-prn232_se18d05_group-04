@@ -255,3 +255,4 @@
 
   window.VivuCarTailwindUI = { applyTailwind, openModal, closeModal, openDrawer, closeDrawer };
 })();
+

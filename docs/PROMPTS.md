@@ -55,8 +55,8 @@ Sinh viên/nhóm cần ghi lại:
 | 1 | 16/05/2026 | Stitch | Thiết kế layout UI Admin | Tạo dashboard quản trị responsive cho hệ thống thuê xe | Gợi ý 5 màn hình Admin | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 1 |
 | 2 | 01/06/2026 | ChatGPT | Khởi tạo cấu trúc dự án | Tạo backend Web API và frontend Razor Pages | Tạo skeleton dự án, cấu hình dependency và kiểm tra build | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 2 |
 | 3 | 07/07/2026 | Antigravity | Tích hợp Backend API Booking, Payment, Auth vào Frontend | Xem backend đã có gì, tích hợp API, thêm GPLX 2 mặt | Sửa DB + Migration; cập nhật 6 file JS tích hợp API thật | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 3 |
-| 4 |  |  |  |  |  | Có / Không |  |
-| 5 |  |  |  |  |  | Có / Không |  |
+| 4 | 20/07/2026 | Antigravity | Pull dev, debug lỗi DI + migration, push code | Pull origin/dev, fix PayOS DI, fix UserSeedHostedService schema cũ, reset DB | API chạy thành công, commit bdd1248 push lên feature/de180117-booking | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 4 |
+| 5 | 20/07/2026 | Antigravity | Tích hợp thư viện CloudinaryDotNet | Nhận thông tin .env và yêu cầu viết API UploadsController, sửa booking-checkout.js | File upload lên Cloudinary trả về link public thành công | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 5 |
 | 6 |  |  |  |  |  | Có / Không |  |
 | 7 |  |  |  |  |  | Có / Không |  |
 | 8 |  |  |  |  |  | Có / Không |  |

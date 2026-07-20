@@ -10,3 +10,4 @@
   function bind(){ U.byId("ownerCarSearch").oninput=(e)=>{state.keyword=e.target.value;render();}; U.byId("statusFilter").onchange=(e)=>{state.status=e.target.value;render();}; U.byId("fuelFilter").onchange=(e)=>{state.fuel_type=e.target.value;render();}; U.byId("sortFilter").onchange=(e)=>{state.sort=e.target.value;render();}; }
   render();
 })();
+

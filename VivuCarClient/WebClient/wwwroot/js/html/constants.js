@@ -10,3 +10,4 @@ window.VivuCarConstants = {
   DISCOUNT_TYPE_LABELS: { percentage: "Giảm theo phần trăm", fixed: "Giảm số tiền cố định" },
   EXPORT_STATUS_LABELS: { pending: "Đang chờ", processing: "Đang xử lý", done: "Hoàn tất", failed: "Thất bại" }
 };
+

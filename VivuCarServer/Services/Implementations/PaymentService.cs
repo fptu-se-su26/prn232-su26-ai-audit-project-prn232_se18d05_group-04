@@ -8,7 +8,7 @@ using Services.Models.Payment;
 
 namespace Services.Implementations;
 
-public class PaymentService(IBookingRepository bookingRepository) : IPaymentService
+public class PaymentService(IBookingRepository bookingRepository, global::Net.payOS.PayOS payOS) : IPaymentService
 {
     public async Task<CreatePaymentResponse> CreateDepositPaymentAsync(int customerId, CreatePaymentRequest request, CancellationToken cancellationToken = default)
     {
@@ -33,11 +33,13 @@ public class PaymentService(IBookingRepository bookingRepository) : IPaymentServ
         {
             "vnpay" => PaymentProvider.VNPay,
             "momo" => PaymentProvider.MoMo,
-            "cash" => PaymentProvider.VNPay, // fallback
-            _ => throw new ArgumentException("Unsupported payment method. Use 'vnpay' or 'momo'.")
+            "payos" => PaymentProvider.PayOS,
+            "cash" => PaymentProvider.PayOS, // fallback
+            _ => throw new ArgumentException("Unsupported payment method.")
         };
 
         var txnCode = "TXN" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + new Random().Next(100, 999);
+        long orderCode = long.Parse(DateTime.UtcNow.ToString("yyMMddHHmmss") + new Random().Next(100, 999));
 
         // Add payment transaction record
         var transaction = new PaymentTransaction
@@ -53,13 +55,46 @@ public class PaymentService(IBookingRepository bookingRepository) : IPaymentServ
         booking.PaymentTransactions.Add(transaction);
         await bookingRepository.SaveChangesAsync(cancellationToken);
 
-        // Simulated payment gateway URL
-        // It points to our API callback endpoint which updates status and redirects to client return url
-        var callbackUrl = $"https://localhost:7005/api/payments/callback?TransactionCode={txnCode}&Status=success&RedirectUrl={Uri.EscapeDataString(request.ReturnUrl)}";
+        // PayOS Return URL configuration
+        var frontendReturnUrl = Environment.GetEnvironmentVariable("PayOS__ReturnUrl") ?? request.ReturnUrl;
+        var frontendCancelUrl = Environment.GetEnvironmentVariable("PayOS__CancelUrl") ?? request.ReturnUrl;
+
+        // Route PayOS back to our backend callback endpoint first, then the backend will redirect to the frontend.
+        // We inject the TransactionCode and expected status so the backend can process it.
+        var backendCallbackSuccess = $"https://localhost:7005/api/payments/callback?TransactionCode={txnCode}&Status=success&RedirectUrl={Uri.EscapeDataString(frontendReturnUrl)}";
+        var backendCallbackCancel = $"https://localhost:7005/api/payments/callback?TransactionCode={txnCode}&Status=failed&RedirectUrl={Uri.EscapeDataString(frontendCancelUrl)}";
+
+        var paymentData = new global::Net.payOS.Types.PaymentData(
+            orderCode: orderCode,
+            amount: (int)booking.DepositAmount,
+            description: $"Coc VivuCar {booking.BookingCode}",
+            items: new List<global::Net.payOS.Types.ItemData>(),
+            cancelUrl: backendCallbackCancel,
+            returnUrl: backendCallbackSuccess
+        );
+
+        string checkoutUrl = "";
+        try
+        {
+            var createPaymentResult = await payOS.createPaymentLink(paymentData);
+            checkoutUrl = createPaymentResult.checkoutUrl;
+        }
+        catch (Exception ex)
+        {
+            // Fallback to mock if configured or fail
+            if (Environment.GetEnvironmentVariable("PayOS__AllowMockPaymentsWhenUnconfigured") == "true")
+            {
+                checkoutUrl = backendCallbackSuccess;
+            }
+            else
+            {
+                throw new InvalidOperationException($"Failed to create PayOS link: {ex.Message}");
+            }
+        }
 
         return new CreatePaymentResponse
         {
-            PaymentUrl = callbackUrl,
+            PaymentUrl = checkoutUrl,
             TransactionCode = txnCode,
             Amount = booking.DepositAmount
         };

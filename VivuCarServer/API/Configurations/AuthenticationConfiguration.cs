@@ -11,7 +11,7 @@ public static class AuthenticationConfiguration
     )
     {
         services.AddScoped<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();
-        services.AddHostedService<UserSeedHostedService>();
+        // UserSeedHostedService removed — replaced by AppDbSeederHostedService (registered in ServiceConfiguration)
         services.AddHostedService<RefreshTokenCleanupHostedService>();
 
         return services;
