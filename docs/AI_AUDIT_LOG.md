@@ -284,6 +284,75 @@ codebase để tìm tham chiếu cũ là rất hiệu quả cho việc refactor 
 
 ---
 
+### Lần sử dụng AI số 4
+
+| Nội dung | Thông tin |
+|---|---|
+| Ngày sử dụng | 20/07/2026 |
+| MSSV | DE180117 |
+| Công cụ AI | Antigravity |
+| Mục đích sử dụng | Pull code từ dev, debug lỗi DI + migration, push code lên nhánh |
+| Phần việc liên quan | Backend / Debug |
+| Mức độ sử dụng | Hỗ trợ nhiều |
+
+#### 4.1. Prompt đã sử dụng
+
+```text
+do có code mới trên git nhánh develop hãy pull về cho tôi nếu có lỗi hãy báo
+giờ cần làm gì tiếp theo để chạy được project
+```
+
+#### 4.2. Kết quả AI gợi ý
+
+```text
+AI thực hiện toàn bộ:
+- Fetch và merge origin/dev vào feature/de180117-booking
+- Phát hiện PayOS chưa được đăng ký vào DI container → fix ServiceConfiguration.cs
+- Phát hiện UserSeedHostedService dùng column schema cũ (BlockedReason, CarTypeId, Color, Year) → remove khỏi AuthenticationConfiguration.cs
+- Drop và recreate database sạch để sync toàn bộ 6 migration từ dev
+- Xác nhận API khởi động thành công tại http://localhost:5119
+- Commit và push code lên feature/de180117-booking theo đúng convention
+```
+
+#### 4.3. Phần sinh viên/nhóm đã sử dụng từ AI
+
+```text
+Áp dụng toàn bộ fix đề xuất của AI:
+- Thêm đăng ký PayOS singleton vào ServiceConfiguration.cs
+- Gỡ bỏ UserSeedHostedService khỏi AuthenticationConfiguration.cs
+- Chạy drop database + dotnet ef database update để reset DB sạch
+```
+
+#### 4.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Sinh viên xác nhận lại API đang chạy (log "Now listening on: http://localhost:5119"
+và "Application started") trước khi commit. Sinh viên tự quyết định drop DB
+thay vì cố patch từng migration bị lệch schema.
+```
+
+#### 4.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | bdd1248 — feature/de180117-booking |
+| File liên quan | `ServiceConfiguration.cs`, `AuthenticationConfiguration.cs`, `Pages/Booking/`, `Pages/Payment/`, `Pages/Shared/_UserLayout.cshtml`, `Migrations/20260711084739_AddPayOSProvider.*` |
+| Screenshot | API log: `Application started. Now listening on: http://localhost:5119` |
+| Kết quả chạy/test | dotnet build: 0 errors. dotnet run: API started. Seed 181 xe thành công. |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
+
+#### 4.6. Nhận xét cá nhân/nhóm
+
+```text
+AI giúp chẩn đoán nhanh lỗi DI (PayOS chưa register) và schema drift (UserSeedHostedService
+dùng column cũ) sau khi merge từ dev. Việc drop và recreate DB là giải pháp
+sạch nhất khi migration bị conflict do nhánh song song. Cần chú ý đồng bộ
+DI registration khi thêm service mới có dependency bên ngoài (như PayOS SDK).
+```
+
+---
+
 ## 5. Bảng tổng hợp mức độ sử dụng AI
 
 Đánh dấu mức độ AI hỗ trợ ở từng hạng mục.

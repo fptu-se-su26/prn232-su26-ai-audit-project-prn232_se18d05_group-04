@@ -246,6 +246,10 @@ DD/MM/YYYY
 | 3 | Tích hợp Payments API (Thanh toán VNPay) | Antigravity AI | `payment-deposit.js`, `payment-result.js` | Tạo URL thanh toán VNPay và hiển thị kết quả thành công |
 | 4 | Sửa Database hỗ trợ GPLX 2 mặt | Antigravity AI | `DriverDocument.cs`, `BookingDriverInfo.cs` | Migration DB thành công |
 | 5 | Tự động lấy GPLX từ hồ sơ khi đặt xe | Antigravity AI | `booking-checkout.js` | Form đặt xe tự động nhận GPLX 2 mặt |
+| 6 | Fix: Đăng ký PayOS singleton vào DI container | Antigravity AI + DE180117 | `API/Configurations/ServiceConfiguration.cs` | API khởi động thành công sau fix, commit bdd1248 |
+| 7 | Fix: Gỡ bỏ UserSeedHostedService dùng schema cũ | Antigravity AI + DE180117 | `API/Configurations/AuthenticationConfiguration.cs` | Seed data chạy đúng với AppDbSeederHostedService mới |
+| 8 | Add: Razor Pages Booking + Payment + UserLayout | Ngô Sỹ Giá - DE180117 | `Pages/Booking/`, `Pages/Payment/`, `Pages/Shared/_UserLayout.cshtml` | Commit bdd1248, push feature/de180117-booking |
+| 9 | Add: Migration AddPayOSProvider | Ngô Sỹ Giá - DE180117 | `Migrations/20260711084739_AddPayOSProvider.*` | Migration applied thành công |
 
 ## AI có hỗ trợ không?
 
