@@ -20,11 +20,11 @@
   function render() {
     const { booking, car, user, payment, inspections, voucher, ui } = getRecord();
     document.getElementById("breadcrumbMount").innerHTML = window.VivuCarLayout.renderBreadcrumb([
-      { label: "Đơn thuê", href: "my-bookings.html" },
+      { label: "Đơn thuê", href: "/Booking/MyBookings" },
       { label: `#${bookingId}` }
     ]);
     if (!booking || !car) {
-      root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy đơn", text: "Đơn không tồn tại hoặc không thuộc tài khoản hiện tại.", href: "my-bookings.html", action: "Về danh sách đơn" });
+      root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy đơn", text: "Đơn không tồn tại hoặc không thuộc tài khoản hiện tại.", href: "/Booking/MyBookings", action: "Về danh sách đơn" });
       return;
     }
     root.innerHTML = `
@@ -69,7 +69,7 @@
           <h2>Timeline</h2>
           <div class="timeline">${timeline(booking, payment, inspections)}</div>
           <div class="booking-actions mt-3.5">
-            ${payment?.status !== "success" ? `<a class="btn btn-primary btn-sm" href="payment-deposit.html?bookingId=${booking.id}">Thanh toán</a>` : ""}
+            ${payment?.status !== "success" ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán</a>` : ""}
             ${U.canCancelBooking(booking) ? `<button class="btn btn-danger btn-sm" type="button" id="cancelBooking">Hủy đơn</button>` : ""}
             ${booking.status === "approved" && inspections.some((item) => item.inspection_type === "pre_rental") && !inspections.some((item) => item.inspection_type === "post_rental") ? `<a class="btn btn-primary btn-sm" href="return-car-request.html?bookingId=${booking.id}">Trả xe</a>` : ""}
             <a class="btn btn-secondary btn-sm" href="booking-contract.html?bookingId=${booking.id}">Hợp đồng</a>
@@ -98,4 +98,5 @@
 
   render();
 })();
+
 

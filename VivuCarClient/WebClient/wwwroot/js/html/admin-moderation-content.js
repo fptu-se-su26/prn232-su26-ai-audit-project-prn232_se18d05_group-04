@@ -176,3 +176,4 @@
   window.ContentModerationPage = { renderContentModeration, softDeleteItem };
   renderContentModeration();
 })();
+

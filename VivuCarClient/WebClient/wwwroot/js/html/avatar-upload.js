@@ -11,3 +11,4 @@
   document.getElementById("btnRemoveAvatar").addEventListener("click", () => { selected = null; document.getElementById("avatarPreview").classList.add("hidden"); });
   document.getElementById("btnSaveAvatar").addEventListener("click", () => { if (!selected) return U.showToast("Vui lòng chọn ảnh."); const url = URL.createObjectURL(selected); DB.user_documents.push({ id: DB.user_documents.length + 1, user_id: user.id, document_type: "avatar", file_name: selected.name.slice(0, 50), file_url: url, verified: true, created_at: new Date().toISOString() }); user.avatar_url = url; new FormData().append("avatar", selected); window.VivuCarSaveDB?.(); U.showToast("Cập nhật ảnh đại diện thành công."); });
 })();
+

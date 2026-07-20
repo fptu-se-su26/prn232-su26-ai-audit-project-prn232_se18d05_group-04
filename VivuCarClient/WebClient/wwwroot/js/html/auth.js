@@ -32,18 +32,18 @@
     // POST /api/auth/logout
     localStorage.removeItem("vivucar_current_user_id");
     localStorage.removeItem("vivucar_current_user_role");
-    location.href = "login.html";
+    location.href = "/Login";
   }
 
   function requireAuth(allowedRoles) {
     const role = localStorage.getItem("vivucar_current_user_role");
     const user = getCurrentUser();
     if (!user || user.is_blocked) {
-      location.href = "login.html";
+      location.href = "/Login";
       return null;
     }
     if (allowedRoles?.length && !allowedRoles.includes(role)) {
-      location.href = "login.html";
+      location.href = "/Login";
       return null;
     }
     return user;
@@ -51,3 +51,4 @@
 
   window.VivuCarAuth = { roleRoutes, getCurrentUser, login, logout, requireAuth };
 })();
+

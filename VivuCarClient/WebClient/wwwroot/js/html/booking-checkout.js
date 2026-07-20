@@ -216,9 +216,10 @@
     DB.payments.push({ id: Math.max(0, ...DB.payments.map((item) => item.id)) + 1, booking_id: id, method, amount: Math.round(pricing.total * 0.3), status: "pending", transaction_code: `PAY${Date.now()}`, paid_at: null });
     window.VivuCarSaveDB();
     U.renderToast("Đã tạo đơn thuê.", "success");
-    setTimeout(() => location.href = `payment-deposit.html?bookingId=${id}`, 350);
+    setTimeout(() => location.href = `/Payment/Deposit?bookingId=${id}`, 350);
   }
 
   render();
 })();
+
 

@@ -13,12 +13,12 @@
 
   function render() {
     if (!booking || !car || !user) {
-      root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy hợp đồng", text: "Đơn không tồn tại hoặc không thuộc tài khoản hiện tại.", href: "my-bookings.html", action: "Về danh sách đơn" });
+      root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy hợp đồng", text: "Đơn không tồn tại hoặc không thuộc tài khoản hiện tại.", href: "/Booking/MyBookings", action: "Về danh sách đơn" });
       return;
     }
     root.innerHTML = `
       <div class="contract-toolbar">
-        <a class="btn btn-secondary" href="booking-detail.html?bookingId=${booking.id}">Quay lại chi tiết đơn</a>
+        <a class="btn btn-secondary" href="/Booking/Detail?bookingId=${booking.id}">Quay lại chi tiết đơn</a>
         <div class="chip-row">
           <button class="btn btn-ghost" type="button" onclick="window.print()">In hợp đồng</button>
           <button class="btn btn-primary" id="downloadContract" type="button">Tải PDF mock</button>
@@ -61,4 +61,5 @@
 
   render();
 })();
+
 

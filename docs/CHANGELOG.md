@@ -306,7 +306,7 @@ DD/MM/YYYY
 |---:|---|---|---|---|
 | 1 | Lỗi Build `UseSqlServer` | Đăng ký ở API thay vì DataAccess | Chuyển cấu hình DbContext về đúng module DataAccess | Fixed |
 | 2 | Lỗi tham chiếu `DriverLicenseImageUrl` | DB Model đổi tên field nhưng Service chưa đổi theo | Dùng grep search tìm và sửa tất cả tham chiếu cũ | Fixed |
-| 3 | Lỗi lấy danh sách đơn của Chủ xe | Backend chưa có API `owner-requests` | Đành giữ Mock Data và ghi nhận Open Issue | Pending |
+| 3 | Lỗi lấy danh sách đơn của Chủ xe | Backend chưa có API `owner-requests` | Viết bổ sung `GetOwnerBookingsAsync` API | Fixed |
 
 ## Thay đổi chi tiết
 
@@ -413,8 +413,7 @@ Viết tại đây...
 
 | STT | Chức năng | Lý do chưa hoàn thành | Hướng cải thiện |
 |---:|---|---|---|
-| 1 | Quản lý đơn phía Chủ Xe | Backend chưa cung cấp API `owner-requests` | Phối hợp với team Backend bổ sung API ở Phase sau |
-| 2 | Upload ảnh thực tế | Chưa kết nối Cloudinary/S3 | Implement Cloud Storage Service ở Backend |
+| 1 | Upload ảnh thực tế | Chưa kết nối Cloudinary/S3 | Implement Cloud Storage Service ở Backend |
 
 ---
 
