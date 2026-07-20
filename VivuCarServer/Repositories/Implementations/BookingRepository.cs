@@ -52,6 +52,12 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
         var query = dbContext.Bookings
             .Include(b => b.Car)
                 .ThenInclude(c => c.Images)
+            .Include(b => b.Customer)
+            .Include(b => b.DriverInfo)
+            .Include(b => b.BookingVoucher)
+                .ThenInclude(bv => bv.Voucher)
+            .Include(b => b.PaymentTransactions)
+            .Include(b => b.RentalContract)
             .Where(b => b.CustomerId == customerId);
 
         if (!string.IsNullOrWhiteSpace(status) && status.ToUpper() != "ALL")
@@ -62,10 +68,13 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
             }
         }
 
+        var pageIndex = Math.Max(1, page);
+        var pSize = Math.Max(1, pageSize);
+
         return await query
             .OrderByDescending(b => b.CreatedAt)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip((pageIndex - 1) * pSize)
+            .Take(pSize)
             .ToListAsync(cancellationToken);
     }
 
@@ -81,6 +90,11 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
             .Include(b => b.Car)
                 .ThenInclude(c => c.Images)
             .Include(b => b.Customer)
+            .Include(b => b.DriverInfo)
+            .Include(b => b.BookingVoucher)
+                .ThenInclude(bv => bv.Voucher)
+            .Include(b => b.PaymentTransactions)
+            .Include(b => b.RentalContract)
             .Where(b => b.Car.OwnerId == ownerId);
 
         if (!string.IsNullOrWhiteSpace(status) && status.ToUpper() != "ALL")
@@ -91,10 +105,13 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
             }
         }
 
+        var pageIndex = Math.Max(1, page);
+        var pSize = Math.Max(1, pageSize);
+
         return await query
             .OrderByDescending(b => b.CreatedAt)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+            .Skip((pageIndex - 1) * pSize)
+            .Take(pSize)
             .ToListAsync(cancellationToken);
     }
 
