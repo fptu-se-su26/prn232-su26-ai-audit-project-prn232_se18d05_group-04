@@ -353,6 +353,66 @@ DI registration khi thêm service mới có dependency bên ngoài (như PayOS S
 
 ---
 
+### Lần sử dụng AI số 5: Tích hợp Cloudinary Storage Service
+
+#### 5.1. Mô tả vấn đề hoặc yêu cầu
+
+```text
+Chức năng upload ảnh thực tế (đặc biệt là Bằng lái xe) trong quá trình Đặt xe
+chưa được hoàn thiện, vẫn đang lưu tạm trong mảng mock. Cần tích hợp
+thư viện CloudinaryDotNet vào Backend để thay thế cơ chế Local File Upload.
+```
+
+#### 5.2. Các prompt đã sử dụng
+
+```text
+"Cloudinary__CloudName=dtm5a4bwr Cloudinary__ApiKey=826725167493146
+Cloudinary__ApiSecret=MZ_VzHZ0nwKPDaruPDRRKFf8ccI
+Cloudinary__SignedUrlExpiresInSeconds=300
+Cloudinary__ResourceType=image Cloudinary__DeliveryType=upload
+Cloudinary__FolderName=Vivucar Cloudinary__DevelopmentMediaRoot=./uploads
+bổ sung cái cloudary này vào file env và apply chỗ upload ảnh cho tôi"
+```
+
+#### 5.3. Kết quả do AI sinh ra
+
+```text
+- AI đề xuất bản Kế hoạch (Implementation Plan) gồm 5 bước: Cài package, 
+tạo CloudinaryStorageService, đổi DI, tạo UploadsController, và update Frontend.
+- Code sinh ra cho `CloudinaryStorageService.cs` có đầy đủ validation file size (< 5MB),
+loại file (JPG/PNG/WEBP) và dùng `CloudinaryDotNet` SDK để đẩy lên thư mục `Vivucar/`.
+- Code sinh ra cho `booking-checkout.js` sửa đổi event change của input file,
+dùng `fetchWithAuth` để post `FormData` lên `/api/uploads`.
+```
+
+#### 5.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Sinh viên rà soát file `.env` xác nhận các Config Key của Cloudinary đã được
+khai báo đúng như yêu cầu của SDK. Cho phép AI tự động thực thi các file thay vì code tay.
+```
+
+#### 5.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | 33091bd — feature/de180117-booking |
+| File liên quan | `API.csproj`, `CloudinaryStorageService.cs`, `ServiceConfiguration.cs`, `UploadsController.cs`, `booking-checkout.js` |
+| Screenshot | Đã đẩy file lên thành công qua API |
+| Kết quả chạy/test | dotnet build: 0 errors. Chạy UI upload GPLX -> response trả về url res.cloudinary.com |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
+
+#### 5.6. Nhận xét cá nhân/nhóm
+
+```text
+AI hiểu nhanh ngữ cảnh kiến trúc Repository/Service/Controller hiện tại để
+implement IFileStorageService mà không phá vỡ logic cũ. Chuyển đổi Local Storage
+sang Cloud Storage trơn tru. Quản lý tác vụ rất tốt với Implementation Plan và Tasks.
+```
+
+---
+
 ## 5. Bảng tổng hợp mức độ sử dụng AI
 
 Đánh dấu mức độ AI hỗ trợ ở từng hạng mục.
