@@ -84,6 +84,7 @@ public class CarService(ICarRepository carRepository) : ICarService
     {
         var (items, totalCount) = await carRepository.SearchCarsAsync(
             query.SearchTerm,
+            query.Brands,
             query.BrandId,
             query.MinPrice,
             query.MaxPrice,
