@@ -1,4 +1,4 @@
-﻿import { fetchJson } from "../shared/api-client.js";
+import { fetchJson } from "../shared/api-client.js";
 import { escapeHtml } from "../shared/dom.js";
 import { formatVnd } from "../shared/utils.js";
 
