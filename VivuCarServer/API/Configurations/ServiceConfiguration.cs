@@ -24,7 +24,7 @@ public static class ServiceConfiguration
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IAdminCarService, AdminCarService>();
         services.AddScoped<IAdminReportService, AdminReportService>();
-        services.AddScoped<IFileStorageService, LocalFileStorageService>();
+        services.AddScoped<IFileStorageService, CloudinaryStorageService>();
         services.AddScoped<ICarService, CarService>();
         services.AddScoped<IOwnerCarService, OwnerCarService>();
         services.AddScoped<IOwnerBookingService, OwnerBookingService>();
