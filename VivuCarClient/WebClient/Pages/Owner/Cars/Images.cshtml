@@ -1,0 +1,208 @@
+@page
+@model WebClient.Pages.Owner.Cars.ImagesModel
+@{
+    ViewData["Title"] = "Quản lý hình ảnh xe";
+    ViewData["OwnerPage"] = "cars";
+    
+}
+
+<div class="max-w-4xl mx-auto space-y-6 pb-12">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <a href="/Owner/Cars/Form?id=@Model.Id" class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-white border border-zinc-200 text-zinc-600 hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-colors">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            </a>
+            <div>
+                <h2 class="text-xl font-bold text-zinc-900" id="carNameTitle">Đang tải...</h2>
+                <p class="text-sm text-zinc-500">Quản lý hình ảnh hiển thị cho khách hàng</p>
+            </div>
+        </div>
+        <a href="/Owner/Cars/Index" class="text-sm font-medium text-primary hover:underline">Quay lại danh sách xe</a>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm">
+        <h3 class="text-base font-semibold text-zinc-900 mb-4">Thêm hình ảnh mới</h3>
+        <div class="flex flex-col sm:flex-row gap-4 items-end">
+            <div class="flex-1 w-full">
+                <label class="block text-sm font-medium text-zinc-700 mb-1">URL Hình ảnh</label>
+                <input type="url" id="imageUrl" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="https://example.com/image.jpg" />
+                <p class="mt-1 text-xs text-zinc-500">Trong phiên bản này, vui lòng nhập URL hình ảnh công khai.</p>
+            </div>
+            <button type="button" id="btnAddImage" class="w-full sm:w-auto inline-flex items-center justify-center rounded-lg bg-zinc-900 px-6 py-2 border border-transparent text-sm font-medium text-white hover:bg-zinc-800 focus:outline-none transition-colors shadow-sm whitespace-nowrap">
+                <svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                Thêm ảnh
+            </button>
+        </div>
+        <div id="uploadError" class="hidden mt-3 text-sm text-red-600 font-medium"></div>
+    </div>
+
+    <!-- Images Gallery -->
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50 flex justify-between items-center">
+            <h3 class="text-base font-semibold text-zinc-900">Thư viện ảnh</h3>
+            <span class="text-sm text-zinc-500"><span id="imageCount">0</span> ảnh</span>
+        </div>
+        <div class="p-6">
+            <div id="loadingGallery" class="flex flex-col items-center justify-center py-12 text-zinc-400">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
+                <p>Đang tải hình ảnh...</p>
+            </div>
+            
+            <div id="emptyGallery" class="hidden flex-col items-center justify-center py-12 text-zinc-400 border-2 border-dashed border-zinc-200 rounded-lg">
+                <svg class="h-12 w-12 mb-3 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L28 20M6 12a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"/></svg>
+                <p class="text-zinc-500 font-medium">Xe này chưa có hình ảnh nào.</p>
+                <p class="text-sm mt-1">Khách hàng có xu hướng thuê xe có nhiều hình ảnh rõ nét hơn.</p>
+            </div>
+            
+            <div id="imageGrid" class="hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Image items will be injected here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const carId = @Model.Id;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            loadImages();
+            document.getElementById('btnAddImage').addEventListener('click', handleAddImage);
+        });
+
+        async function loadImages() {
+            try {
+                const res = await fetch(`/api/proxy/owner/cars/${carId}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
+                });
+                
+                if (!res.ok) {
+                    if (res.status === 401) return window.location.href = '/Index';
+                    throw new Error('Không thể tải thông tin xe.');
+                }
+                
+                const car = await res.json();
+                document.getElementById('carNameTitle').textContent = car.name;
+                renderGallery(car.images || []);
+            } catch (e) {
+                console.error(e);
+                window.VivuCarUtils.showToast('Lỗi khi tải hình ảnh', 'error');
+            }
+        }
+
+        function renderGallery(images) {
+            document.getElementById('loadingGallery').classList.add('hidden');
+            document.getElementById('imageCount').textContent = images.length;
+            
+            if (images.length === 0) {
+                document.getElementById('emptyGallery').classList.remove('hidden');
+                document.getElementById('imageGrid').classList.add('hidden');
+                return;
+            }
+            
+            document.getElementById('emptyGallery').classList.add('hidden');
+            const grid = document.getElementById('imageGrid');
+            grid.classList.remove('hidden');
+            
+            grid.innerHTML = images.map(img => `
+                <div class="group relative rounded-lg overflow-hidden border border-zinc-200 aspect-w-4 aspect-h-3 bg-zinc-100">
+                    <img src="${img.imageUrl}" class="object-cover w-full h-full" alt="Car Image" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D\\'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg\\' width%3D\\'100%25\\' height%3D\\'100%25\\'%3E%3Crect width%3D\\'100%25\\' height%3D\\'100%25\\' fill%3D\\'%23f4f4f5\\'%2F%3E%3Ctext x%3D\\'50%25\\' y%3D\\'50%25\\' fill%3D\\'%23a1a1aa\\' font-family%3D\\'sans-serif\\' font-size%3D\\'14\\' text-anchor%3D\\'middle\\' dominant-baseline%3D\\'middle\\'%3ELỗi tải ảnh%3C%2Ftext%3E%3C%2Fsvg%3E'" />
+                    
+                    ${img.isPrimary ? `<div class="absolute top-2 left-2 px-2 py-1 bg-green-500 text-white text-xs font-bold rounded shadow-sm">Ảnh đại diện</div>` : ''}
+                    
+                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center gap-2">
+                        ${!img.isPrimary ? `
+                            <button onclick="setPrimaryImage(${img.id})" class="px-3 py-1.5 bg-white text-zinc-900 text-xs font-semibold rounded hover:bg-zinc-100 w-28 text-center shadow">
+                                Đặt làm đại diện
+                            </button>
+                        ` : ''}
+                        <button onclick="deleteImage(${img.id})" class="px-3 py-1.5 bg-red-600 text-white text-xs font-semibold rounded hover:bg-red-700 w-28 text-center shadow">
+                            Xóa ảnh
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function handleAddImage() {
+            const urlInput = document.getElementById('imageUrl');
+            const url = urlInput.value.trim();
+            const errorDiv = document.getElementById('uploadError');
+            const btn = document.getElementById('btnAddImage');
+            
+            errorDiv.classList.add('hidden');
+            
+            if (!url) {
+                errorDiv.textContent = 'Vui lòng nhập URL hình ảnh.';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.innerHTML = '<div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div> Đang xử lý...';
+            
+            try {
+                const payload = [{ imageUrl: url, isPrimary: false, displayOrder: 0 }];
+                
+                const res = await fetch(`/api/proxy/owner/cars/${carId}/images`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.message || 'Lỗi khi thêm hình ảnh');
+                }
+                
+                urlInput.value = '';
+                window.VivuCarUtils.showToast('Thêm ảnh thành công', 'success');
+                loadImages(); // Reload gallery
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<svg class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg> Thêm ảnh';
+            }
+        }
+
+        async function setPrimaryImage(imageId) {
+            try {
+                const res = await fetch(`/api/proxy/owner/cars/${carId}/images/${imageId}/primary`, {
+                    method: 'PATCH',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
+                });
+                
+                if (!res.ok) throw new Error('Không thể đổi ảnh đại diện');
+                
+                window.VivuCarUtils.showToast('Đã đổi ảnh đại diện', 'success');
+                loadImages();
+            } catch (error) {
+                window.VivuCarUtils.showToast(error.message, 'error');
+            }
+        }
+
+        async function deleteImage(imageId) {
+            if (!confirm('Bạn có chắc chắn muốn xóa hình ảnh này?')) return;
+            
+            try {
+                const res = await fetch(`/api/proxy/owner/cars/${carId}/images/${imageId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
+                });
+                
+                if (!res.ok) throw new Error('Không thể xóa hình ảnh');
+                
+                window.VivuCarUtils.showToast('Đã xóa hình ảnh', 'success');
+                loadImages();
+            } catch (error) {
+                window.VivuCarUtils.showToast(error.message, 'error');
+            }
+        }
+    </script>
+}

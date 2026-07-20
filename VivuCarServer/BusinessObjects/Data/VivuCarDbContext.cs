@@ -59,5 +59,14 @@ public class VivuCarDbContext(DbContextOptions<VivuCarDbContext> options) : DbCo
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(VivuCarDbContext).Assembly);
+
+        // Explicit precision for nullable decimal columns added in later migrations
+        modelBuilder.Entity<Booking>()
+            .Property(b => b.OverdueFee)
+            .HasPrecision(18, 2);
+
+        modelBuilder.Entity<IncidentReport>()
+            .Property(i => i.PenaltyAmount)
+            .HasPrecision(18, 2);
     }
 }

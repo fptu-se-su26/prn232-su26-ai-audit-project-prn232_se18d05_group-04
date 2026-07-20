@@ -192,6 +192,9 @@ namespace BusinessObjects.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<decimal?>("OverdueFee")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("PickupLocation")
                         .IsRequired()
                         .HasMaxLength(300)
@@ -866,6 +869,9 @@ namespace BusinessObjects.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<decimal?>("PenaltyAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("ReporterId")
                         .HasColumnType("int");
 
@@ -876,6 +882,10 @@ namespace BusinessObjects.Migrations
                         .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

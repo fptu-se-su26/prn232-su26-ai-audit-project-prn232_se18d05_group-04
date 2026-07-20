@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   const C = window.VivuCarConstants;
   const Auth = window.VivuCarAuth;
   const U = window.VivuCarUtils;
