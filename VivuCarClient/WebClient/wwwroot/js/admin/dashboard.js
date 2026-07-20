@@ -47,7 +47,7 @@ function badge(value, type) {
 function renderBookings(items = []) {
   const body = document.getElementById("recentBookingsBody"); const wrap = body.closest(".revenue-table-wrap"); const empty = document.getElementById("recentEmpty");
   setText("recentCount", `${items.length} đơn`); wrap.hidden = !items.length; empty.hidden = !!items.length;
-  body.innerHTML = items.map(item => `<tr><td><strong>${escapeHtml(item.bookingCode || `#${item.id}`)}</strong></td><td>${escapeHtml(item.customerName)}</td><td>${escapeHtml(item.carName)}</td><td>${escapeHtml(fullDate.format(new Date(item.pickupDate)))}</td><td class="revenue-money">${escapeHtml(formatVnd(item.totalAmount))}</td><td>${badge(item.bookingStatus,"booking")}</td><td>${badge(item.paymentStatus,"payment")}</td><td>${item.paymentStatus === 'success' || item.paymentStatus === 'pending' || item.paymentStatus === 'failed' ? `<button onclick="deletePayment(${item.id})" class="btn" style="color:red; font-size:12px; padding:2px 8px;">Xoá Payment</button>` : ''}</td></tr>`).join("");
+  body.innerHTML = items.map(item => `<tr><td><strong>${escapeHtml(item.bookingCode || `#${item.id}`)}</strong></td><td>${escapeHtml(item.customerName)}</td><td>${escapeHtml(item.carName)}</td><td>${escapeHtml(fullDate.format(new Date(item.pickupDate)))}</td><td class="revenue-money">${escapeHtml(formatVnd(item.totalAmount))}</td><td>${badge(item.bookingStatus,"booking")}</td><td>${badge(item.paymentStatus,"payment")}</td></tr>`).join("");
 }
 async function loadDashboard() {
   setLoading(true); document.getElementById("dashboardError").hidden = true;
@@ -61,17 +61,6 @@ function choosePreset(button) {
   const key = button.dataset.range; document.getElementById("customRangeForm").hidden = key !== "custom";
   if (key !== "custom") { Object.assign(state, rangeFor(key)); loadDashboard(); }
 }
-window.deletePayment = async function(bookingId) {
-  if (!confirm('Bạn có chắc chắn muốn xóa toàn bộ payment của đơn này không?')) return;
-  try {
-    const res = await fetchJson(`api/payments/by-booking/${bookingId}`, { method: 'DELETE' });
-    alert('Đã xoá payment thành công!');
-    loadDashboard();
-  } catch (error) {
-    alert('Lỗi: ' + error.message);
-  }
-};
-
 if (root) {
   Object.assign(state, rangeFor("month"));
   document.getElementById("revenuePresets").addEventListener("click", event => { const button = event.target.closest("button[data-range]"); if (button) choosePreset(button); });

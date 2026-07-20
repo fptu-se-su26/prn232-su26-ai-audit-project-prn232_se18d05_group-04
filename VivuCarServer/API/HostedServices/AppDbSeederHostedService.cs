@@ -389,8 +389,8 @@ public class AppDbSeederHostedService(
                 PaymentProvider = PaymentProvider.VNPay,
                 Status          = PaymentStatus.Success,
                 TransactionCode = "VNP-B3-DEP01",
-                PaidAt          = now.AddDays(-5),
-                CreatedAt       = now.AddDays(-5)
+                PaidAt          = now.AddDays(-2),
+                CreatedAt       = now.AddDays(-2)
             });
         }
 
@@ -403,8 +403,8 @@ public class AppDbSeederHostedService(
                 PaymentProvider = PaymentProvider.MoMo,
                 Status          = PaymentStatus.Success,
                 TransactionCode = "MOMO-B4-DEP01",
-                PaidAt          = now.AddDays(-4),
-                CreatedAt       = now.AddDays(-4)
+                PaidAt          = now.AddDays(-3),
+                CreatedAt       = now.AddDays(-3)
             });
         }
 
@@ -417,8 +417,8 @@ public class AppDbSeederHostedService(
                 PaymentProvider = PaymentProvider.VNPay,
                 Status          = PaymentStatus.Success,
                 TransactionCode = "VNP-B5-DEP01",
-                PaidAt          = now.AddDays(-3),
-                CreatedAt       = now.AddDays(-3)
+                PaidAt          = now.AddDays(-7),
+                CreatedAt       = now.AddDays(-7)
             });
         }
 
@@ -431,8 +431,8 @@ public class AppDbSeederHostedService(
                 PaymentProvider = PaymentProvider.VNPay,
                 Status          = PaymentStatus.Success,
                 TransactionCode = "VNP-B6-DEP01",
-                PaidAt          = now.AddDays(-2),
-                CreatedAt       = now.AddDays(-2)
+                PaidAt          = now.AddDays(-15),
+                CreatedAt       = now.AddDays(-15)
             });
         }
         
@@ -445,8 +445,63 @@ public class AppDbSeederHostedService(
                 PaymentProvider = PaymentProvider.MoMo,
                 Status          = PaymentStatus.Success,
                 TransactionCode = "CASH-B6-REM01",
-                PaidAt          = now.AddDays(-1),
-                CreatedAt       = now.AddDays(-1)
+                PaidAt          = now.AddDays(-12),
+                CreatedAt       = now.AddDays(-12)
+            });
+        }
+
+        // Payment for b8
+        if (!await db.PaymentTransactions.AnyAsync(p => p.TransactionCode == "VNP-B8-DEP01", ct))
+        {
+            db.PaymentTransactions.Add(new PaymentTransaction
+            {
+                BookingId       = b8.Id,
+                Amount          = depositAmt8,
+                PaymentProvider = PaymentProvider.VNPay,
+                Status          = PaymentStatus.Success,
+                TransactionCode = "VNP-B8-DEP01",
+                PaidAt          = now.AddDays(-21),
+                CreatedAt       = now.AddDays(-21)
+            });
+        }
+        if (!await db.PaymentTransactions.AnyAsync(p => p.TransactionCode == "VNP-B8-REM01", ct))
+        {
+            db.PaymentTransactions.Add(new PaymentTransaction
+            {
+                BookingId       = b8.Id,
+                Amount          = car1.DailyPrice * 3 - depositAmt8,
+                PaymentProvider = PaymentProvider.VNPay,
+                Status          = PaymentStatus.Success,
+                TransactionCode = "VNP-B8-REM01",
+                PaidAt          = now.AddDays(-17),
+                CreatedAt       = now.AddDays(-17)
+            });
+        }
+        // Payment for b9
+        if (!await db.PaymentTransactions.AnyAsync(p => p.TransactionCode == "VNP-B9-DEP01", ct))
+        {
+            db.PaymentTransactions.Add(new PaymentTransaction
+            {
+                BookingId       = b9.Id,
+                Amount          = depositAmt9,
+                PaymentProvider = PaymentProvider.MoMo,
+                Status          = PaymentStatus.Success,
+                TransactionCode = "VNP-B9-DEP01",
+                PaidAt          = now.AddDays(-31),
+                CreatedAt       = now.AddDays(-31)
+            });
+        }
+        if (!await db.PaymentTransactions.AnyAsync(p => p.TransactionCode == "VNP-B9-REM01", ct))
+        {
+            db.PaymentTransactions.Add(new PaymentTransaction
+            {
+                BookingId       = b9.Id,
+                Amount          = car2.DailyPrice * 2 - depositAmt9,
+                PaymentProvider = PaymentProvider.MoMo,
+                Status          = PaymentStatus.Success,
+                TransactionCode = "VNP-B9-REM01",
+                PaidAt          = now.AddDays(-28),
+                CreatedAt       = now.AddDays(-28)
             });
         }
 

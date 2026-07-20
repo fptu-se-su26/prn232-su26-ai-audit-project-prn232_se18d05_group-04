@@ -9,5 +9,4 @@ public interface IPaymentService
     Task<PaymentStatusResponse> ProcessCallbackAsync(PaymentCallbackQuery query, CancellationToken cancellationToken = default);
 
     Task<PaymentStatusResponse?> GetPaymentStatusByBookingIdAsync(int customerId, int bookingId, CancellationToken cancellationToken = default);
-    Task DeletePaymentByBookingIdAsync(int bookingId, CancellationToken cancellationToken = default);
 }
