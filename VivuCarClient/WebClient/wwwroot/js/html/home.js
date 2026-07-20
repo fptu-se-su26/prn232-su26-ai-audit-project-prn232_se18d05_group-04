@@ -1,7 +1,7 @@
 (function () {
   const DB = window.VivuCarDB, U = window.VivuCarUtils;
   function card(car) {
-    return `<article class="car-card"><img src="${U.carImage(car.id)}" alt="${U.carTitle(car)}"><div class="car-card-body"><div>${U.statusBadge("success", "available", "Khả dụng")}</div><h3>${U.carTitle(car)}</h3><div class="car-meta"><span>${car.address}</span><span>${U.stars(U.carRating(car.id))} ${U.carRating(car.id).toFixed(1)}</span><span>${U.rentalCount(car.id)} lượt thuê</span></div><div class="price-line"><strong>${U.formatVnd(car.price_per_day)}</strong><span class="muted">/ngày</span></div><div class="actions"><a class="btn btn-secondary btn-sm" href="car-detail.html?carId=${car.id}">Xem chi tiết</a><a class="btn btn-primary btn-sm" href="booking-checkout.html?carId=${car.id}">Đặt xe</a></div></div></article>`;
+    return `<article class="car-card"><img src="${U.carImage(car.id)}" alt="${U.carTitle(car)}"><div class="car-card-body"><div>${U.statusBadge("success", "available", "Khả dụng")}</div><h3>${U.carTitle(car)}</h3><div class="car-meta"><span>${car.address}</span><span>${U.stars(U.carRating(car.id))} ${U.carRating(car.id).toFixed(1)}</span><span>${U.rentalCount(car.id)} lượt thuê</span></div><div class="price-line"><strong>${U.formatVnd(car.price_per_day)}</strong><span class="muted">/ngày</span></div><div class="actions"><a class="btn btn-secondary btn-sm" href="car-detail.html?carId=${car.id}">Xem chi tiết</a><a class="btn btn-primary btn-sm" href="/Booking/Checkout?carId=${car.id}">Đặt xe</a></div></div></article>`;
   }
   function featuredCars(cars) {
     // UI-only field. Not present in current DB schema. Requires migration before backend integration.
@@ -42,3 +42,4 @@
   });
   setTimeout(render, 180);
 })();
+

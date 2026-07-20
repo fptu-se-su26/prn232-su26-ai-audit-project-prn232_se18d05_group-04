@@ -16,6 +16,14 @@ public interface IBookingRepository
         CancellationToken cancellationToken = default
     );
 
+    Task<IReadOnlyList<Booking>> GetOwnerListAsync(
+        int ownerId,
+        string? status,
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken = default
+    );
+
     Task AddAsync(Booking booking, CancellationToken cancellationToken = default);
 
     Task<bool> CheckOverlapExistsAsync(

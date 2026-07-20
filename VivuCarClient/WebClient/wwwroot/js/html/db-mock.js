@@ -160,3 +160,4 @@ window.VivuCarDB.chat_messages ||= [
   { id: 4, session_id: 2, sender_id: 6, role: "user", content: "Chủ xe cho tôi hỏi thời gian nhận xe sáng mai.", created_at: "2026-05-21T09:01:00+07:00" },
   { id: 5, session_id: 2, sender_id: 2, role: "user", content: "Tôi sẽ chuẩn bị xe trước 7:45 tại Sơn Trà.", created_at: "2026-05-21T09:12:00+07:00" }
 ];
+

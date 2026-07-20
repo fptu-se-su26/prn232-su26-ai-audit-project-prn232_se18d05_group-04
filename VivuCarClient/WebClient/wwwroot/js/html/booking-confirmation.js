@@ -13,12 +13,12 @@
 
   function render() {
     document.getElementById("breadcrumbMount").innerHTML = window.VivuCarLayout.renderBreadcrumb([
-      { label: "Đơn thuê", href: "my-bookings.html" },
-      { label: `#${bookingId}`, href: `booking-detail.html?bookingId=${bookingId}` },
+      { label: "Đơn thuê", href: "/Booking/MyBookings" },
+      { label: `#${bookingId}`, href: `/Booking/Detail?bookingId=${bookingId}` },
       { label: "Xác nhận" }
     ]);
     if (!booking || !car || !user || !payment) {
-      root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy biên lai", text: "Dữ liệu xác nhận chưa sẵn sàng.", href: "my-bookings.html", action: "Về danh sách đơn" });
+      root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy biên lai", text: "Dữ liệu xác nhận chưa sẵn sàng.", href: "/Booking/MyBookings", action: "Về danh sách đơn" });
       return;
     }
     root.innerHTML = `
@@ -57,3 +57,4 @@
 
   render();
 })();
+

@@ -13,9 +13,9 @@
   }
 
   function render() {
-    document.getElementById("breadcrumbMount").innerHTML = window.VivuCarLayout.renderBreadcrumb([{ label: "Đơn thuê", href: "my-bookings.html" }, { label: "Trả xe" }]);
-    if (!booking || !car) return root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy đơn", text: "Đơn không thuộc tài khoản hiện tại.", href: "my-bookings.html", action: "Về đơn thuê" });
-    if (!canReturn()) return root.innerHTML = U.renderEmptyState({ title: "Chưa thể gửi yêu cầu trả xe", text: "Yêu cầu cần booking approved, đã có pre_rental inspection và chưa có post_rental inspection.", href: `booking-detail.html?bookingId=${bookingId}`, action: "Xem chi tiết" });
+    document.getElementById("breadcrumbMount").innerHTML = window.VivuCarLayout.renderBreadcrumb([{ label: "Đơn thuê", href: "/Booking/MyBookings" }, { label: "Trả xe" }]);
+    if (!booking || !car) return root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy đơn", text: "Đơn không thuộc tài khoản hiện tại.", href: "/Booking/MyBookings", action: "Về đơn thuê" });
+    if (!canReturn()) return root.innerHTML = U.renderEmptyState({ title: "Chưa thể gửi yêu cầu trả xe", text: "Yêu cầu cần booking approved, đã có pre_rental inspection và chưa có post_rental inspection.", href: `/Booking/Detail?bookingId=${bookingId}`, action: "Xem chi tiết" });
     root.innerHTML = `
       <div class="checkout-layout">
         <form class="checkout-main" id="returnForm">
@@ -30,7 +30,7 @@
           <section class="checkout-section"><h2>Ảnh minh chứng</h2><input id="return_images" type="file" accept="image/*" multiple><div id="returnPreview" class="image-preview-grid"></div><p class="muted">Tối đa 8 ảnh, mỗi ảnh không quá 5MB.</p></section>
           <button class="btn btn-primary btn-full" type="submit">Gửi yêu cầu trả xe</button>
         </form>
-        <aside class="summary-card"><h2>Lưu ý</h2><p class="return-note">Sau khi gửi, chủ xe sẽ kiểm tra tình trạng xe. Frontend chỉ lưu draft yêu cầu trả xe, không tạo booking.status mới.</p><a class="btn btn-secondary btn-full" href="booking-detail.html?bookingId=${booking.id}">Quay lại chi tiết đơn</a></aside>
+        <aside class="summary-card"><h2>Lưu ý</h2><p class="return-note">Sau khi gửi, chủ xe sẽ kiểm tra tình trạng xe. Frontend chỉ lưu draft yêu cầu trả xe, không tạo booking.status mới.</p><a class="btn btn-secondary btn-full" href="/Booking/Detail?bookingId=${booking.id}">Quay lại chi tiết đơn</a></aside>
       </div>`;
     U.byId("actual_return_datetime").value = new Date().toISOString().slice(0, 16);
     U.byId("usePickup").onclick = () => U.byId("return_location").value = booking.pickup_address || car.address;
@@ -55,8 +55,9 @@
     DB.return_requests.push({ id: Date.now(), booking_id: booking.id, actual_return_datetime: new Date(U.byId("actual_return_datetime").value).toISOString(), return_location: U.byId("return_location").value.trim(), handover_person: U.byId("handover_person").value.trim(), contact_phone: U.byId("contact_phone").value.trim(), note: U.byId("customer_return_note").value.trim(), images, created_at: new Date().toISOString() });
     window.VivuCarSaveDB();
     U.renderToast("Đã gửi yêu cầu trả xe.", "success");
-    setTimeout(() => location.href = `booking-detail.html?bookingId=${booking.id}`, 400);
+    setTimeout(() => location.href = `/Booking/Detail?bookingId=${booking.id}`, 400);
   }
 
   render();
 })();
+

@@ -9,3 +9,4 @@
   document.getElementById("reviewForm").addEventListener("submit", (e) => { e.preventDefault(); const err = document.getElementById("reviewError"); if (rating < 1 || rating > 5) { err.textContent = "Vui lòng chọn số sao đánh giá."; err.classList.remove("hidden"); return; } if (comment.value.trim().length < 10) { err.textContent = "Bình luận tối thiểu 10 ký tự."; err.classList.remove("hidden"); return; } err.classList.add("hidden"); if (review) { review.rating = rating; review.comment = comment.value.trim(); U.showToast("Cập nhật đánh giá thành công."); } else { DB.reviews.push({ id: DB.reviews.length + 1, booking_id: booking.id, reviewer_id: user.id, car_id: car.id, rating, comment: comment.value.trim(), created_at: new Date().toISOString() }); U.showToast("Gửi đánh giá thành công."); } window.VivuCarSaveDB?.(); setTimeout(() => location.href = "my-reviews.html", 650); });
   renderStars();
 })();
+

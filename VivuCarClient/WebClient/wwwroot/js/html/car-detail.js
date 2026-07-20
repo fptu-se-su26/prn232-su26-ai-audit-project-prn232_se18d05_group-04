@@ -16,7 +16,7 @@
     document.getElementById("carThumbnailList").addEventListener("click", (e) => { if (e.target.tagName === "IMG") document.getElementById("mainCarImage").src = e.target.src; });
     document.getElementById("detailTabs").addEventListener("click", (e) => { const b = e.target.closest("[data-tab]"); if (!b) return; document.querySelectorAll("#detailTabs button").forEach((x) => x.classList.toggle("active", x === b)); renderTab(b.dataset.tab); });
     ["detailPickupDate", "detailReturnDate"].forEach((id) => document.getElementById(id).addEventListener("change", updatePrice));
-    document.getElementById("btnBookCar").addEventListener("click", () => { if (!Auth.getCurrentUser()) location.href = "login.html"; else location.href = `booking-checkout.html?carId=${car.id}`; });
+    document.getElementById("btnBookCar").addEventListener("click", () => { if (!Auth.getCurrentUser()) location.href = "/Login"; else location.href = `/Booking/Checkout?carId=${car.id}`; });
   }
   function updatePrice() { const s = document.getElementById("detailPickupDate").value, e = document.getElementById("detailReturnDate").value; const days = s && e ? calculateRentalDays(s, e) : 1; document.getElementById("totalRentalDays").textContent = days; document.getElementById("estimatedPrice").textContent = U.formatVnd(days * car.price_per_day); }
   function renderTab(tab) {
@@ -28,4 +28,5 @@
   }
   render();
 })();
+
 

@@ -9,3 +9,4 @@
   function exportCsv(d){ const csv=["booking_id,user,total_amount,status",...d.bookings.map((b)=>`${b.id},${b.user_id},${b.total_amount},${b.status}`)].join("\n"); U.downloadBlob(new Blob([csv],{type:"text/csv;charset=utf-8"}),`car-${car.id}-history.csv`); U.renderToast("Đã xuất CSV.", "success");}
   render();
 })();
+

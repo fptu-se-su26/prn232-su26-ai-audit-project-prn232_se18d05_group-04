@@ -12,12 +12,12 @@
 
   function render() {
     document.getElementById("breadcrumbMount").innerHTML = window.VivuCarLayout.renderBreadcrumb([
-      { label: "Đơn thuê", href: "my-bookings.html" },
-      { label: `#${bookingId}`, href: `booking-detail.html?bookingId=${bookingId}` },
+      { label: "Đơn thuê", href: "/Booking/MyBookings" },
+      { label: `#${bookingId}`, href: `/Booking/Detail?bookingId=${bookingId}` },
       { label: "Thanh toán cọc" }
     ]);
     if (!booking || !car || !payment) {
-      root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy thanh toán", text: "Đường dẫn không hợp lệ.", href: "my-bookings.html", action: "Về danh sách đơn" });
+      root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy thanh toán", text: "Đường dẫn không hợp lệ.", href: "/Booking/MyBookings", action: "Về danh sách đơn" });
       return;
     }
     const state = U.resolveBookingUiState(booking, payment, U.inspectionsForBooking(booking.id));
@@ -58,12 +58,13 @@
       payment.paid_at = null;
       window.VivuCarSaveDB();
       U.renderToast("Đã chọn thanh toán tiền mặt khi nhận xe.", "success");
-      setTimeout(() => location.href = `booking-detail.html?bookingId=${booking.id}`, 350);
+      setTimeout(() => location.href = `/Booking/Detail?bookingId=${booking.id}`, 350);
       return;
     }
     window.VivuCarSaveDB();
-    location.href = `payment-result.html?bookingId=${booking.id}&status=success`;
+    location.href = `/Payment/Result?bookingId=${booking.id}&status=success`;
   }
 
   render();
 })();
+

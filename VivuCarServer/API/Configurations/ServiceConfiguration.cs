@@ -9,6 +9,13 @@ public static class ServiceConfiguration
     public static IServiceCollection AddVivuCarServices(this IServiceCollection services)
     {
         services.AddMemoryCache();
+
+        // Register PayOS singleton — required by PaymentService via DI
+        var payOsClientId = Environment.GetEnvironmentVariable("PayOS__ClientId") ?? "";
+        var payOsApiKey = Environment.GetEnvironmentVariable("PayOS__ApiKey") ?? "";
+        var payOsChecksumKey = Environment.GetEnvironmentVariable("PayOS__ChecksumKey") ?? "";
+        services.AddSingleton(new Net.payOS.PayOS(payOsClientId, payOsApiKey, payOsChecksumKey));
+
         services.AddScoped<IAdminUserService, AdminUserService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITokenService, JwtTokenService>();
