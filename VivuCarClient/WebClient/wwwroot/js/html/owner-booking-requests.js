@@ -8,3 +8,4 @@
   function bind(p){U.byId("q").oninput=(e)=>{state.keyword=e.target.value;state.page=1;render();}; U.byId("status").onchange=(e)=>{state.status=e.target.value;state.page=1;render();}; U.byId("prev").onclick=()=>{state.page=Math.max(1,state.page-1);render();}; U.byId("next").onclick=()=>{state.page=Math.min(p.totalPages,state.page+1);render();}; document.querySelectorAll("[data-accept]").forEach((b)=>b.onclick=()=>window.VivuCarOwnerBookingActions.openAcceptBookingModal(b.dataset.accept,render)); document.querySelectorAll("[data-decline]").forEach((b)=>b.onclick=()=>window.VivuCarOwnerBookingActions.openDeclineBookingModal(b.dataset.decline,render)); document.querySelectorAll("[data-chat]").forEach((b)=>b.onclick=()=>{const [u,id]=b.dataset.chat.split(":"); window.VivuCarOwnerBookingActions.openCustomerChat(u,id);});}
   render();
 })();
+

@@ -159,3 +159,4 @@
   window.LicenseModerationPage = { renderLicenseModeration, approveLicense, rejectLicense };
   renderLicenseModeration();
 })();
+

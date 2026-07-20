@@ -9,3 +9,4 @@
   function submit(e){e.preventDefault(); const car=collect(); const error=validate(car); if(error)return U.renderToast(error,"danger"); car.id=Math.max(0,...DB.cars.map((x)=>x.id))+1; DB.cars.push(car); (images.length?images:[`https://picsum.photos/seed/vivucar-new-${car.id}/640/420`]).forEach((url,i)=>DB.car_images.push({id:Math.max(0,...DB.car_images.map((x)=>x.id))+1,car_id:car.id,image_url:url,is_primary:i===0})); window.VivuCarSaveDB(); U.renderToast("Đã tạo xe.", "success"); setTimeout(()=>location.href="owner-cars.html",400); }
   window.VivuCarOwnerCarForm={formSections,input,select,collect,validate,previewImages:preview}; render();
 })();
+

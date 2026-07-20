@@ -270,6 +270,12 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         return list.Select(MapToDetailResponse).ToList();
     }
 
+    public async Task<IReadOnlyList<BookingDetailResponse>> GetOwnerBookingsAsync(int ownerId, BookingListFilter filter, CancellationToken cancellationToken = default)
+    {
+        var list = await bookingRepository.GetOwnerListAsync(ownerId, filter.Status, filter.Page, filter.PageSize, cancellationToken);
+        return list.Select(MapToDetailResponse).ToList();
+    }
+
     public async Task<CancelBookingResponse> CancelBookingAsync(int customerId, int bookingId, CancelBookingRequest request, CancellationToken cancellationToken = default)
     {
         if (!request.Confirmed)

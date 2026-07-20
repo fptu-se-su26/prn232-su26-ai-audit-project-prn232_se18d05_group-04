@@ -80,8 +80,8 @@
           <strong>${U.formatVnd(booking.total_amount)}</strong>
         </div>
         <div class="booking-actions">
-          <a class="btn btn-secondary btn-sm" href="booking-detail.html?bookingId=${booking.id}">Chi tiết</a>
-          ${!paid ? `<a class="btn btn-primary btn-sm" href="payment-deposit.html?bookingId=${booking.id}">Thanh toán</a>` : ""}
+          <a class="btn btn-secondary btn-sm" href="/Booking/Detail?bookingId=${booking.id}">Chi tiết</a>
+          ${!paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán</a>` : ""}
           ${U.canCancelBooking(booking) ? `<button class="btn btn-danger btn-sm" type="button" data-cancel="${booking.id}">Hủy đơn</button>` : ""}
           ${booking.status === "completed" ? `<a class="btn btn-ghost btn-sm" href="post-trip-review.html?bookingId=${booking.id}&carId=${car.id}">Đánh giá</a>` : ""}
         </div>
@@ -108,4 +108,5 @@
 
   render();
 })();
+
 

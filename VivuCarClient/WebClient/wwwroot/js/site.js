@@ -63,7 +63,7 @@ function redirectByRole(user) {
     const roleRoutes = {
         Admin: "/admin/dashboard",
         CarOwner: "/owner/dashboard",
-        Customer: "/home"
+        Customer: "/cars"
     };
 
     const destination = roleRoutes[user.role];

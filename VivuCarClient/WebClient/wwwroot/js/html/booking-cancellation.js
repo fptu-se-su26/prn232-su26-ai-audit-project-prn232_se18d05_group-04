@@ -47,3 +47,4 @@
 
   window.VivuCarBookingCancellation = { openCancelBookingModal, cancelBooking };
 })();
+
