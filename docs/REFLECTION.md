@@ -12,7 +12,7 @@
 | Tên sinh viên / Nhóm | Nhóm 4 |
 | MSSV / Danh sách MSSV | DE180117 |
 | Giảng viên hướng dẫn | QuangLTN3 |
-| Ngày hoàn thành reflection | 01/06/2026 |
+| Ngày hoàn thành reflection | 20/07/2026 |
 
 ---
 
@@ -346,7 +346,7 @@ Sinh viên/nhóm tự đánh giá theo thang 1-5.
 
 | Tiêu chí | Điểm tự đánh giá 1-5 | Ghi chú |
 |---|:---:|---|
-| Ghi nhận việc dùng AI trung thực | 5 | Đã ghi lại hai lần sử dụng AI |
+| Ghi nhận việc dùng AI trung thực | 5 | Đã ghi lại bốn lần sử dụng AI |
 | Prompt có mục tiêu rõ ràng | 4 | Có nêu công nghệ, cấu trúc và đầu ra mong muốn |
 | Kiểm chứng kết quả AI | 4 | Đã build và smoke test; chưa có test tự động |
 | Tự chỉnh sửa/cải tiến | 4 | Đã sửa dependency và URL backend |
