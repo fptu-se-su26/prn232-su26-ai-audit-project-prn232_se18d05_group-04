@@ -246,6 +246,11 @@ DD/MM/YYYY
 | 3 | Tích hợp Payments API (Thanh toán VNPay) | Antigravity AI | `payment-deposit.js`, `payment-result.js` | Tạo URL thanh toán VNPay và hiển thị kết quả thành công |
 | 4 | Sửa Database hỗ trợ GPLX 2 mặt | Antigravity AI | `DriverDocument.cs`, `BookingDriverInfo.cs` | Migration DB thành công |
 | 5 | Tự động lấy GPLX từ hồ sơ khi đặt xe | Antigravity AI | `booking-checkout.js` | Form đặt xe tự động nhận GPLX 2 mặt |
+| 6 | Fix: Đăng ký PayOS singleton vào DI container | Antigravity AI + DE180117 | `API/Configurations/ServiceConfiguration.cs` | API khởi động thành công sau fix, commit bdd1248 |
+| 7 | Fix: Gỡ bỏ UserSeedHostedService dùng schema cũ | Antigravity AI + DE180117 | `API/Configurations/AuthenticationConfiguration.cs` | Seed data chạy đúng với AppDbSeederHostedService mới |
+| 8 | Add: Razor Pages Booking + Payment + UserLayout | Ngô Sỹ Giá - DE180117 | `Pages/Booking/`, `Pages/Payment/`, `Pages/Shared/_UserLayout.cshtml` | Commit bdd1248, push feature/de180117-booking |
+| 9 | Add: Migration AddPayOSProvider | Ngô Sỹ Giá - DE180117 | `Migrations/20260711084739_AddPayOSProvider.*` | Migration applied thành công |
+| 10 | Tích hợp Cloudinary Upload Service | Antigravity AI | `CloudinaryStorageService.cs`, `UploadsController.cs`, `booking-checkout.js` | Tải ảnh GPLX thành công, có URL public |
 
 ## AI có hỗ trợ không?
 
@@ -302,7 +307,8 @@ DD/MM/YYYY
 |---:|---|---|---|---|
 | 1 | Lỗi Build `UseSqlServer` | Đăng ký ở API thay vì DataAccess | Chuyển cấu hình DbContext về đúng module DataAccess | Fixed |
 | 2 | Lỗi tham chiếu `DriverLicenseImageUrl` | DB Model đổi tên field nhưng Service chưa đổi theo | Dùng grep search tìm và sửa tất cả tham chiếu cũ | Fixed |
-| 3 | Lỗi lấy danh sách đơn của Chủ xe | Backend chưa có API `owner-requests` | Đành giữ Mock Data và ghi nhận Open Issue | Pending |
+| 3 | Lỗi lấy danh sách đơn của Chủ xe | Backend chưa có API `owner-requests` | Viết bổ sung `GetOwnerBookingsAsync` API | Fixed |
+| 4 | Chưa có API upload ảnh thực tế | Thiếu implementation Cloud Storage | Tạo `CloudinaryStorageService` và `UploadsController` | Fixed |
 
 ## Thay đổi chi tiết
 
@@ -409,8 +415,7 @@ Viết tại đây...
 
 | STT | Chức năng | Lý do chưa hoàn thành | Hướng cải thiện |
 |---:|---|---|---|
-| 1 | Quản lý đơn phía Chủ Xe | Backend chưa cung cấp API `owner-requests` | Phối hợp với team Backend bổ sung API ở Phase sau |
-| 2 | Upload ảnh thực tế | Chưa kết nối Cloudinary/S3 | Implement Cloud Storage Service ở Backend |
+|  | Toàn bộ Phase 4 đã hoàn thành | N/A | N/A |
 
 ---
 

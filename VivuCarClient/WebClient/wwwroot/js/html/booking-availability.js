@@ -30,3 +30,4 @@
 
   window.VivuCarBookingAvailability = { checkAvailability, isValidBookingRange, overlaps };
 })();
+

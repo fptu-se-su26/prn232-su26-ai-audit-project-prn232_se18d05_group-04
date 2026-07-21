@@ -1,0 +1,22 @@
+@page
+@model VivuCarClient.WebClient.Pages.Payment.DepositModel
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Thanh toán cọc";
+    ViewData["DataPage"] = "bookings";
+}
+
+<main class="page-shell booking-shell">
+  <div id="breadcrumbMount"></div>
+  <div class="flow-steps">
+    <span class="flow-step">Thông tin thuê</span>
+    <span class="flow-step">Kiểm tra lịch</span>
+    <span class="flow-step active">Thanh toán cọc</span>
+    <span class="flow-step">Xác nhận</span>
+  </div>
+  <section id="paymentDepositRoot"></section>
+</main>
+
+@section Scripts {
+  <script src="~/js/html/payment-deposit.js" asp-append-version="true"></script>
+}

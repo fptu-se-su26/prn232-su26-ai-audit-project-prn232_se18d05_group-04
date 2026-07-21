@@ -198,3 +198,4 @@
   window.VivuCarAdminTrash = { softDeleteItem, restoreItem, forceDeleteItem, renderTrash };
   renderTrash();
 })();
+

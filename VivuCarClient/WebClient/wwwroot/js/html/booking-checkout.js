@@ -158,7 +158,7 @@
     updateAll();
   }
 
-  function previewLicense(event) {
+  async function previewLicense(event) {
     const file = event.target.files[0];
     if (!file) return;
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 5 * 1024 * 1024) {
@@ -166,13 +166,31 @@
       U.renderToast("Ảnh phải là JPG/PNG/WEBP và không quá 5MB.", "danger");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
+    
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "driver-licenses");
+      
+      const response = await Auth.fetchWithAuth("https://localhost:7198/api/uploads", {
+        method: "POST",
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error("Lỗi upload ảnh");
+      }
+      
+      const data = await response.json();
+      
       const type = event.target.id === "licenseFront" ? "license_front" : "license_back";
-      licenseUploads[type] = { file_name: file.name, file_url: reader.result };
-      U.byId("licensePreview").insertAdjacentHTML("beforeend", `<img src="${reader.result}" alt="Preview GPLX">`);
-    };
-    reader.readAsDataURL(file);
+      licenseUploads[type] = { file_name: file.name, file_url: data.publicUrl };
+      U.byId("licensePreview").insertAdjacentHTML("beforeend", `<img src="${data.publicUrl}" alt="Preview GPLX">`);
+      U.renderToast("Đã tải ảnh lên thành công", "success");
+    } catch (error) {
+      console.error(error);
+      U.renderToast("Upload thất bại. Vui lòng thử lại.", "danger");
+    }
   }
 
   function submitBooking(event) {
@@ -216,9 +234,10 @@
     DB.payments.push({ id: Math.max(0, ...DB.payments.map((item) => item.id)) + 1, booking_id: id, method, amount: Math.round(pricing.total * 0.3), status: "pending", transaction_code: `PAY${Date.now()}`, paid_at: null });
     window.VivuCarSaveDB();
     U.renderToast("Đã tạo đơn thuê.", "success");
-    setTimeout(() => location.href = `payment-deposit.html?bookingId=${id}`, 350);
+    setTimeout(() => location.href = `/Payment/Deposit?bookingId=${id}`, 350);
   }
 
   render();
 })();
+
 

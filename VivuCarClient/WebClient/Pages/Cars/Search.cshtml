@@ -1,7 +1,7 @@
 @page "/cars/search"
 @model WebClient.Pages.Cars.SearchModel
 @{
-    ViewData["Title"] = "Search Cars - VivuCar";
+    ViewData["Title"] = "Cars - VivuCar";
     Layout = null;
 }
 <!DOCTYPE html>
@@ -23,6 +23,11 @@
         .price-chip.active,.price-chip:hover { background:#16a34a; border-color:#16a34a; color:#fff; }
         .skeleton { background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:12px; height:280px; }
         @@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        #filterPanel { overflow-y: auto; }
+        #filterPanel::-webkit-scrollbar { width: 4px; }
+        #filterPanel::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 2px; }
+        summary::-webkit-details-marker { display: none; }
+        summary { list-style: none; }
     </style>
 </head>
 <body class="bg-zinc-50 text-zinc-900 font-sans antialiased">
@@ -36,7 +41,7 @@
             </a>
             <div class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-600">
                 <a href="/cars" class="hover:text-zinc-900 transition-colors">Home</a>
-                <a href="/cars/search" class="text-primary font-semibold">Search Cars</a>
+                <a href="/cars/search" class="text-primary font-semibold">Cars</a>
             </div>
             <div class="flex items-center gap-3">
                 <span id="navUserName" class="hidden text-sm font-medium text-zinc-700"></span>
@@ -56,7 +61,7 @@
                        class="w-full border border-zinc-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
                 <div id="suggestionsBox" class="hidden absolute top-full left-0 right-0 bg-white border border-zinc-200 rounded-xl mt-1 shadow-lg z-50 overflow-hidden"></div>
             </div>
-            <button id="btnSearch" class="px-5 py-2.5 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-green-700 transition-colors shrink-0">Search</button>
+            <button id="btnSearch" style="flex-shrink:0;background:#16a34a;color:#fff;font-weight:600;padding:10px 20px;border-radius:12px;font-size:.875rem;border:none;cursor:pointer;" onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">Search</button>
         </div>
     </div>
 
@@ -64,92 +69,120 @@
         <div class="flex gap-6">
 
             <!-- Filter Sidebar -->
-            <aside id="filterPanel" class="hidden md:block w-64 shrink-0 sticky top-24 self-start max-h-[calc(100vh-6rem)] overflow-y-auto pb-6 space-y-4">
-                <div class="bg-white rounded-2xl border border-zinc-200 p-5 space-y-5">
-                    <div class="flex items-center justify-between">
+            <aside class="hidden md:flex flex-col w-64 shrink-0 sticky top-24 self-start" style="max-height: calc(100vh - 7rem);">
+                <div class="bg-white rounded-2xl border border-zinc-200 p-5 flex flex-col" style="max-height: calc(100vh - 7rem); overflow: hidden;">
+                    <div class="flex items-center justify-between mb-4 shrink-0">
                         <h2 class="font-bold text-zinc-900">Filters</h2>
                         <button id="btnResetFilter" class="text-xs text-red-500 font-medium hover:underline">Clear all</button>
                     </div>
 
-                    <!-- Brand -->
-                    <fieldset>
-                        <legend class="text-xs font-bold text-zinc-500 uppercase tracking-wide mb-3">Brand</legend>
-                        <div id="brandFilters" class="space-y-2 max-h-48 overflow-y-auto text-sm">
-                            <div class="h-4 bg-zinc-100 rounded animate-pulse"></div>
-                        </div>
-                    </fieldset>
+                    <!-- Scrollable filter content -->
+                    <div class="overflow-y-auto flex-1 space-y-4 pr-1">
+                        <!-- Brand -->
+                        <details class="group border-b border-zinc-100 pb-3" open>
+                            <summary class="flex justify-between items-center font-bold text-xs text-zinc-500 uppercase tracking-wide cursor-pointer select-none">
+                                <span>Brand</span>
+                                <svg class="h-4 w-4 transform group-open:rotate-180 transition-transform duration-200 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </summary>
+                            <div id="brandFilters" class="space-y-2 text-sm mt-2 max-h-48 overflow-y-auto pr-1">
+                                <div class="h-4 bg-zinc-100 rounded animate-pulse"></div>
+                            </div>
+                        </details>
 
-                    <!-- Price -->
-                    <fieldset>
-                        <legend class="text-xs font-bold text-zinc-500 uppercase tracking-wide mb-3">Daily Price (VND)</legend>
-                        <div class="flex gap-2">
-                            <input id="minPrice" type="number" placeholder="From" min="0"
-                                   class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary" />
-                            <input id="maxPrice" type="number" placeholder="To" min="0"
-                                   class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary" />
-                        </div>
-                        <div class="flex flex-wrap gap-2 mt-2">
-                            <button class="price-chip" data-price="0,300000">Under 300k</button>
-                            <button class="price-chip" data-price="300000,600000">300k–600k</button>
-                            <button class="price-chip" data-price="600000,1000000">600k–1M</button>
-                            <button class="price-chip" data-price="1000000,99999999">Over 1M</button>
-                        </div>
-                    </fieldset>
+                        <!-- Price -->
+                        <details class="group border-b border-zinc-100 pb-3" open>
+                            <summary class="flex justify-between items-center font-bold text-xs text-zinc-500 uppercase tracking-wide cursor-pointer select-none">
+                                <span>Daily Price (VND)</span>
+                                <svg class="h-4 w-4 transform group-open:rotate-180 transition-transform duration-200 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </summary>
+                            <div class="mt-2 space-y-2">
+                                <div class="flex gap-2">
+                                    <input id="minPrice" type="number" placeholder="From" min="0"
+                                           class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary" />
+                                    <input id="maxPrice" type="number" placeholder="To" min="0"
+                                           class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-primary" />
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    <button class="price-chip" data-price="0,300000">Under 300k</button>
+                                    <button class="price-chip" data-price="300000,600000">300k–600k</button>
+                                    <button class="price-chip" data-price="600000,1000000">600k–1M</button>
+                                    <button class="price-chip" data-price="1000000,99999999">Over 1M</button>
+                                </div>
+                            </div>
+                        </details>
 
-                    <!-- Area -->
-                    <fieldset>
-                        <legend class="text-xs font-bold text-zinc-500 uppercase tracking-wide mb-3">Area</legend>
-                        <div class="space-y-2 text-sm">
-                            @foreach (var loc in new[]{"Hai Chau","Thanh Khe","Son Tra","Ngu Hanh Son","Lien Chieu","Cam Le","Hoa Vang"})
-                            {
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" name="location" value="@loc" class="rounded accent-green-600" />
-                                    <span class="text-zinc-700">@loc</span>
-                                </label>
-                            }
-                        </div>
-                    </fieldset>
+                        <!-- Area -->
+                        <details class="group border-b border-zinc-100 pb-3" open>
+                            <summary class="flex justify-between items-center font-bold text-xs text-zinc-500 uppercase tracking-wide cursor-pointer select-none">
+                                <span>Area</span>
+                                <svg class="h-4 w-4 transform group-open:rotate-180 transition-transform duration-200 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </summary>
+                            <div class="space-y-2 text-sm mt-2 max-h-40 overflow-y-auto pr-1">
+                                @foreach (var loc in new[]{"Hai Chau","Thanh Khe","Son Tra","Ngu Hanh Son","Lien Chieu","Cam Le","Hoa Vang"})
+                                {
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" name="location" value="@loc" class="rounded accent-green-600" />
+                                        <span class="text-zinc-700">@loc</span>
+                                    </label>
+                                }
+                            </div>
+                        </details>
 
-                    <!-- Seats -->
-                    <fieldset>
-                        <legend class="text-xs font-bold text-zinc-500 uppercase tracking-wide mb-3">Seats</legend>
-                        <select id="seatFilter" class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-white">
-                            <option value="">All</option>
-                            <option value="4">4 seats</option>
-                            <option value="5">5 seats</option>
-                            <option value="7">7 seats</option>
-                        </select>
-                    </fieldset>
+                        <!-- Seats -->
+                        <details class="group border-b border-zinc-100 pb-3" open>
+                            <summary class="flex justify-between items-center font-bold text-xs text-zinc-500 uppercase tracking-wide cursor-pointer select-none">
+                                <span>Seats</span>
+                                <svg class="h-4 w-4 transform group-open:rotate-180 transition-transform duration-200 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </summary>
+                            <div class="mt-2">
+                                <select id="seatFilter" class="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-white">
+                                    <option value="">All</option>
+                                    <option value="4">4 seats</option>
+                                    <option value="5">5 seats</option>
+                                    <option value="7">7 seats</option>
+                                </select>
+                            </div>
+                        </details>
 
-                    <!-- Transmission -->
-                    <fieldset>
-                        <legend class="text-xs font-bold text-zinc-500 uppercase tracking-wide mb-3">Transmission</legend>
-                        <div class="space-y-2 text-sm">
-                            @foreach (var (lbl, val) in new[]{("All",""),("Automatic","2"),("Manual","1")})
-                            {
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="radio" name="transmission" value="@val" @(val == "" ? "checked" : "") class="accent-green-600" />
-                                    <span>@lbl</span>
-                                </label>
-                            }
-                        </div>
-                    </fieldset>
+                        <!-- Transmission -->
+                        <details class="group border-b border-zinc-100 pb-3" open>
+                            <summary class="flex justify-between items-center font-bold text-xs text-zinc-500 uppercase tracking-wide cursor-pointer select-none">
+                                <span>Transmission</span>
+                                <svg class="h-4 w-4 transform group-open:rotate-180 transition-transform duration-200 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </summary>
+                            <div class="space-y-2 text-sm mt-2">
+                                @foreach (var (lbl, val) in new[]{("All",""),("Automatic","2"),("Manual","1")})
+                                {
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="radio" name="transmission" value="@val" @(val == "" ? "checked" : "") class="accent-green-600" />
+                                        <span>@lbl</span>
+                                    </label>
+                                }
+                            </div>
+                        </details>
 
-                    <!-- Fuel -->
-                    <fieldset>
-                        <legend class="text-xs font-bold text-zinc-500 uppercase tracking-wide mb-3">Fuel Type</legend>
-                        <div class="space-y-2 text-sm">
-                            @foreach (var (lbl, val) in new[]{("Gasoline","1"),("Diesel","2"),("Electric","3"),("Hybrid","4")})
-                            {
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" name="fuel" value="@val" class="rounded accent-green-600" />
-                                    <span class="text-zinc-700">@lbl</span>
-                                </label>
-                            }
-                        </div>
-                    </fieldset>
+                        <!-- Fuel -->
+                        <details class="group pb-3" open>
+                            <summary class="flex justify-between items-center font-bold text-xs text-zinc-500 uppercase tracking-wide cursor-pointer select-none">
+                                <span>Fuel Type</span>
+                                <svg class="h-4 w-4 transform group-open:rotate-180 transition-transform duration-200 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            </summary>
+                            <div class="space-y-2 text-sm mt-2">
+                                @foreach (var (lbl, val) in new[]{("Gasoline","1"),("Diesel","2"),("Electric","3"),("Hybrid","4")})
+                                {
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" name="fuel" value="@val" class="rounded accent-green-600" />
+                                        <span class="text-zinc-700">@lbl</span>
+                                    </label>
+                                }
+                            </div>
+                        </details>
+                    </div>
 
-                    <button id="btnApplyFilter" class="w-full bg-primary text-white font-bold py-2.5 rounded-xl text-sm hover:bg-green-700 transition-colors">Apply Filters</button>
+                    <!-- Apply button always visible at bottom -->
+                    <div class="pt-4 shrink-0 border-t border-zinc-100 mt-4" style="margin-top:auto;">
+                        <button id="btnApplyFilter" style="display:block;width:100%;background:#16a34a;color:#fff;font-weight:700;padding:10px 0;border-radius:12px;font-size:.875rem;border:none;cursor:pointer;" onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">Apply Filters</button>
+                    </div>
                 </div>
             </aside>
 
@@ -179,7 +212,7 @@
         </div>
     </div>
 
-    @section Scripts {
+    <!-- Inline scripts (Layout = null) -->
     <script type="module">
         import { authService } from '/js/shared/auth-service.js';
         authService.refresh().then(s => {
@@ -191,10 +224,13 @@
                 document.getElementById('navLogoutBtn').classList.remove('hidden');
             }
         });
-        document.getElementById('navLogoutBtn').addEventListener('click', async () => { await authService.logout(); window.location.href = '/'; });
+        document.getElementById('navLogoutBtn').addEventListener('click', async () => {
+            const { authService: a } = await import('/js/shared/auth-service.js');
+            await a.logout(); window.location.href = '/';
+        });
     </script>
     <script>
-        const STATE = { page:1, pageSize:12, searchTerm:'@Model.SearchTerm', location:'@Model.Location', sortBy:'@Model.SortBy', seatCount:'@(Model.SeatCount?.ToString()??"")', brandId:null, minPrice:null, maxPrice:null, transmissionType:null, fuelTypes:[] };
+        const STATE = { page:1, pageSize:12, searchTerm:'@Model.SearchTerm', location:'@Model.Location', sortBy:'@Model.SortBy', seatCount:'@(Model.SeatCount?.ToString()??"")', brands:[], minPrice:null, maxPrice:null, transmissionType:null, fuelTypes:[] };
 
         const fmt   = n => (n || 0).toLocaleString('vi-VN') + '₫';
         const stars = r => { const f = Math.floor(r || 0); return `<span class="text-amber-400">${'★'.repeat(f)}${'☆'.repeat(5-f)}</span>`; };
@@ -234,7 +270,7 @@
         function qs() {
             const p = new URLSearchParams();
             if (STATE.searchTerm) p.set('searchTerm', STATE.searchTerm);
-            if (STATE.brandId) p.set('brandId', STATE.brandId);
+            if (STATE.brands && STATE.brands.length) p.set('brands', STATE.brands.join(','));
             if (STATE.minPrice) p.set('minPrice', STATE.minPrice);
             if (STATE.maxPrice) p.set('maxPrice', STATE.maxPrice);
             if (STATE.location) p.set('location', STATE.location);
@@ -251,27 +287,32 @@
             grid.innerHTML = '<div class="skeleton col-span-3 h-64"></div>';
             try {
                 const r = await fetch(`/api/proxy/cars?${qs()}`);
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
                 const data = await r.json();
                 const items = data.items ?? [];
                 grid.innerHTML = items.length ? items.map(carCard).join('') : empty('No cars match your search.');
                 document.getElementById('resultCount').textContent = `Found ${data.totalCount||0} car(s)`;
                 document.getElementById('resultSubtitle').classList.remove('hidden');
                 renderPagination(data.totalCount||0);
-            } catch { grid.innerHTML = empty('Failed to load. Please try again.'); }
+            } catch(e) {
+                console.error('Load cars error:', e);
+                grid.innerHTML = empty('Failed to load. Please try again.');
+            }
         }
 
-        async function loadBrands() {
-            try {
-                const r = await fetch('/api/proxy/owner/cars/meta/models');
-                const models = await r.json();
-                const brands = {};
-                (models||[]).forEach(m => { if (m.brandName) brands[m.brandName] = true; });
-                document.getElementById('brandFilters').innerHTML = Object.keys(brands).sort().map(b =>
+        function loadBrands() {
+            // Hardcoded brand list from seed data (no public /api/cars/brands endpoint)
+            const brands = [
+                'Toyota','Mazda','Kia','Hyundai','Honda',
+                'Ford','Mitsubishi','Chevrolet','VinFast','Mercedes',
+                'BMW','Suzuki','MG','Isuzu'
+            ];
+            document.getElementById('brandFilters').innerHTML =
+                brands.map(b =>
                     `<label class="flex items-center gap-2 cursor-pointer text-sm">
-                        <input type="radio" name="brand" value="${b}" class="accent-green-600" /><span class="text-zinc-700">${b}</span>
+                        <input type="checkbox" name="brand" value="${b}" class="rounded accent-green-600"/><span class="text-zinc-700">${b}</span>
                      </label>`
                 ).join('');
-            } catch { document.getElementById('brandFilters').innerHTML = '<p class="text-xs text-zinc-400">Could not load brands.</p>'; }
         }
 
         async function loadSuggestions(q) {
@@ -279,6 +320,7 @@
             if (!q || q.length < 2) { box.classList.add('hidden'); return; }
             try {
                 const r = await fetch(`/api/proxy/cars/suggestions?q=${encodeURIComponent(q)}`);
+                if (!r.ok) { box.classList.add('hidden'); return; }
                 const items = await r.json();
                 if (!items?.length) { box.classList.add('hidden'); return; }
                 box.innerHTML = items.map(s => `<button class="w-full text-left px-4 py-2.5 text-sm hover:bg-zinc-50 transition-colors text-zinc-700" data-suggest="${s}">${s}</button>`).join('');
@@ -290,22 +332,46 @@
             const pages = Math.ceil(total / STATE.pageSize);
             const el = document.getElementById('pagination');
             if (pages <= 1) { el.innerHTML = ''; return; }
-            el.innerHTML = Array.from({length:pages},(_,i) => i+1).map(i =>
-                `<button data-p="${i}" class="px-3.5 py-2 rounded-xl text-sm font-medium transition-colors ${i===STATE.page?'bg-primary text-white shadow-sm':'bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50'}">${i}</button>`
-            ).join('');
+            
+            let html = '';
+            
+            // Previous button
+            if (STATE.page > 1) {
+                html += `<button data-p="${STATE.page - 1}" class="px-3.5 py-2 rounded-xl text-sm font-medium transition-colors bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50">&larr; Prev</button>`;
+            }
+            
+            // Numbers with sliding window
+            const range = 2; // Show 2 pages left & right of current page
+            for (let i = 1; i <= pages; i++) {
+                if (i === 1 || i === pages || (i >= STATE.page - range && i <= STATE.page + range)) {
+                    html += `<button data-p="${i}" class="px-3.5 py-2 rounded-xl text-sm font-medium transition-colors ${i===STATE.page?'bg-primary text-white shadow-sm':'bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50'}">${i}</button>`;
+                } else if (i === 2 || i === pages - 1) {
+                    if (!html.endsWith('...</span>')) {
+                        html += `<span class="px-2 py-2 text-zinc-400">...</span>`;
+                    }
+                }
+            }
+            
+            // Next button
+            if (STATE.page < pages) {
+                html += `<button data-p="${STATE.page + 1}" class="px-3.5 py-2 rounded-xl text-sm font-medium transition-colors bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50">Next &rarr;</button>`;
+            }
+            
+            el.innerHTML = html;
         }
 
         function collectFilters() {
-            STATE.searchTerm       = document.getElementById('searchInput').value.trim();
-            STATE.sortBy           = document.getElementById('sortCars').value;
-            STATE.seatCount        = document.getElementById('seatFilter').value;
-            STATE.minPrice         = document.getElementById('minPrice').value || null;
-            STATE.maxPrice         = document.getElementById('maxPrice').value || null;
-            const loc              = [...document.querySelectorAll('[name=location]:checked')].map(x=>x.value);
-            STATE.location         = loc[0] || '';
-            const trans            = document.querySelector('[name=transmission]:checked');
-            STATE.transmissionType = trans?.value || null;
-            STATE.fuelTypes        = [...document.querySelectorAll('[name=fuel]:checked')].map(x=>x.value);
+            STATE.searchTerm        = document.getElementById('searchInput').value.trim();
+            STATE.sortBy            = document.getElementById('sortCars').value;
+            STATE.seatCount         = document.getElementById('seatFilter').value;
+            STATE.minPrice          = document.getElementById('minPrice').value || null;
+            STATE.maxPrice          = document.getElementById('maxPrice').value || null;
+            const loc               = [...document.querySelectorAll('[name=location]:checked')].map(x=>x.value);
+            STATE.location          = loc[0] || '';
+            const trans             = document.querySelector('[name=transmission]:checked');
+            STATE.transmissionType  = trans?.value || null;
+            STATE.fuelTypes         = [...document.querySelectorAll('[name=fuel]:checked')].map(x=>x.value);
+            STATE.brands            = [...document.querySelectorAll('[name=brand]:checked')].map(x=>x.value);
         }
 
         function resetFilters() {
@@ -313,19 +379,20 @@
             document.getElementById('minPrice').value = '';
             document.getElementById('maxPrice').value = '';
             document.getElementById('seatFilter').value = '';
-            document.querySelectorAll('[name=transmission]')[0].checked = true;
+            const firstTrans = document.querySelectorAll('[name=transmission]')[0];
+            if (firstTrans) firstTrans.checked = true;
             document.querySelectorAll('[name=location],[name=fuel],[name=brand]').forEach(x=>x.checked=false);
             document.querySelectorAll('.price-chip').forEach(x=>x.classList.remove('active'));
-            Object.assign(STATE, {brandId:null,minPrice:null,maxPrice:null,transmissionType:null,fuelTypes:[],seatCount:'',location:'',searchTerm:'',page:1});
+            Object.assign(STATE, {brands:[],minPrice:null,maxPrice:null,transmissionType:null,fuelTypes:[],seatCount:'',location:'',searchTerm:'',page:1});
             load();
         }
 
         // Init from URL
-        const p = new URLSearchParams(location.search);
-        STATE.searchTerm = p.get('searchTerm') || '';
-        STATE.location   = p.get('location') || '';
-        STATE.sortBy     = p.get('sortBy') || '';
-        STATE.seatCount  = p.get('seatCount') || '';
+        const urlParams = new URLSearchParams(location.search);
+        STATE.searchTerm = urlParams.get('searchTerm') || STATE.searchTerm || '';
+        STATE.location   = urlParams.get('location') || STATE.location || '';
+        STATE.sortBy     = urlParams.get('sortBy') || STATE.sortBy || '';
+        STATE.seatCount  = urlParams.get('seatCount') || STATE.seatCount || '';
         if (STATE.searchTerm) document.getElementById('searchInput').value = STATE.searchTerm;
         if (STATE.sortBy)     document.getElementById('sortCars').value = STATE.sortBy;
         if (STATE.seatCount)  document.getElementById('seatFilter').value = STATE.seatCount;
@@ -362,6 +429,5 @@
 
         loadBrands(); load();
     </script>
-    }
 </body>
 </html>

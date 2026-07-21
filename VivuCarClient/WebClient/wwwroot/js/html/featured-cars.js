@@ -25,3 +25,4 @@
   document.getElementById("featuredPagination").addEventListener("click", (e) => { const b = e.target.closest("[data-page]"); if (b) { state.page = Number(b.dataset.page); render(); } });
   setTimeout(render, 180);
 })();
+

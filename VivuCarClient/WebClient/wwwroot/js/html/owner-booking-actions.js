@@ -54,3 +54,4 @@
   }
   window.VivuCarOwnerBookingActions = { ownerBooking, openAcceptBookingModal, openDeclineBookingModal, openCustomerChat };
 })();
+

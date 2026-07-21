@@ -40,3 +40,4 @@
     errorBox.classList.remove("hidden");
   }
 })();
+

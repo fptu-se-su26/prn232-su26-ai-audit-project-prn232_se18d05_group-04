@@ -38,3 +38,4 @@
 
   window.VivuCarBookingPricing = { calculate, calculateVoucher, rentalDays, rentalHours, usedCount };
 })();
+
