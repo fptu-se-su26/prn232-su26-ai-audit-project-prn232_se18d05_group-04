@@ -4,3 +4,5 @@
 .vs/
 .env
 db.sql
+
+**/node_modules/

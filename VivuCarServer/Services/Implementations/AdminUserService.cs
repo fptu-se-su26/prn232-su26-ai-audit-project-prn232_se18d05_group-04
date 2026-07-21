@@ -25,8 +25,8 @@ public class AdminUserService(
                 user.Id,
                 user.Email,
                 user.FullName,
-                user.Role.ToString(),
-                user.Status.ToString(),
+                MapRole(user.Role),
+                user.Status == UserStatus.Locked,
                 user.CreatedAt
             ))
             .ToList();
@@ -99,6 +99,13 @@ public class AdminUserService(
         return true;
     }
 
+    private static string MapRole(UserRole role) => role switch
+    {
+        UserRole.Customer => "user",
+        UserRole.CarOwner => "car_owner",
+        UserRole.Admin => "admin",
+        _ => "user"
+    };
     private static UserRole? ParseRole(string? role)
     {
         return role?.Trim().ToLowerInvariant() switch
@@ -111,3 +118,5 @@ public class AdminUserService(
         };
     }
 }
+
+

@@ -1,4 +1,4 @@
-using BusinessObjects.Data;
+﻿using BusinessObjects.Data;
 using BusinessObjects.Models;
 using BusinessObjects.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +20,7 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
                 .ThenInclude(c => c.Images)
             .Include(b => b.Customer)
             .Include(b => b.DriverInfo)
-            .Include(b => b.BookingVoucher)
+            .Include(b => b.BookingVoucher!)
                 .ThenInclude(bv => bv.Voucher)
             .Include(b => b.PaymentTransactions)
             .Include(b => b.RentalContract)
@@ -33,7 +33,7 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
             .Include(b => b.Car)
             .Include(b => b.Customer)
             .Include(b => b.DriverInfo)
-            .Include(b => b.BookingVoucher)
+            .Include(b => b.BookingVoucher!)
                 .ThenInclude(bv => bv.Voucher)
             .Include(b => b.PaymentTransactions)
             .Include(b => b.RentalContract)
@@ -219,3 +219,8 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
         return dbContext.Database.CurrentTransaction ?? await dbContext.Database.BeginTransactionAsync(cancellationToken);
     }
 }
+
+
+
+
+

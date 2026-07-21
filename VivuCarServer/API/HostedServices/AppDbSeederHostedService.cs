@@ -1,4 +1,5 @@
 using BusinessObjects.Data;
+using BusinessObjects.Data.Seed;
 using BusinessObjects.Enums;
 using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
@@ -112,6 +113,8 @@ public class AppDbSeederHostedService(
         // ── 5. Bookings & Payments & Incidents ────────────────────────────────
         logger.LogInformation("[Seeder] Seeding bookings...");
         await SeedBookingsAsync(db, customer1, customer2, owner1, owner2, car1, car2, car3, car4, car6, cancellationToken);
+        var snapshotsChanged = await BaseSeed.RefreshRevenueSnapshotsAsync(db, cancellationToken);
+        logger.LogInformation("[Seeder] Revenue snapshots synchronized: {SnapshotsChanged} changed.", snapshotsChanged);
 
         logger.LogInformation("[Seeder] Seed completed successfully.");
     }
@@ -435,7 +438,7 @@ public class AppDbSeederHostedService(
                 CreatedAt       = now.AddDays(-15)
             });
         }
-        
+
         if (!await db.PaymentTransactions.AnyAsync(p => p.TransactionCode == "CASH-B6-REM01", ct))
         {
             db.PaymentTransactions.Add(new PaymentTransaction
@@ -712,16 +715,15 @@ public class AppDbSeederHostedService(
         if (await db.Vouchers.AnyAsync(v => v.Code == "VIVUCAR10", ct)) return;
         db.Vouchers.Add(new Voucher
         {
-            Code          = "VIVUCAR10",
-            Description   = "Giảm 10% tổng hóa đơn, tối đa 200.000đ",
-            DiscountType  = DiscountType.Percentage,
-            DiscountValue = 10,
+            Name           = "VivuCar 10%",
+            Code           = "VIVUCAR10",
+            DiscountType   = DiscountType.Percentage,
+            DiscountValue  = 10,
             MinOrderAmount = 500_000,
-            StartDateTime = DateTime.UtcNow.AddDays(-1),
-            EndDateTime   = DateTime.UtcNow.AddMonths(3),
-            UsageLimit    = 100,
-            UsedCount     = 0,
-            IsActive      = true
+            MaxDiscount    = 200_000,
+            Quantity       = 100,
+            ExpiresAt      = DateTime.UtcNow.AddMonths(3),
+            CreatedAt      = DateTime.UtcNow
         });
         await db.SaveChangesAsync(ct);
     }

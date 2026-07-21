@@ -6,7 +6,7 @@
     "admin-sidebar": "fixed inset-y-0 left-0 z-40 flex h-[100dvh] w-[300px] flex-col gap-5 overflow-hidden border-r border-zinc-200 bg-white p-4 shadow-sm transition-all duration-300 ease-in-out max-lg:-translate-x-full",
     "owner-sidebar": "max-lg:static max-lg:h-auto max-lg:translate-x-0",
     "sidebar-brand": "flex min-w-0 items-center gap-3 rounded-2xl px-2 py-2 font-extrabold tracking-tight text-zinc-900",
-    "brand-mark": "grid h-10 w-10 min-h-[2.5rem] min-w-[2.5rem] shrink-0 aspect-square place-items-center rounded-xl bg-emerald-600 text-sm font-extrabold text-white shadow-sm object-contain [&_svg]:h-4 [&_svg]:w-4 [&_svg]:shrink-0",
+    "brand-mark": "grid h-10 w-10 min-h-[2.5rem] min-w-[2.5rem] shrink-0 aspect-square place-items-center overflow-hidden rounded-xl bg-transparent object-contain shadow-sm",
     "sidebar-nav": "grid gap-1.5 [&_a]:relative [&_a]:flex [&_a]:items-center [&_a]:gap-3 [&_a]:rounded-xl [&_a]:px-3 [&_a]:py-2.5 [&_a]:text-sm [&_a]:font-medium [&_a]:text-zinc-600 [&_a]:transition-all [&_a]:duration-200 [&_a]:ease-out [&_a:hover]:bg-zinc-100 [&_a:hover]:text-zinc-900 [&_button]:relative [&_button]:flex [&_button]:w-full [&_button]:items-center [&_button]:gap-3 [&_button]:rounded-xl [&_button]:px-3 [&_button]:py-2.5 [&_button]:text-left [&_button]:text-sm [&_button]:font-medium [&_button]:text-zinc-600 [&_button]:transition-all [&_button]:duration-200 [&_button]:ease-out [&_button:hover]:bg-red-50 [&_button:hover]:text-red-600",
     "active": "bg-[#efefed] text-neutral-950",
     "admin-nav-active": "border border-emerald-100 bg-emerald-50 text-emerald-700 shadow-sm animate-admin-nav-in",

@@ -15,7 +15,7 @@ public class ApiProxyController(IHttpClientFactory httpClientFactory)
     )
     {
         return ForwardAsync(
-            "api/" + path + Request.QueryString,
+            path + Request.QueryString,
             forwardCookies: false,
             cancellationToken
         );

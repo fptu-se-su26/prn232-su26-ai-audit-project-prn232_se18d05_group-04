@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Data;
+using BusinessObjects.Data;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 using Repositories.Models;
@@ -19,10 +19,26 @@ public class AdminReportRepository(VivuCarDbContext dbContext) : IAdminReportRep
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<IReadOnlyList<AdminRecentBookingRecord>> GetRecentBookingsAsync(
+    public async Task<int> CountBookingsAsync(
         DateOnly from,
         DateOnly to,
-        int limit,
+        CancellationToken cancellationToken = default)
+    {
+        var start = from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        var endExclusive = to.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+
+        return await dbContext.Bookings
+            .AsNoTracking()
+            .CountAsync(
+                booking => booking.CreatedAt >= start && booking.CreatedAt < endExclusive,
+                cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<AdminRecentBookingRecord>> GetBookingsPageAsync(
+        DateOnly from,
+        DateOnly to,
+        int skip,
+        int take,
         CancellationToken cancellationToken = default)
     {
         var start = from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
@@ -36,7 +52,8 @@ public class AdminReportRepository(VivuCarDbContext dbContext) : IAdminReportRep
             .Where(booking => booking.CreatedAt >= start && booking.CreatedAt < endExclusive)
             .OrderByDescending(booking => booking.CreatedAt)
             .ThenByDescending(booking => booking.Id)
-            .Take(Math.Clamp(limit, 1, 50))
+            .Skip(Math.Max(0, skip))
+            .Take(Math.Clamp(take, 1, 50))
             .ToListAsync(cancellationToken);
 
         return bookings.Select(booking =>

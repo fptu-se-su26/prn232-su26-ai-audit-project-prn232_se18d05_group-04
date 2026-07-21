@@ -28,6 +28,40 @@ namespace BusinessObjects.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CarTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CarTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DailyRevenueSnapshots",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SnapshotDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    TotalBookings = table.Column<int>(type: "int", nullable: false),
+                    CompletedBookings = table.Column<int>(type: "int", nullable: false),
+                    CancelledBookings = table.Column<int>(type: "int", nullable: false),
+                    GrossRevenue = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    NetRevenue = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    DepositCollected = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    GeneratedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DailyRevenueSnapshots", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -40,6 +74,7 @@ namespace BusinessObjects.Migrations
                     AvatarUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Role = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    TokenVersion = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
@@ -56,17 +91,15 @@ namespace BusinessObjects.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Code = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    DiscountType = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    DiscountType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     DiscountValue = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    MaxDiscountAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
-                    MinOrderAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
-                    StartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UsageLimit = table.Column<int>(type: "int", nullable: true),
-                    UsedCount = table.Column<int>(type: "int", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    MinOrderAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false, defaultValue: 0m),
+                    MaxDiscount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {
@@ -95,6 +128,31 @@ namespace BusinessObjects.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AdminAuditLogs",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AdminUserId = table.Column<int>(type: "int", nullable: false),
+                    Action = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    EntityType = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: false),
+                    EntityId = table.Column<int>(type: "int", nullable: false),
+                    OldValues = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NewValues = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdminAuditLogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AdminAuditLogs_Users_AdminUserId",
+                        column: x => x.AdminUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DriverDocuments",
                 columns: table => new
                 {
@@ -105,7 +163,8 @@ namespace BusinessObjects.Migrations
                     CitizenIdFrontImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CitizenIdBackImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     DriverLicenseNumber = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    DriverLicenseImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    DriverLicenseFrontImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    DriverLicenseBackImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     VerificationStatus = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
@@ -122,6 +181,58 @@ namespace BusinessObjects.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ExportJobs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RequestedBy = table.Column<int>(type: "int", nullable: false),
+                    ExportType = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    ParamsJson = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    FileUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    ErrorMessage = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExportJobs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ExportJobs_Users_RequestedBy",
+                        column: x => x.RequestedBy,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    TokenHash = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    ExpiresAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    RevokedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ReplacedByTokenHash = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: true),
+                    CreatedByIp = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true),
+                    RevokedByIp = table.Column<string>(type: "nvarchar(64)", maxLength: 64, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Cars",
                 columns: table => new
                 {
@@ -130,15 +241,22 @@ namespace BusinessObjects.Migrations
                     OwnerId = table.Column<int>(type: "int", nullable: false),
                     CarBrandId = table.Column<int>(type: "int", nullable: false),
                     CarModelId = table.Column<int>(type: "int", nullable: false),
+                    CarTypeId = table.Column<int>(type: "int", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     LicensePlate = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Year = table.Column<short>(type: "smallint", nullable: true),
+                    Color = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    KilometersDriven = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     Location = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     DailyPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    PricePerHour = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false, defaultValue: 0m),
                     InsuranceFeePerDay = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     DeliveryFee = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     DepositAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
+                    PreviousStatus = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
+                    BlockedReason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     SeatCount = table.Column<int>(type: "int", nullable: false),
                     TransmissionType = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     FuelType = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
@@ -158,6 +276,12 @@ namespace BusinessObjects.Migrations
                         name: "FK_Cars_CarModels_CarModelId",
                         column: x => x.CarModelId,
                         principalTable: "CarModels",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Cars_CarTypes_CarTypeId",
+                        column: x => x.CarTypeId,
+                        principalTable: "CarTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -246,7 +370,8 @@ namespace BusinessObjects.Migrations
                     CitizenIdFrontImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CitizenIdBackImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     DriverLicenseNumber = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
-                    DriverLicenseImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    DriverLicenseFrontImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    DriverLicenseBackImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -328,7 +453,8 @@ namespace BusinessObjects.Migrations
                     StartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Reason = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
-                    BookingId = table.Column<int>(type: "int", nullable: true)
+                    BookingId = table.Column<int>(type: "int", nullable: true),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -496,21 +622,45 @@ namespace BusinessObjects.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "Address", "AvatarUrl", "CreatedAt", "DateOfBirth", "Email", "FullName", "PasswordHash", "PhoneNumber", "Role", "Status", "UpdatedAt" },
+                table: "CarBrands",
+                columns: new[] { "Id", "IsActive", "Name" },
+                values: new object[] { 1, true, "Toyota" });
+
+            migrationBuilder.InsertData(
+                table: "CarTypes",
+                columns: new[] { "Id", "IsActive", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Ho Chi Minh City", null, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateOnly(1990, 1, 1), "admin@vivucar.local", "System Admin", "SeedPasswordHash_Admin123", "0900000001", "Admin", "Active", null },
-                    { 2, "District 1, Ho Chi Minh City", null, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateOnly(1998, 3, 12), "customer01@vivucar.local", "Nguyen Van An", "SeedPasswordHash_Customer123", "0900000002", "Customer", "Active", null },
-                    { 3, "Thu Duc City, Ho Chi Minh City", null, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateOnly(1997, 7, 21), "customer02@vivucar.local", "Tran Thi Binh", "SeedPasswordHash_Customer123", "0900000003", "Customer", "Active", null },
-                    { 4, "Da Nang", null, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateOnly(1995, 11, 5), "customer03@vivucar.local", "Le Minh Chau", "SeedPasswordHash_Customer123", "0900000004", "Customer", "Active", null },
-                    { 5, "Can Tho", null, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateOnly(1996, 9, 18), "customer04@vivucar.local", "Pham Gia Huy", "SeedPasswordHash_Customer123", "0900000005", "Customer", "Locked", null },
-                    { 6, "District 7, Ho Chi Minh City", null, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateOnly(1988, 4, 9), "owner01@vivucar.local", "Vo Quoc Khanh", "SeedPasswordHash_Owner123", "0900000006", "CarOwner", "Active", null },
-                    { 7, "Binh Thanh, Ho Chi Minh City", null, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateOnly(1985, 12, 2), "owner02@vivucar.local", "Dang Hoang Long", "SeedPasswordHash_Owner123", "0900000007", "CarOwner", "Active", null },
-                    { 8, "Nha Trang", null, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateOnly(1992, 6, 30), "owner03@vivucar.local", "Hoang Bao Tram", "SeedPasswordHash_Owner123", "0900000008", "CarOwner", "Active", null },
-                    { 9, "Ha Noi", null, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateOnly(1987, 8, 14), "owner04@vivucar.local", "Bui Thanh Son", "SeedPasswordHash_Owner123", "0900000009", "CarOwner", "Locked", null },
-                    { 10, "Ho Chi Minh City", null, new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), new DateOnly(1991, 10, 25), "admin02@vivucar.local", "Support Admin", "SeedPasswordHash_Admin123", "0900000010", "Admin", "Active", null }
+                    { 1, true, "Sedan" },
+                    { 2, true, "SUV" },
+                    { 3, true, "Hatchback" },
+                    { 4, true, "MPV" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Vouchers",
+                columns: new[] { "Id", "Code", "CreatedAt", "DiscountType", "DiscountValue", "ExpiresAt", "MaxDiscount", "MinOrderAmount", "Name", "Quantity" },
+                values: new object[] { 1, "VIVUCAR10", new DateTime(2026, 6, 1, 0, 0, 0, 0, DateTimeKind.Utc), "percentage", 10m, new DateTime(2026, 12, 31, 23, 59, 59, 0, DateTimeKind.Utc), 250000m, 500000m, "VivuCar 10%", 100 });
+
+            migrationBuilder.InsertData(
+                table: "CarModels",
+                columns: new[] { "Id", "CarBrandId", "IsActive", "Name" },
+                values: new object[] { 1, 1, true, "Vios" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdminAuditLogs_Action",
+                table: "AdminAuditLogs",
+                column: "Action");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdminAuditLogs_AdminUserId",
+                table: "AdminAuditLogs",
+                column: "AdminUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdminAuditLogs_EntityType_EntityId",
+                table: "AdminAuditLogs",
+                columns: new[] { "EntityType", "EntityId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_BookingDriverInfos_BookingId",
@@ -603,6 +753,11 @@ namespace BusinessObjects.Migrations
                 column: "CarModelId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cars_CarTypeId",
+                table: "Cars",
+                column: "CarTypeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cars_LicensePlate",
                 table: "Cars",
                 column: "LicensePlate",
@@ -617,6 +772,18 @@ namespace BusinessObjects.Migrations
                 name: "IX_Cars_Status",
                 table: "Cars",
                 column: "Status");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CarTypes_Name",
+                table: "CarTypes",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DailyRevenueSnapshots_SnapshotDate",
+                table: "DailyRevenueSnapshots",
+                column: "SnapshotDate",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DriverDocuments_CitizenIdNumber",
@@ -635,6 +802,16 @@ namespace BusinessObjects.Migrations
                 table: "DriverDocuments",
                 column: "UserId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExportJobs_RequestedBy",
+                table: "ExportJobs",
+                column: "RequestedBy");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExportJobs_Status",
+                table: "ExportJobs",
+                column: "Status");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IncidentReports_BookingId",
@@ -666,6 +843,22 @@ namespace BusinessObjects.Migrations
                 table: "PaymentTransactions",
                 column: "TransactionCode",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_ExpiresAt",
+                table: "RefreshTokens",
+                column: "ExpiresAt");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_TokenHash",
+                table: "RefreshTokens",
+                column: "TokenHash",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_UserId",
+                table: "RefreshTokens",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RentalContracts_BookingId",
@@ -712,6 +905,9 @@ namespace BusinessObjects.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AdminAuditLogs");
+
+            migrationBuilder.DropTable(
                 name: "BookingDriverInfos");
 
             migrationBuilder.DropTable(
@@ -727,7 +923,13 @@ namespace BusinessObjects.Migrations
                 name: "CarImages");
 
             migrationBuilder.DropTable(
+                name: "DailyRevenueSnapshots");
+
+            migrationBuilder.DropTable(
                 name: "DriverDocuments");
+
+            migrationBuilder.DropTable(
+                name: "ExportJobs");
 
             migrationBuilder.DropTable(
                 name: "IncidentReports");
@@ -737,6 +939,9 @@ namespace BusinessObjects.Migrations
 
             migrationBuilder.DropTable(
                 name: "PaymentTransactions");
+
+            migrationBuilder.DropTable(
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
                 name: "RentalContracts");
@@ -755,6 +960,9 @@ namespace BusinessObjects.Migrations
 
             migrationBuilder.DropTable(
                 name: "CarModels");
+
+            migrationBuilder.DropTable(
+                name: "CarTypes");
 
             migrationBuilder.DropTable(
                 name: "Users");

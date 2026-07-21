@@ -1,9 +1,10 @@
-﻿@page "/admin/users"
+@page "/admin/users"
 @model WebClient.Pages.Admin.Users.IndexModel
 @{
     ViewData["Title"] = "Người dùng";
     ViewData["AdminPage"] = "users";
 }
+<div data-admin-users-page>
 
 <div class="page-heading">
           <div>
@@ -114,6 +115,5 @@
       </div>
     </div>
   </div>
-@section Scripts {
-    <script src="~/js/html/admin-users.js" asp-append-version="true"></script>
-}
+</div>
+@section Scripts { <script type="module" src="~/js/admin/users/index.js" asp-append-version="true"></script> }

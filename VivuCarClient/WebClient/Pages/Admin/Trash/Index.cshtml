@@ -1,9 +1,10 @@
-﻿@page "/admin/trash"
+@page "/admin/trash"
 @model WebClient.Pages.Admin.Trash.IndexModel
 @{
     ViewData["Title"] = "Thùng rác";
     ViewData["AdminPage"] = "trash";
 }
+<div data-admin-trash-page>
 
 <div class="page-heading">
           <div>
@@ -64,6 +65,5 @@
       </div>
     </div>
   </div>
-@section Scripts {
-    <script src="~/js/html/admin-trash.js" asp-append-version="true"></script>
-}
+</div>
+@section Scripts { <script type="module" src="~/js/admin/trash/index.js" asp-append-version="true"></script> }

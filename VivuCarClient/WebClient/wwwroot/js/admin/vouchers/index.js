@@ -1,75 +1,13 @@
-import { getVouchers } from "./voucher-api.js";
+import { deleteVoucher,getVoucherPerformance,getVouchers } from "./voucher-api.js";
 import { escapeHtml } from "../../shared/dom.js";
 import { formatVnd } from "../../shared/utils.js";
-
-const root = document.querySelector("[data-admin-vouchers-page]");
-const state = { vouchers: [] };
-
-function normalize(item) {
-    return {
-        id: item.id ?? item.Id,
-        code: item.code ?? item.Code ?? "",
-        name: item.name ?? item.Name ?? "",
-        discount_type: item.discount_type ?? item.discountType ?? item.DiscountType ?? "",
-        discount_value: item.discount_value ?? item.discountValue ?? item.DiscountValue ?? 0,
-        min_order_amount: item.min_order_amount ?? item.minOrderAmount ?? item.MinOrderAmount ?? 0,
-        quantity: item.quantity ?? item.Quantity ?? 0,
-        expires_at: item.expires_at ?? item.expiresAt ?? item.ExpiresAt ?? ""
-    };
-}
-
-function filtered() {
-    const keyword = document.getElementById("searchVoucherInput")?.value.trim().toLowerCase() ?? "";
-    const type = document.getElementById("discountTypeFilter")?.value ?? "";
-    return state.vouchers.filter(voucher => {
-        const matchesKeyword = !keyword || voucher.code.toLowerCase().includes(keyword) || voucher.name.toLowerCase().includes(keyword);
-        const matchesType = !type || voucher.discount_type === type;
-        return matchesKeyword && matchesType;
-    });
-}
-
-function render() {
-    const body = document.getElementById("vouchersTableBody");
-    const vouchers = filtered();
-    if (!body) return;
-
-    if (!vouchers.length) {
-        body.innerHTML = `<tr><td colspan="8" class="empty-cell">Chua c� voucher ph� h?p.</td></tr>`;
-        return;
-    }
-
-    body.innerHTML = vouchers.map(voucher => `<tr>
-        <td>${escapeHtml(voucher.code)}</td>
-        <td>${escapeHtml(voucher.name)}</td>
-        <td>${escapeHtml(voucher.discount_type)}</td>
-        <td>${escapeHtml(voucher.discount_type === "fixed" ? formatVnd(voucher.discount_value) : `${voucher.discount_value}%`)}</td>
-        <td>${escapeHtml(formatVnd(voucher.min_order_amount))}</td>
-        <td>${escapeHtml(voucher.quantity)}</td>
-        <td>${escapeHtml(voucher.expires_at || "-")}</td>
-        <td><a class="button button-secondary" href="/admin/voucher-form/${encodeURIComponent(voucher.id)}">S?a</a></td>
-    </tr>`).join("");
-}
-
-async function loadVouchers() {
-    const body = document.getElementById("vouchersTableBody");
-    if (body) body.innerHTML = `<tr><td colspan="8" class="empty-cell">�ang t?i voucher...</td></tr>`;
-
-    try {
-        const payload = await getVouchers();
-        const items = Array.isArray(payload) ? payload : payload.items ?? payload.Items ?? [];
-        state.vouchers = items.map(normalize);
-        render();
-    } catch (error) {
-        if (body) body.innerHTML = `<tr><td colspan="8" class="empty-cell">${escapeHtml(error.message)}</td></tr>`;
-    }
-}
-
-if (root) {
-    document.getElementById("btnFilterVoucher")?.addEventListener("click", render);
-    document.getElementById("btnResetVoucherFilter")?.addEventListener("click", () => {
-        document.getElementById("searchVoucherInput").value = "";
-        document.getElementById("discountTypeFilter").value = "";
-        render();
-    });
-    loadVouchers();
-}
+import { showToast } from "../../shared/toast.js";
+const root=document.querySelector("[data-admin-vouchers-page]"),byId=id=>document.getElementById(id),state={items:[],totalItems:0};
+const date=value=>value?new Intl.DateTimeFormat("vi-VN").format(new Date(value)):"Không giới hạn";
+function query(){return{page:1,pageSize:100,keyword:byId("searchVoucherInput").value.trim(),status:byId("voucherStatusFilter").value,discount_type:byId("discountTypeFilter").value,from:byId("voucherDateFrom").value,to:byId("voucherDateTo").value}}
+function statusLabel(value){return{active:"Đang hoạt động",expired:"Đã hết hạn",used_up:"Đã dùng hết"}[value]||value}
+function render(){const active=state.items.filter(i=>i.status==="active").length,used=state.items.reduce((sum,i)=>sum+Number(i.usage_count||0),0);byId("voucherSummary").innerHTML='<article class="summary-card"><span>Đang hoạt động</span><strong>'+active+'</strong></article><article class="summary-card"><span>Lượt đã dùng</span><strong>'+used+'</strong></article><article class="summary-card"><span>Tổng voucher</span><strong>'+state.totalItems+'</strong></article>';byId("voucherEmpty").classList.toggle("hidden",!!state.items.length);byId("voucherTableBody").closest(".table-wrap").classList.toggle("hidden",!state.items.length);byId("voucherTableBody").innerHTML=state.items.map(i=>'<tr><td><strong class="font-mono">'+escapeHtml(i.code)+'</strong></td><td>'+escapeHtml(i.name)+'</td><td>'+(i.discount_type==="percentage"?"Phần trăm":"Cố định")+'</td><td>'+(i.discount_type==="percentage"?i.discount_value+"%":formatVnd(i.discount_value))+'</td><td>'+formatVnd(i.min_order_amount)+'</td><td>'+date(i.expires_at)+'</td><td>'+i.usage_count+'/'+i.quantity+'</td><td><span class="status-badge status-'+escapeHtml(i.status)+'">'+escapeHtml(statusLabel(i.status))+'</span></td><td><div class="flex gap-1"><button class="btn btn-ghost btn-sm" data-performance="'+i.id+'">Hiệu quả</button><a class="btn btn-ghost btn-sm" href="/admin/vouchers/form?id='+i.id+'">Sửa</a><button class="btn btn-ghost btn-sm text-red-600" data-delete="'+i.id+'">Xóa</button></div></td></tr>').join("")}
+async function load(){byId("voucherTableBody").innerHTML='<tr><td colspan="9" class="empty-cell">Đang tải voucher...</td></tr>';try{const data=await getVouchers(query());state.items=data.items||[];state.totalItems=data.total_items??state.items.length;render()}catch(error){byId("voucherTableBody").innerHTML='<tr><td colspan="9" class="empty-cell">'+escapeHtml(error.message)+'</td></tr>'}}
+function closeDrawer(){byId("voucherPerformanceDrawer").classList.remove("is-open");byId("drawerOverlay").classList.remove("is-open")}
+async function openPerformance(id){byId("voucherPerformanceDrawer").classList.add("is-open");byId("drawerOverlay").classList.add("is-open");byId("performanceContent").innerHTML="<p>Đang tải thống kê...</p>";try{const d=await getVoucherPerformance(id);byId("performanceContent").innerHTML='<div class="grid gap-3"><article class="summary-card"><span>Tỷ lệ sử dụng</span><strong>'+d.usage_rate+'%</strong></article><article class="summary-card"><span>Doanh thu booking</span><strong>'+formatVnd(d.gross_revenue)+'</strong></article><article class="summary-card"><span>Tổng giảm</span><strong>'+formatVnd(d.discount_total)+'</strong></article></div>'}catch(error){byId("performanceContent").textContent=error.message}}
+if(root){byId("btnFilterVoucher").onclick=load;byId("btnResetVoucherFilter").onclick=()=>{["searchVoucherInput","voucherStatusFilter","discountTypeFilter","voucherDateFrom","voucherDateTo"].forEach(id=>byId(id).value="");load()};byId("voucherTableBody").onclick=async event=>{const perf=event.target.closest("[data-performance]");if(perf)return openPerformance(perf.dataset.performance);const remove=event.target.closest("[data-delete]");if(!remove||!confirm("Xóa voucher này?"))return;try{await deleteVoucher(remove.dataset.delete);showToast("Đã xóa voucher.","success");load()}catch(error){showToast(error.message,"error")}};byId("btnClosePerformance").onclick=closeDrawer;byId("drawerOverlay").onclick=closeDrawer;load()}
