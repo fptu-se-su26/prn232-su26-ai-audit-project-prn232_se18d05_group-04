@@ -47,7 +47,7 @@ public static class BaseSeed
             );
         }
 
-        var snapshotsAdded = await SeedRevenueSnapshotsAsync(dbContext, cancellationToken);
+        var snapshotsAdded = await RefreshRevenueSnapshotsAsync(dbContext, cancellationToken);
         return new BaseSeedResult(bookingsAdded, reviewsAdded, paymentsAdded, snapshotsAdded);
     }
 
@@ -142,36 +142,87 @@ public static class BaseSeed
         return (bookingsAdded, reviewsAdded, paymentsAdded);
     }
 
-    private static async Task<int> SeedRevenueSnapshotsAsync(
+    public static async Task<int> RefreshRevenueSnapshotsAsync(
         VivuCarDbContext dbContext,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken = default
     )
     {
-        var added = 0;
-        for (var index = 0; index < 5; index++)
-        {
-            var date = new DateOnly(2026, 6, 20 + index);
-            if (await dbContext.DailyRevenueSnapshots.AnyAsync(
-                    snapshot => snapshot.SnapshotDate == date,
-                    cancellationToken
-                )) continue;
-
-            var gross = 2250000m + index * 475000m;
-            dbContext.DailyRevenueSnapshots.Add(new DailyRevenueSnapshot
+        var bookings = await dbContext.Bookings
+            .AsNoTracking()
+            .Include(booking => booking.PaymentTransactions)
+            .ToListAsync(cancellationToken);
+        var generatedAt = DateTime.UtcNow;
+        var calculatedSnapshots = bookings
+            .GroupBy(booking => DateOnly.FromDateTime(booking.CreatedAt))
+            .Select(group =>
             {
-                SnapshotDate = date,
-                TotalBookings = 3 + index,
-                CompletedBookings = 2 + index,
-                CancelledBookings = index % 2,
-                GrossRevenue = gross,
-                NetRevenue = decimal.Round(gross * 0.9m, 0),
-                DepositCollected = 3000000m + index * 500000m,
-                GeneratedAt = date.ToDateTime(new TimeOnly(23, 0), DateTimeKind.Utc)
-            });
-            added++;
+                var grossRevenue = group.Sum(booking => booking.PaymentTransactions
+                    .Where(payment => payment.Status == PaymentStatus.Success)
+                    .Sum(payment => payment.Amount));
+                var depositCollected = group.Sum(booking => Math.Min(
+                    booking.DepositAmount,
+                    booking.PaymentTransactions
+                        .Where(payment => payment.Status == PaymentStatus.Success)
+                        .Sum(payment => payment.Amount)));
+
+                return new DailyRevenueSnapshot
+                {
+                    SnapshotDate = group.Key,
+                    TotalBookings = group.Count(),
+                    CompletedBookings = group.Count(booking => booking.Status == BookingStatus.Completed),
+                    CancelledBookings = group.Count(booking =>
+                        booking.Status is BookingStatus.Cancelled or BookingStatus.Expired),
+                    GrossRevenue = grossRevenue,
+                    NetRevenue = grossRevenue,
+                    DepositCollected = depositCollected,
+                    GeneratedAt = generatedAt
+                };
+            })
+            .OrderBy(snapshot => snapshot.SnapshotDate)
+            .ToList();
+
+        var existingSnapshots = await dbContext.DailyRevenueSnapshots
+            .ToListAsync(cancellationToken);
+        var calculatedDates = calculatedSnapshots
+            .Select(snapshot => snapshot.SnapshotDate)
+            .ToHashSet();
+        var staleSnapshots = existingSnapshots
+            .Where(snapshot => !calculatedDates.Contains(snapshot.SnapshotDate))
+            .ToList();
+        dbContext.DailyRevenueSnapshots.RemoveRange(staleSnapshots);
+
+        var changed = staleSnapshots.Count;
+        var existingByDate = existingSnapshots.ToDictionary(snapshot => snapshot.SnapshotDate);
+        foreach (var calculated in calculatedSnapshots)
+        {
+            if (!existingByDate.TryGetValue(calculated.SnapshotDate, out var existing))
+            {
+                dbContext.DailyRevenueSnapshots.Add(calculated);
+                changed++;
+                continue;
+            }
+
+            if (existing.TotalBookings == calculated.TotalBookings
+                && existing.CompletedBookings == calculated.CompletedBookings
+                && existing.CancelledBookings == calculated.CancelledBookings
+                && existing.GrossRevenue == calculated.GrossRevenue
+                && existing.NetRevenue == calculated.NetRevenue
+                && existing.DepositCollected == calculated.DepositCollected)
+            {
+                continue;
+            }
+
+            existing.TotalBookings = calculated.TotalBookings;
+            existing.CompletedBookings = calculated.CompletedBookings;
+            existing.CancelledBookings = calculated.CancelledBookings;
+            existing.GrossRevenue = calculated.GrossRevenue;
+            existing.NetRevenue = calculated.NetRevenue;
+            existing.DepositCollected = calculated.DepositCollected;
+            existing.GeneratedAt = generatedAt;
+            changed++;
         }
 
         await dbContext.SaveChangesAsync(cancellationToken);
-        return added;
+        return changed;
     }
 }

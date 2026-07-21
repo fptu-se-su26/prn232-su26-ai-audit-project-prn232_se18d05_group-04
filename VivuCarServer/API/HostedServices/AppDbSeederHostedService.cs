@@ -1,4 +1,5 @@
 using BusinessObjects.Data;
+using BusinessObjects.Data.Seed;
 using BusinessObjects.Enums;
 using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
@@ -112,6 +113,8 @@ public class AppDbSeederHostedService(
         // ── 5. Bookings & Payments & Incidents ────────────────────────────────
         logger.LogInformation("[Seeder] Seeding bookings...");
         await SeedBookingsAsync(db, customer1, customer2, owner1, owner2, car1, car2, car3, car4, car6, cancellationToken);
+        var snapshotsChanged = await BaseSeed.RefreshRevenueSnapshotsAsync(db, cancellationToken);
+        logger.LogInformation("[Seeder] Revenue snapshots synchronized: {SnapshotsChanged} changed.", snapshotsChanged);
 
         logger.LogInformation("[Seeder] Seed completed successfully.");
     }

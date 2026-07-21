@@ -1,4 +1,4 @@
-﻿using Repositories.Interfaces;
+using Repositories.Interfaces;
 using Services.Interfaces;
 using Services.Models.Admin;
 
@@ -11,6 +11,8 @@ public class AdminReportService(IAdminReportRepository repository) : IAdminRepor
     public async Task<AdminRevenueReportResponse> GetRevenueAsync(
         DateOnly from,
         DateOnly to,
+        int page = 1,
+        int pageSize = 5,
         CancellationToken cancellationToken = default)
     {
         if (from > to)
@@ -23,8 +25,26 @@ public class AdminReportService(IAdminReportRepository repository) : IAdminRepor
             throw new AdminReportValidationException($"Date range cannot exceed {MaximumRangeDays} days.");
         }
 
+        if (page < 1)
+        {
+            throw new AdminReportValidationException("page must be at least 1.");
+        }
+
+        if (pageSize is < 1 or > 50)
+        {
+            throw new AdminReportValidationException("pageSize must be between 1 and 50.");
+        }
+
         var snapshots = await repository.GetRevenueSnapshotsAsync(from, to, cancellationToken);
-        var recentBookings = await repository.GetRecentBookingsAsync(from, to, 10, cancellationToken);
+        var totalBookingItems = await repository.CountBookingsAsync(from, to, cancellationToken);
+        var totalPages = Math.Max(1, (int)Math.Ceiling(totalBookingItems / (double)pageSize));
+        var resolvedPage = Math.Min(page, totalPages);
+        var recentBookings = await repository.GetBookingsPageAsync(
+            from,
+            to,
+            (resolvedPage - 1) * pageSize,
+            pageSize,
+            cancellationToken);
         var totalBookings = snapshots.Sum(item => item.TotalBookings);
         var completedBookings = snapshots.Sum(item => item.CompletedBookings);
         var cancelledBookings = snapshots.Sum(item => item.CancelledBookings);
@@ -55,6 +75,13 @@ public class AdminReportService(IAdminReportRepository repository) : IAdminRepor
                 CompletedBookings = item.CompletedBookings,
                 CancelledBookings = item.CancelledBookings
             }).ToList(),
+            Pagination = new AdminRevenuePagination
+            {
+                Page = resolvedPage,
+                PageSize = pageSize,
+                TotalItems = totalBookingItems,
+                TotalPages = totalPages
+            },
             RecentBookings = recentBookings.Select(item => new AdminRevenueRecentBooking
             {
                 Id = item.Id,

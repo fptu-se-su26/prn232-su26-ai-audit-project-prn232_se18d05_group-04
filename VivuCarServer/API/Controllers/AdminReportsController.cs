@@ -1,4 +1,4 @@
-﻿using Repositories.Models;
+using Repositories.Models;
 using API.Models;
 using BusinessObjects.Security;
 using Microsoft.AspNetCore.Authorization;
@@ -36,6 +36,8 @@ public class AdminReportsController(IAdminReportService reportService) : Control
     public async Task<ActionResult<AdminRevenueReportResponse>> GetRevenue(
         [FromQuery] DateOnly? from,
         [FromQuery] DateOnly? to,
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize,
         CancellationToken cancellationToken)
     {
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
@@ -44,7 +46,12 @@ public class AdminReportsController(IAdminReportService reportService) : Control
 
         try
         {
-            return Ok(await reportService.GetRevenueAsync(resolvedFrom, resolvedTo, cancellationToken));
+            return Ok(await reportService.GetRevenueAsync(
+                resolvedFrom,
+                resolvedTo,
+                page ?? 1,
+                pageSize ?? 5,
+                cancellationToken));
         }
         catch (AdminReportValidationException exception)
         {
