@@ -111,9 +111,9 @@
             </div>
 
             <!-- Right: Booking + Owner -->
-            <div class="space-y-5">
+            <div class="space-y-5 sticky top-20 self-start">
                 <!-- Booking Card -->
-                <div class="bg-white rounded-2xl border border-zinc-200 p-5 space-y-4 sticky top-24">
+                <div class="bg-white rounded-2xl border border-zinc-200 p-5 space-y-4">
                     <div>
                         <p id="cardBrand" class="text-xs text-zinc-400 font-semibold uppercase tracking-wide mb-1"></p>
                         <h1 id="cardName" class="text-xl font-bold text-zinc-900 leading-tight"></h1>
@@ -161,8 +161,10 @@
                     <!-- CTAs -->
                     <div class="space-y-2">
                         <a id="btnBook" href="#"
-                           class="block w-full text-center bg-primary hover:bg-green-700 text-white font-bold py-3 rounded-xl text-sm transition-colors">
-                            Book This Car
+                           style="display:block;width:100%;text-align:center;background:#16a34a;color:#ffffff;font-weight:700;padding:12px 0;border-radius:12px;font-size:0.875rem;text-decoration:none;transition:background 0.2s;"
+                           onmouseover="if(this.dataset.available!=='false') this.style.background='#15803d'"
+                           onmouseout="if(this.dataset.available!=='false') this.style.background='#16a34a'">
+                            Book Car
                         </a>
                         <button id="btnContact"
                                 class="w-full border border-zinc-200 text-zinc-700 font-semibold py-3 rounded-xl text-sm hover:bg-zinc-50 transition-colors">
@@ -192,7 +194,6 @@
         &copy; 2026 VivuCar &mdash; Self-Drive Car Rental
     </footer>
 
-    @section Scripts {
     <script type="module">
         import { authService } from '/js/shared/auth-service.js';
         authService.refresh().then(s => {
@@ -224,7 +225,7 @@
                 if (!r.ok) { showError(); return; }
                 CAR = await r.json();
                 renderCar();
-            } catch { showError(); }
+            } catch(e) { console.error('Failed to load car detail:', e); showError(); }
         }
 
         function renderCar() {
@@ -242,13 +243,35 @@
             document.getElementById('depositInfo').textContent = `Deposit: ${fmt(CAR.depositAmount)}  ·  Insurance: ${fmt(CAR.insuranceFeePerDay)}/day`;
             document.getElementById('ratingBadge').textContent = `★ ${(CAR.averageRating||0).toFixed(1)}  (${(CAR.reviews||[]).length} reviews)`;
 
-            const ok = (CAR.status||'').toLowerCase() === 'available';
+            const st = (CAR.status||'Available').toLowerCase();
+            const ok = st === 'available';
             const sb = document.getElementById('statusBadge');
-            sb.textContent = ok ? '✓ Available' : 'Unavailable';
-            sb.className = `text-xs font-semibold px-3 py-1 rounded-full ${ok?'bg-green-100 text-green-700':'bg-zinc-100 text-zinc-500'}`;
+            if (st === 'available') {
+                sb.textContent = '✓ Available';
+                sb.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700';
+            } else if (st === 'rented') {
+                sb.textContent = 'Rented';
+                sb.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-amber-100 text-amber-700';
+            } else if (st === 'maintenance') {
+                sb.textContent = 'Maintenance';
+                sb.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-orange-100 text-orange-700';
+            } else {
+                sb.textContent = CAR.status || 'Unavailable';
+                sb.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-zinc-100 text-zinc-500';
+            }
 
-            document.getElementById('btnBook').href = ok ? `/booking-checkout?carId=${CAR.id}` : '#';
-            if (!ok) document.getElementById('btnBook').className = 'block w-full text-center bg-zinc-200 text-zinc-400 font-bold py-3 rounded-xl text-sm cursor-not-allowed';
+            const btnBook = document.getElementById('btnBook');
+            if (ok) {
+                btnBook.href = `/booking-checkout?carId=${CAR.id}`;
+                btnBook.textContent = 'Book Car';
+                btnBook.dataset.available = 'true';
+                btnBook.style.cssText = 'display:block;width:100%;text-align:center;background:#16a34a;color:#ffffff;font-weight:700;padding:12px 0;border-radius:12px;font-size:0.875rem;text-decoration:none;transition:background 0.2s;cursor:pointer;';
+            } else {
+                btnBook.href = '#';
+                btnBook.textContent = st === 'rented' ? 'Currently Rented' : (st === 'maintenance' ? 'Under Maintenance' : 'Unavailable');
+                btnBook.dataset.available = 'false';
+                btnBook.style.cssText = 'display:block;width:100%;text-align:center;background:#e4e4e7;color:#a1a1aa;font-weight:700;padding:12px 0;border-radius:12px;font-size:0.875rem;text-decoration:none;cursor:not-allowed;';
+            }
 
             document.getElementById('ownerName').textContent = CAR.ownerFullName || 'Car Owner';
             if (CAR.ownerAvatarUrl) document.getElementById('ownerAvatar').innerHTML = `<img src="${CAR.ownerAvatarUrl}" class="w-full h-full object-cover" />`;
@@ -394,6 +417,5 @@
 
         loadCar();
     </script>
-    }
 </body>
 </html>

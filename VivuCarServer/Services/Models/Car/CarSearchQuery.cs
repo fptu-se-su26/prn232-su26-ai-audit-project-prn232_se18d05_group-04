@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Services.Models.Car;
 
@@ -10,8 +11,8 @@ public class CarSearchQuery
     public decimal? MinPrice { get; set; }
     public decimal? MaxPrice { get; set; }
     public string? Location { get; set; }
-    public int? TransmissionType { get; set; } // 1 = Manual, 2 = Automatic
-    public int? FuelType { get; set; }         // FuelType enum values
+    public int? TransmissionType { get; set; } // 1 = Manual, 2 = Automatic, 3 = CVT
+    public List<int>? FuelType { get; set; }   // List of FuelType enum values (1=Gasoline,2=Diesel,3=Electric,4=Hybrid)
     public int? SeatCount { get; set; }
     public double? MinRating { get; set; }
     public DateTime? StartDate { get; set; }

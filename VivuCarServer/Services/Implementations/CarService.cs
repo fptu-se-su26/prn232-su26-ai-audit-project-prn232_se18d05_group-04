@@ -144,7 +144,25 @@ public class CarService(ICarRepository carRepository) : ICarService
             Fuel = c.FuelType.ToString(),
             AverageRating = avgRating,
             TotalBookings = c.Bookings?.Count ?? 0,
-            OwnerName = c.Owner?.FullName ?? string.Empty
+            OwnerName = c.Owner?.FullName ?? string.Empty,
+            Status = c.Status.ToString()
+        };
+    }
+
+    public async Task<CarFilterOptionsDto> GetFilterOptionsAsync(CancellationToken cancellationToken = default)
+    {
+        var (brands, districts, seatCounts, transmissions, fuelTypes, minPrice, maxPrice) =
+            await carRepository.GetFilterOptionsAsync(cancellationToken);
+
+        return new CarFilterOptionsDto
+        {
+            Brands      = brands,
+            Districts   = districts,
+            SeatCounts  = seatCounts,
+            Transmissions = transmissions,
+            FuelTypes   = fuelTypes,
+            MinPrice    = minPrice,
+            MaxPrice    = maxPrice
         };
     }
 }

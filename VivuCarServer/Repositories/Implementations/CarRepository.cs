@@ -100,7 +100,7 @@ public class CarRepository(VivuCarDbContext dbContext) : ICarRepository
         decimal? maxPrice,
         string? location,
         int? transmissionType,
-        int? fuelType,
+        IReadOnlyList<int>? fuelTypes,
         int? seatCount,
         double? minRating,
         DateTime? startDate,
@@ -112,13 +112,12 @@ public class CarRepository(VivuCarDbContext dbContext) : ICarRepository
     )
     {
         // Only show available cars that are not locked, pending or unavailable
-        var query = dbContext.Cars
+        IQueryable<Car> query = dbContext.Cars
             .Include(c => c.CarBrand)
             .Include(c => c.CarModel)
             .Include(c => c.Images)
             .Include(c => c.Reviews)
-            .Include(c => c.Owner)
-            .Where(c => c.Status == CarStatus.Available);
+            .Include(c => c.Owner);
 
         // Brands filter (comma-separated list)
         if (!string.IsNullOrWhiteSpace(brands))
@@ -159,7 +158,22 @@ public class CarRepository(VivuCarDbContext dbContext) : ICarRepository
         if (!string.IsNullOrWhiteSpace(location))
         {
             var loc = location.Trim().ToLower();
-            query = query.Where(c => c.Location.ToLower().Contains(loc));
+            if (loc.Contains("hai chau") || loc.Contains("hải châu"))
+                query = query.Where(c => c.Location.ToLower().Contains("hải châu") || c.Location.ToLower().Contains("hai chau"));
+            else if (loc.Contains("thanh khe") || loc.Contains("thanh khê"))
+                query = query.Where(c => c.Location.ToLower().Contains("thanh khê") || c.Location.ToLower().Contains("thanh khe"));
+            else if (loc.Contains("son tra") || loc.Contains("sơn trà"))
+                query = query.Where(c => c.Location.ToLower().Contains("sơn trà") || c.Location.ToLower().Contains("son tra"));
+            else if (loc.Contains("ngu hanh son") || loc.Contains("ngũ hành sơn"))
+                query = query.Where(c => c.Location.ToLower().Contains("ngũ hành sơn") || c.Location.ToLower().Contains("ngu hanh son"));
+            else if (loc.Contains("lien chieu") || loc.Contains("liên chiểu"))
+                query = query.Where(c => c.Location.ToLower().Contains("liên chiểu") || c.Location.ToLower().Contains("lien chieu"));
+            else if (loc.Contains("cam le") || loc.Contains("cẩm lệ"))
+                query = query.Where(c => c.Location.ToLower().Contains("cẩm lệ") || c.Location.ToLower().Contains("cam le"));
+            else if (loc.Contains("hoa vang") || loc.Contains("hòa vang"))
+                query = query.Where(c => c.Location.ToLower().Contains("hòa vang") || c.Location.ToLower().Contains("hoa vang"));
+            else
+                query = query.Where(c => c.Location.ToLower().Contains(loc));
         }
 
         if (transmissionType.HasValue)
@@ -168,10 +182,10 @@ public class CarRepository(VivuCarDbContext dbContext) : ICarRepository
             query = query.Where(c => c.TransmissionType == transmission);
         }
 
-        if (fuelType.HasValue)
+        if (fuelTypes != null && fuelTypes.Count > 0)
         {
-            var fuel = (FuelType)fuelType.Value;
-            query = query.Where(c => c.FuelType == fuel);
+            var fuelEnums = fuelTypes.Select(f => (FuelType)f).ToList();
+            query = query.Where(c => fuelEnums.Contains(c.FuelType));
         }
 
         if (seatCount.HasValue)
@@ -496,5 +510,40 @@ public class CarRepository(VivuCarDbContext dbContext) : ICarRepository
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .Take(8)
             .ToList();
+    }
+
+    public async Task<(IReadOnlyList<string> Brands, IReadOnlyList<string> Districts, IReadOnlyList<int> SeatCounts, IReadOnlyList<string> Transmissions, IReadOnlyList<string> FuelTypes, decimal MinPrice, decimal MaxPrice)> GetFilterOptionsAsync(CancellationToken cancellationToken = default)
+    {
+        var brands = await dbContext.CarBrands
+            .Where(b => b.IsActive)
+            .Select(b => b.Name)
+            .Distinct()
+            .OrderBy(b => b)
+            .ToListAsync(cancellationToken);
+        if (!brands.Any())
+        {
+            brands = ["VinFast", "Toyota", "Kia", "Hyundai", "Honda", "Mazda", "Ford", "Chevrolet", "Mercedes", "BMW"];
+        }
+
+        var districts = new List<string> { "Hải Châu", "Thanh Khê", "Sơn Trà", "Ngũ Hành Sơn", "Liên Chiểu", "Cẩm Lệ", "Hòa Vàng" };
+
+        var seatCounts = await dbContext.Cars
+            .Select(c => c.SeatCount)
+            .Distinct()
+            .OrderBy(s => s)
+            .ToListAsync(cancellationToken);
+        if (!seatCounts.Any()) seatCounts = [4, 5, 7];
+
+        var transmissions = new List<string> { "Automatic", "Manual", "Cvt" };
+        var fuelTypes = new List<string> { "Gasoline", "Diesel", "Electric", "Hybrid" };
+
+        var prices = await dbContext.Cars
+            .Select(c => c.DailyPrice)
+            .ToListAsync(cancellationToken);
+
+        var minPrice = prices.Any() ? prices.Min() : 0m;
+        var maxPrice = prices.Any() ? prices.Max() : 5_000_000m;
+
+        return (brands, districts, seatCounts, transmissions, fuelTypes, minPrice, maxPrice);
     }
 }
