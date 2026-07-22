@@ -10,16 +10,22 @@ if not exist "%WEBCLIENT_DIR%\WebClient.csproj" (
 
 pushd "%WEBCLIENT_DIR%"
 
-echo [1/3] Installing frontend dependencies...
+echo [1/4] Installing frontend dependencies...
 call npm ci
 if errorlevel 1 goto :fail
 
-echo [2/3] Building Tailwind CSS...
+echo [2/4] Building Tailwind CSS...
 call npm run build:css
 if errorlevel 1 goto :fail
 
-echo [3/3] Starting VivuCar WebClient...
-dotnet run
+echo [3/4] Building VivuCar WebClient...
+dotnet build --nologo -p:UseAppHost=false
+if errorlevel 1 goto :fail
+
+echo [4/4] Starting VivuCar WebClient at http://localhost:5162...
+set "ASPNETCORE_ENVIRONMENT=Development"
+set "ASPNETCORE_URLS=http://localhost:5162"
+dotnet ".\bin\Debug\net8.0\WebClient.dll"
 set "EXIT_CODE=%ERRORLEVEL%"
 popd
 exit /b %EXIT_CODE%
