@@ -180,6 +180,21 @@
         const fmt = n => (n || 0).toLocaleString('vi-VN') + '₫';
         const starsHtml = r => { const f = Math.round(r || 0); return '★'.repeat(f) + '☆'.repeat(5 - f); };
 
+        function getStatusBadge(status) {
+            const s = (status || 'Available').toLowerCase();
+            if (s === 'available') {
+                return `<span class="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">Available</span>`;
+            } else if (s === 'rented') {
+                return `<span class="absolute top-3 left-3 bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">Rented</span>`;
+            } else if (s === 'maintenance') {
+                return `<span class="absolute top-3 left-3 bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">Maintenance</span>`;
+            } else if (s === 'blocked') {
+                return `<span class="absolute top-3 left-3 bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">Blocked</span>`;
+            } else {
+                return `<span class="absolute top-3 left-3 bg-zinc-100 text-zinc-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">${status}</span>`;
+            }
+        }
+
         function carCard(car) {
             const img = car.primaryImageUrl
                 ? `<img src="${car.primaryImageUrl}" alt="${car.name}" class="w-full h-48 object-cover" loading="lazy">`
@@ -187,7 +202,7 @@
             const fuel = { Gasoline:'Gasoline', Electric:'Electric', Diesel:'Diesel', Hybrid:'Hybrid' };
             return `<article class="car-card bg-white rounded-2xl border border-zinc-200 overflow-hidden flex flex-col">
                 <div class="relative overflow-hidden">${img}
-                    <span class="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">Available</span>
+                    ${getStatusBadge(car.status)}
                 </div>
                 <div class="p-4 flex flex-col flex-1">
                     <p class="text-xs text-zinc-400 font-medium mb-1">${car.brandName || ''}</p>
@@ -203,7 +218,7 @@
                     </div>
                     <div class="mt-auto flex items-center justify-between">
                         <div><span class="font-bold text-zinc-900">${fmt(car.dailyPrice)}</span><span class="text-xs text-zinc-400">/day</span></div>
-                        <a href="/cars/detail?id=${car.id}" class="text-xs font-semibold bg-primary/10 text-primary hover:bg-primary hover:text-white px-3 py-1.5 rounded-lg transition-colors">View Details</a>
+                        <a href="/cars/detail?id=${car.id}" style="background:#f0fdf4; color:#15803d; font-size:0.75rem; font-weight:600; padding:6px 14px; border-radius:10px; text-decoration:none; transition:all 0.2s;" onmouseover="this.style.background='#16a34a'; this.style.color='#ffffff';" onmouseout="this.style.background='#f0fdf4'; this.style.color='#15803d';">View Details</a>
                     </div>
                 </div>
             </article>`;
@@ -228,14 +243,15 @@
 
         async function loadAvailable() {
             try {
-                const r = await fetch('/api/proxy/cars?pageSize=8&sortBy=newest');
+                const r = await fetch('/api/proxy/cars?pageSize=50&sortBy=newest');
                 if (!r.ok) throw new Error(r.status);
                 const data = await r.json();
-                const items = data.items ?? [];
-                document.getElementById('availableCarsGrid').innerHTML = items.length ? items.map(carCard).join('') : empty('No cars available.');
+                const allItems = data.items ?? [];
+                const availableItems = allItems.filter(c => (c.status || 'Available').toLowerCase() === 'available').slice(0, 8);
+                document.getElementById('availableCarsGrid').innerHTML = availableItems.length ? availableItems.map(carCard).join('') : empty('No cars available.');
                 if (data.totalCount != null) {
                     document.getElementById('homeStats').innerHTML = `
-                        <div><div class="text-3xl font-extrabold text-zinc-900">${data.totalCount}+</div><div class="text-sm text-zinc-500 mt-1">Cars Available</div></div>
+                        <div><div class="text-3xl font-extrabold text-zinc-900">${availableItems.length}+</div><div class="text-sm text-zinc-500 mt-1">Cars Available</div></div>
                         <div><div class="text-3xl font-extrabold text-zinc-900">7</div><div class="text-sm text-zinc-500 mt-1">Pickup Areas</div></div>
                         <div><div class="text-3xl font-extrabold text-zinc-900">4.8★</div><div class="text-sm text-zinc-500 mt-1">Avg. Rating</div></div>`;
                 }
@@ -256,6 +272,25 @@
         });
         document.getElementById('homeSearchInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btnQuickSearch').click(); });
 
+        async function loadFilterOptions() {
+            try {
+                const r = await fetch('/api/proxy/cars/filter-options');
+                if (!r.ok) return;
+                const opt = await r.json();
+                if (Array.isArray(opt.districts) && opt.districts.length) {
+                    document.getElementById('homeLocationSelect').innerHTML =
+                        '<option value="" style="color:#09090b;">All areas</option>' +
+                        opt.districts.map(d => `<option value="${d}" style="color:#09090b;">${d}</option>`).join('');
+                }
+                if (Array.isArray(opt.seatCounts) && opt.seatCounts.length) {
+                    document.getElementById('seatQuickSelect').innerHTML =
+                        '<option value="" style="color:#09090b;">All</option>' +
+                        opt.seatCounts.map(s => `<option value="${s}" style="color:#09090b;">${s} seats</option>`).join('');
+                }
+            } catch(e) {}
+        }
+
+        loadFilterOptions();
         loadFeatured();
         loadAvailable();
     </script>

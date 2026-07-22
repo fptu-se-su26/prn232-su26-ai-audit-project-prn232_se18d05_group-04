@@ -117,7 +117,7 @@
                                 <span>Area</span>
                                 <svg class="h-4 w-4 transform group-open:rotate-180 transition-transform duration-200 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                             </summary>
-                            <div class="space-y-2 text-sm mt-2 max-h-40 overflow-y-auto pr-1">
+                            <div id="areaFilters" class="space-y-2 text-sm mt-2 max-h-40 overflow-y-auto pr-1">
                                 @foreach (var loc in new[]{"Hai Chau","Thanh Khe","Son Tra","Ngu Hanh Son","Lien Chieu","Cam Le","Hoa Vang"})
                                 {
                                     <label class="flex items-center gap-2 cursor-pointer">
@@ -150,7 +150,7 @@
                                 <span>Transmission</span>
                                 <svg class="h-4 w-4 transform group-open:rotate-180 transition-transform duration-200 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                             </summary>
-                            <div class="space-y-2 text-sm mt-2">
+                            <div id="transmissionFilters" class="space-y-2 text-sm mt-2">
                                 @foreach (var (lbl, val) in new[]{("All",""),("Automatic","2"),("Manual","1")})
                                 {
                                     <label class="flex items-center gap-2 cursor-pointer">
@@ -167,7 +167,7 @@
                                 <span>Fuel Type</span>
                                 <svg class="h-4 w-4 transform group-open:rotate-180 transition-transform duration-200 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                             </summary>
-                            <div class="space-y-2 text-sm mt-2">
+                            <div id="fuelFilters" class="space-y-2 text-sm mt-2">
                                 @foreach (var (lbl, val) in new[]{("Gasoline","1"),("Diesel","2"),("Electric","3"),("Hybrid","4")})
                                 {
                                     <label class="flex items-center gap-2 cursor-pointer">
@@ -191,7 +191,6 @@
                 <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
                     <div>
                         <h1 id="resultCount" class="font-bold text-zinc-900 text-lg">Loading...</h1>
-                        <p id="resultSubtitle" class="text-xs text-zinc-500 mt-0.5 hidden">Available cars only</p>
                     </div>
                     <select id="sortCars" class="border border-zinc-200 rounded-xl px-4 py-2 text-sm text-zinc-700 focus:outline-none focus:ring-2 focus:ring-primary bg-white">
                         <option value="">Most Relevant</option>
@@ -236,12 +235,27 @@
         const stars = r => { const f = Math.floor(r || 0); return `<span class="text-amber-400">${'★'.repeat(f)}${'☆'.repeat(5-f)}</span>`; };
         const fuelMap = { Gasoline:'Gasoline', Electric:'Electric', Diesel:'Diesel', Hybrid:'Hybrid' };
 
+        function getStatusBadge(status) {
+            const s = (status || 'Available').toLowerCase();
+            if (s === 'available') {
+                return `<span class="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">Available</span>`;
+            } else if (s === 'rented') {
+                return `<span class="absolute top-3 left-3 bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">Rented</span>`;
+            } else if (s === 'maintenance') {
+                return `<span class="absolute top-3 left-3 bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">Maintenance</span>`;
+            } else if (s === 'blocked') {
+                return `<span class="absolute top-3 left-3 bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">Blocked</span>`;
+            } else {
+                return `<span class="absolute top-3 left-3 bg-zinc-100 text-zinc-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">${status}</span>`;
+            }
+        }
+
         function carCard(car) {
             const img = car.primaryImageUrl
                 ? `<img src="${car.primaryImageUrl}" alt="${car.name}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy">`
                 : `<div class="w-full h-48 bg-zinc-200 flex items-center justify-center text-zinc-300 text-5xl">🚗</div>`;
             return `<article class="car-card group bg-white rounded-2xl border border-zinc-200 overflow-hidden flex flex-col">
-                <div class="relative overflow-hidden">${img}<span class="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">Available</span></div>
+                <div class="relative overflow-hidden">${img}${getStatusBadge(car.status)}</div>
                 <div class="p-4 flex flex-col flex-1">
                     <p class="text-xs text-zinc-400 font-medium mb-1">${car.brandName||''}</p>
                     <h3 class="font-bold text-zinc-900 text-sm leading-snug mb-2">${car.name}</h3>
@@ -257,7 +271,7 @@
                     </div>
                     <div class="mt-auto flex items-center justify-between">
                         <div><span class="font-bold text-zinc-900 text-base">${fmt(car.dailyPrice)}</span><span class="text-xs text-zinc-400">/day</span></div>
-                        <a href="/cars/detail?id=${car.id}" class="text-xs font-semibold bg-primary/10 text-primary hover:bg-primary hover:text-white px-4 py-2 rounded-lg transition-colors">View Details</a>
+                        <a href="/cars/detail?id=${car.id}" style="background:#f0fdf4; color:#15803d; font-size:0.75rem; font-weight:600; padding:6px 14px; border-radius:10px; text-decoration:none; transition:all 0.2s;" onmouseover="this.style.background='#16a34a'; this.style.color='#ffffff';" onmouseout="this.style.background='#f0fdf4'; this.style.color='#15803d';">View Details</a>
                     </div>
                 </div>
             </article>`;
@@ -292,7 +306,6 @@
                 const items = data.items ?? [];
                 grid.innerHTML = items.length ? items.map(carCard).join('') : empty('No cars match your search.');
                 document.getElementById('resultCount').textContent = `Found ${data.totalCount||0} car(s)`;
-                document.getElementById('resultSubtitle').classList.remove('hidden');
                 renderPagination(data.totalCount||0);
             } catch(e) {
                 console.error('Load cars error:', e);
@@ -300,19 +313,85 @@
             }
         }
 
-        function loadBrands() {
-            // Hardcoded brand list from seed data (no public /api/cars/brands endpoint)
-            const brands = [
-                'Toyota','Mazda','Kia','Hyundai','Honda',
-                'Ford','Mitsubishi','Chevrolet','VinFast','Mercedes',
-                'BMW','Suzuki','MG','Isuzu'
-            ];
-            document.getElementById('brandFilters').innerHTML =
-                brands.map(b =>
+        function renderBrands(brands) {
+            const sel = STATE.brands || [];
+            const el = document.getElementById('brandFilters');
+            if (el) {
+                el.innerHTML = brands.map(b =>
                     `<label class="flex items-center gap-2 cursor-pointer text-sm">
-                        <input type="checkbox" name="brand" value="${b}" class="rounded accent-green-600"/><span class="text-zinc-700">${b}</span>
+                        <input type="checkbox" name="brand" value="${b}" ${sel.includes(b)?'checked':''} class="rounded accent-green-600"/><span class="text-zinc-700">${b}</span>
                      </label>`
                 ).join('');
+            }
+        }
+
+        async function loadFilterOptions() {
+            const defaultBrands = ['VinFast', 'Toyota', 'Kia', 'Hyundai', 'Honda', 'Mazda', 'Ford', 'Chevrolet', 'Mercedes', 'BMW'];
+            renderBrands(defaultBrands);
+            try {
+                const r = await fetch('/api/proxy/cars/filter-options');
+                if (!r.ok) return;
+                const opt = await r.json();
+
+                // 1. Brands
+                if (Array.isArray(opt.brands) && opt.brands.length) {
+                    renderBrands(opt.brands);
+                }
+
+                // 2. Districts / Area
+                if (Array.isArray(opt.districts) && opt.districts.length) {
+                    document.getElementById('areaFilters').innerHTML = opt.districts.map(d =>
+                        `<label class="flex items-center gap-2 cursor-pointer text-sm">
+                            <input type="checkbox" name="location" value="${d}" ${STATE.location===d?'checked':''} class="rounded accent-green-600"/><span class="text-zinc-700">${d}</span>
+                         </label>`
+                    ).join('');
+                }
+
+                // 3. Seats
+                if (Array.isArray(opt.seatCounts) && opt.seatCounts.length) {
+                    const cur = STATE.seatCount;
+                    document.getElementById('seatFilter').innerHTML =
+                        '<option value="">All</option>' +
+                        opt.seatCounts.map(s => `<option value="${s}" ${String(cur)===String(s)?'selected':''}>${s} seats</option>`).join('');
+                }
+
+                // 4. Transmission
+                if (Array.isArray(opt.transmissions) && opt.transmissions.length) {
+                    const transMap = { 'Manual': 1, 'Automatic': 2, 'Cvt': 3 };
+                    const transLabel = { 'Manual': 'Manual', 'Automatic': 'Automatic', 'Cvt': 'CVT' };
+                    let html = `<label class="flex items-center gap-2 cursor-pointer text-sm">
+                        <input type="radio" name="transmission" value="" ${!STATE.transmissionType?'checked':''} class="accent-green-600" />
+                        <span>All</span>
+                    </label>`;
+                    opt.transmissions.forEach(t => {
+                        const val = transMap[t] || '';
+                        const lbl = transLabel[t] || t;
+                        html += `<label class="flex items-center gap-2 cursor-pointer text-sm">
+                            <input type="radio" name="transmission" value="${val}" ${String(STATE.transmissionType)===String(val)?'checked':''} class="accent-green-600" />
+                            <span>${lbl}</span>
+                        </label>`;
+                    });
+                    document.getElementById('transmissionFilters').innerHTML = html;
+                }
+
+                // 5. Fuel Type
+                const allFuelTypes = ['Gasoline', 'Diesel', 'Electric', 'Hybrid'];
+                const fuelList = (Array.isArray(opt.fuelTypes) && opt.fuelTypes.length >= 4) ? opt.fuelTypes : allFuelTypes;
+                const fuelMap = { 'Gasoline': 1, 'Diesel': 2, 'Electric': 3, 'Hybrid': 4 };
+                const fuelLabel = { 'Gasoline': 'Gasoline', 'Diesel': 'Diesel', 'Electric': 'Electric', 'Hybrid': 'Hybrid' };
+                const curFuels = STATE.fuelTypes || [];
+                document.getElementById('fuelFilters').innerHTML = fuelList.map(f => {
+                    const val = String(fuelMap[f] || f);
+                    const lbl = fuelLabel[f] || f;
+                    const checked = curFuels.includes(val) ? 'checked' : '';
+                    return `<label class="flex items-center gap-2 cursor-pointer text-sm">
+                        <input type="checkbox" name="fuel" value="${val}" ${checked} class="rounded accent-green-600" />
+                        <span class="text-zinc-700">${lbl}</span>
+                    </label>`;
+                }).join('');
+            } catch(e) {
+                console.error('Failed to load filter options:', e);
+            }
         }
 
         async function loadSuggestions(q) {
@@ -427,7 +506,7 @@
             if (btn) { STATE.page=+btn.dataset.p; load(); window.scrollTo({top:0,behavior:'smooth'}); }
         });
 
-        loadBrands(); load();
+        loadFilterOptions(); load();
     </script>
 </body>
 </html>

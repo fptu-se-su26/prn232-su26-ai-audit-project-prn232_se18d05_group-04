@@ -79,13 +79,13 @@ public interface ICarRepository
         decimal? minPrice,
         decimal? maxPrice,
         string? location,
-        int? transmissionType, // 1 = Manual, 2 = Automatic
-        int? fuelType,         // enum FuelType
+        int? transmissionType,             // 1 = Manual, 2 = Automatic, 3 = CVT
+        IReadOnlyList<int>? fuelTypes,     // list of FuelType enum values
         int? seatCount,
         double? minRating,
         DateTime? startDate,
         DateTime? endDate,
-        string? sortBy,        // price_asc, price_desc, rating_desc, bookings_desc, newest
+        string? sortBy,                    // price_asc, price_desc, rating_desc, bookings_desc, newest
         int page,
         int pageSize,
         CancellationToken cancellationToken = default
@@ -94,4 +94,6 @@ public interface ICarRepository
     Task<IReadOnlyList<Car>> GetFeaturedCarsAsync(string? sortBy, int limit, CancellationToken cancellationToken = default);
     
     Task<IReadOnlyList<string>> GetSearchSuggestionsAsync(string query, CancellationToken cancellationToken = default);
+
+    Task<(IReadOnlyList<string> Brands, IReadOnlyList<string> Districts, IReadOnlyList<int> SeatCounts, IReadOnlyList<string> Transmissions, IReadOnlyList<string> FuelTypes, decimal MinPrice, decimal MaxPrice)> GetFilterOptionsAsync(CancellationToken cancellationToken = default);
 }
