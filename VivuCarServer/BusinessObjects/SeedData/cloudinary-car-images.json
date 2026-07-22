@@ -1,39 +1,53 @@
 {
-  "generated_at": 1783740351,
+  "generated_at": 1784696656,
   "car_count": 59,
-  "image_count": 271,
+  "image_count": 265,
   "cars": [
     {
-      "source_order": 2,
-      "car_id": 3,
-      "slug": "chevrolet-spark-2012",
+      "source_order": 3,
+      "car_id": 4,
+      "slug": "vinfast-vf3-2025",
       "images": [
         {
           "display_order": 1,
           "is_primary": true,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740136/Vivucar/seed/cars/chevrolet-spark-2012/01.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696447/Vivucar/seed/cars/vinfast-vf3-2025/01.jpg"
         },
         {
           "display_order": 2,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740138/Vivucar/seed/cars/chevrolet-spark-2012/02.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696448/Vivucar/seed/cars/vinfast-vf3-2025/02.jpg"
         },
         {
           "display_order": 3,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740157/Vivucar/seed/cars/chevrolet-spark-2012/03.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696449/Vivucar/seed/cars/vinfast-vf3-2025/03.jpg"
         },
         {
           "display_order": 4,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740159/Vivucar/seed/cars/chevrolet-spark-2012/04.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696450/Vivucar/seed/cars/vinfast-vf3-2025/04.jpg"
         },
         {
           "display_order": 5,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740161/Vivucar/seed/cars/chevrolet-spark-2012/05.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696451/Vivucar/seed/cars/vinfast-vf3-2025/05.jpg"
         }
-      ]
+      ],
+      "name": "VinFast VF 3 2025",
+      "brand": "VinFast",
+      "model": "VF 3",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 4,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 481000,
+      "address": "Phường Tam Thuận, Quận Thanh Khê",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 6,
@@ -60,34 +74,67 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740169/Vivucar/seed/cars/kia-k3-premium-2022/04.jpg"
         }
-      ]
+      ],
+      "name": "Kia K3 Premium 2022",
+      "brand": "Kia",
+      "model": "K3 Premium",
+      "year": 2022,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 934000,
+      "address": "Phường Tam Thuận, Quận Thanh Khê",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
-      "source_order": 10,
-      "car_id": 11,
-      "slug": "chevrolet-cruze-2015",
+      "source_order": 8,
+      "car_id": 9,
+      "slug": "vinfast-vf3-2026",
       "images": [
         {
           "display_order": 1,
           "is_primary": true,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740171/Vivucar/seed/cars/chevrolet-cruze-2015/01.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696452/Vivucar/seed/cars/vinfast-vf3-2026/01.jpg"
         },
         {
           "display_order": 2,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740173/Vivucar/seed/cars/chevrolet-cruze-2015/02.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696453/Vivucar/seed/cars/vinfast-vf3-2026/02.jpg"
         },
         {
           "display_order": 3,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740175/Vivucar/seed/cars/chevrolet-cruze-2015/03.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696454/Vivucar/seed/cars/vinfast-vf3-2026/03.jpg"
         },
         {
           "display_order": 4,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740177/Vivucar/seed/cars/chevrolet-cruze-2015/04.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696454/Vivucar/seed/cars/vinfast-vf3-2026/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696457/Vivucar/seed/cars/vinfast-vf3-2026/05.jpg"
         }
-      ]
+      ],
+      "name": "VinFast VF 3 2026",
+      "brand": "VinFast",
+      "model": "VF 3",
+      "year": 2026,
+      "car_type": "SUV",
+      "seats": 4,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 565000,
+      "address": "Phường Nại Hiên Đông, Quận Sơn Trà",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 11,
@@ -114,7 +161,159 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740186/Vivucar/seed/cars/vinfast-lux-sa-2021/04.jpg"
         }
-      ]
+      ],
+      "name": "VinFast Lux Sa 2021",
+      "brand": "VinFast",
+      "model": "Lux Sa",
+      "year": 2021,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1028000,
+      "address": "Phường An Hải Bắc, Quận Sơn Trà",
+      "description": "",
+      "status": "available",
+      "color": null
+    },
+    {
+      "source_order": 12,
+      "car_id": 13,
+      "slug": "vinfast-vf7-eco-2026",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696458/Vivucar/seed/cars/vinfast-vf7-eco-2026/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696459/Vivucar/seed/cars/vinfast-vf7-eco-2026/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696459/Vivucar/seed/cars/vinfast-vf7-eco-2026/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696460/Vivucar/seed/cars/vinfast-vf7-eco-2026/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696461/Vivucar/seed/cars/vinfast-vf7-eco-2026/05.jpg"
+        }
+      ],
+      "name": "VinFast VF 7 Eco 2026",
+      "brand": "VinFast",
+      "model": "VF 7 Eco",
+      "year": 2026,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1298000,
+      "address": "Phường Hải Châu I, Quận Hải Châu",
+      "description": "",
+      "status": "available",
+      "color": null
+    },
+    {
+      "source_order": 13,
+      "car_id": 14,
+      "slug": "vinfast-limo-green-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696462/Vivucar/seed/cars/vinfast-limo-green-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696463/Vivucar/seed/cars/vinfast-limo-green-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696464/Vivucar/seed/cars/vinfast-limo-green-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696470/Vivucar/seed/cars/vinfast-limo-green-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696471/Vivucar/seed/cars/vinfast-limo-green-2025/05.jpg"
+        }
+      ],
+      "name": "VinFast Limo Green 2025",
+      "brand": "VinFast",
+      "model": "Limo Green",
+      "year": 2025,
+      "car_type": "MPV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1079000,
+      "address": "Phường Thạch Thang, Quận Hải Châu",
+      "description": "",
+      "status": "available",
+      "color": null
+    },
+    {
+      "source_order": 15,
+      "car_id": 16,
+      "slug": "vinfast-vf5-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696472/Vivucar/seed/cars/vinfast-vf5-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696473/Vivucar/seed/cars/vinfast-vf5-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696473/Vivucar/seed/cars/vinfast-vf5-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696474/Vivucar/seed/cars/vinfast-vf5-2024/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696476/Vivucar/seed/cars/vinfast-vf5-2024/05.jpg"
+        }
+      ],
+      "name": "VinFast VF 5 2024",
+      "brand": "VinFast",
+      "model": "VF 5",
+      "year": 2024,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 807000,
+      "address": "Phường Thạch Thang, Quận Hải Châu",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 20,
@@ -141,7 +340,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740194/Vivucar/seed/cars/chevrolet-captiva-2016/04.jpg"
         }
-      ]
+      ],
+      "name": "Chevrolet Captiva 2016",
+      "brand": "Chevrolet",
+      "model": "Captiva",
+      "year": 2016,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 876000,
+      "address": "Phường An Hải Bắc, Quận Sơn Trà",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 23,
@@ -173,7 +386,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740207/Vivucar/seed/cars/mazda-3-luxury-2020/05.jpg"
         }
-      ]
+      ],
+      "name": "Mazda 3 Luxury 2020",
+      "brand": "Mazda",
+      "model": "3 Luxury",
+      "year": 2020,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 807000,
+      "address": "Phường Tân Chính, Quận Thanh Khê",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 24,
@@ -195,7 +422,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740214/Vivucar/seed/cars/chevrolet-colorado-4x2-2018/03.jpg"
         }
-      ]
+      ],
+      "name": "Chevrolet Colorado 4X2 2018",
+      "brand": "Chevrolet",
+      "model": "Colorado 4X2",
+      "year": 2018,
+      "car_type": "Pickup",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "manual",
+      "fuel_type": "diesel",
+      "price_per_day": 895000,
+      "address": "Phường An Hải Đông, Quận Sơn Trà",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 26,
@@ -227,39 +468,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740225/Vivucar/seed/cars/omoda-c5-flagship-turbo-2025/05.jpg"
         }
-      ]
-    },
-    {
-      "source_order": 29,
-      "car_id": 30,
-      "slug": "mitsubishi-attrage-2020",
-      "images": [
-        {
-          "display_order": 1,
-          "is_primary": true,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740227/Vivucar/seed/cars/mitsubishi-attrage-2020/01.jpg"
-        },
-        {
-          "display_order": 2,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740229/Vivucar/seed/cars/mitsubishi-attrage-2020/02.jpg"
-        },
-        {
-          "display_order": 3,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740231/Vivucar/seed/cars/mitsubishi-attrage-2020/03.jpg"
-        },
-        {
-          "display_order": 4,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740233/Vivucar/seed/cars/mitsubishi-attrage-2020/04.jpg"
-        },
-        {
-          "display_order": 5,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740235/Vivucar/seed/cars/mitsubishi-attrage-2020/05.jpg"
-        }
-      ]
+      ],
+      "name": "Omoda C5 Flagship Turbo 2025",
+      "brand": "Omoda",
+      "model": "C5 Flagship Turbo",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1033000,
+      "address": "Phường Tam Thuận, Quận Thanh Khê",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 31,
@@ -291,7 +514,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740246/Vivucar/seed/cars/toyota-fortuner-2009/05.jpg"
         }
-      ]
+      ],
+      "name": "Toyota Fortuner 2009",
+      "brand": "Toyota",
+      "model": "Fortuner",
+      "year": 2009,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 865000,
+      "address": "Phường Thạch Thang, Quận Hải Châu",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 36,
@@ -323,7 +560,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740260/Vivucar/seed/cars/mitsubishi-outlander-2019/05.jpg"
         }
-      ]
+      ],
+      "name": "Mitsubishi Outlander 2019",
+      "brand": "Mitsubishi",
+      "model": "Outlander",
+      "year": 2019,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 952000,
+      "address": "Phường Thạch Thang, Quận Hải Châu",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 38,
@@ -355,71 +606,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740270/Vivucar/seed/cars/toyota-avanza-2023/05.jpg"
         }
-      ]
-    },
-    {
-      "source_order": 42,
-      "car_id": 43,
-      "slug": "hyundai-veloser-hatchback-2011",
-      "images": [
-        {
-          "display_order": 1,
-          "is_primary": true,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740272/Vivucar/seed/cars/hyundai-veloser-hatchback-2011/01.jpg"
-        },
-        {
-          "display_order": 2,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740275/Vivucar/seed/cars/hyundai-veloser-hatchback-2011/02.jpg"
-        },
-        {
-          "display_order": 3,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740277/Vivucar/seed/cars/hyundai-veloser-hatchback-2011/03.jpg"
-        },
-        {
-          "display_order": 4,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740279/Vivucar/seed/cars/hyundai-veloser-hatchback-2011/04.jpg"
-        },
-        {
-          "display_order": 5,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740281/Vivucar/seed/cars/hyundai-veloser-hatchback-2011/05.jpg"
-        }
-      ]
-    },
-    {
-      "source_order": 43,
-      "car_id": 44,
-      "slug": "suzuki-swift-hatchback-2016",
-      "images": [
-        {
-          "display_order": 1,
-          "is_primary": true,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740283/Vivucar/seed/cars/suzuki-swift-hatchback-2016/01.jpg"
-        },
-        {
-          "display_order": 2,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740285/Vivucar/seed/cars/suzuki-swift-hatchback-2016/02.jpg"
-        },
-        {
-          "display_order": 3,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740287/Vivucar/seed/cars/suzuki-swift-hatchback-2016/03.jpg"
-        },
-        {
-          "display_order": 4,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740289/Vivucar/seed/cars/suzuki-swift-hatchback-2016/04.jpg"
-        },
-        {
-          "display_order": 5,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740291/Vivucar/seed/cars/suzuki-swift-hatchback-2016/05.jpg"
-        }
-      ]
+      ],
+      "name": "Toyota Avanza 2023",
+      "brand": "Toyota",
+      "model": "Avanza",
+      "year": 2023,
+      "car_type": "MPV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "manual",
+      "fuel_type": "gasoline",
+      "price_per_day": 1068000,
+      "address": "Phường Nại Hiên Đông, Quận Sơn Trà",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 51,
@@ -446,39 +647,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740299/Vivucar/seed/cars/kia-sorento-premium-2018/04.jpg"
         }
-      ]
-    },
-    {
-      "source_order": 54,
-      "car_id": 55,
-      "slug": "honda-city-2016",
-      "images": [
-        {
-          "display_order": 1,
-          "is_primary": true,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740301/Vivucar/seed/cars/honda-city-2016/01.jpg"
-        },
-        {
-          "display_order": 2,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740303/Vivucar/seed/cars/honda-city-2016/02.jpg"
-        },
-        {
-          "display_order": 3,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740305/Vivucar/seed/cars/honda-city-2016/03.jpg"
-        },
-        {
-          "display_order": 4,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740307/Vivucar/seed/cars/honda-city-2016/04.jpg"
-        },
-        {
-          "display_order": 5,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740309/Vivucar/seed/cars/honda-city-2016/05.jpg"
-        }
-      ]
+      ],
+      "name": "Kia Sorento Premium 2018",
+      "brand": "Kia",
+      "model": "Sorento Premium",
+      "year": 2018,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1244000,
+      "address": "Phường Mỹ An, Quận Ngũ Hành Sơn",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 58,
@@ -500,7 +683,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740318/Vivucar/seed/cars/hyundai-accent-2020/03.jpg"
         }
-      ]
+      ],
+      "name": "Hyundai Accent 2020",
+      "brand": "Hyundai",
+      "model": "Accent",
+      "year": 2020,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 818000,
+      "address": "Phường Xuân Hà, Quận Thanh Khê",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 60,
@@ -522,66 +719,62 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740323/Vivucar/seed/cars/kia-soluto-2021/03.jpg"
         }
-      ]
+      ],
+      "name": "Kia Soluto 2021",
+      "brand": "Kia",
+      "model": "Soluto",
+      "year": 2021,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 645000,
+      "address": "Phường Hòa Khê, Quận Thanh Khê",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
-      "source_order": 71,
-      "car_id": 72,
-      "slug": "mercedes-c200-2008",
+      "source_order": 69,
+      "car_id": 70,
+      "slug": "vinfast-vf6-eco-2024",
       "images": [
         {
           "display_order": 1,
           "is_primary": true,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740325/Vivucar/seed/cars/mercedes-c200-2008/01.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696476/Vivucar/seed/cars/vinfast-vf6-eco-2024/01.jpg"
         },
         {
           "display_order": 2,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740328/Vivucar/seed/cars/mercedes-c200-2008/02.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696477/Vivucar/seed/cars/vinfast-vf6-eco-2024/02.jpg"
         },
         {
           "display_order": 3,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740330/Vivucar/seed/cars/mercedes-c200-2008/03.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696478/Vivucar/seed/cars/vinfast-vf6-eco-2024/03.jpg"
         },
         {
           "display_order": 4,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740332/Vivucar/seed/cars/mercedes-c200-2008/04.jpg"
-        },
-        {
-          "display_order": 5,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740334/Vivucar/seed/cars/mercedes-c200-2008/05.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696479/Vivucar/seed/cars/vinfast-vf6-eco-2024/04.jpg"
         }
-      ]
-    },
-    {
-      "source_order": 74,
-      "car_id": 75,
-      "slug": "mitsubishi-mirage-2018",
-      "images": [
-        {
-          "display_order": 1,
-          "is_primary": true,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740336/Vivucar/seed/cars/mitsubishi-mirage-2018/01.jpg"
-        },
-        {
-          "display_order": 2,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740338/Vivucar/seed/cars/mitsubishi-mirage-2018/02.jpg"
-        },
-        {
-          "display_order": 3,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740340/Vivucar/seed/cars/mitsubishi-mirage-2018/03.jpg"
-        },
-        {
-          "display_order": 4,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740558/Vivucar/seed/cars/mitsubishi-mirage-2018/04.jpg"
-        }
-      ]
+      ],
+      "name": "VinFast VF 6 Eco 2024",
+      "brand": "VinFast",
+      "model": "VF 6 Eco",
+      "year": 2024,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 912000,
+      "address": "Phường An Hải Tây, Quận Sơn Trà",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 76,
@@ -613,7 +806,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740572/Vivucar/seed/cars/kia-sonet-luxury-2025/05.jpg"
         }
-      ]
+      ],
+      "name": "Kia Sonet Luxury 2025",
+      "brand": "Kia",
+      "model": "Sonet Luxury",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 971000,
+      "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 77,
@@ -644,50 +851,22 @@
           "display_order": 5,
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740584/Vivucar/seed/cars/mitsubishi-outlander-2022/05.jpg"
-        },
-        {
-          "display_order": 6,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740586/Vivucar/seed/cars/mitsubishi-outlander-2022/06.jpg"
         }
-      ]
-    },
-    {
-      "source_order": 80,
-      "car_id": 81,
-      "slug": "mazda-3-premium-2017",
-      "images": [
-        {
-          "display_order": 1,
-          "is_primary": true,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740588/Vivucar/seed/cars/mazda-3-premium-2017/01.jpg"
-        },
-        {
-          "display_order": 2,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740591/Vivucar/seed/cars/mazda-3-premium-2017/02.jpg"
-        },
-        {
-          "display_order": 3,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740593/Vivucar/seed/cars/mazda-3-premium-2017/03.jpg"
-        },
-        {
-          "display_order": 4,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740595/Vivucar/seed/cars/mazda-3-premium-2017/04.jpg"
-        },
-        {
-          "display_order": 5,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740597/Vivucar/seed/cars/mazda-3-premium-2017/05.jpg"
-        },
-        {
-          "display_order": 6,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740600/Vivucar/seed/cars/mazda-3-premium-2017/06.jpg"
-        }
-      ]
+      ],
+      "name": "Mitsubishi Outlander 2022",
+      "brand": "Mitsubishi",
+      "model": "Outlander",
+      "year": 2022,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1105000,
+      "address": "Phường Mỹ An, Quận Ngũ Hành Sơn",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 84,
@@ -702,24 +881,33 @@
         {
           "display_order": 2,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740605/Vivucar/seed/cars/peugeot-3008-2018/02.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740607/Vivucar/seed/cars/peugeot-3008-2018/03.jpg"
         },
         {
           "display_order": 3,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740607/Vivucar/seed/cars/peugeot-3008-2018/03.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740609/Vivucar/seed/cars/peugeot-3008-2018/04.jpg"
         },
         {
           "display_order": 4,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740609/Vivucar/seed/cars/peugeot-3008-2018/04.jpg"
-        },
-        {
-          "display_order": 5,
-          "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740612/Vivucar/seed/cars/peugeot-3008-2018/05.jpg"
         }
-      ]
+      ],
+      "name": "Peugeot 3008 2018",
+      "brand": "Peugeot",
+      "model": "3008",
+      "year": 2018,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 861000,
+      "address": "Ph��ng Th�c Gi�n, Qu�n Thanh Kh�",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 85,
@@ -741,7 +929,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740620/Vivucar/seed/cars/hyundai-creta-luxury-2025/03.jpg"
         }
-      ]
+      ],
+      "name": "Hyundai Creta Luxury 2025",
+      "brand": "Hyundai",
+      "model": "Creta Luxury",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1186000,
+      "address": "Phường An Hải Bắc, Quận Sơn Trà",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 87,
@@ -773,7 +975,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740634/Vivucar/seed/cars/ford-territory-titanium-2023/05.jpg"
         }
-      ]
+      ],
+      "name": "Ford Territory Titanium 2023",
+      "brand": "Ford",
+      "model": "Territory Titanium",
+      "year": 2023,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1263000,
+      "address": "Phường Vĩnh Trung, Quận Thanh Khê",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 95,
@@ -805,7 +1021,62 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740646/Vivucar/seed/cars/mazda-cx8-premium-2023/05.jpg"
         }
-      ]
+      ],
+      "name": "Mazda CX-8 Premium 2023",
+      "brand": "Mazda",
+      "model": "CX-8 Premium",
+      "year": 2023,
+      "car_type": "SUV",
+      "seats": 6,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1547000,
+      "address": "Phường Nại Hiên Đông, Quận Sơn Trà",
+      "description": "",
+      "status": "available",
+      "color": null
+    },
+    {
+      "source_order": 96,
+      "car_id": 97,
+      "slug": "vinfast-vf5-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696480/Vivucar/seed/cars/vinfast-vf5-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696481/Vivucar/seed/cars/vinfast-vf5-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696482/Vivucar/seed/cars/vinfast-vf5-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696483/Vivucar/seed/cars/vinfast-vf5-2025/04.jpg"
+        }
+      ],
+      "name": "VinFast VF 5 2025",
+      "brand": "VinFast",
+      "model": "VF 5",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 838000,
+      "address": "Phường Hòa Khê, Quận Thanh Khê",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 100,
@@ -837,7 +1108,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740658/Vivucar/seed/cars/mitsubishi-outlander-premium-2020/05.jpg"
         }
-      ]
+      ],
+      "name": "Mitsubishi Outlander Premium 2020",
+      "brand": "Mitsubishi",
+      "model": "Outlander Premium",
+      "year": 2020,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1104000,
+      "address": "Phường Mỹ An, Quận Ngũ Hành Sơn",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 101,
@@ -864,7 +1149,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740667/Vivucar/seed/cars/hyundai-venue-2025/04.jpg"
         }
-      ]
+      ],
+      "name": "Hyundai Venue 2025",
+      "brand": "Hyundai",
+      "model": "Venue",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 918000,
+      "address": "Phường Hòa Khê, Quận Thanh Khê",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 107,
@@ -891,7 +1190,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740676/Vivucar/seed/cars/ford-ranger-xls-4x4-2025/04.jpg"
         }
-      ]
+      ],
+      "name": "Ford Ranger XLS 4x4 2025",
+      "brand": "Ford",
+      "model": "Ranger XLS 4x4",
+      "year": 2025,
+      "car_type": "Pickup",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "diesel",
+      "price_per_day": 1027000,
+      "address": "Phường Hòa An, Quận Cẩm Lệ",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 108,
@@ -918,7 +1231,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740687/Vivucar/seed/cars/suzuki-ciaz-2017/04.jpg"
         }
-      ]
+      ],
+      "name": "Suzuki Ciaz 2017",
+      "brand": "Suzuki",
+      "model": "Ciaz",
+      "year": 2017,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 531000,
+      "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 111,
@@ -945,7 +1272,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740695/Vivucar/seed/cars/honda-city-2018/04.jpg"
         }
-      ]
+      ],
+      "name": "Honda City 2018",
+      "brand": "Honda",
+      "model": "City",
+      "year": 2018,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 646000,
+      "address": "Phường Hòa Khê, Quận Thanh Khê",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 118,
@@ -977,7 +1318,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740708/Vivucar/seed/cars/mazda-2-2025/05.jpg"
         }
-      ]
+      ],
+      "name": "Mazda 2 2025",
+      "brand": "Mazda",
+      "model": "2",
+      "year": 2025,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 818000,
+      "address": "Phường Hòa Cường Nam, Quận Hải Châu",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 120,
@@ -1009,7 +1364,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740718/Vivucar/seed/cars/kia-sportage-signature-2025/05.jpg"
         }
-      ]
+      ],
+      "name": "Kia Sportage Signature 2025",
+      "brand": "Kia",
+      "model": "Sportage Signature",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1611000,
+      "address": "Phường An Khê, Quận Thanh Khê",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 129,
@@ -1041,7 +1410,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740729/Vivucar/seed/cars/hyundai-venue-2024/05.jpg"
         }
-      ]
+      ],
+      "name": "Hyundai Venue 2024",
+      "brand": "Hyundai",
+      "model": "Venue",
+      "year": 2024,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1033000,
+      "address": "Phường Khuê Mỹ, Quận Ngũ Hành Sơn",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 134,
@@ -1073,7 +1456,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740742/Vivucar/seed/cars/kia-carens-2024/05.jpg"
         }
-      ]
+      ],
+      "name": "Kia Carens 2024",
+      "brand": "Kia",
+      "model": "Carens",
+      "year": 2024,
+      "car_type": "MPV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1097000,
+      "address": "Phường Khuê Mỹ, Quận Ngũ Hành Sơn",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 135,
@@ -1100,7 +1497,62 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740751/Vivucar/seed/cars/nissan-almera-el-2022/04.jpg"
         }
-      ]
+      ],
+      "name": "Nissan Almera El 2022",
+      "brand": "Nissan",
+      "model": "Almera El",
+      "year": 2022,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 646000,
+      "address": "Phường Khuê Trung, Quận Cẩm Lệ",
+      "description": "",
+      "status": "available",
+      "color": null
+    },
+    {
+      "source_order": 145,
+      "car_id": 146,
+      "slug": "vinfast-vf7-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696643/Vivucar/seed/cars/vinfast-vf7-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696643/Vivucar/seed/cars/vinfast-vf7-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696644/Vivucar/seed/cars/vinfast-vf7-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696645/Vivucar/seed/cars/vinfast-vf7-2025/04.jpg"
+        }
+      ],
+      "name": "VinFast VF 7 2025",
+      "brand": "VinFast",
+      "model": "VF 7",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1246000,
+      "address": "Phường Thanh Khê Đông, Quận Thanh Khê",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 153,
@@ -1127,7 +1579,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740763/Vivucar/seed/cars/honda-jazz-2018/04.jpg"
         }
-      ]
+      ],
+      "name": "Honda Jazz 2018",
+      "brand": "Honda",
+      "model": "Jazz",
+      "year": 2018,
+      "car_type": "Hatchback",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 620000,
+      "address": "Phường Khuê Trung, Quận Cẩm Lệ",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 155,
@@ -1154,7 +1620,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740771/Vivucar/seed/cars/honda-crv-l-awd-2018/04.jpg"
         }
-      ]
+      ],
+      "name": "Honda CR-V L AWD 2018",
+      "brand": "Honda",
+      "model": "CR-V L AWD",
+      "year": 2018,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1246000,
+      "address": "Phường Hòa Thọ Đông, Quận Cẩm Lệ",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 162,
@@ -1186,7 +1666,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740785/Vivucar/seed/cars/mitsubishi-xpander-2026/05.jpg"
         }
-      ]
+      ],
+      "name": "Mitsubishi Xpander 2026",
+      "brand": "Mitsubishi",
+      "model": "Xpander",
+      "year": 2026,
+      "car_type": "MPV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 897000,
+      "address": "Phường Hòa Minh, Quận Liên Chiểu",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 164,
@@ -1218,7 +1712,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740797/Vivucar/seed/cars/ford-focus-2017/05.jpg"
         }
-      ]
+      ],
+      "name": "Ford Focus 2017",
+      "brand": "Ford",
+      "model": "Focus",
+      "year": 2017,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 624000,
+      "address": "Phường Khuê Mỹ, Quận Ngũ Hành Sơn",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 177,
@@ -1250,7 +1758,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740812/Vivucar/seed/cars/hyundai-creta-luxury-2023/05.jpg"
         }
-      ]
+      ],
+      "name": "Hyundai Creta Luxury 2023",
+      "brand": "Hyundai",
+      "model": "Creta Luxury",
+      "year": 2023,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 969000,
+      "address": "Phường Hòa Minh, Quận Liên Chiểu",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 183,
@@ -1282,7 +1804,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740825/Vivucar/seed/cars/mazda-6-premium-2021/05.jpg"
         }
-      ]
+      ],
+      "name": "Mazda 6 Premium 2021",
+      "brand": "Mazda",
+      "model": "6 Premium",
+      "year": 2021,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1037000,
+      "address": "Phường Hòa Xuân, Quận Cẩm Lệ",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 184,
@@ -1314,7 +1850,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740836/Vivucar/seed/cars/mitsubishi-xforce-ultimate-2025/05.jpg"
         }
-      ]
+      ],
+      "name": "Mitsubishi Xforce Ultimate 2025",
+      "brand": "Mitsubishi",
+      "model": "Xforce Ultimate",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1091000,
+      "address": "Phường Hòa Xuân, Quận Cẩm Lệ",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 185,
@@ -1346,7 +1896,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740847/Vivucar/seed/cars/toyota-corolla-cross-v-2025/05.jpg"
         }
-      ]
+      ],
+      "name": "Toyota Corolla Cross V 2025",
+      "brand": "Toyota",
+      "model": "Corolla Cross V",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1275000,
+      "address": "Phường Khuê Mỹ, Quận Ngũ Hành Sơn",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 187,
@@ -1367,13 +1931,22 @@
           "display_order": 3,
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740855/Vivucar/seed/cars/geely-coolray-standard-2025/03.jpg"
-        },
-        {
-          "display_order": 4,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740857/Vivucar/seed/cars/geely-coolray-standard-2025/04.jpg"
         }
-      ]
+      ],
+      "name": "Geely Coolray Standard 2025",
+      "brand": "Geely",
+      "model": "Coolray Standard",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 917000,
+      "address": "Phường Hòa Minh, Quận Liên Chiểu",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 189,
@@ -1405,7 +1978,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740870/Vivucar/seed/cars/mitsubishi-pajero-2018/05.jpg"
         }
-      ]
+      ],
+      "name": "Mitsubishi Pajero 2018",
+      "brand": "Mitsubishi",
+      "model": "Pajero",
+      "year": 2018,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "manual",
+      "fuel_type": "diesel",
+      "price_per_day": 1147000,
+      "address": "Phường Hòa Thọ Đông, Quận Cẩm Lệ",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 190,
@@ -1437,7 +2024,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740883/Vivucar/seed/cars/honda-hrv-g-2023/05.jpg"
         }
-      ]
+      ],
+      "name": "Honda HR-V G 2023",
+      "brand": "Honda",
+      "model": "HR-V G",
+      "year": 2023,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1263000,
+      "address": "Phường Hòa An, Quận Cẩm Lệ",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 191,
@@ -1464,7 +2065,67 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740892/Vivucar/seed/cars/honda-crv-l-2022/04.jpg"
         }
-      ]
+      ],
+      "name": "Honda CR-V L 2022",
+      "brand": "Honda",
+      "model": "CR-V L",
+      "year": 2022,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1458000,
+      "address": "Phường Hòa Minh, Quận Liên Chiểu",
+      "description": "",
+      "status": "available",
+      "color": null
+    },
+    {
+      "source_order": 202,
+      "car_id": 203,
+      "slug": "vinfast-vf6-plus-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696484/Vivucar/seed/cars/vinfast-vf6-plus-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696485/Vivucar/seed/cars/vinfast-vf6-plus-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696486/Vivucar/seed/cars/vinfast-vf6-plus-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696486/Vivucar/seed/cars/vinfast-vf6-plus-2024/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696487/Vivucar/seed/cars/vinfast-vf6-plus-2024/05.jpg"
+        }
+      ],
+      "name": "VinFast VF 6 Plus 2024",
+      "brand": "VinFast",
+      "model": "VF 6 Plus",
+      "year": 2024,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1068000,
+      "address": "Phường Hòa Minh, Quận Liên Chiểu",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 203,
@@ -1489,14 +2150,23 @@
         {
           "display_order": 4,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740902/Vivucar/seed/cars/kia-cerato-2020/04.jpg"
-        },
-        {
-          "display_order": 5,
-          "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740904/Vivucar/seed/cars/kia-cerato-2020/05.jpg"
         }
-      ]
+      ],
+      "name": "Kia Cerato 2020",
+      "brand": "Kia",
+      "model": "Cerato",
+      "year": 2020,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 899000,
+      "address": "Phường Hòa Minh, Quận Liên Chiểu",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 204,
@@ -1523,7 +2193,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740912/Vivucar/seed/cars/vinfast-limo-green-2026/04.jpg"
         }
-      ]
+      ],
+      "name": "VinFast Limo Green 2026",
+      "brand": "VinFast",
+      "model": "Limo Green",
+      "year": 2026,
+      "car_type": "MPV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1195000,
+      "address": "Ph��ng H�a Kh�nh Nam, Qu�n Li�n Chi�u",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 206,
@@ -1545,7 +2229,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740921/Vivucar/seed/cars/suzuki-ertiga-2020/03.jpg"
         }
-      ]
+      ],
+      "name": "Suzuki Ertiga 2020",
+      "brand": "Suzuki",
+      "model": "Ertiga",
+      "year": 2020,
+      "car_type": "MPV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 775000,
+      "address": "Ph��ng H�a Kh�nh Nam, Qu�n Li�n Chi�u",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 214,
@@ -1587,7 +2285,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740936/Vivucar/seed/cars/kia-carnival-premium-2024/07.jpg"
         }
-      ]
+      ],
+      "name": "Kia Carnival Premium 2024",
+      "brand": "Kia",
+      "model": "Carnival Premium",
+      "year": 2024,
+      "car_type": "MPV",
+      "seats": 8,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "diesel",
+      "price_per_day": 2084000,
+      "address": "Phường Hòa Xuân, Quận Cẩm Lệ",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 215,
@@ -1619,7 +2331,67 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740948/Vivucar/seed/cars/vinfast-vf6-plus-2025/05.jpg"
         }
-      ]
+      ],
+      "name": "VinFast VF 6 Plus 2025",
+      "brand": "VinFast",
+      "model": "VF 6 Plus",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1132000,
+      "address": "Ph��ng H�a Kh�nh B�c, Qu�n Li�n Chi�u",
+      "description": "",
+      "status": "available",
+      "color": null
+    },
+    {
+      "source_order": 225,
+      "car_id": 226,
+      "slug": "vinfast-minio-green-2026",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696651/Vivucar/seed/cars/vinfast-minio-green-2026/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696652/Vivucar/seed/cars/vinfast-minio-green-2026/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696653/Vivucar/seed/cars/vinfast-minio-green-2026/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696654/Vivucar/seed/cars/vinfast-minio-green-2026/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696655/Vivucar/seed/cars/vinfast-minio-green-2026/05.jpg"
+        }
+      ],
+      "name": "VinFast Minio Green 2026",
+      "brand": "VinFast",
+      "model": "Minio Green",
+      "year": 2026,
+      "car_type": "Hatchback",
+      "seats": 4,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 472000,
+      "address": "Phường Hoà Hải, Quận Ngũ Hành Sơn",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 229,
@@ -1651,7 +2423,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741041/Vivucar/seed/cars/vinfast-vf7-plus-2025/05.jpg"
         }
-      ]
+      ],
+      "name": "VinFast VF 7 Plus 2025",
+      "brand": "VinFast",
+      "model": "VF 7 Plus",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1298000,
+      "address": "Phường Hoà Hải, Quận Ngũ Hành Sơn",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 234,
@@ -1676,14 +2462,23 @@
         {
           "display_order": 4,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741052/Vivucar/seed/cars/mercedes-c200-exclusive-2023/04.jpg"
-        },
-        {
-          "display_order": 5,
-          "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741054/Vivucar/seed/cars/mercedes-c200-exclusive-2023/05.jpg"
         }
-      ]
+      ],
+      "name": "Mercedes-Benz C200 Exclusive 2023",
+      "brand": "Mercedes-Benz",
+      "model": "C200 Exclusive",
+      "year": 2023,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1965000,
+      "address": "Ph��ng H�a Kh�nh Nam, Qu�n Li�n Chi�u",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 235,
@@ -1710,7 +2505,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741063/Vivucar/seed/cars/mercedes-c250-2016/04.jpg"
         }
-      ]
+      ],
+      "name": "Mercedes-Benz C250 2016",
+      "brand": "Mercedes-Benz",
+      "model": "C250",
+      "year": 2016,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1277000,
+      "address": "Phường Hoà Hải, Quận Ngũ Hành Sơn",
+      "description": "",
+      "status": "available",
+      "color": null
     },
     {
       "source_order": 237,
@@ -1742,34 +2551,21 @@
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741073/Vivucar/seed/cars/toyota-yaris-cross-2024/05.jpg"
         }
-      ]
-    },
-    {
-      "source_order": 239,
-      "car_id": 240,
-      "slug": "hyundai-accent-2012",
-      "images": [
-        {
-          "display_order": 1,
-          "is_primary": true,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741076/Vivucar/seed/cars/hyundai-accent-2012/01.jpg"
-        },
-        {
-          "display_order": 2,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741078/Vivucar/seed/cars/hyundai-accent-2012/02.jpg"
-        },
-        {
-          "display_order": 3,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741082/Vivucar/seed/cars/hyundai-accent-2012/03.jpg"
-        },
-        {
-          "display_order": 4,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741084/Vivucar/seed/cars/hyundai-accent-2012/04.jpg"
-        }
-      ]
+      ],
+      "name": "Toyota Yaris Cross 2024",
+      "brand": "Toyota",
+      "model": "Yaris Cross",
+      "year": 2024,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1074000,
+      "address": "Xã Hòa Phước, Huyện Hòa Vang",
+      "description": "",
+      "status": "available",
+      "color": null
     }
   ]
 }

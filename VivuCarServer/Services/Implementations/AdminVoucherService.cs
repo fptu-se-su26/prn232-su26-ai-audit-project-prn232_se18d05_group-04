@@ -23,6 +23,16 @@ public partial class AdminVoucherService(IAdminVoucherRepository repository) : I
             query = query.Where(voucher => voucher.Code.Contains(keyword) || voucher.Name.Contains(keyword));
         }
         if (TryParseType(request.DiscountType, out var type)) query = query.Where(voucher => voucher.DiscountType == type);
+        if (request.From.HasValue)
+        {
+            var fromUtc = DateTime.SpecifyKind(request.From.Value.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+            query = query.Where(voucher => voucher.ExpiresAt.HasValue && voucher.ExpiresAt >= fromUtc);
+        }
+        if (request.To.HasValue)
+        {
+            var toUtc = DateTime.SpecifyKind(request.To.Value.ToDateTime(TimeOnly.MaxValue), DateTimeKind.Utc);
+            query = query.Where(voucher => voucher.ExpiresAt.HasValue && voucher.ExpiresAt <= toUtc);
+        }
         query = request.Status?.Trim().ToLowerInvariant() switch
         {
             "expired" => query.Where(voucher => voucher.ExpiresAt.HasValue && voucher.ExpiresAt < now),
@@ -88,7 +98,7 @@ public partial class AdminVoucherService(IAdminVoucherRepository repository) : I
             .Select(group => new AdminVoucherDailyUsage(group.Key, group.Count(), group.Sum(usage => usage.DiscountAmount))).ToList();
         var recent = usages.Take(10).Select(usage => new AdminVoucherRecentUsage(
             usage.BookingId, usage.Booking.BookingCode, usage.Booking.Customer.FullName,
-            usage.DiscountAmount, usage.AppliedAt)).ToList();
+            usage.Booking.TotalAmount, usage.DiscountAmount, usage.AppliedAt)).ToList();
         return new AdminVoucherPerformanceResponse(Map(voucher), rate,
             usages.Sum(usage => usage.Booking.TotalAmount), usages.Sum(usage => usage.DiscountAmount), daily, recent);
     }

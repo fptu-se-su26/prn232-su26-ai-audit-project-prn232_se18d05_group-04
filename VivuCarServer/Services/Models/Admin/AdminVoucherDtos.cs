@@ -9,6 +9,8 @@ public class AdminVoucherListQuery
     public string? Keyword { get; set; }
     public string? DiscountType { get; set; }
     public string? Status { get; set; }
+    public DateOnly? From { get; set; }
+    public DateOnly? To { get; set; }
 }
 
 public class AdminVoucherUpsertRequest
@@ -49,6 +51,7 @@ public record AdminVoucherRecentUsage(
     [property: JsonPropertyName("booking_id")] int BookingId,
     [property: JsonPropertyName("booking_code")] string BookingCode,
     [property: JsonPropertyName("customer_name")] string CustomerName,
+    [property: JsonPropertyName("order_amount")] decimal OrderAmount,
     [property: JsonPropertyName("discount_amount")] decimal DiscountAmount,
     [property: JsonPropertyName("applied_at")] DateTime AppliedAt
 );

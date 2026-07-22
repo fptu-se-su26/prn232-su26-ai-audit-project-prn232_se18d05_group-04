@@ -16,9 +16,23 @@ public class AdminVouchersController(IAdminVoucherService service) : ControllerB
     public async Task<ActionResult<PagedResult<AdminVoucherResponse>>> GetList(
         [FromQuery] int page, [FromQuery] int pageSize, [FromQuery] string? keyword,
         [FromQuery(Name = "discount_type")] string? discountType, [FromQuery] string? status,
+        [FromQuery] DateOnly? from, [FromQuery] DateOnly? to,
         CancellationToken cancellationToken)
-        => Ok(await service.GetListAsync(new AdminVoucherListQuery
-        { Page = page <= 0 ? 1 : page, PageSize = pageSize <= 0 ? 10 : pageSize, Keyword = keyword, DiscountType = discountType, Status = status }, cancellationToken));
+    {
+        if (from.HasValue && to.HasValue && from > to)
+            return ApiErrorFactory.Error(HttpContext, 400, "Ngày bắt đầu không được sau ngày kết thúc.");
+
+        return Ok(await service.GetListAsync(new AdminVoucherListQuery
+        {
+            Page = page <= 0 ? 1 : page,
+            PageSize = pageSize <= 0 ? 10 : pageSize,
+            Keyword = keyword,
+            DiscountType = discountType,
+            Status = status,
+            From = from,
+            To = to
+        }, cancellationToken));
+    }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<AdminVoucherResponse>> GetById(int id, CancellationToken cancellationToken)
@@ -55,7 +69,7 @@ public class AdminVouchersController(IAdminVoucherService service) : ControllerB
         return result is null ? NotFoundError() : Ok(result);
     }
 
-    private ObjectResult NotFoundError() => ApiErrorFactory.Error(HttpContext, 404, "Khng tm th?y voucher.");
+    private ObjectResult NotFoundError() => ApiErrorFactory.Error(HttpContext, 404, "Không tìm thấy voucher.");
     private ObjectResult ServiceError(AdminVoucherServiceException ex) => ApiErrorFactory.Error(HttpContext, ex.StatusCode, ex.Message, ex.Errors);
 }
 

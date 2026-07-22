@@ -183,6 +183,7 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
     {
         var normalizedCode = code.Trim().ToUpper();
         return await dbContext.Vouchers
+            .Include(v => v.BookingVouchers)
             .SingleOrDefaultAsync(v => v.Code.ToUpper() == normalizedCode, cancellationToken);
     }
 

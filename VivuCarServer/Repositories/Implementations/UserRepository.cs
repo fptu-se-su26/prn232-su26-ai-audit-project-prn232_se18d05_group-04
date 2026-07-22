@@ -1,4 +1,5 @@
 using BusinessObjects.Data;
+using BusinessObjects.Enums;
 using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
@@ -36,6 +37,18 @@ public class UserRepository(VivuCarDbContext dbContext) : IUserRepository
         return await dbContext.Users
             .AsNoTracking()
             .OrderBy(user => user.Id)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<AppUser>> GetByStatusAsync(
+        UserStatus status,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await dbContext.Users
+            .AsNoTracking()
+            .Where(user => user.Status == status)
+            .OrderByDescending(user => user.UpdatedAt)
             .ToListAsync(cancellationToken);
     }
 
