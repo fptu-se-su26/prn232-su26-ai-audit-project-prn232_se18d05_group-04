@@ -1,7 +1,7 @@
 {
   "generated_at": 1783740351,
   "car_count": 59,
-  "image_count": 271,
+  "image_count": 265,
   "cars": [
     {
       "source_order": 2,
@@ -381,11 +381,6 @@
           "display_order": 4,
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740279/Vivucar/seed/cars/hyundai-veloser-hatchback-2011/04.jpg"
-        },
-        {
-          "display_order": 5,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740281/Vivucar/seed/cars/hyundai-veloser-hatchback-2011/05.jpg"
         }
       ]
     },
@@ -644,11 +639,6 @@
           "display_order": 5,
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740584/Vivucar/seed/cars/mitsubishi-outlander-2022/05.jpg"
-        },
-        {
-          "display_order": 6,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740586/Vivucar/seed/cars/mitsubishi-outlander-2022/06.jpg"
         }
       ]
     },
@@ -702,20 +692,15 @@
         {
           "display_order": 2,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740605/Vivucar/seed/cars/peugeot-3008-2018/02.jpg"
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740607/Vivucar/seed/cars/peugeot-3008-2018/03.jpg"
         },
         {
           "display_order": 3,
           "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740607/Vivucar/seed/cars/peugeot-3008-2018/03.jpg"
-        },
-        {
-          "display_order": 4,
-          "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740609/Vivucar/seed/cars/peugeot-3008-2018/04.jpg"
         },
         {
-          "display_order": 5,
+          "display_order": 4,
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740612/Vivucar/seed/cars/peugeot-3008-2018/05.jpg"
         }
@@ -1367,11 +1352,6 @@
           "display_order": 3,
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740855/Vivucar/seed/cars/geely-coolray-standard-2025/03.jpg"
-        },
-        {
-          "display_order": 4,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740857/Vivucar/seed/cars/geely-coolray-standard-2025/04.jpg"
         }
       ]
     },
@@ -1488,11 +1468,6 @@
         },
         {
           "display_order": 4,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740902/Vivucar/seed/cars/kia-cerato-2020/04.jpg"
-        },
-        {
-          "display_order": 5,
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740904/Vivucar/seed/cars/kia-cerato-2020/05.jpg"
         }
@@ -1675,11 +1650,6 @@
         },
         {
           "display_order": 4,
-          "is_primary": false,
-          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741052/Vivucar/seed/cars/mercedes-c200-exclusive-2023/04.jpg"
-        },
-        {
-          "display_order": 5,
           "is_primary": false,
           "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741054/Vivucar/seed/cars/mercedes-c200-exclusive-2023/05.jpg"
         }

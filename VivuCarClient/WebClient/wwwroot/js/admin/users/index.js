@@ -1,9 +1,9 @@
-import { getUsers, lockUser, unlockUser } from "./user-api.js";
+import { getUsers, lockUser, softDeleteCustomer, unlockUser } from "./user-api.js";
 import { escapeHtml } from "../../shared/dom.js";
 import { paginate } from "../../shared/pagination.js";
 import { showToast } from "../../shared/toast.js";
 const root=document.querySelector("[data-admin-users-page]"),byId=id=>document.getElementById(id);
-const state={users:[],keyword:"",role:"",blocked:"",page:1,pageSize:10,selectedId:null,action:null,selected:new Set()};
+const state={users:[],keyword:"",role:"",blocked:"",page:1,pageSize:10,selectedId:null,action:null,selected:new Set(),softDeleteIds:[]};
 const roles={user:"Khách thuê",car_owner:"Chủ xe",admin:"Quản trị viên"};
 function filtered(){const k=state.keyword.toLowerCase();return state.users.filter(u=>(!k||u.fullName.toLowerCase().includes(k)||u.email.toLowerCase().includes(k))&&(!state.role||u.role===state.role)&&(!state.blocked||String(u.isBlocked)===state.blocked))}
 function row(u){const action=u.isBlocked?"unlock":"lock";return'<tr><td><input type="checkbox" data-select-user="'+u.id+'" '+(state.selected.has(u.id)?"checked":"")+' aria-label="Chọn '+escapeHtml(u.fullName)+'"></td><td><strong>'+escapeHtml(u.fullName)+'</strong><small class="block text-zinc-500">'+escapeHtml(u.email)+'</small></td><td>'+escapeHtml(roles[u.role]||u.role)+'</td><td><span class="status-badge status-'+(u.isBlocked?"danger":"success")+'">'+(u.isBlocked?"Đã khóa":"Đang hoạt động")+'</span></td><td><span class="status-badge status-info">Chưa xác minh</span></td><td>—</td><td>0</td><td>0</td><td>'+new Date(u.createdAt).toLocaleDateString("vi-VN")+'</td><td><button class="btn btn-secondary btn-sm" type="button" data-user-action="'+action+'" data-user-id="'+u.id+'">'+(action==="lock"?"Khóa":"Mở khóa")+'</button></td></tr>'}
@@ -17,4 +17,40 @@ function openModal(id,action){state.selectedId=Number(id);state.action=action;by
 async function applyOne(id,action){action==="lock"?await lockUser(id):await unlockUser(id)}
 async function confirmChange(){if(!state.selectedId)return;const button=byId("btnConfirmUserStatus");button.disabled=true;try{await applyOne(state.selectedId,state.action);showToast("Đã cập nhật tài khoản.","success");closeModal();await load()}catch(error){showToast(error.message,"error")}finally{button.disabled=false}}
 async function bulk(action){if(!state.selected.size)return;try{for(const id of state.selected)await applyOne(id,action);state.selected.clear();showToast("Đã cập nhật các tài khoản đã chọn.","success");await load()}catch(error){showToast(error.message,"error")}}
-if(root){byId("btnApplyFilter").onclick=()=>{state.keyword=byId("searchUserInput").value.trim();state.role=byId("roleFilter").value;state.blocked=byId("blockedFilter").value;state.page=1;render()};byId("btnResetFilter").onclick=()=>{byId("searchUserInput").value="";byId("roleFilter").value="";byId("blockedFilter").value="";byId("verificationFilter").value="";state.keyword=state.role=state.blocked="";state.page=1;render()};byId("userPageSize").onchange=()=>{state.pageSize=Number(byId("userPageSize").value);state.page=1;render()};byId("userPrevPage").onclick=()=>{state.page--;render()};byId("userNextPage").onclick=()=>{state.page++;render()};byId("userPageNumbers").onclick=e=>{const b=e.target.closest("[data-page]");if(b){state.page=Number(b.dataset.page);render()}};byId("userQuickTabs").onclick=e=>{const b=e.target.closest("[data-role-tab]");if(b){state.role=b.dataset.roleTab;byId("roleFilter").value=state.role;state.page=1;render()}};byId("usersTableBody").onclick=e=>{const check=e.target.closest("[data-select-user]");if(check){const id=Number(check.dataset.selectUser);check.checked?state.selected.add(id):state.selected.delete(id);renderBulk();return}const b=e.target.closest("[data-user-action]");if(b)openModal(b.dataset.userId,b.dataset.userAction)};byId("userSelectAll").onchange=e=>{const ids=paginate(filtered(),state.page,state.pageSize).items.map(u=>u.id);ids.forEach(id=>e.target.checked?state.selected.add(id):state.selected.delete(id));render()};document.querySelectorAll("#userStatusModal [data-close-modal]").forEach(b=>b.onclick=closeModal);byId("btnCancelUserStatus").onclick=closeModal;byId("btnConfirmUserStatus").onclick=confirmChange;byId("btnBulkBlock").onclick=()=>bulk("lock");byId("btnBulkUnblock").onclick=()=>bulk("unlock");byId("btnBulkClear").onclick=()=>{state.selected.clear();render()};byId("btnBulkSoftDelete").onclick=()=>showToast("API hiện tại chưa hỗ trợ xóa mềm người dùng.","info");byId("btnCancelSoftDeleteUser").onclick=()=>byId("userSoftDeleteModal").classList.remove("is-open");byId("btnConfirmSoftDeleteUser").onclick=()=>showToast("API hiện tại chưa hỗ trợ xóa mềm người dùng.","info");load()}
+function openSoftDeleteModal(){
+ const selectedUsers=state.users.filter(user=>state.selected.has(user.id));
+ if(!selectedUsers.length){showToast("Chọn ít nhất một khách thuê.","info");return}
+ if(selectedUsers.some(user=>user.role!=="user")){showToast("Chỉ có thể xóa mềm tài khoản khách thuê.","info");return}
+ state.softDeleteIds=selectedUsers.map(user=>user.id);
+ byId("userSoftDeleteInfo").textContent=selectedUsers.length===1?selectedUsers[0].fullName:selectedUsers.length+" khách thuê đã chọn";
+ byId("userSoftDeleteModal").classList.add("is-open")
+}
+function closeSoftDeleteModal(){byId("userSoftDeleteModal").classList.remove("is-open");state.softDeleteIds=[]}
+async function confirmSoftDelete(){
+ if(!state.softDeleteIds.length)return;
+ const button=byId("btnConfirmSoftDeleteUser"),ids=[...state.softDeleteIds];
+ button.disabled=true;
+ try{
+  for(const id of ids)await softDeleteCustomer(id);
+  ids.forEach(id=>state.selected.delete(id));
+  closeSoftDeleteModal();
+  showToast("Đã xóa mềm khách thuê.","success");
+  await load()
+ }catch(error){showToast(error.message,"error")}
+ finally{button.disabled=false}
+}
+if(root){byId("btnApplyFilter").onclick=()=>{state.keyword=byId("searchUserInput").value.trim();state.role=byId("roleFilter").value;state.blocked=byId("blockedFilter").value;state.page=1;render()};byId("btnResetFilter").onclick=()=>{byId("searchUserInput").value="";byId("roleFilter").value="";byId("blockedFilter").value="";byId("verificationFilter").value="";state.keyword=state.role=state.blocked="";state.page=1;render()};byId("userPageSize").onchange=()=>{state.pageSize=Number(byId("userPageSize").value);state.page=1;render()};byId("userPrevPage").onclick=()=>{state.page--;render()};byId("userNextPage").onclick=()=>{state.page++;render()};byId("userPageNumbers").onclick=e=>{const b=e.target.closest("[data-page]");if(b){state.page=Number(b.dataset.page);render()}};byId("userQuickTabs").onclick=e=>{const b=e.target.closest("[data-role-tab]");if(b){state.role=b.dataset.roleTab;byId("roleFilter").value=state.role;state.page=1;render()}};byId("usersTableBody").onclick=e=>{const check=e.target.closest("[data-select-user]");if(check){const id=Number(check.dataset.selectUser);check.checked?state.selected.add(id):state.selected.delete(id);renderBulk();return}const b=e.target.closest("[data-user-action]");if(b)openModal(b.dataset.userId,b.dataset.userAction)};byId("userSelectAll").onchange=e=>{const ids=paginate(filtered(),state.page,state.pageSize).items.map(u=>u.id);ids.forEach(id=>e.target.checked?state.selected.add(id):state.selected.delete(id));render()};document.querySelectorAll("#userStatusModal [data-close-modal]").forEach(b=>b.onclick=closeModal);document.querySelectorAll("#userSoftDeleteModal [data-close-modal]").forEach(b=>b.onclick=closeSoftDeleteModal);byId("btnCancelUserStatus").onclick=closeModal;byId("btnConfirmUserStatus").onclick=confirmChange;byId("btnBulkBlock").onclick=()=>bulk("lock");byId("btnBulkUnblock").onclick=()=>bulk("unlock");byId("btnBulkClear").onclick=()=>{state.selected.clear();render()};byId("btnBulkSoftDelete").onclick=openSoftDeleteModal;byId("btnCancelSoftDeleteUser").onclick=closeSoftDeleteModal;byId("btnConfirmSoftDeleteUser").onclick=confirmSoftDelete;load()}
+if(root){
+ const quickTabs=byId("userQuickTabs");
+ const syncRoleTabs=()=>quickTabs.querySelectorAll("[data-role-tab]").forEach(button=>{
+  const isActive=button.dataset.roleTab===state.role;
+  button.className=`btn ${isActive?"btn-primary":"btn-secondary"} btn-sm`;
+  window.VivuCarTailwindUI?.applyTailwind(button);
+  button.setAttribute("aria-pressed",String(isActive));
+ });
+ quickTabs.addEventListener("click",()=>queueMicrotask(syncRoleTabs));
+ byId("btnApplyFilter").addEventListener("click",()=>queueMicrotask(syncRoleTabs));
+ byId("btnResetFilter").addEventListener("click",()=>queueMicrotask(syncRoleTabs));
+ new MutationObserver(syncRoleTabs).observe(quickTabs,{childList:true});
+ syncRoleTabs();
+}

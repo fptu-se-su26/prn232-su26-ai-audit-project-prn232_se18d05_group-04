@@ -19,6 +19,25 @@ public class AppDbSeederHostedService(
     private const string DefaultPasswordHash =
         "AQAAAAIAAYagAAAAEJn3SErB4UJSTrOTrtphxBkS/fG69fareXbTJkKAzNAuzibKzreYyYlZE0iTw5gDbQ==";
 
+    // Legacy demo plates are retained because bookings reference them. Metadata and
+    // galleries are synchronized to distinct catalog cars so each car matches its images.
+    private static readonly IReadOnlyDictionary<string, string> LegacyCarCatalogSlugs =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["43A-56789"] = "honda-city-2018",
+            ["43A-99911"] = "hyundai-accent-2020",
+            ["43A-88888"] = "hyundai-venue-2024",
+            ["43A-22233"] = "kia-sonet-luxury-2025",
+            ["43A-66677"] = "vinfast-vf7-plus-2025",
+            ["43A-77788"] = "mazda-cx8-premium-2023",
+            ["43A-12345"] = "toyota-corolla-cross-v-2025",
+            ["43B-67890"] = "honda-crv-l-2022",
+            ["43C-11111"] = "kia-sportage-signature-2025",
+            ["43D-22222"] = "mazda-3-luxury-2020",
+            ["43E-33333"] = "hyundai-creta-luxury-2023",
+            ["43F-44444"] = "toyota-yaris-cross-2024"
+        };
+
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         await using var scope = scopeFactory.CreateAsyncScope();
@@ -104,6 +123,18 @@ public class AppDbSeederHostedService(
             status: CarStatus.Available, year: 2022, km: 22_000,
             description: "Sedan hạng D sang trọng, êm ái, phù hợp công tác dài ngày.",
             cancellationToken: cancellationToken);
+
+        var legacyCatalogSync = await CarSeed.SynchronizeCarsFromCatalogAsync(
+            db,
+            LegacyCarCatalogSlugs,
+            cancellationToken
+        );
+        logger.LogInformation(
+            "[Seeder] Legacy cars synchronized: {CarsUpdated} cars, {ImagesAdded} images added, {ImagesRemoved} stale or duplicate images removed.",
+            legacyCatalogSync.CarsUpdated,
+            legacyCatalogSync.ImagesAdded,
+            legacyCatalogSync.ImagesRemoved
+        );
 
         logger.LogInformation("[Seeder] Cars ready.");
 

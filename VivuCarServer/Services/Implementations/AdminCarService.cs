@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using BusinessObjects.Enums;
 using BusinessObjects.Models;
 using Repositories.Interfaces;
@@ -222,6 +222,15 @@ public class AdminCarService(ICarRepository carRepository) : IAdminCarService
         if (images.Count == 0)
         {
             throw ValidationError("files", "At least one image is required.");
+        }
+
+        const int maxImageCount = 8;
+        if (car.Images.Count + images.Count > maxImageCount)
+        {
+            throw ValidationError(
+                "files",
+                $"A car can have at most {maxImageCount} images."
+            );
         }
 
         var oldValues = Snapshot(car);
