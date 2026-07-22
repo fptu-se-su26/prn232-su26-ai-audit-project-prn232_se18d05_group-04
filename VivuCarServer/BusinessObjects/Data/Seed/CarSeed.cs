@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -26,16 +25,6 @@ public static class CarSeed
     public const int MinimumImagesPerCar = 3;
     private const string CloudinaryManifestName = "cloudinary-car-images.json";
     private static readonly DateTime SeedCreatedAt = new(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc);
-    private static readonly string[] Colors = ["White", "Black", "Silver", "Gray", "Blue", "Red"];
-    private static readonly string[] Locations =
-    [
-        "Hai Chau, Da Nang",
-        "Son Tra, Da Nang",
-        "Thanh Khe, Da Nang",
-        "Ngu Hanh Son, Da Nang",
-        "Cam Le, Da Nang"
-    ];
-
     public static async Task<CarSeedResult> SeedAsync(
         VivuCarDbContext dbContext,
         CancellationToken cancellationToken = default
@@ -67,9 +56,7 @@ public static class CarSeed
 
         ValidateCatalogCars(cloudCars);
 
-        var definitions = cloudCars
-            .Select((car, index) => BuildDefinition(car, index))
-            .ToList();
+        var definitions = cloudCars.Select(BuildDefinition).ToList();
         var brands = await EnsureBrandsAsync(dbContext, definitions, cancellationToken);
         var types = await EnsureTypesAsync(dbContext, definitions, cancellationToken);
         var models = await EnsureModelsAsync(dbContext, definitions, brands, cancellationToken);
@@ -160,8 +147,7 @@ public static class CarSeed
         }
 
         var manifest = await LoadCloudinaryManifestAsync(cancellationToken);
-        var orderedCatalog = manifest.Cars.OrderBy(car => car.SourceOrder).ToList();
-        var cloudCarsBySlug = orderedCatalog.ToDictionary(
+        var cloudCarsBySlug = manifest.Cars.ToDictionary(
             car => car.Slug,
             StringComparer.OrdinalIgnoreCase
         );
@@ -188,7 +174,7 @@ public static class CarSeed
             .ToListAsync(cancellationToken);
         var definitionsBySlug = selectedCatalogCars.ToDictionary(
             cloudCar => cloudCar.Slug,
-            cloudCar => BuildDefinition(cloudCar, orderedCatalog.IndexOf(cloudCar)),
+            BuildDefinition,
             StringComparer.OrdinalIgnoreCase
         );
         var definitions = definitionsBySlug.Values.ToList();
@@ -315,49 +301,49 @@ public static class CarSeed
                 $"Every catalog car must have at least {MinimumImagesPerCar} distinct images. Invalid: {string.Join(", ", invalidCars)}."
             );
         }
-    }
-    private static CarDefinition BuildDefinition(CloudinaryCar cloudCar, int index)
-    {
-        var parts = cloudCar.Slug.Split('-', StringSplitOptions.RemoveEmptyEntries);
-        if (parts.Length < 3 || !short.TryParse(parts[^1], out var year))
-        {
-            throw new InvalidOperationException($"Cannot derive car metadata from slug '{cloudCar.Slug}'.");
-        }
 
-        var brand = BrandName(parts[0]);
-        var model = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(string.Join(' ', parts[1..^1]));
-        var type = ResolveType(cloudCar.Slug);
-        var dailyPrice = 480000m + index % 10 * 85000m + Math.Max(0, year - 2020) * 25000m;
-        var status = index switch
+        var incompleteCars = cloudCars
+            .Where(car =>
+                string.IsNullOrWhiteSpace(car.Name) ||
+                string.IsNullOrWhiteSpace(car.Brand) ||
+                string.IsNullOrWhiteSpace(car.Model) ||
+                string.IsNullOrWhiteSpace(car.CarType) ||
+                string.IsNullOrWhiteSpace(car.Address) ||
+                car.Year is < 1900 ||
+                car.Seats <= 0 ||
+                car.PricePerDay <= 0)
+            .Select(car => car.Slug)
+            .ToArray();
+        if (incompleteCars.Length > 0)
         {
-            4 => CarStatus.Maintenance,
-            12 => CarStatus.Blocked,
-            _ => CarStatus.Available
-        };
+            throw new InvalidOperationException(
+                $"Catalog metadata is incomplete for: {string.Join(", ", incompleteCars)}."
+            );
+        }
+    }
+
+    private static CarDefinition BuildDefinition(CloudinaryCar cloudCar)
+    {
+        var status = ParseStatus(cloudCar.Status);
 
         return new CarDefinition(
             cloudCar.Slug,
-            brand,
-            model,
-            type,
-            $"{brand} {model} {year}",
-            LicensePlate(cloudCar.CarId, type),
-            year,
-            Colors[index % Colors.Length],
-            12000 + index * 4700,
-            ResolveSeatCount(type, cloudCar.Slug),
-            ResolveTransmission(cloudCar.Slug),
-            ResolveFuel(cloudCar.Slug),
-            dailyPrice,
+            cloudCar.Brand,
+            cloudCar.Model,
+            cloudCar.CarType,
+            cloudCar.Name,
+            LicensePlate(cloudCar.CarId, cloudCar.CarType),
+            cloudCar.Year,
+            cloudCar.Color,
+            cloudCar.KilometersDriven,
+            cloudCar.Seats,
+            ParseTransmission(cloudCar.Transmission),
+            ParseFuel(cloudCar.FuelType),
+            cloudCar.PricePerDay,
             status,
-            $"Seed vehicle sourced from the Cloudinary catalog for {brand} {model}.",
-            status switch
-            {
-                CarStatus.Maintenance => "Scheduled maintenance",
-                CarStatus.Blocked => "Pending document re-verification",
-                _ => null
-            },
-            Locations[index % Locations.Length]
+            cloudCar.Description,
+            null,
+            cloudCar.Address
         );
     }
 
@@ -446,42 +432,32 @@ public static class CarSeed
         ) ?? throw new InvalidOperationException("Cloudinary image manifest is invalid.");
     }
 
-    private static string ResolveType(string slug)
+    private static TransmissionType ParseTransmission(string value) => value.Trim().ToLowerInvariant() switch
     {
-        if (slug.Contains("colorado", StringComparison.OrdinalIgnoreCase)) return "Pickup";
-        if (ContainsAny(slug, "hatchback", "spark", "swift", "mirage", "veloser")) return "Hatchback";
-        if (ContainsAny(slug, "avanza", "xpander", "ertiga", "innova")) return "MPV";
-        if (ContainsAny(slug, "captiva", "fortuner", "outlander", "sorento", "lux-sa", "omoda-c5", "santa-fe", "cx-5", "terra")) return "SUV";
-        return "Sedan";
-    }
+        "manual" => TransmissionType.Manual,
+        "cvt" => TransmissionType.Cvt,
+        _ => TransmissionType.Automatic
+    };
 
-    private static int ResolveSeatCount(string type, string slug) =>
-        type is "SUV" or "MPV" || ContainsAny(slug, "fortuner", "captiva", "outlander", "sorento") ? 7 : 5;
-
-    private static TransmissionType ResolveTransmission(string slug)
+    private static FuelType ParseFuel(string value) => value.Trim().ToLowerInvariant() switch
     {
-        if (ContainsAny(slug, "spark-2012", "c200-2008")) return TransmissionType.Manual;
-        if (ContainsAny(slug, "attrage", "outlander", "mirage")) return TransmissionType.Cvt;
-        return TransmissionType.Automatic;
-    }
+        "diesel" => FuelType.Diesel,
+        "electric" => FuelType.Electric,
+        "hybrid" => FuelType.Hybrid,
+        _ => FuelType.Gasoline
+    };
 
-    private static FuelType ResolveFuel(string slug) =>
-        ContainsAny(slug, "colorado", "fortuner", "sorento", "terra") ? FuelType.Diesel : FuelType.Gasoline;
-
-    private static string BrandName(string slugBrand) => slugBrand.ToLowerInvariant() switch
+    private static CarStatus ParseStatus(string value) => value.Trim().ToLowerInvariant() switch
     {
-        "vinfast" => "VinFast",
-        "mercedes" => "Mercedes-Benz",
-        "kia" => "Kia",
-        "bmw" => "BMW",
-        _ => CultureInfo.InvariantCulture.TextInfo.ToTitleCase(slugBrand)
+        "rented" => CarStatus.Rented,
+        "maintenance" => CarStatus.Maintenance,
+        "blocked" => CarStatus.Blocked,
+        _ => CarStatus.Available
     };
 
     private static string LicensePlate(int carId, string type) =>
         $"{(type == "Pickup" ? "43C" : "43A")}-{12000 + carId:00000}";
 
-    private static bool ContainsAny(string value, params string[] terms) =>
-        terms.Any(term => value.Contains(term, StringComparison.OrdinalIgnoreCase));
 
     private static string ModelKey(string brand, string model) => $"{brand.Trim()}::{model.Trim()}";
 
@@ -493,7 +469,7 @@ public static class CarSeed
         string Name,
         string LicensePlate,
         short Year,
-        string Color,
+        string? Color,
         int KilometersDriven,
         int SeatCount,
         TransmissionType Transmission,
@@ -519,6 +495,24 @@ public static class CarSeed
         public int CarId { get; set; }
 
         public string Slug { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Brand { get; set; } = string.Empty;
+        public string Model { get; set; } = string.Empty;
+        public short Year { get; set; }
+        [JsonPropertyName("car_type")]
+        public string CarType { get; set; } = string.Empty;
+        public int Seats { get; set; }
+        [JsonPropertyName("kilometers_driven")]
+        public int KilometersDriven { get; set; }
+        public string Transmission { get; set; } = string.Empty;
+        [JsonPropertyName("fuel_type")]
+        public string FuelType { get; set; } = string.Empty;
+        [JsonPropertyName("price_per_day")]
+        public decimal PricePerDay { get; set; }
+        public string Address { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Status { get; set; } = "available";
+        public string? Color { get; set; }
         public List<CloudinaryImage> Images { get; set; } = [];
     }
 

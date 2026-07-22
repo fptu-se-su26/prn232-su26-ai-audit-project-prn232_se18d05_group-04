@@ -39,4 +39,52 @@ public class CarSeedDataQualityTests
             );
         }
     }
+
+    [Fact]
+    public void CloudinaryCatalog_HasNormalizedMetadata_AndCorrectVinFastVf7Facts()
+    {
+        using var document = LoadCatalog();
+        var cars = document.RootElement.GetProperty("cars").EnumerateArray().ToList();
+
+        foreach (var car in cars)
+        {
+            Assert.False(string.IsNullOrWhiteSpace(car.GetProperty("brand").GetString()));
+            Assert.False(string.IsNullOrWhiteSpace(car.GetProperty("model").GetString()));
+            Assert.False(string.IsNullOrWhiteSpace(car.GetProperty("car_type").GetString()));
+            Assert.False(string.IsNullOrWhiteSpace(car.GetProperty("address").GetString()));
+            Assert.True(car.GetProperty("seats").GetInt32() > 0);
+            Assert.True(car.GetProperty("price_per_day").GetDecimal() > 0);
+        }
+
+        var vf7 = cars.Single(car =>
+            car.GetProperty("slug").GetString() == "vinfast-vf7-plus-2025"
+        );
+        Assert.Equal("VinFast", vf7.GetProperty("brand").GetString());
+        Assert.Equal("VF 7 Plus", vf7.GetProperty("model").GetString());
+        Assert.Equal("SUV", vf7.GetProperty("car_type").GetString());
+        Assert.Equal(5, vf7.GetProperty("seats").GetInt32());
+        Assert.Equal("electric", vf7.GetProperty("fuel_type").GetString());
+        Assert.Equal(0, vf7.GetProperty("kilometers_driven").GetInt32());
+        Assert.Equal(JsonValueKind.Null, vf7.GetProperty("color").ValueKind);
+
+        Assert.Equal(
+            13,
+            cars.Count(car => car.GetProperty("fuel_type").GetString() == "electric")
+        );
+        Assert.Equal(
+            42,
+            cars.Count(car => car.GetProperty("fuel_type").GetString() == "gasoline")
+        );
+    }
+
+    private static JsonDocument LoadCatalog()
+    {
+        var assembly = typeof(CarSeed).Assembly;
+        var resourceName = assembly.GetManifestResourceNames().Single(name =>
+            name.EndsWith("cloudinary-car-images.json", StringComparison.OrdinalIgnoreCase)
+        );
+        using var stream = assembly.GetManifestResourceStream(resourceName);
+        return JsonDocument.Parse(stream!);
+    }
+
 }

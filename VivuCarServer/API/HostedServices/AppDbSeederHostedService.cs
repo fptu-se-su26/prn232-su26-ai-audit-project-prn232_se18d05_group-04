@@ -24,18 +24,18 @@ public class AppDbSeederHostedService(
     private static readonly IReadOnlyDictionary<string, string> LegacyCarCatalogSlugs =
         new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-            ["43A-56789"] = "honda-city-2018",
-            ["43A-99911"] = "hyundai-accent-2020",
-            ["43A-88888"] = "hyundai-venue-2024",
-            ["43A-22233"] = "kia-sonet-luxury-2025",
+            ["43A-56789"] = "vinfast-vf3-2025",
+            ["43A-99911"] = "vinfast-vf3-2026",
+            ["43A-88888"] = "vinfast-vf7-eco-2026",
+            ["43A-22233"] = "vinfast-limo-green-2025",
             ["43A-66677"] = "vinfast-vf7-plus-2025",
             ["43A-77788"] = "mazda-cx8-premium-2023",
-            ["43A-12345"] = "toyota-corolla-cross-v-2025",
-            ["43B-67890"] = "honda-crv-l-2022",
-            ["43C-11111"] = "kia-sportage-signature-2025",
-            ["43D-22222"] = "mazda-3-luxury-2020",
-            ["43E-33333"] = "hyundai-creta-luxury-2023",
-            ["43F-44444"] = "toyota-yaris-cross-2024"
+            ["43A-12345"] = "vinfast-vf5-2024",
+            ["43B-67890"] = "vinfast-vf6-eco-2024",
+            ["43C-11111"] = "vinfast-vf5-2025",
+            ["43D-22222"] = "vinfast-vf7-2025",
+            ["43E-33333"] = "vinfast-vf6-plus-2024",
+            ["43F-44444"] = "vinfast-minio-green-2026"
         };
 
     public async Task StartAsync(CancellationToken cancellationToken)
