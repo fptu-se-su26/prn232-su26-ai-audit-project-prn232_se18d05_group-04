@@ -1,4 +1,4 @@
-let accessToken = null;
+let accessToken = localStorage.getItem("vivucar_token");
 let currentUser = null;
 let refreshPromise = null;
 

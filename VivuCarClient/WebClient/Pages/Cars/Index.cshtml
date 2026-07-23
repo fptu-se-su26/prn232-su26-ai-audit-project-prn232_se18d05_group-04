@@ -35,7 +35,7 @@
             </a>
             <div class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-600">
                 <a href="/cars" class="text-primary font-semibold">Home</a>
-                <a href="/cars/search" class="hover:text-zinc-900 transition-colors">Search Cars</a>
+                <a href="/cars/search" class="hover:text-zinc-900 transition-colors">Cars</a>
             </div>
             <div class="flex items-center gap-3">
                 <span id="navUserName" class="hidden text-sm font-medium text-zinc-700"></span>
@@ -55,40 +55,40 @@
             </div>
 
             <!-- Quick Search Card -->
-            <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-4xl">
+            <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-4xl text-zinc-950">
                 <h2 class="text-zinc-900 font-bold text-lg mb-4">Quick Search</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div class="md:col-span-3">
                         <label class="block text-xs font-semibold text-zinc-500 mb-1 uppercase tracking-wide">Car name or brand</label>
-                        <input id="homeSearchInput" type="text" placeholder="Toyota Vios, Mazda CX-5, VinFast..."
-                               class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+                        <input id="homeSearchInput" type="text" autocomplete="off" placeholder="Toyota Vios, Mazda CX-5, VinFast..."
+                               class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" style="color: #09090b;" />
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-zinc-500 mb-1 uppercase tracking-wide">Area</label>
-                        <select id="homeLocationSelect" class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-white">
-                            <option value="">All areas</option>
-                            <option>Hai Chau</option><option>Thanh Khe</option><option>Son Tra</option>
-                            <option>Ngu Hanh Son</option><option>Lien Chieu</option><option>Cam Le</option><option>Hoa Vang</option>
+                        <select id="homeLocationSelect" class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-white text-zinc-900" style="color: #09090b;">
+                            <option value="" style="color: #09090b;">All areas</option>
+                            <option style="color: #09090b;">Hai Chau</option><option style="color: #09090b;">Thanh Khe</option><option style="color: #09090b;">Son Tra</option>
+                            <option style="color: #09090b;">Ngu Hanh Son</option><option style="color: #09090b;">Lien Chieu</option><option style="color: #09090b;">Cam Le</option><option style="color: #09090b;">Hoa Vang</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-zinc-500 mb-1 uppercase tracking-wide">Seats</label>
-                        <select id="seatQuickSelect" class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-white">
-                            <option value="">All</option>
-                            <option value="4">4 seats</option><option value="5">5 seats</option><option value="7">7 seats</option>
+                        <select id="seatQuickSelect" class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-white text-zinc-900" style="color: #09090b;">
+                            <option value="" style="color: #09090b;">All</option>
+                            <option value="4" style="color: #09090b;">4 seats</option><option value="5" style="color: #09090b;">5 seats</option><option value="7" style="color: #09090b;">7 seats</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-zinc-500 mb-1 uppercase tracking-wide">Sort by</label>
-                        <select id="homeSortSelect" class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-white">
-                            <option value="">Most relevant</option>
-                            <option value="price_asc">Price: Low to High</option>
-                            <option value="price_desc">Price: High to Low</option>
-                            <option value="rating_desc">Highest Rated</option>
+                        <select id="homeSortSelect" class="w-full border border-zinc-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-white text-zinc-900" style="color: #09090b;">
+                            <option value="" style="color: #09090b;">Most relevant</option>
+                            <option value="price_asc" style="color: #09090b;">Price: Low to High</option>
+                            <option value="price_desc" style="color: #09090b;">Price: High to Low</option>
+                            <option value="rating_desc" style="color: #09090b;">Highest Rated</option>
                         </select>
                     </div>
                 </div>
-                <button id="btnQuickSearch" class="w-full bg-primary hover:bg-green-700 text-white font-bold py-3 px-6 rounded-xl transition-colors text-sm">
+                <button id="btnQuickSearch" style="display:block;width:100%;background:#16a34a;color:#fff;font-weight:700;padding:12px 24px;border-radius:12px;font-size:.875rem;border:none;cursor:pointer;" onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">
                     Search Cars
                 </button>
             </div>
@@ -159,7 +159,7 @@
         &copy; 2026 VivuCar &mdash; Self-Drive Car Rental
     </footer>
 
-    @section Scripts {
+    <!-- Inline scripts (Layout = null) -->
     <script type="module">
         import { authService } from '/js/shared/auth-service.js';
         authService.refresh().then(s => {
@@ -172,12 +172,28 @@
             }
         });
         document.getElementById('navLogoutBtn').addEventListener('click', async () => {
-            await authService.logout(); window.location.href = '/';
+            const { authService: a } = await import('/js/shared/auth-service.js');
+            await a.logout(); window.location.href = '/';
         });
     </script>
     <script>
         const fmt = n => (n || 0).toLocaleString('vi-VN') + '₫';
         const starsHtml = r => { const f = Math.round(r || 0); return '★'.repeat(f) + '☆'.repeat(5 - f); };
+
+        function getStatusBadge(status) {
+            const s = (status || 'Available').toLowerCase();
+            if (s === 'available') {
+                return `<span class="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">Available</span>`;
+            } else if (s === 'rented') {
+                return `<span class="absolute top-3 left-3 bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">Rented</span>`;
+            } else if (s === 'maintenance') {
+                return `<span class="absolute top-3 left-3 bg-orange-100 text-orange-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">Maintenance</span>`;
+            } else if (s === 'blocked') {
+                return `<span class="absolute top-3 left-3 bg-red-100 text-red-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">Blocked</span>`;
+            } else {
+                return `<span class="absolute top-3 left-3 bg-zinc-100 text-zinc-700 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm">${status}</span>`;
+            }
+        }
 
         function carCard(car) {
             const img = car.primaryImageUrl
@@ -186,7 +202,7 @@
             const fuel = { Gasoline:'Gasoline', Electric:'Electric', Diesel:'Diesel', Hybrid:'Hybrid' };
             return `<article class="car-card bg-white rounded-2xl border border-zinc-200 overflow-hidden flex flex-col">
                 <div class="relative overflow-hidden">${img}
-                    <span class="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">Available</span>
+                    ${getStatusBadge(car.status)}
                 </div>
                 <div class="p-4 flex flex-col flex-1">
                     <p class="text-xs text-zinc-400 font-medium mb-1">${car.brandName || ''}</p>
@@ -202,7 +218,7 @@
                     </div>
                     <div class="mt-auto flex items-center justify-between">
                         <div><span class="font-bold text-zinc-900">${fmt(car.dailyPrice)}</span><span class="text-xs text-zinc-400">/day</span></div>
-                        <a href="/cars/detail?id=${car.id}" class="text-xs font-semibold bg-primary/10 text-primary hover:bg-primary hover:text-white px-3 py-1.5 rounded-lg transition-colors">View Details</a>
+                        <a href="/cars/detail?id=${car.id}" style="background:#f0fdf4; color:#15803d; font-size:0.75rem; font-weight:600; padding:6px 14px; border-radius:10px; text-decoration:none; transition:all 0.2s;" onmouseover="this.style.background='#16a34a'; this.style.color='#ffffff';" onmouseout="this.style.background='#f0fdf4'; this.style.color='#15803d';">View Details</a>
                     </div>
                 </div>
             </article>`;
@@ -215,25 +231,34 @@
         async function loadFeatured() {
             try {
                 const r = await fetch('/api/proxy/cars/featured?sortBy=rating_desc&limit=8');
+                if (!r.ok) throw new Error(r.status);
                 const items = await r.json();
                 document.getElementById('featuredCarsGrid').innerHTML = Array.isArray(items) && items.length
                     ? items.map(carCard).join('') : empty('No featured cars yet.');
-            } catch { document.getElementById('featuredCarsGrid').innerHTML = empty('Could not load cars.'); }
+            } catch(e) {
+                console.error('Featured load error:', e);
+                document.getElementById('featuredCarsGrid').innerHTML = empty('Could not load featured cars.');
+            }
         }
 
         async function loadAvailable() {
             try {
-                const r = await fetch('/api/proxy/cars?pageSize=8&sortBy=newest');
+                const r = await fetch('/api/proxy/cars?pageSize=50&sortBy=newest');
+                if (!r.ok) throw new Error(r.status);
                 const data = await r.json();
-                const items = data.items ?? [];
-                document.getElementById('availableCarsGrid').innerHTML = items.length ? items.map(carCard).join('') : empty('No cars available.');
+                const allItems = data.items ?? [];
+                const availableItems = allItems.filter(c => (c.status || 'Available').toLowerCase() === 'available').slice(0, 8);
+                document.getElementById('availableCarsGrid').innerHTML = availableItems.length ? availableItems.map(carCard).join('') : empty('No cars available.');
                 if (data.totalCount != null) {
                     document.getElementById('homeStats').innerHTML = `
-                        <div><div class="text-3xl font-extrabold text-zinc-900">${data.totalCount}+</div><div class="text-sm text-zinc-500 mt-1">Cars Available</div></div>
+                        <div><div class="text-3xl font-extrabold text-zinc-900">${availableItems.length}+</div><div class="text-sm text-zinc-500 mt-1">Cars Available</div></div>
                         <div><div class="text-3xl font-extrabold text-zinc-900">7</div><div class="text-sm text-zinc-500 mt-1">Pickup Areas</div></div>
                         <div><div class="text-3xl font-extrabold text-zinc-900">4.8★</div><div class="text-sm text-zinc-500 mt-1">Avg. Rating</div></div>`;
                 }
-            } catch { document.getElementById('availableCarsGrid').innerHTML = empty('Could not load cars.'); }
+            } catch(e) {
+                console.error('Available load error:', e);
+                document.getElementById('availableCarsGrid').innerHTML = empty('Could not load cars.');
+            }
         }
 
         document.getElementById('btnQuickSearch').addEventListener('click', () => {
@@ -247,9 +272,27 @@
         });
         document.getElementById('homeSearchInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btnQuickSearch').click(); });
 
+        async function loadFilterOptions() {
+            try {
+                const r = await fetch('/api/proxy/cars/filter-options');
+                if (!r.ok) return;
+                const opt = await r.json();
+                if (Array.isArray(opt.districts) && opt.districts.length) {
+                    document.getElementById('homeLocationSelect').innerHTML =
+                        '<option value="" style="color:#09090b;">All areas</option>' +
+                        opt.districts.map(d => `<option value="${d}" style="color:#09090b;">${d}</option>`).join('');
+                }
+                if (Array.isArray(opt.seatCounts) && opt.seatCounts.length) {
+                    document.getElementById('seatQuickSelect').innerHTML =
+                        '<option value="" style="color:#09090b;">All</option>' +
+                        opt.seatCounts.map(s => `<option value="${s}" style="color:#09090b;">${s} seats</option>`).join('');
+                }
+            } catch(e) {}
+        }
+
+        loadFilterOptions();
         loadFeatured();
         loadAvailable();
     </script>
-    }
 </body>
 </html>

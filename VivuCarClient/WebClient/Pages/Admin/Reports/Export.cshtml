@@ -1,9 +1,10 @@
-﻿@page "/admin/reports/export"
+@page "/admin/reports/export"
 @model WebClient.Pages.Admin.Reports.ExportModel
 @{
     ViewData["Title"] = "Xuất báo cáo";
     ViewData["AdminPage"] = "reports";
 }
+<div data-admin-reports-page>
 
 <div class="page-heading"><div><h1>Xuất báo cáo</h1><p>Preview từ bảng `payments`, `users`, `cars`, `daily_revenue_snapshots`; lịch sử export lưu mock vào `export_jobs`.</p></div></div>
     <section class="report-types" id="reportTypes"><label class="radio-card"><input type="radio" name="reportType" value="payments" checked>Giao dịch</label><label class="radio-card"><input type="radio" name="reportType" value="users">Khách hàng</label><label class="radio-card"><input type="radio" name="reportType" value="cars">Danh sách xe</label><label class="radio-card"><input type="radio" name="reportType" value="revenue">Doanh thu</label></section>
@@ -12,6 +13,6 @@
     <section class="panel"><div class="panel-head"><h2>Lịch sử export_jobs</h2></div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Loại</th><th>Trạng thái</th><th>File</th><th>Tạo lúc</th></tr></thead><tbody id="exportJobsBody"></tbody></table></div></section>
 
 <div class="modal-backdrop" id="pdfExportModal"><div class="modal"><div class="modal-header"><h2>Tùy chọn PDF</h2><button class="icon-button" type="button" data-close-modal>×</button></div><label>Tiêu đề báo cáo<input id="pdfTitle" value="Báo cáo VivuCar"></label><label class="check-row"><input id="includeLogo" type="checkbox" checked> Hiển thị logo công ty</label><label class="check-row"><input id="includeFooter" type="checkbox" checked> Hiển thị footer</label><div class="modal-actions"><button class="btn btn-secondary" data-close-modal>Hủy</button><button class="btn btn-primary" id="btnCreatePdf">Tạo PDF</button></div></div></div>
-@section Scripts {
-    <script src="~/js/html/admin-export-reports.js" asp-append-version="true"></script>
-}
+</div>
+@section Styles { <link rel="stylesheet" href="~/css/admin-export.css" asp-append-version="true" /> }
+@section Scripts { <script type="module" src="~/js/admin/reports/export.js" asp-append-version="true"></script> }

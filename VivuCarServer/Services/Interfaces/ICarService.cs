@@ -14,4 +14,6 @@ public interface ICarService
     Task<IReadOnlyList<CarSearchItemDto>> GetFeaturedCarsAsync(string? sortBy, int limit, CancellationToken cancellationToken = default);
     
     Task<IReadOnlyList<string>> GetSearchSuggestionsAsync(string query, CancellationToken cancellationToken = default);
+
+    Task<CarFilterOptionsDto> GetFilterOptionsAsync(CancellationToken cancellationToken = default);
 }

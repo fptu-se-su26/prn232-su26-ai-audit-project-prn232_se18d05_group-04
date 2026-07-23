@@ -12,10 +12,11 @@ public class CloudinaryStorageService : IFileStorageService
 
     public CloudinaryStorageService(IConfiguration configuration)
     {
-        var cloudName = configuration["Cloudinary__CloudName"];
-        var apiKey = configuration["Cloudinary__ApiKey"];
-        var apiSecret = configuration["Cloudinary__ApiSecret"];
-        _folderName = configuration["Cloudinary__FolderName"] ?? "Vivucar";
+        var cloudinaryConfiguration = configuration.GetSection("Cloudinary");
+        var cloudName = cloudinaryConfiguration["CloudName"];
+        var apiKey = cloudinaryConfiguration["ApiKey"];
+        var apiSecret = cloudinaryConfiguration["ApiSecret"];
+        _folderName = cloudinaryConfiguration["FolderName"] ?? "Vivucar";
 
         if (string.IsNullOrEmpty(cloudName) || string.IsNullOrEmpty(apiKey) || string.IsNullOrEmpty(apiSecret))
         {

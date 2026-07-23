@@ -1,4 +1,5 @@
 using BusinessObjects.Data;
+using BusinessObjects.Data.Seed;
 using BusinessObjects.Enums;
 using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +18,25 @@ public class AppDbSeederHostedService(
     // Password123!
     private const string DefaultPasswordHash =
         "AQAAAAIAAYagAAAAEJn3SErB4UJSTrOTrtphxBkS/fG69fareXbTJkKAzNAuzibKzreYyYlZE0iTw5gDbQ==";
+
+    // Legacy demo plates are retained because bookings reference them. Metadata and
+    // galleries are synchronized to distinct catalog cars so each car matches its images.
+    private static readonly IReadOnlyDictionary<string, string> LegacyCarCatalogSlugs =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["43A-56789"] = "vinfast-vf3-2025",
+            ["43A-99911"] = "vinfast-vf3-2026",
+            ["43A-88888"] = "vinfast-vf7-eco-2026",
+            ["43A-22233"] = "vinfast-limo-green-2025",
+            ["43A-66677"] = "vinfast-vf7-plus-2025",
+            ["43A-77788"] = "mazda-cx8-premium-2023",
+            ["43A-12345"] = "vinfast-vf5-2024",
+            ["43B-67890"] = "vinfast-vf6-eco-2024",
+            ["43C-11111"] = "vinfast-vf5-2025",
+            ["43D-22222"] = "vinfast-vf7-2025",
+            ["43E-33333"] = "vinfast-vf6-plus-2024",
+            ["43F-44444"] = "vinfast-minio-green-2026"
+        };
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
@@ -104,6 +124,18 @@ public class AppDbSeederHostedService(
             description: "Sedan hạng D sang trọng, êm ái, phù hợp công tác dài ngày.",
             cancellationToken: cancellationToken);
 
+        var legacyCatalogSync = await CarSeed.SynchronizeCarsFromCatalogAsync(
+            db,
+            LegacyCarCatalogSlugs,
+            cancellationToken
+        );
+        logger.LogInformation(
+            "[Seeder] Legacy cars synchronized: {CarsUpdated} cars, {ImagesAdded} images added, {ImagesRemoved} stale or duplicate images removed.",
+            legacyCatalogSync.CarsUpdated,
+            legacyCatalogSync.ImagesAdded,
+            legacyCatalogSync.ImagesRemoved
+        );
+
         logger.LogInformation("[Seeder] Cars ready.");
 
         // ── 4. Voucher ────────────────────────────────────────────────────────
@@ -112,6 +144,8 @@ public class AppDbSeederHostedService(
         // ── 5. Bookings & Payments & Incidents ────────────────────────────────
         logger.LogInformation("[Seeder] Seeding bookings...");
         await SeedBookingsAsync(db, customer1, customer2, owner1, owner2, car1, car2, car3, car4, car6, cancellationToken);
+        var snapshotsChanged = await BaseSeed.RefreshRevenueSnapshotsAsync(db, cancellationToken);
+        logger.LogInformation("[Seeder] Revenue snapshots synchronized: {SnapshotsChanged} changed.", snapshotsChanged);
 
         logger.LogInformation("[Seeder] Seed completed successfully.");
     }
@@ -435,7 +469,7 @@ public class AppDbSeederHostedService(
                 CreatedAt       = now.AddDays(-15)
             });
         }
-        
+
         if (!await db.PaymentTransactions.AnyAsync(p => p.TransactionCode == "CASH-B6-REM01", ct))
         {
             db.PaymentTransactions.Add(new PaymentTransaction
@@ -712,16 +746,15 @@ public class AppDbSeederHostedService(
         if (await db.Vouchers.AnyAsync(v => v.Code == "VIVUCAR10", ct)) return;
         db.Vouchers.Add(new Voucher
         {
-            Code          = "VIVUCAR10",
-            Description   = "Giảm 10% tổng hóa đơn, tối đa 200.000đ",
-            DiscountType  = DiscountType.Percentage,
-            DiscountValue = 10,
+            Name           = "VivuCar 10%",
+            Code           = "VIVUCAR10",
+            DiscountType   = DiscountType.Percentage,
+            DiscountValue  = 10,
             MinOrderAmount = 500_000,
-            StartDateTime = DateTime.UtcNow.AddDays(-1),
-            EndDateTime   = DateTime.UtcNow.AddMonths(3),
-            UsageLimit    = 100,
-            UsedCount     = 0,
-            IsActive      = true
+            MaxDiscount    = 200_000,
+            Quantity       = 100,
+            ExpiresAt      = DateTime.UtcNow.AddMonths(3),
+            CreatedAt      = DateTime.UtcNow
         });
         await db.SaveChangesAsync(ct);
     }

@@ -75,10 +75,6 @@ public class BookingExpirationHostedService(
                     {
                         var voucher = await dbContext.Vouchers
                             .SingleOrDefaultAsync(v => v.Code.ToUpper() == booking.BookingVoucher.Code.ToUpper(), cancellationToken);
-                        if (voucher != null && voucher.UsedCount > 0)
-                        {
-                            voucher.UsedCount--;
-                        }
                     }
                 }
 
@@ -96,3 +92,4 @@ public class BookingExpirationHostedService(
         }
     }
 }
+

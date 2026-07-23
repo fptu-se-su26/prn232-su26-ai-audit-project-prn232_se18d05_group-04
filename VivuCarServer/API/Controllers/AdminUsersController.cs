@@ -69,4 +69,23 @@ public class AdminUsersController(IAdminUserService adminUserService)
 
         return succeeded ? NoContent() : NotFound();
     }
+
+    [HttpDelete("customers/{userId:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> SoftDeleteCustomer(
+        int userId,
+        CancellationToken cancellationToken
+    )
+    {
+        var succeeded = await adminUserService.SoftDeleteCustomerAsync(
+            userId,
+            HttpContext.Connection.RemoteIpAddress?.ToString(),
+            cancellationToken
+        );
+
+        return succeeded
+            ? NoContent()
+            : NotFound(new { message = "Customer account was not found." });
+    }
 }

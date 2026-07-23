@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Enums;
+using BusinessObjects.Enums;
 using BusinessObjects.Models;
 using Moq;
 using Repositories.Interfaces;
@@ -151,6 +151,38 @@ public class AdminCarServiceTests
         Assert.Contains("blocked_reason", exception.Errors!.Keys);
     }
 
+    [Fact]
+    public async Task AddImagesAsync_RejectsMoreThanEightTotalImages()
+    {
+        var car = CreateCar(CarStatus.Available);
+        car.Images = Enumerable.Range(1, 8)
+            .Select(index => new CarImage
+            {
+                Id = index,
+                CarId = car.Id,
+                ImageUrl = $"https://example.test/{index}.jpg",
+                IsPrimary = index == 1,
+                DisplayOrder = index
+            })
+            .ToList();
+        repository.Setup(repo => repo.FindByIdWithDetailsAsync(car.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(car);
+
+        var exception = await Assert.ThrowsAsync<AdminCarServiceException>(() =>
+            service.AddImagesAsync(12, car.Id, [
+                new AdminCarImageCreateRequest
+                {
+                    ImageUrl = "https://example.test/9.jpg"
+                }
+            ]));
+
+        Assert.Equal(400, exception.StatusCode);
+        Assert.Contains("files", exception.Errors!.Keys);
+        repository.Verify(
+            repo => repo.AddImageAsync(It.IsAny<CarImage>(), It.IsAny<CancellationToken>()),
+            Times.Never
+        );
+    }
     private static Car CreateCar(CarStatus status)
     {
         var owner = new AppUser { Id = 2, FullName = "Owner", Role = UserRole.CarOwner };

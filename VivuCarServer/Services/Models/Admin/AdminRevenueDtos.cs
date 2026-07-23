@@ -1,4 +1,4 @@
-﻿namespace Services.Models.Admin;
+namespace Services.Models.Admin;
 
 public sealed class AdminRevenueReportResponse
 {
@@ -7,6 +7,15 @@ public sealed class AdminRevenueReportResponse
     public required AdminRevenueSummary Summary { get; init; }
     public required IReadOnlyList<AdminRevenueDailyItem> Daily { get; init; }
     public required IReadOnlyList<AdminRevenueRecentBooking> RecentBookings { get; init; }
+    public required AdminRevenuePagination Pagination { get; init; }
+}
+
+public sealed class AdminRevenuePagination
+{
+    public int Page { get; init; }
+    public int PageSize { get; init; }
+    public int TotalItems { get; init; }
+    public int TotalPages { get; init; }
 }
 
 public sealed class AdminRevenueSummary

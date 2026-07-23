@@ -1,43 +1,109 @@
-﻿@page "/admin/dashboard"
+@page "/admin/dashboard"
 @model WebClient.Pages.Admin.DashboardModel
-@{ ViewData["Title"] = "Dashboard doanh thu"; ViewData["AdminPage"] = "dashboard"; }
-@section Styles { <link rel="stylesheet" href="~/css/admin-dashboard.css" asp-append-version="true" /> }
+@{
+    ViewData["Title"] = "Dashboard doanh thu";
+    ViewData["AdminPage"] = "dashboard";
+}
+<div data-admin-dashboard-page>
 
-<div class="revenue-page" data-admin-dashboard-page>
-  <header class="revenue-heading">
-    <div><p class="revenue-eyebrow">Báo cáo vận hành</p><h1>Dashboard doanh thu</h1><p>Theo dõi doanh thu đã chốt từ snapshot hằng ngày và trạng thái các đơn gần nhất.</p></div>
-    <p class="revenue-period" id="selectedPeriod" aria-live="polite">Đang tải khoảng thời gian…</p>
-  </header>
+<div class="mb-6 flex items-start justify-between gap-4 max-sm:grid">
+          <div>
+            <h1 class="m-0 text-3xl font-bold tracking-tight text-zinc-900">Dashboard doanh thu</h1>
+            <p class="mt-1.5 max-w-[72ch] text-sm leading-6 text-zinc-600">Theo dõi dòng tiền từ các đơn đã thanh toán thành công và tình trạng xử lý đơn hàng.</p>
+          </div>
+        </div>
 
-  <section class="revenue-filter" aria-labelledby="filterTitle">
-    <div><h2 id="filterTitle">Khoảng báo cáo</h2><p>Dữ liệu tối đa 366 ngày cho mỗi lần truy vấn.</p></div>
-    <div class="revenue-presets" id="revenuePresets" role="group" aria-label="Chọn nhanh khoảng báo cáo">
-      <button type="button" data-range="today">Hôm nay</button><button type="button" data-range="7days">7 ngày</button><button type="button" data-range="month" class="is-active">Tháng này</button><button type="button" data-range="year">Năm nay</button><button type="button" data-range="custom">Tùy chỉnh</button>
-    </div>
-    <form class="revenue-custom-range" id="customRangeForm" hidden>
-      <label>Từ ngày<input id="dateFrom" name="from" type="date" required /></label><label>Đến ngày<input id="dateTo" name="to" type="date" required /></label><button class="revenue-primary-button" type="submit">Áp dụng</button>
-    </form>
-  </section>
+        <section class="mt-4 mb-6">
+          <div id="revenueRangeButtons" class="flex gap-2 overflow-x-auto whitespace-nowrap pb-1" aria-label="Chọn mốc thời gian doanh thu"></div>
+          <div id="customRangePanel" class="mt-3 hidden rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm">
+            <div class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-end gap-3 max-md:grid-cols-1">
+              <label class="grid gap-1.5 text-sm font-medium text-zinc-700">
+                Ngày bắt đầu
+                <input id="customStartDate" class="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100" type="date">
+              </label>
+              <label class="grid gap-1.5 text-sm font-medium text-zinc-700">
+                Ngày kết thúc
+                <input id="customEndDate" class="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none transition focus:border-emerald-500 focus:ring-4 focus:ring-emerald-100" type="date">
+              </label>
+              <button id="applyCustomRange" class="rounded-xl border border-emerald-600 bg-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700" type="button">Áp dụng</button>
+            </div>
+          </div>
+        </section>
 
-  <div class="revenue-alert" id="dashboardError" role="alert" hidden><div><strong>Không tải được báo cáo</strong><p id="dashboardErrorMessage"></p></div><button type="button" id="retryDashboard">Thử lại</button></div>
+        <section class="grid grid-cols-2 gap-5 max-lg:grid-cols-1">
+          <article class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+            <div class="mb-5">
+              <h2 class="m-0 text-lg font-semibold tracking-tight text-zinc-900">Thu theo đơn thành công</h2>
+              <p id="revenueCardRangeTitle" class="mt-1 text-sm text-zinc-500">Tổng doanh thu trong khoảng đã chọn.</p>
+            </div>
+            <div class="rounded-xl border border-zinc-100 bg-zinc-50 p-5">
+              <div class="flex items-center justify-between gap-4 max-sm:items-start">
+                <div class="flex items-center gap-3">
+                  <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-emerald-50 text-emerald-600">
+                    <svg aria-hidden="true" class="h-5 w-5 fill-current" viewBox="0 0 512 512"><path d="M64 64c0-17.7-14.3-32-32-32S0 46.3 0 64v336c0 44.2 35.8 80 80 80h400c17.7 0 32-14.3 32-32s-14.3-32-32-32H80c-8.8 0-16-7.2-16-16V64zm375 111c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-87 87-39-39c-9.4-9.4-24.6-9.4-33.9 0l-96 96c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l79-79 39 39c9.4 9.4 24.6 9.4 33.9 0l104-104z"/></svg>
+                  </span>
+                  <div>
+                    <p id="completedOrdersTitle" class="text-sm font-medium text-zinc-500">Tổng đơn hoàn thành</p>
+                    <p class="mt-1 text-xs text-zinc-400" id="successfulOrderCount">0 đơn đã thanh toán</p>
+                  </div>
+                </div>
+                <strong id="successfulRevenue" class="text-right text-xl font-semibold tracking-tight text-zinc-900 max-sm:text-left">0 VND</strong>
+              </div>
+            </div>
+            <div class="mt-4 grid grid-cols-2 divide-x divide-zinc-200 border-t border-zinc-100 pt-4">
+              <div class="pr-4">
+                <span class="block text-xs font-medium text-zinc-500">Giá trị trung bình / đơn</span>
+                <strong id="averageOrderValue" class="mt-1 block text-base font-semibold text-zinc-900">0 VND</strong>
+              </div>
+              <div class="pl-4">
+                <span class="block text-xs font-medium text-zinc-500">Doanh thu ròng</span>
+                <strong id="netRevenue" class="mt-1 block text-base font-semibold text-zinc-900">0 VND</strong>
+              </div>
+            </div>
+          </article>
 
-  <section class="revenue-kpis" aria-label="Chỉ số doanh thu">
-    <article class="revenue-kpi revenue-kpi-primary"><span>Tổng doanh thu</span><strong id="grossRevenue">—</strong><small id="completedSummary">Đang tải…</small></article>
-    <article class="revenue-kpi"><span>Doanh thu thuần</span><strong id="netRevenue">—</strong><small>Sau các khoản điều chỉnh</small></article>
-    <article class="revenue-kpi"><span>Tiền cọc đã thu</span><strong id="depositCollected">—</strong><small id="totalBookingSummary">Đang tải…</small></article>
-    <article class="revenue-kpi"><span>Giá trị đơn trung bình</span><strong id="averageOrderValue">—</strong><small id="cancelRateSummary">Đang tải…</small></article>
-  </section>
+          <article class="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+            <div class="mb-4">
+              <h2 class="m-0 text-lg font-semibold tracking-tight text-zinc-900">Thống kê trạng thái đơn hàng</h2>
+              <p class="mt-1 text-sm text-zinc-500">Tỷ trọng đơn theo thanh toán và hủy đơn.</p>
+            </div>
+            <div class="grid place-items-center">
+              <div id="orderStatusDonut" class="relative grid h-48 w-48 place-items-center rounded-full bg-zinc-100">
+                <div class="flex h-28 w-28 flex-col items-center justify-center rounded-full bg-white text-center shadow-sm">
+                  <span class="whitespace-nowrap text-xs font-medium leading-none text-zinc-500">Tổng đơn hàng</span>
+                  <strong id="totalOrders" class="mt-2 block text-3xl font-bold leading-none tracking-tight text-zinc-900">0</strong>
+                </div>
+              </div>
+              <div id="orderStatusLegend" class="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-zinc-600"></div>
+            </div>
+          </article>
+        </section>
 
-  <section class="revenue-panel" aria-labelledby="chartTitle">
-    <div class="revenue-panel-heading"><div><h2 id="chartTitle">Doanh thu theo ngày</h2><p>Chiều cao cột dựa trên tổng doanh thu snapshot.</p></div><span id="snapshotCount">0 ngày dữ liệu</span></div>
-    <div class="revenue-skeleton revenue-chart-skeleton" id="chartSkeleton" aria-label="Đang tải biểu đồ"></div><div class="revenue-chart" id="revenueChart" hidden></div>
-    <div class="revenue-empty" id="chartEmpty" hidden><strong>Chưa có snapshot doanh thu</strong><p>Khoảng này chưa được tổng hợp; hệ thống không tự tạo số liệu ước tính.</p></div>
-  </section>
+        <section class="mt-5 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+          <div class="mb-5 flex items-start justify-between gap-4 max-sm:grid">
+            <div>
+              <h2 id="revenueChartTitle" class="m-0 text-lg font-semibold tracking-tight text-zinc-900">Doanh thu theo tháng</h2>
+              <p id="revenueChartDescription" class="mt-1 text-sm text-zinc-500">Chỉ tính doanh thu từ các đơn đã thanh toán thành công.</p>
+            </div>
+            <div class="flex flex-wrap items-center justify-end gap-2 max-sm:justify-start">
+              <span id="chartGranularityBadge" class="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs font-semibold text-zinc-600">Theo ngày</span>
+              <span id="revenueRangeBadge" class="rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">Tháng này</span>
+            </div>
+          </div>
+          <div id="monthlyRevenueChart" class="min-h-[380px]"></div>
+        </section>
 
-  <section class="revenue-panel" aria-labelledby="recentTitle">
-    <div class="revenue-panel-heading"><div><h2 id="recentTitle">Đơn gần đây</h2><p>Tối đa 10 đơn được tạo trong khoảng báo cáo.</p></div><span id="recentCount">—</span></div>
-    <div class="revenue-table-wrap"><table><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Xe</th><th>Ngày nhận</th><th>Tổng tiền</th><th>Booking</th><th>Thanh toán</th></tr></thead><tbody id="recentBookingsBody"><tr><td colspan="7"><div class="revenue-row-skeleton"></div></td></tr></tbody></table></div>
-    <div class="revenue-empty" id="recentEmpty" hidden><strong>Chưa có đơn trong khoảng này</strong><p>Hãy chọn khoảng thời gian khác để xem hoạt động gần đây.</p></div>
-  </section>
+        <section class="mt-5 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
+          <div class="mb-5 flex items-start justify-between gap-4 max-sm:grid">
+            <div>
+              <h2 class="m-0 text-lg font-semibold tracking-tight text-zinc-900">Chi tiết đơn hàng theo trạng thái</h2>
+              <p class="mt-1 text-sm text-zinc-500">Danh sách đơn bị hủy, chờ thanh toán và đã thanh toán trong khoảng thời gian đang chọn.</p>
+            </div>
+            <span id="orderDetailCount" class="rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs font-semibold text-zinc-600">0 đơn</span>
+          </div>
+          <div id="orderDetailTable"></div>
+          <nav id="orderPagination" class="mt-4 flex items-center justify-between gap-3 max-sm:grid" aria-label="Phân trang đơn hàng"></nav>
+        </section>
 </div>
+@section Styles { <link rel="stylesheet" href="~/css/admin-dashboard.css" asp-append-version="true" /> }
 @section Scripts { <script type="module" src="~/js/admin/dashboard.js" asp-append-version="true"></script> }

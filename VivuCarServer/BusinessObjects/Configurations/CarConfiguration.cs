@@ -1,5 +1,4 @@
 ﻿using BusinessObjects.Models;
-using BusinessObjects.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -64,32 +63,5 @@ public class CarConfiguration : IEntityTypeConfiguration<Car>
             .HasForeignKey(car => car.CarTypeId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        entity.HasData(new Car
-        {
-            Id = 1,
-            OwnerId = 6,
-            CarBrandId = 1,
-            CarModelId = 1,
-            CarTypeId = 1,
-            Name = "Toyota Vios 2022",
-            LicensePlate = "43A-12345",
-            Year = 2022,
-            Color = "White",
-            KilometersDriven = 28000,
-            Description = "Clean 5-seat family car with stable handling and efficient fuel usage.",
-            Location = "Hai Chau, Da Nang",
-            DailyPrice = 600000m,
-            PricePerHour = 90000m,
-            InsuranceFeePerDay = 50000m,
-            DeliveryFee = 10000m,
-            DepositAmount = 1500000m,
-            Status = CarStatus.Available,
-            PreviousStatus = null,
-            BlockedReason = null,
-            SeatCount = 5,
-            TransmissionType = TransmissionType.Automatic,
-            FuelType = FuelType.Gasoline,
-            CreatedAt = new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc)
-        });
     }
 }

@@ -15,4 +15,5 @@ public class CarSearchItemDto
     public double AverageRating { get; set; }
     public int TotalBookings { get; set; }
     public string OwnerName { get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
 }

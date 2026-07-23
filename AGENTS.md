@@ -21,9 +21,6 @@ Do not use:
 - React
 - Vue
 - Angular
-- Bootstrap
-- Tailwind
-- jQuery
 - UI component frameworks
 
 Use plain browser APIs only.

@@ -23,6 +23,7 @@ public static class ServiceConfiguration
         services.AddScoped<IBookingService, BookingService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IAdminCarService, AdminCarService>();
+        services.AddScoped<IAdminVoucherService, AdminVoucherService>();
         services.AddScoped<IAdminReportService, AdminReportService>();
         services.AddScoped<IFileStorageService, CloudinaryStorageService>();
         services.AddScoped<ICarService, CarService>();
@@ -36,3 +37,5 @@ public static class ServiceConfiguration
         return services;
     }
 }
+
+

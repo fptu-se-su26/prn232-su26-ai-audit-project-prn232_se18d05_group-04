@@ -46,6 +46,14 @@ public class CarsController(ICarService carService) : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("filter-options")]
+    [ProducesResponseType(typeof(CarFilterOptionsDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetFilterOptions(CancellationToken cancellationToken)
+    {
+        var result = await carService.GetFilterOptionsAsync(cancellationToken);
+        return Ok(result);
+    }
+
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(CarDetailDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -43,61 +43,79 @@ public class MiotoCarSeedHostedService(
         var dbContext = scope.ServiceProvider.GetRequiredService<VivuCarDbContext>();
         var owner = await EnsureSeedOwnerAsync(dbContext, cancellationToken);
         var dataRoot = ResolveDataRoot(payload);
-        var maxCars = configuration.GetValue("MiotoSeed:MaxCars", payload.Cars.Count);
-        var seededCount = 0;
-        var skippedCount = 0;
-
-        foreach (var seedCar in payload.Cars.Take(maxCars))
-        {
-            if (await dbContext.Cars.AnyAsync(car => car.LicensePlate == seedCar.LicensePlate, cancellationToken))
+        var qualifiedCars = payload.Cars
+            .Select(car =>
             {
-                skippedCount++;
-                continue;
-            }
+                car.Images = car.Images
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+                return car;
+            })
+            .Where(car => car.Images.Count >= 3)
+            .ToList();
+        var maxCars = configuration.GetValue("MiotoSeed:MaxCars", qualifiedCars.Count);
+        var seededCount = 0;
+        var updatedCount = 0;
+        var rejectedCount = payload.Cars.Count - qualifiedCars.Count;
 
+        foreach (var seedCar in qualifiedCars.Take(maxCars))
+        {
             var brand = await EnsureBrandAsync(dbContext, seedCar.Brand, cancellationToken);
             var model = await EnsureModelAsync(dbContext, brand, seedCar.Model, cancellationToken);
             var type = await EnsureTypeAsync(dbContext, seedCar.CarType, cancellationToken);
+            var car = await dbContext.Cars
+                .Include(item => item.Images)
+                .SingleOrDefaultAsync(
+                    item => item.LicensePlate == seedCar.LicensePlate,
+                    cancellationToken
+                );
 
-            var car = new Car
+            if (car is null)
             {
-                OwnerId = owner.Id,
-                CarBrandId = brand.Id,
-                CarModelId = model.Id,
-                CarTypeId = type.Id,
-                Name = seedCar.Title,
-                LicensePlate = seedCar.LicensePlate,
-                Year = seedCar.Year.HasValue ? (short?)seedCar.Year.Value : null,
-                Color = null,
-                KilometersDriven = Math.Max(0, seedCar.KilometersDriven),
-                Description = seedCar.Description,
-                Location = seedCar.Address,
-                DailyPrice = seedCar.PricePerDay,
-                PricePerHour = seedCar.PricePerHours,
-                InsuranceFeePerDay = 0,
-                DeliveryFee = 0,
-                DepositAmount = 0,
-                Status = ParseStatus(seedCar.Status),
-                SeatCount = seedCar.Seats,
-                TransmissionType = ParseTransmission(seedCar.Transmission),
-                FuelType = ParseFuel(seedCar.FuelType),
-                CreatedAt = DateTime.UtcNow
-            };
+                car = new Car
+                {
+                    LicensePlate = seedCar.LicensePlate,
+                    CreatedAt = DateTime.UtcNow
+                };
+                dbContext.Cars.Add(car);
+                seededCount++;
+            }
+            else
+            {
+                updatedCount++;
+            }
 
-            dbContext.Cars.Add(car);
+            car.OwnerId = owner.Id;
+            car.CarBrandId = brand.Id;
+            car.CarModelId = model.Id;
+            car.CarTypeId = type.Id;
+            car.Name = seedCar.Title;
+            car.Year = seedCar.Year.HasValue ? (short?)seedCar.Year.Value : null;
+            car.Color = null;
+            car.KilometersDriven = Math.Max(0, seedCar.KilometersDriven);
+            car.Description = seedCar.Description;
+            car.Location = seedCar.Address;
+            car.DailyPrice = seedCar.PricePerDay;
+            car.PricePerHour = seedCar.PricePerHours;
+            car.InsuranceFeePerDay = 0;
+            car.DeliveryFee = 0;
+            car.DepositAmount = 0;
+            car.Status = ParseStatus(seedCar.Status);
+            car.SeatCount = seedCar.Seats;
+            car.TransmissionType = ParseTransmission(seedCar.Transmission);
+            car.FuelType = ParseFuel(seedCar.FuelType);
+
             await dbContext.SaveChangesAsync(cancellationToken);
-
             await SeedImagesAsync(dbContext, car, seedCar, dataRoot, cancellationToken);
-            seededCount++;
         }
 
         logger.LogInformation(
-            "Mioto car seed completed. Seeded {SeededCount} cars, skipped {SkippedCount} existing cars.",
+            "Mioto car seed completed. Seeded {SeededCount}, updated {UpdatedCount}, rejected {RejectedCount} cars with fewer than 3 distinct image paths.",
             seededCount,
-            skippedCount
+            updatedCount,
+            rejectedCount
         );
     }
-
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
     private string ResolveSeedFilePath()
@@ -206,38 +224,87 @@ public class MiotoCarSeedHostedService(
         var destinationFolder = Path.Combine(webRoot, "uploads", "seed", "cars", car.LicensePlate.Replace("-", ""));
         Directory.CreateDirectory(destinationFolder);
 
-        var displayOrder = 1;
+        var desiredUrls = new List<string>();
         foreach (var relativeImagePath in seedCar.Images)
         {
-            var sourcePath = Path.GetFullPath(Path.Combine(dataRoot, relativeImagePath.Replace('/', Path.DirectorySeparatorChar)));
-            if (!File.Exists(sourcePath))
+            var sourcePath = Path.GetFullPath(
+                Path.Combine(
+                    dataRoot,
+                    relativeImagePath.Replace('/', Path.DirectorySeparatorChar)
+                )
+            );
+            var fileName = Path.GetFileName(relativeImagePath);
+            var destinationPath = Path.Combine(destinationFolder, fileName);
+            if (File.Exists(sourcePath))
             {
-                logger.LogWarning("Seed image was skipped because source file was missing: {SourcePath}.", sourcePath);
+                File.Copy(sourcePath, destinationPath, overwrite: true);
+            }
+            else if (!File.Exists(destinationPath))
+            {
+                logger.LogWarning(
+                    "Seed image was skipped because both source and packaged files are missing: {SourcePath}.",
+                    sourcePath
+                );
                 continue;
             }
 
-            var extension = Path.GetExtension(sourcePath);
-            var fileName = $"{displayOrder:00}{extension}";
-            var destinationPath = Path.Combine(destinationFolder, fileName);
-            if (!File.Exists(destinationPath))
+            desiredUrls.Add(
+                $"/uploads/seed/cars/{car.LicensePlate.Replace("-", "")}/{fileName}"
+            );
+        }
+
+        desiredUrls = desiredUrls
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (desiredUrls.Count < 3)
+        {
+            throw new InvalidOperationException(
+                $"Mioto seed car '{seedCar.LicensePlate}' must resolve to at least 3 distinct images."
+            );
+        }
+
+        var existingImages = car.Images.ToList();
+        foreach (var duplicate in existingImages
+            .GroupBy(image => image.ImageUrl, StringComparer.OrdinalIgnoreCase)
+            .SelectMany(group => group.Skip(1))
+            .ToList())
+        {
+            dbContext.CarImages.Remove(duplicate);
+            existingImages.Remove(duplicate);
+        }
+
+        var desiredUrlSet = desiredUrls.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        foreach (var staleImage in existingImages
+            .Where(image => !desiredUrlSet.Contains(image.ImageUrl))
+            .ToList())
+        {
+            dbContext.CarImages.Remove(staleImage);
+            existingImages.Remove(staleImage);
+        }
+
+        for (var index = 0; index < desiredUrls.Count; index++)
+        {
+            var publicUrl = desiredUrls[index];
+            var image = existingImages.FirstOrDefault(item =>
+                string.Equals(item.ImageUrl, publicUrl, StringComparison.OrdinalIgnoreCase)
+            );
+            if (image is null)
             {
-                File.Copy(sourcePath, destinationPath);
+                image = new CarImage
+                {
+                    CarId = car.Id,
+                    ImageUrl = publicUrl
+                };
+                dbContext.CarImages.Add(image);
+                existingImages.Add(image);
             }
 
-            var publicUrl = $"/uploads/seed/cars/{car.LicensePlate.Replace("-", "")}/{fileName}";
-            dbContext.CarImages.Add(new CarImage
-            {
-                CarId = car.Id,
-                ImageUrl = publicUrl,
-                IsPrimary = displayOrder == 1,
-                DisplayOrder = displayOrder
-            });
-            displayOrder++;
+            image.IsPrimary = index == 0;
+            image.DisplayOrder = index + 1;
         }
 
         await dbContext.SaveChangesAsync(cancellationToken);
     }
-
     private static CarStatus ParseStatus(string value) => value.Trim().ToLowerInvariant() switch
     {
         "rented" => CarStatus.Rented,

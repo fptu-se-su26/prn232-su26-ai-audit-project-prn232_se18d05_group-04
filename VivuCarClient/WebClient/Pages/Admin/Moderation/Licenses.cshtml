@@ -1,9 +1,10 @@
-﻿@page "/admin/moderation/licenses"
+@page "/admin/moderation/licenses"
 @model WebClient.Pages.Admin.Moderation.LicensesModel
 @{
     ViewData["Title"] = "Kiểm duyệt GPLX";
     ViewData["AdminPage"] = "moderation-licenses";
 }
+<div data-admin-licenses-page>
 
 <div class="page-heading">
           <div>
@@ -56,6 +57,5 @@
       </div>
     </div>
   </div>
-@section Scripts {
-    <script src="~/js/html/admin-moderation-licenses.js" asp-append-version="true"></script>
-}
+</div>
+@section Scripts { <script type="module" src="~/js/admin/moderation/licenses.js" asp-append-version="true"></script> }

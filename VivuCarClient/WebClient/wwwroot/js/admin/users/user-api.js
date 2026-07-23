@@ -31,3 +31,8 @@ export async function unlockUser(userId) {
     const response = await apiFetch(`api/admin/users/${userId}/unlock`, { method: "PATCH" });
     await ensureOk(response, "Unable to unlock this user.");
 }
+
+export async function softDeleteCustomer(userId) {
+    const response = await apiFetch("api/admin/users/customers/" + userId, { method: "DELETE" });
+    await ensureOk(response, "Unable to soft-delete this customer.");
+}

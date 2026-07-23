@@ -57,7 +57,7 @@
       <aside class="admin-sidebar" data-admin-sidebar>
         <div class="flex items-center gap-2">
           <a class="sidebar-brand min-w-0 flex-1" href="admin-dashboard.html" title="VivuCar Admin" data-sidebar-logo>
-            <span class="brand-mark">${adminIcons.car}</span>
+            <img class="brand-mark" src="/logo.webp" alt="" width="40" height="40">
             <span class="admin-sidebar-title"><span>VivuCar</span><span class="text-xs font-semibold text-zinc-500">Admin Console</span></span>
           </a>
           <button class="admin-sidebar-toggle" type="button" data-sidebar-collapse-toggle aria-label="Thu gá»n sidebar" title="Thu gá»n sidebar">${chevronLeft}</button>
@@ -115,7 +115,7 @@
     const avatar = currentUser?.avatar_url || window.VivuCarDB.user_documents.find((doc) => doc.user_id === currentUser?.id && doc.document_type === "avatar")?.file_url;
     return `
       <header class="user-header">
-        <a class="sidebar-brand" href="home.html"><span class="brand-mark">VC</span><span>VivuCar</span></a>
+        <a class="sidebar-brand" href="home.html"><img class="brand-mark" src="/logo.webp" alt="" width="40" height="40"><span>VivuCar</span></a>
         <nav class="user-nav" aria-label="User navigation">
           <a class="${activeKey === "home" ? "active" : ""}" href="home.html">Trang chá»§</a>
           <a class="${activeKey === "search" ? "active" : ""}" href="search.html">TÃ¬m xe</a>
@@ -257,7 +257,7 @@
     ];
     return `
       <aside class="admin-sidebar owner-sidebar">
-        <a class="sidebar-brand" href="owner-dashboard.html"><span class="brand-mark">VC</span><span class="grid leading-tight"><span>VivuCar</span><span class="text-xs font-semibold text-zinc-500">Owner Portal</span></span></a>
+        <a class="sidebar-brand" href="owner-dashboard.html"><img class="brand-mark" src="/logo.webp" alt="" width="40" height="40"><span class="grid leading-tight"><span>VivuCar</span><span class="text-xs font-semibold text-zinc-500">Owner Portal</span></span></a>
         <nav class="sidebar-nav" aria-label="Owner navigation">
           ${items.map(([key, label, href, icon]) => {
             const active = resolvedKey === key;
