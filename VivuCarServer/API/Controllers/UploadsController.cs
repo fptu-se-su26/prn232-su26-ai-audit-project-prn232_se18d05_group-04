@@ -8,7 +8,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/uploads")]
-[Authorize] // Any authenticated user can upload
+// [Authorize] // Any authenticated user can upload
 public class UploadsController(IFileStorageService fileStorageService) : ControllerBase
 {
     [HttpPost]
@@ -17,13 +17,19 @@ public class UploadsController(IFileStorageService fileStorageService) : Control
     [ProducesResponseType<ApiErrorResponse>(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<StoredFileResult>> Upload(
         IFormFile file,
-        string? folder,
+        [FromQuery] string? folder,
         CancellationToken cancellationToken
     )
     {
-        if (file == null || file.Length == 0)
+        if (file == null)
         {
+            Console.WriteLine("UploadsController: file is NULL!");
             return ApiErrorFactory.Error(HttpContext, StatusCodes.Status400BadRequest, "No file provided.");
+        }
+        if (file.Length == 0)
+        {
+            Console.WriteLine("UploadsController: file length is 0!");
+            return ApiErrorFactory.Error(HttpContext, StatusCodes.Status400BadRequest, "File is empty.");
         }
 
         try

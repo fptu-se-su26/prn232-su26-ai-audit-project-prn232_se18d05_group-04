@@ -1,0 +1,171 @@
+@page "/profile"
+@model WebClient.Pages.User.ProfileModel
+@{
+    ViewData["Title"] = "Hồ sơ của tôi";
+    Layout = null;
+}
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>@ViewData["Title"] - VivuCar</title>
+
+  <script>
+    tailwind = { config: { theme: { extend: { fontFamily: { sans: ['Be Vietnam Pro','Segoe UI','Arial','sans-serif'], mono: ['SFMono-Regular','Consolas','monospace'] }, colors: { notion: { bg: '#f7f7f5', surface: '#ffffff', muted: '#fbfbfa', border: '#e6e4df', text: '#1f1f1f' }, primary: '#15803d' } } } } };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="~/css/animations.css" asp-append-version="true" />
+</head>
+<body class="bg-zinc-50 text-zinc-900 font-sans antialiased overflow-x-hidden">
+
+<div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <!-- Navbar -->
+    <partial name="_Navbar" />
+
+    <!-- Header -->
+    <div class="mb-8 flex items-center justify-between px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold text-zinc-900 tracking-tight">Hồ sơ của tôi</h1>
+    </div>
+
+    <!-- Main Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- LEFT COLUMN: Avatar & Overview -->
+        <div class="lg:col-span-1 space-y-6">
+            <section class="panel bg-white p-6 rounded-2xl shadow-sm border border-zinc-100 flex flex-col items-center text-center">
+                <div class="relative group w-32 h-32 mb-4">
+                    <img id="profileAvatar" src="" alt="Avatar" class="w-full h-full object-cover rounded-full shadow-md border-4 border-white bg-zinc-100" style="display:none;" />
+                    <div id="profileAvatarFallback" class="w-full h-full flex items-center justify-center bg-zinc-200 text-zinc-500 rounded-full text-4xl font-bold shadow-md border-4 border-white"></div>
+                    
+                    <!-- Avatar Upload Trigger -->
+                    <label for="avatarFileInput" class="absolute inset-0 bg-black/50 text-white rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 cursor-pointer transition-opacity">
+                        <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <span class="text-xs font-semibold">Đổi ảnh</span>
+                    </label>
+                    <input type="file" id="avatarFileInput" class="hidden" accept="image/png, image/jpeg" />
+                </div>
+                
+                <h2 id="profileName" class="text-xl font-bold text-zinc-900 mb-1">...</h2>
+                <p id="profileEmail" class="text-sm text-zinc-500 mb-4">...</p>
+                <div class="w-full border-t border-zinc-100 pt-4 flex flex-col gap-2 text-sm text-left">
+                    <div class="flex justify-between">
+                        <span class="text-zinc-500">Ngày tham gia</span>
+                        <span id="profileJoined" class="font-medium text-zinc-900">...</span>
+                    </div>
+                    <div class="flex justify-between items-center mt-2">
+                        <span class="text-zinc-500">Giấy phép lái xe</span>
+                        <span id="driverDocBadge" class="status-badge status-neutral">Đang tải...</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- RIGHT COLUMN: Forms -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- SECTION: Personal Info -->
+            <section class="panel bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold text-zinc-900">Thông tin cá nhân</h2>
+                </div>
+                <form id="personalInfoForm">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-zinc-700 mb-1" for="fullName">Họ và tên <span class="text-red-500">*</span></label>
+                            <input type="text" id="fullName" class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" required />
+                            <span id="err-fullName" class="text-xs text-red-500 mt-1 hidden"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="block text-sm font-medium text-zinc-700 mb-1" for="phoneNumber">Số điện thoại</label>
+                            <input type="tel" id="phoneNumber" class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                            <span id="err-phoneNumber" class="text-xs text-red-500 mt-1 hidden"></span>
+                        </div>
+                        <div class="form-group md:col-span-2">
+                            <label class="block text-sm font-medium text-zinc-700 mb-1" for="dateOfBirth">Ngày sinh</label>
+                            <input type="date" id="dateOfBirth" class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" />
+                            <span id="err-dateOfBirth" class="text-xs text-red-500 mt-1 hidden"></span>
+                        </div>
+                        <div class="form-group md:col-span-2">
+                            <label class="block text-sm font-medium text-zinc-700 mb-1" for="address">Địa chỉ</label>
+                            <textarea id="address" rows="3" class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none"></textarea>
+                            <span id="err-address" class="text-xs text-red-500 mt-1 hidden"></span>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-end">
+                        <button type="submit" id="saveProfileBtn" class="px-6 py-2.5 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-sm disabled:opacity-50">Lưu thay đổi</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- SECTION: Driver Documents -->
+            <section class="panel bg-white p-6 rounded-2xl shadow-sm border border-zinc-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold text-zinc-900">Giấy tờ tùy thân & Bằng lái xe</h2>
+                </div>
+                <form id="documentForm">
+                    <p class="text-sm text-zinc-500 mb-6 bg-blue-50 text-blue-800 p-3 rounded-lg border border-blue-100">
+                        Hồ sơ này dùng để xác minh danh tính khi thuê xe hoặc cho thuê xe. Vui lòng tải lên ảnh rõ nét.
+                    </p>
+                    
+                    <div class="mb-8">
+                        <h3 class="text-md font-semibold text-zinc-800 mb-4 border-b border-zinc-100 pb-2">Căn cước công dân (CCCD)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="form-group md:col-span-2">
+                                <label class="block text-sm font-medium text-zinc-700 mb-1" for="citizenIdNumber">Số CCCD <span class="text-red-500">*</span></label>
+                                <input type="text" id="citizenIdNumber" class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-primary outline-none" required />
+                                <span id="err-citizenIdNumber" class="text-xs text-red-500 mt-1 hidden"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-zinc-700 mb-1" for="citizenIdFront">Ảnh mặt trước <span class="text-red-500">*</span></label>
+                                <input type="file" id="citizenIdFront" accept="image/*" class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-primary outline-none" />
+                                <input type="hidden" id="citizenIdFrontUrl" />
+                                <div id="preview-citizenIdFront" class="mt-2 hidden"><img src="" class="h-20 w-auto rounded border" /></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-zinc-700 mb-1" for="citizenIdBack">Ảnh mặt sau <span class="text-red-500">*</span></label>
+                                <input type="file" id="citizenIdBack" accept="image/*" class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-primary outline-none" />
+                                <input type="hidden" id="citizenIdBackUrl" />
+                                <div id="preview-citizenIdBack" class="mt-2 hidden"><img src="" class="h-20 w-auto rounded border" /></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 class="text-md font-semibold text-zinc-800 mb-4 border-b border-zinc-100 pb-2">Giấy phép lái xe (GPLX)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="form-group md:col-span-2">
+                                <label class="block text-sm font-medium text-zinc-700 mb-1" for="driverLicenseNumber">Số GPLX <span class="text-red-500">*</span></label>
+                                <input type="text" id="driverLicenseNumber" class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-primary outline-none" required />
+                                <span id="err-driverLicenseNumber" class="text-xs text-red-500 mt-1 hidden"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-zinc-700 mb-1" for="driverLicenseFront">Ảnh mặt trước <span class="text-red-500">*</span></label>
+                                <input type="file" id="driverLicenseFront" accept="image/*" class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-primary outline-none" />
+                                <input type="hidden" id="driverLicenseFrontUrl" />
+                                <div id="preview-driverLicenseFront" class="mt-2 hidden"><img src="" class="h-20 w-auto rounded border" /></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-sm font-medium text-zinc-700 mb-1" for="driverLicenseBack">Ảnh mặt sau <span class="text-red-500">*</span></label>
+                                <input type="file" id="driverLicenseBack" accept="image/*" class="w-full px-4 py-2 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-primary outline-none" />
+                                <input type="hidden" id="driverLicenseBackUrl" />
+                                <div id="preview-driverLicenseBack" class="mt-2 hidden"><img src="" class="h-20 w-auto rounded border" /></div>
+                            </div>
+
+                    <div class="mt-8 flex justify-end gap-3">
+                        <button type="button" id="cancelDocBtn" class="hidden px-6 py-2.5 bg-red-50 text-red-600 font-semibold rounded-lg hover:bg-red-100 transition-colors shadow-sm">
+                            Hủy chờ duyệt
+                        </button>
+                        <button type="submit" id="submitDocBtn" class="px-6 py-2.5 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                            Gửi yêu cầu xác minh
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="~/js/profile.js?v=3" asp-append-version="true"></script>
+</body>
+</html>

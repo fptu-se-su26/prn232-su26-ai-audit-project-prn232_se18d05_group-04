@@ -413,6 +413,57 @@ sang Cloud Storage trơn tru. Quản lý tác vụ rất tốt với Implementat
 
 ---
 
+### Lần sử dụng AI số 6: Xây dựng trang User Profile & Sửa lỗi Upload Cloudinary
+
+#### 6.1. Mô tả vấn đề hoặc yêu cầu
+
+```text
+Người dùng cần tạo giao diện Profile, hiển thị Avatar, Dropdown menu, Form cập nhật thông tin cá nhân và upload GPLX 2 mặt. Cần tích hợp nút Hủy chờ duyệt và sửa các lỗi liên quan đến proxy API khi upload ảnh lên Cloudinary.
+```
+
+#### 6.2. Các prompt đã sử dụng
+
+```text
+- ở trang profile thì còn đang lỗi font chữ khá nhiều, phần hồ sơ chưa load được data hiện tại...
+- thêm nút hủy chờ duyệt để có thể upload lại ảnh khác
+- cả hôm nay làm từ đầu phần user profile bạn tìm những file cần điền và điền cho đúng
+```
+
+#### 6.3. Kết quả do AI sinh ra
+
+```text
+- Sinh code UI cho Profile.cshtml và logic Javascript trong profile.js
+- Sửa cấu hình CORS trong Program.cs và loại bỏ proxy trong fetch để giải quyết lỗi 400 Bad Request
+- Thêm cache-buster v=3 vào html để khắc phục lỗi trình duyệt cache file cũ (gây ra lỗi lưu chữ "undefined" vào DB)
+- Bổ sung nút "Hủy chờ duyệt" ở Frontend và API endpoint my/cancel tương ứng ở Backend
+- Sửa lỗi Enum DocumentVerificationStatus thiếu trạng thái Unverified = 0 gây lỗi build
+```
+
+#### 6.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Sinh viên tự chạy lại lệnh dotnet run, khởi động lại Backend/Frontend và hard-reload trình duyệt (Ctrl + F5) theo hướng dẫn của AI để cập nhật giao diện và API mới nhất.
+```
+
+#### 6.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | Chưa tạo commit |
+| File liên quan | `Profile.cshtml`, `profile.js`, `UploadsController.cs`, `DriverDocumentsController.cs`, `Program.cs`, `UserService.cs`, `DocumentVerificationStatus.cs` |
+| Screenshot | Đã Hủy duyệt và Upload thành công không lỗi undefined |
+| Kết quả chạy/test | Trang Profile hoạt động tốt, Upload thành công không lỗi undefined. |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
+
+#### 6.6. Nhận xét cá nhân/nhóm
+
+```text
+AI giải quyết dứt điểm các lỗi khó liên quan đến cơ chế cache của trình duyệt và Model Binding của HttpClient proxy rất xuất sắc. Xử lý UI tốt và đồng bộ hoàn hảo với logic Backend C#.
+```
+
+---
+
 ## 5. Bảng tổng hợp mức độ sử dụng AI
 
 Đánh dấu mức độ AI hỗ trợ ở từng hạng mục.

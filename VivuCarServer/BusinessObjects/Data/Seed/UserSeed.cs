@@ -55,6 +55,22 @@ public static class UserSeed
                 CreatedAt = new DateTime(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc).AddMinutes(added)
             };
             user.PasswordHash = passwordHashFactory(user);
+            
+            if (user.Role == UserRole.Customer || user.Role == UserRole.CarOwner)
+            {
+                user.DriverDocument = new DriverDocument
+                {
+                    CitizenIdNumber = $"0480{definition.DateOfBirth.Year}{added:00000}",
+                    CitizenIdFrontImageUrl = "https://res.cloudinary.com/demo/image/upload/sample.jpg",
+                    CitizenIdBackImageUrl = "https://res.cloudinary.com/demo/image/upload/sample.jpg",
+                    DriverLicenseNumber = $"DL{definition.DateOfBirth.Year}{added:0000}",
+                    DriverLicenseFrontImageUrl = "https://res.cloudinary.com/demo/image/upload/sample.jpg",
+                    DriverLicenseBackImageUrl = "https://res.cloudinary.com/demo/image/upload/sample.jpg",
+                    VerificationStatus = (added % 3) == 0 ? DocumentVerificationStatus.Approved : DocumentVerificationStatus.Pending,
+                    CreatedAt = user.CreatedAt
+                };
+            }
+
             dbContext.Users.Add(user);
             existing.Add(user.Email);
             added++;

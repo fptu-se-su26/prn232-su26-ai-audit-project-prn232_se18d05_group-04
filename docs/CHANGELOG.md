@@ -309,6 +309,10 @@ DD/MM/YYYY
 | 2 | Lỗi tham chiếu `DriverLicenseImageUrl` | DB Model đổi tên field nhưng Service chưa đổi theo | Dùng grep search tìm và sửa tất cả tham chiếu cũ | Fixed |
 | 3 | Lỗi lấy danh sách đơn của Chủ xe | Backend chưa có API `owner-requests` | Viết bổ sung `GetOwnerBookingsAsync` API | Fixed |
 | 4 | Chưa có API upload ảnh thực tế | Thiếu implementation Cloud Storage | Tạo `CloudinaryStorageService` và `UploadsController` | Fixed |
+| 5 | Lỗi 400 Bad Request khi upload file | ASP.NET Core `HttpClient` proxy làm mất boundary của multipart form | Thêm `[FromQuery]` và CORS policy vào API, bypass proxy ở Frontend | Fixed |
+| 6 | Lỗi DB lưu giá trị "undefined" khi upload ảnh | Cache trình duyệt giữ file JS cũ, đọc sai key JSON `url` thành `publicUrl` | Thêm cache-buster `?v=3` vào script src, ép trình duyệt tải JS mới | Fixed |
+| 7 | Cần nút hủy chờ duyệt hồ sơ | Thiếu luồng hủy yêu cầu chờ duyệt trên giao diện và hệ thống | Thêm API `/cancel`, nút bấm và state JS để hủy về `Unverified` | Fixed |
+| 8 | Compile Error: `DocumentVerificationStatus` thiếu `Unverified` | Khai báo thiếu trạng thái mặc định trong Enum của BusinessObjects | Thêm `Unverified = 0` vào enum | Fixed |
 
 ## Thay đổi chi tiết
 
@@ -316,6 +320,9 @@ DD/MM/YYYY
 |---:|---|---|---|---|
 | 1 | Thực hiện smoke test toàn bộ luồng Auth, Booking, Payment | Ngô Sỹ Giá - DE180117 | Frontend/Backend | Hệ thống không crash |
 | 2 | Sửa lỗi giao diện hiển thị 2 ảnh GPLX | Ngô Sỹ Giá - DE180117 | `booking-checkout.js` | UI hiển thị đúng 2 ảnh nếu có |
+| 3 | Sửa lỗi proxy upload 400 Bad Request | Antigravity AI | `UploadsController.cs`, `Program.cs`, `profile.js` | Ảnh Cloudinary lên thành công |
+| 4 | Sửa lỗi lưu chữ "undefined" vào DB khi tải ảnh | Antigravity AI | `Profile.cshtml`, `profile.js` | Database lưu đúng đường dẫn URL |
+| 5 | Thêm tính năng "Hủy chờ duyệt" hồ sơ tài xế | Antigravity AI | `UserService.cs`, `profile.js`, `DriverDocumentsController.cs` | Bấm Hủy sẽ mở khóa form upload |
 
 ## AI có hỗ trợ không?
 
