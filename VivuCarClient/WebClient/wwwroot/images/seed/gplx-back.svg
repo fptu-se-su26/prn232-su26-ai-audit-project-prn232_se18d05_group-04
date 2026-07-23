@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="title description">
+  <title id="title">Sample driving license back</title>
+  <desc id="description">Development-only placeholder for a driving license back image.</desc>
+  <rect width="960" height="600" rx="32" fill="#eff6ff"/>
+  <rect x="36" y="36" width="888" height="528" rx="24" fill="#fff" stroke="#93c5fd" stroke-width="4"/>
+  <text x="82" y="112" fill="#1d4ed8" font-family="Arial, sans-serif" font-size="40" font-weight="700">THÔNG TIN GPLX MẪU</text>
+  <text x="82" y="185" fill="#3f3f46" font-family="Arial, sans-serif" font-size="25">Hạng xe được phép điều khiển: B2</text>
+  <text x="82" y="235" fill="#3f3f46" font-family="Arial, sans-serif" font-size="25">Ngày cấp: 12/05/2024</text>
+  <text x="82" y="285" fill="#3f3f46" font-family="Arial, sans-serif" font-size="25">Có giá trị đến: 12/05/2034</text>
+  <rect x="82" y="350" width="796" height="88" rx="12" fill="#e4e4e7"/>
+  <path d="M110 372h740M110 394h740M110 416h740" stroke="#71717a" stroke-width="8" stroke-dasharray="12 8"/>
+  <text x="82" y="510" fill="#2563eb" font-family="Arial, sans-serif" font-size="22" font-weight="700">MẶT SAU · DỮ LIỆU PHÁT TRIỂN</text>
+</svg>

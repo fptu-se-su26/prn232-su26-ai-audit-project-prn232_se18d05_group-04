@@ -38,24 +38,88 @@
           </div>
         </section>
 
-<div class="modal-backdrop" id="licenseDetailModal">
-    <div class="modal">
-      <div class="modal-header"><h2>Chi tiết GPLX</h2><button class="icon-button" type="button" data-close-modal>×</button></div>
-      <div id="licenseDetailContent"></div>
-      <div class="modal-actions"><button class="btn btn-secondary" type="button" data-close-modal>Đóng</button></div>
-    </div>
-  </div>
+<div class="modal-backdrop license-review-backdrop" id="licenseDetailModal" aria-hidden="true">
+    <section class="license-review-modal" role="dialog" aria-modal="true" aria-labelledby="licenseReviewTitle">
+      <header class="license-review-modal__header">
+        <div>
+          <h2 id="licenseReviewTitle">Kiểm tra giấy phép lái xe</h2>
+          <p>Đối chiếu hồ sơ với hệ thống tra cứu chính thức của Cục CSGT.</p>
+        </div>
+        <button class="icon-button" type="button" data-close-modal aria-label="Đóng popup">×</button>
+      </header>
 
-  <div class="modal-backdrop" id="licenseRejectModal">
-    <div class="modal">
-      <div class="modal-header"><h2>Từ chối GPLX</h2><button class="icon-button" type="button" data-close-modal>×</button></div>
-      <p class="muted">Nhập lý do để người dùng biết cần bổ sung hoặc gửi lại giấy phép.</p>
-      <label>Lý do từ chối<textarea id="licenseRejectReason" placeholder="Ví dụ: Ảnh mặt sau bị mờ, vui lòng tải lại."></textarea></label>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" id="btnCancelLicenseReject" type="button">Hủy</button>
-        <button class="btn btn-danger" id="btnConfirmLicenseReject" type="button">Từ chối GPLX</button>
+      <div class="license-review-modal__body">
+        <section class="license-review-panel license-review-panel--document" aria-labelledby="licenseProfileTitle">
+          <div class="license-review-section-heading">
+            <div>
+              <h3 id="licenseProfileTitle">Thông tin hồ sơ</h3>
+              <p id="licenseProfileMeta">Đang tải hồ sơ...</p>
+            </div>
+            <span id="licenseReviewStatus" class="status-badge status-warning">Chờ duyệt</span>
+          </div>
+          <div class="license-document-images" id="licenseDocumentImages"></div>
+          <div class="license-review-section-heading license-review-section-heading--ocr">
+            <div><h3>Thông tin đối chiếu</h3><p>Sao chép dữ liệu hiện có để tra cứu thủ công.</p></div>
+            <div class="license-ocr-tools">
+              <span id="licenseOcrConfidence" class="license-ocr-confidence hidden"></span>
+              <button class="btn btn-secondary btn-sm" id="btnScanLicenseOcr" type="button">Quét OCR</button>
+            </div>
+          </div>
+          <div class="license-ocr-fields" id="licenseOcrFields"></div>
+        </section>
+
+        <section class="license-review-panel license-review-panel--lookup" aria-labelledby="licenseLookupTitle">
+          <div class="license-lookup-header">
+            <div><h3 id="licenseLookupTitle">Tra cứu trên Cục CSGT</h3><p>Nhập CAPTCHA và đối chiếu trực tiếp trên trang chính thức.</p></div>
+            <div class="license-lookup-actions">
+              <button class="btn btn-ghost btn-sm" id="btnReloadOfficialLookup" type="button">Tải lại CAPTCHA</button>
+              <button class="btn btn-secondary btn-sm" id="btnOpenOfficialLookup" type="button">Mở riêng</button>
+            </div>
+          </div>
+          <div class="license-lookup-notice" role="note">
+            Nếu CAPTCHA đúng vẫn báo lỗi, hãy tải lại mã. Nếu lỗi lặp lại, trình duyệt đang giới hạn cookie iframe và cần dùng “Mở riêng”.
+          </div>
+          <div class="license-lookup-frame">
+            <iframe id="officialLicenseLookupFrame" src="https://gplx.csgt.bocongan.gov.vn/" title="Tra cứu giấy phép lái xe trên Cục CSGT" loading="lazy"></iframe>
+          </div>
+        </section>
       </div>
-    </div>
+
+      <footer class="license-review-modal__footer">
+        <div class="license-review-note">
+          <label for="licenseAdminNote">Ghi chú phiên đối chiếu</label>
+          <input id="licenseAdminNote" type="text" placeholder="Nhập kết quả đối chiếu hoặc lý do xử lý">
+          <small>Ghi chú chưa được lưu vì API hiện tại chưa có trường tương ứng.</small>
+        </div>
+        <div class="license-review-actions">
+          <button class="btn btn-secondary" id="btnLicenseLookupUnavailable" type="button">Không tra cứu được</button>
+          <button class="btn btn-danger" id="btnLicenseMismatch" type="button">Thông tin không khớp</button>
+          <button class="btn btn-primary" id="btnLicenseApprove" type="button">Xác nhận hợp lệ</button>
+        </div>
+      </footer>
+    </section>
   </div>
-</div>
+<div class="modal-backdrop license-image-backdrop" id="licenseImageModal" aria-hidden="true">
+  <section class="license-image-modal" role="dialog" aria-modal="true" aria-labelledby="licenseImageTitle">
+    <header class="license-image-modal__header">
+      <div><h2 id="licenseImageTitle">Ảnh giấy phép lái xe</h2><p>Nhấn vào ảnh để chuyển giữa mặt trước và mặt sau.</p></div>
+      <button class="icon-button" type="button" data-close-license-image aria-label="Đóng ảnh">×</button>
+    </header>
+    <div class="license-image-modal__body">
+      <button class="license-flip-card" id="licenseFlipCard" type="button" aria-label="Lật ảnh GPLX">
+        <span class="license-flip-card__inner">
+          <span class="license-flip-card__face license-flip-card__face--front"><img id="licenseImageFront" alt="Mặt trước giấy phép lái xe"></span>
+          <span class="license-flip-card__face license-flip-card__face--back"><img id="licenseImageBack" alt="Mặt sau giấy phép lái xe"></span>
+        </span>
+      </button>
+    </div>
+    <footer class="license-image-modal__footer">
+      <span id="licenseImageSide" class="status-badge status-neutral">Mặt trước</span>
+      <div class="flex gap-2">
+        <button class="btn btn-secondary" id="btnFlipLicenseImage" type="button">Xem mặt sau</button>
+        <button class="btn btn-primary" type="button" data-close-license-image>Đóng</button>
+      </div>
+    </footer>
+  </section>
+</div></div>
 @section Scripts { <script type="module" src="~/js/admin/moderation/licenses.js" asp-append-version="true"></script> }

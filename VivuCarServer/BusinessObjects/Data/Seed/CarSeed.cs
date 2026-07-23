@@ -21,7 +21,7 @@ public sealed record CarCatalogSyncResult(
 
 public static class CarSeed
 {
-    public const int CarCount = 30;
+    public const int CarCount = 59;
     public const int MinimumImagesPerCar = 3;
     private const string CloudinaryManifestName = "cloudinary-car-images.json";
     private static readonly DateTime SeedCreatedAt = new(2026, 7, 1, 0, 0, 0, DateTimeKind.Utc);

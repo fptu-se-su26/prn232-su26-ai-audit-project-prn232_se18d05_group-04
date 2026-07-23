@@ -1,3 +1,4 @@
+using API.Services.Ocr;
 using API.Services.Storage;
 using Services.Implementations;
 using Services.Interfaces;
@@ -25,6 +26,11 @@ public static class ServiceConfiguration
         services.AddScoped<IAdminCarService, AdminCarService>();
         services.AddScoped<IAdminVoucherService, AdminVoucherService>();
         services.AddScoped<IAdminReportService, AdminReportService>();
+        services.AddScoped<IAdminExportService, AdminExportService>();
+        services.AddScoped<IAdminExportFileStore, AdminExportFileStore>();
+        services.AddScoped<IAdminModerationService, AdminModerationService>();
+        services.AddHttpClient<IDriverLicenseOcrService, TesseractDriverLicenseOcrService>(client =>
+            client.Timeout = TimeSpan.FromSeconds(30));
         services.AddScoped<IFileStorageService, CloudinaryStorageService>();
         services.AddScoped<ICarService, CarService>();
         services.AddScoped<IOwnerCarService, OwnerCarService>();
@@ -32,7 +38,7 @@ public static class ServiceConfiguration
         services.AddScoped<IIncidentService, IncidentService>();
         services.AddHostedService<API.HostedServices.BookingExpirationHostedService>();
         services.AddHostedService<API.HostedServices.AppDbSeederHostedService>();
-        services.AddHostedService<API.HostedServices.MiotoCarSeedHostedService>();
+        services.AddHostedService<API.HostedServices.UserSeedHostedService>();
 
         return services;
     }

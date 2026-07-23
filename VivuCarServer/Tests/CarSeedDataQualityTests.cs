@@ -54,6 +54,23 @@ public class CarSeedDataQualityTests
             Assert.False(string.IsNullOrWhiteSpace(car.GetProperty("address").GetString()));
             Assert.True(car.GetProperty("seats").GetInt32() > 0);
             Assert.True(car.GetProperty("price_per_day").GetDecimal() > 0);
+            Assert.False(string.IsNullOrWhiteSpace(car.GetProperty("color").GetString()));
+            Assert.False(string.IsNullOrWhiteSpace(car.GetProperty("description").GetString()));
+
+            var normalizedTextFields = new[]
+            {
+                car.GetProperty("name").GetString(),
+                car.GetProperty("brand").GetString(),
+                car.GetProperty("model").GetString(),
+                car.GetProperty("address").GetString(),
+                car.GetProperty("color").GetString(),
+                car.GetProperty("description").GetString()
+            };
+            Assert.All(normalizedTextFields, value =>
+            {
+                Assert.DoesNotContain("\uFFFD", value);
+                Assert.DoesNotContain("?", value);
+            });
         }
 
         var vf7 = cars.Single(car =>
@@ -65,7 +82,7 @@ public class CarSeedDataQualityTests
         Assert.Equal(5, vf7.GetProperty("seats").GetInt32());
         Assert.Equal("electric", vf7.GetProperty("fuel_type").GetString());
         Assert.Equal(0, vf7.GetProperty("kilometers_driven").GetInt32());
-        Assert.Equal(JsonValueKind.Null, vf7.GetProperty("color").ValueKind);
+        Assert.Equal("Tr\u1eafng", vf7.GetProperty("color").GetString());
 
         Assert.Equal(
             13,
