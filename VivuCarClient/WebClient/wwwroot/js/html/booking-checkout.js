@@ -415,11 +415,12 @@ import { authService } from '/js/shared/auth-service.js';
       if (!r.ok) {
         const err = await r.json().catch(() => ({}));
         if (r.status === 401) {
-          showToast('Phiên đăng nhập đã hết hạn hoặc chưa đăng nhập. Vui lòng đăng nhập lại.', 'danger');
+          showToast('Phiên đăng nhập đã hết hạn. Đang chuyển hướng đến trang đăng nhập...', 'danger');
+          setTimeout(() => location.href = '/Login', 1500);
         } else {
           showToast(err.message || 'Không thể tạo đơn thuê. Vui lòng thử lại.', 'danger');
+          setLoading(btn, false);
         }
-        setLoading(btn, false);
         return;
       }
 
