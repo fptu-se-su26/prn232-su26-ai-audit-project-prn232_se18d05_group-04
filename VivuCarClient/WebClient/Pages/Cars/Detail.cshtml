@@ -262,7 +262,10 @@
 
             const btnBook = document.getElementById('btnBook');
             if (ok) {
-                btnBook.href = `/booking-checkout?carId=${CAR.id}`;
+                const pickup = document.getElementById('pickupDate').value;
+                const ret    = document.getElementById('returnDate').value;
+                const dateParams = pickup && ret ? `&pickupDate=${pickup}&returnDate=${ret}` : '';
+                btnBook.href = `/Booking/Checkout?carId=${CAR.id}${dateParams}`;
                 btnBook.textContent = 'Book Car';
                 btnBook.dataset.available = 'true';
                 btnBook.style.cssText = 'display:block;width:100%;text-align:center;background:#16a34a;color:#ffffff;font-weight:700;padding:12px 0;border-radius:12px;font-size:0.875rem;text-decoration:none;transition:background 0.2s;cursor:pointer;';
@@ -406,7 +409,18 @@
             document.getElementById('priceEstimate').classList.remove('hidden');
         }
 
-        ['pickupDate','returnDate'].forEach(id => document.getElementById(id).addEventListener('change', updatePrice));
+        function updateBookLink() {
+            if (!CAR) return;
+            const pickup = document.getElementById('pickupDate').value;
+            const ret    = document.getElementById('returnDate').value;
+            const dateParams = pickup && ret ? `&pickupDate=${pickup}&returnDate=${ret}` : '';
+            const btnBook = document.getElementById('btnBook');
+            if (btnBook && btnBook.dataset.available !== 'false') {
+                btnBook.href = `/Booking/Checkout?carId=${CAR.id}${dateParams}`;
+            }
+        }
+
+        ['pickupDate','returnDate'].forEach(id => document.getElementById(id).addEventListener('change', () => { updatePrice(); updateBookLink(); }));
         document.getElementById('pickupDate').addEventListener('change', () => {
             document.getElementById('returnDate').min = document.getElementById('pickupDate').value;
         });
