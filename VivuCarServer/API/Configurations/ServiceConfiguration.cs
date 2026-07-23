@@ -17,6 +17,7 @@ public static class ServiceConfiguration
         services.AddSingleton(new Net.payOS.PayOS(payOsClientId, payOsApiKey, payOsChecksumKey));
 
         services.AddScoped<IAdminUserService, AdminUserService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITokenService, JwtTokenService>();
         services.AddScoped<IUserSecurityStateService, UserSecurityStateService>();
