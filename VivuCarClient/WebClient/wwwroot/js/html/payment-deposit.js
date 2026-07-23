@@ -9,6 +9,27 @@ import { authService } from '/js/shared/auth-service.js';
   
   const session = await authService.refresh();
   const currentUser = session?.user ?? null;
+
+  // Patch header to show logged-in user (layout.js uses mock auth, so we bridge)
+  function patchHeader(user) {
+    if (!user) return;
+    if (window.VivuCarLayout?.patchHeaderForRealUser) {
+      window.VivuCarLayout.patchHeaderForRealUser(user);
+      return;
+    }
+    const headerMount = document.getElementById('headerMount');
+    if (!headerMount) return;
+    const loginLink = headerMount.querySelector('a[href="/Login"], a[href*="login"]');
+    if (loginLink) {
+      loginLink.textContent = user.fullName || user.email || 'Tài khoản';
+      loginLink.href = '/Profile';
+      loginLink.classList.remove('btn-primary');
+      loginLink.classList.add('btn-secondary');
+    }
+  }
+  requestAnimationFrame(() => patchHeader(currentUser));
+  setTimeout(() => patchHeader(currentUser), 300);
+
   if (!currentUser) {
     location.href = '/';
     return;

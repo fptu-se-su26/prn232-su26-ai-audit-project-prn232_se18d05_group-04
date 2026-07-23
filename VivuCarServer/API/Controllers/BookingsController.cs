@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
@@ -21,6 +21,7 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         throw new UnauthorizedAccessException("User claims are invalid or missing.");
     }
 
+    [AllowAnonymous]
     [HttpPost("check-availability")]
     public async Task<ActionResult> CheckAvailability([FromBody] PricePreviewRequest request, CancellationToken cancellationToken)
     {
@@ -28,6 +29,7 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         return Ok(new { available });
     }
 
+    [AllowAnonymous]
     [HttpPost("price-preview")]
     public async Task<ActionResult<PricePreviewResponse>> PricePreview([FromBody] PricePreviewRequest request, CancellationToken cancellationToken)
     {
@@ -211,67 +213,70 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
 </head>
 <body>
     <div class='header'>
-        <div class='title'>Cá»˜NG HÃ’A XÃƒ Há»˜I CHá»¦ NGHÄ¨A VIá»†T NAM</div>
-        <div class='sub-title'>Äá»™c láº­p - Tá»± do - Háº¡nh phÃºc</div>
-        <div class='title' style='margin-top: 20px; font-size: 20px;'>Há»¢P Äá»’NG THUÃŠ XE Tá»° LÃI</div>
-        <div class='sub-title'>Sá»‘ há»£p Ä‘á»“ng: HD-BK{id}</div>
+        <div class='title'>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
+        <div class='sub-title'>Độc lập - Tự do - Hạnh phúc</div>
+        <div class='title' style='margin-top: 20px; font-size: 20px;'>HỢP ĐỒNG THUÊ XE TỰ LÁI</div>
+        <div class='sub-title'>Số hợp đồng: HD-BK{id}</div>
     </div>
 
     <div class='section'>
-        <div class='section-title'>1. BÃªn Cho ThuÃª (BÃªn A - Chá»§ xe)</div>
-        <p>Há» tÃªn: Há»‡ thá»‘ng VivuCar Partner</p>
-        <p>Äá»‹a chá»‰: Háº£i ChÃ¢u, ÄÃ  Náºµng</p>
+        <div class='section-title'>1. Bên Cho Thuê (Bên A - Chủ xe)</div>
+        <p>Họ tên: Hệ thống VivuCar Partner</p>
+        <p>Địa chỉ: Hải Châu, Đà Nẵng</p>
     </div>
 
     <div class='section'>
-        <div class='section-title'>2. BÃªn ThuÃª (BÃªn B - KhÃ¡ch hÃ ng)</div>
-        <p>ThÃ´ng tin Ä‘Æ°á»£c Ä‘Äƒng kÃ½ trÃªn há»“ sÆ¡ trá»±c tuyáº¿n Ä‘iá»‡n tá»­ cá»§a VivuCar.</p>
+        <div class='section-title'>2. Bên Thuê (Bên B - Khách hàng)</div>
+        <p>Thông tin được đăng ký trên hồ sơ trực tuyến điện tử của VivuCar.</p>
     </div>
 
     <div class='section'>
-        <div class='section-title'>3. Chi tiáº¿t PhÆ°Æ¡ng tiá»‡n & GiÃ¡ thuÃª</div>
+        <div class='section-title'>3. Chi tiết Phương tiện & Giá thuê</div>
         <table>
             <tr>
-                <th>MÃ£ ÄÆ¡n Äáº·t</th>
+                <th>Mã Đơn Đặt</th>
                 <td>BK-{id}</td>
-                <th>PhÆ°Æ¡ng tiá»‡n</th>
-                <td>Xe tá»± lÃ¡i VivuCar</td>
+                <th>Phương tiện</th>
+                <td>Xe tự lái VivuCar</td>
             </tr>
             <tr>
-                <th>Thá»i gian Nháº­n</th>
-                <td>Vui lÃ²ng xem chi tiáº¿t Ä‘Æ¡n hÃ ng</td>
-                <th>Thá»i gian Tráº£</th>
-                <td>Vui lÃ²ng xem chi tiáº¿t Ä‘Æ¡n hÃ ng</td>
+                <th>Thời gian Nhận</th>
+                <td>Vui lòng xem chi tiết đơn hàng</td>
+                <th>Thời gian Trả</th>
+                <td>Vui lòng xem chi tiết đơn hàng</td>
             </tr>
             <tr>
-                <th>Tá»•ng sá»‘ tiá»n thuÃª</th>
-                <td>Theo báº£ng tÃ­nh chi tiáº¿t</td>
-                <th>Tiá»n cá»c giá»¯ xe</th>
-                <td>ÄÃ£ thanh toÃ¡n (30%)</td>
+                <th>Tổng số tiền thuê</th>
+                <td>Theo bảng tính chi tiết</td>
+                <th>Phương thức thanh toán</th>
+                <td>Chuyển khoản / Tiền mặt</td>
             </tr>
         </table>
     </div>
 
     <div class='section'>
-        <div class='section-title'>4. Äiá»u khoáº£n thá»a thuáº­n</div>
-        <p>BÃªn B cam káº¿t váº­n hÃ nh xe Ä‘Ãºng luáº­t giao thÃ´ng Ä‘Æ°á»ng bá»™ Viá»‡t Nam. KhÃ´ng sá»­ dá»¥ng xe vÃ o má»¥c Ä‘Ã­ch pháº¡m phÃ¡p. Tráº£ xe Ä‘Ãºng thá»i háº¡n vÃ  hiá»‡n tráº¡ng ban Ä‘áº§u nhÆ° lÃºc nháº­n bÃ n giao.</p>
+        <div class='section-title'>4. Trách nhiệm các bên</div>
+        <ul>
+            <li><strong>Bên A:</strong> Giao xe đúng hẹn, đúng tình trạng mô tả, giấy tờ đầy đủ.</li>
+            <li><strong>Bên B:</strong> Trả xe đúng hẹn, thanh toán đủ tiền, chịu trách nhiệm vi phạm giao thông và hư hỏng trong thời gian thuê.</li>
+        </ul>
     </div>
-
     <div class='signatures'>
         <div class='signature-box'>
-            <strong>Äáº¡i diá»‡n BÃªn A</strong><br/>
-            (KÃ½ vÃ  ghi rÃµ há» tÃªn)
+            <strong>ĐẠI DIỆN BÊN A</strong><br/>
+            (Ký và ghi rõ họ tên)
             <div class='signature-line'></div>
         </div>
         <div class='signature-box'>
-            <strong>Äáº¡i diá»‡n BÃªn B</strong><br/>
-            (KÃ½ vÃ  ghi rÃµ há» tÃªn)
+            <strong>ĐẠI DIỆN BÊN B</strong><br/>
+            (Ký và ghi rõ họ tên)
             <div class='signature-line'></div>
         </div>
     </div>
-
+    
     <div class='footer'>
-        Há»£p Ä‘á»“ng Ä‘iá»‡n tá»­ Ä‘Æ°á»£c khá»Ÿi táº¡o tá»± Ä‘á»™ng bá»Ÿi VivuCar. ÄÃ  Náºµng, nÄƒm 2026.
+        Hợp đồng được tạo tự động bởi hệ thống VivuCar.<br/>
+        Có giá trị pháp lý khi hai bên đồng thuận và ký xác nhận.
     </div>
 </body>
 </html>

@@ -39,14 +39,14 @@
     const items = [
       ["dashboard", "Dashboard doanh thu", "admin-dashboard.html", adminIcons.chartLine],
       ["users", "NgÆ°á»i dÃ¹ng", "admin-users.html", adminIcons.users],
-      ["cars", "PhÆ°Æ¡ng tiá»‡n", "admin-cars.html", adminIcons.car],
+      ["cars", "Phương tiện", "admin-cars.html", adminIcons.car],
       ["vouchers", "Voucher", "admin-vouchers.html", adminIcons.ticket],
-      ["reports", "Xuáº¥t bÃ¡o cÃ¡o", "admin-export-reports.html", adminIcons.fileExport],
-      ["trash", "ThÃ¹ng rÃ¡c", "admin-trash.html", adminIcons.trash, trashCount]
+      ["reports", "Xuất báo cáo", "admin-export-reports.html", adminIcons.fileExport],
+      ["trash", "Thùng rác", "admin-trash.html", adminIcons.trash, trashCount]
     ];
     const moderationItems = [
-      ["moderation-content", "Kiá»ƒm duyá»‡t ná»™i dung", "admin-moderation-content.html", adminIcons.contentWarning, contentPendingCount],
-      ["moderation-licenses", "Kiá»ƒm duyá»‡t GPLX", "admin-moderation-licenses.html", adminIcons.idCard, licensePendingCount]
+      ["moderation-content", "Kiểm duyệt nội dung", "admin-moderation-content.html", adminIcons.contentWarning, contentPendingCount],
+      ["moderation-licenses", "Kiểm duyệt GPLX", "admin-moderation-licenses.html", adminIcons.idCard, licensePendingCount]
     ];
     const renderSidebarItem = ([key, label, href, icon, count], isChild = false) => {
       const active = activeKey === key;
@@ -60,7 +60,7 @@
             <img class="brand-mark" src="/logo.webp" alt="" width="40" height="40">
             <span class="admin-sidebar-title"><span>VivuCar</span><span class="text-xs font-semibold text-zinc-500">Admin Console</span></span>
           </a>
-          <button class="admin-sidebar-toggle" type="button" data-sidebar-collapse-toggle aria-label="Thu gá»n sidebar" title="Thu gá»n sidebar">${chevronLeft}</button>
+          <button class="admin-sidebar-toggle" type="button" data-sidebar-collapse-toggle aria-label="Thu gọn sidebar" title="Thu gọn sidebar">${chevronLeft}</button>
         </div>
         <div class="admin-sidebar-search">
           <span class="admin-search-icon">${searchIcon}</span>
@@ -88,7 +88,7 @@
     const initials = currentUser.full_name.split(" ").slice(-2).map((part) => part[0]).join("").toUpperCase();
     return `
       <header class="admin-header">
-        <button class="icon-button menu-toggle" type="button" data-menu-toggle aria-label="Má»Ÿ menu">Menu</button>
+        <button class="icon-button menu-toggle" type="button" data-menu-toggle aria-label="Mở menu">Menu</button>
         <div></div>
         <div class="header-user">
           <span class="name">${currentUser.full_name}</span>
@@ -100,10 +100,10 @@
     return `
       <div class="modal-backdrop" id="logoutModal" role="dialog" aria-modal="true">
         <div class="modal">
-          <div class="modal-header"><h2>XÃ¡c nháº­n Ä‘Äƒng xuáº¥t</h2><button class="icon-button" type="button" data-close-modal>Ã—</button></div>
+          <div class="modal-header"><h2>Xác nhận đăng xuất</h2><button class="icon-button" type="button" data-close-modal>Ã—</button></div>
           <p class="muted">Báº¡n cÃ³ cháº¯c cháº¯n muá»‘n Ä‘Äƒng xuáº¥t khá»i VivuCar?</p>
           <div class="modal-actions">
-            <button class="btn btn-secondary" id="btnCancelLogout" type="button">Há»§y</button>
+            <button class="btn btn-secondary" id="btnCancelLogout" type="button">Hủy</button>
             <button class="btn btn-danger" id="btnConfirmLogout" type="button">ÄÄƒng xuáº¥t</button>
           </div>
         </div>
@@ -117,14 +117,14 @@
       <header class="user-header">
         <a class="sidebar-brand" href="home.html"><img class="brand-mark" src="/logo.webp" alt="" width="40" height="40"><span>VivuCar</span></a>
         <nav class="user-nav" aria-label="User navigation">
-          <a class="${activeKey === "home" ? "active" : ""}" href="home.html">Trang chá»§</a>
-          <a class="${activeKey === "search" ? "active" : ""}" href="search.html">TÃ¬m xe</a>
-          <a class="${activeKey === "featured" ? "active" : ""}" href="featured-cars.html">Xe ná»•i báº­t</a>
-          <a class="${activeKey === "bookings" ? "active" : ""}" href="my-bookings.html">ÄÆ¡n thuÃª</a>
-          <a class="${activeKey === "profile" ? "active" : ""}" href="profile.html">Há»“ sÆ¡</a>
+          <a class="${activeKey === "home" ? "active" : ""}" href="/Cars">Trang chủ</a>
+          <a class="${activeKey === "search" ? "active" : ""}" href="/Cars/Search">Tìm xe</a>
+          <a class="${activeKey === "featured" ? "active" : ""}" href="/Cars/Featured">Xe nổi bật</a>
+          <a class="${activeKey === "bookings" ? "active" : ""}" href="/Booking/MyBookings">Đơn thuê</a>
+          <a class="${activeKey === "profile" ? "active" : ""}" href="/Profile">Hồ sơ</a>
         </nav>
         <div class="header-user">
-          ${currentUser ? `<a class="btn btn-secondary btn-sm" href="profile.html">${avatar ? `<img class="avatar" src="${avatar}" alt="${currentUser.full_name}">` : `<span class="avatar">${currentUser.full_name[0]}</span>`}<span class="name">${currentUser.full_name}</span></a><button class="btn btn-ghost btn-sm" type="button" data-logout-trigger>ÄÄƒng xuáº¥t</button>` : `<a class="btn btn-primary btn-sm" href="login.html">ÄÄƒng nháº­p</a>`}
+          ${currentUser ? `<a class="btn btn-secondary btn-sm" href="/Profile">${avatar ? `<img class="avatar" src="${avatar}" alt="${currentUser.full_name}">` : `<span class="avatar">${currentUser.full_name[0]}</span>`}<span class="name">${currentUser.full_name}</span></a><button class="btn btn-ghost btn-sm" type="button" data-logout-trigger>Đăng xuất</button>` : `<a class="btn btn-primary btn-sm" href="/Login">Đăng nhập</a>`}
         </div>
       </header>`;
   }
@@ -132,20 +132,20 @@
   function appNavItems(role) {
     if (role === C.USER_ROLES.CAR_OWNER) {
       return [
-        ["rent", "ThuÃª xe", "home.html"],
-        ["my-bookings", "ÄÆ¡n thuÃª cá»§a tÃ´i", "my-bookings.html"],
-        ["owner-cars", "Xe cá»§a tÃ´i", "owner-cars.html"],
-        ["owner-bookings", "ÄÆ¡n Ä‘áº·t xe", "owner-booking-requests.html"],
-        ["owner-handover", "BÃ n giao & tráº£ xe", "owner-handover-dashboard.html"],
-        ["owner-support", "Há»— trá»£", "owner-support-inbox.html"],
-        ["profile", "Há»“ sÆ¡", "profile.html"]
+        ["rent", "Thuê xe", "/Cars"],
+        ["my-bookings", "Đơn thuê của tôi", "/Booking/MyBookings"],
+        ["owner-cars", "Xe của tôi", "/Owner/Cars"],
+        ["owner-bookings", "Đơn đặt xe", "/Owner/BookingRequests"],
+        ["owner-handover", "Bàn giao & trả xe", "/Owner/Handover"],
+        ["owner-support", "Hỗ trợ", "/Owner/Support"],
+        ["profile", "Hồ sơ", "/Profile"]
       ];
     }
     return [
-      ["rent", "ThuÃª xe", "home.html"],
-      ["my-bookings", "ÄÆ¡n thuÃª cá»§a tÃ´i", "my-bookings.html"],
-      ["my-reviews", "ÄÃ¡nh giÃ¡ cá»§a tÃ´i", "my-reviews.html"],
-      ["profile", "Há»“ sÆ¡", "profile.html"]
+      ["rent", "Thuê xe", "/Cars"],
+      ["my-bookings", "Đơn thuê của tôi", "/Booking/MyBookings"],
+      ["my-reviews", "Đánh giá của tôi", "/Profile/Reviews"],
+      ["profile", "Hồ sơ", "/Profile"]
     ];
   }
 
@@ -174,22 +174,24 @@
     return `
       <header class="sticky top-0 z-40 border-b border-[#e6e4df] bg-[#f7f7f5]/92 backdrop-blur-xl">
         <div class="mx-auto flex min-h-[68px] w-[min(1440px,100%)] items-center gap-3 px-5 max-sm:px-4">
-          <a class="flex shrink-0 items-center gap-2.5 font-extrabold text-neutral-950" href="home.html">
+          <a class="flex shrink-0 items-center gap-2.5 font-extrabold text-neutral-950" href="/cars">
             <span class="grid h-8 w-8 place-items-center rounded-[9px] bg-neutral-900 text-sm font-extrabold text-white">VC</span>
             <span>VivuCar</span>
           </a>
           <nav class="ml-2 flex flex-1 items-center gap-1 overflow-x-auto rounded-full border border-[#e6e4df] bg-white p-1 max-lg:hidden" aria-label="App navigation">
             ${navMarkup}
           </nav>
-          <button class="icon-button ml-auto hidden max-lg:inline-grid" type="button" data-app-menu-toggle aria-label="Má»Ÿ menu">â˜°</button>
+          <button class="icon-button ml-auto hidden max-lg:inline-grid" type="button" data-app-menu-toggle aria-label="Mở menu">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+          </button>
           <div class="hidden items-center gap-2 text-sm text-neutral-500 lg:flex">
-            ${currentUser ? `<a class="btn btn-secondary btn-sm" href="profile.html">${avatar ? `<img class="avatar" src="${avatar}" alt="${currentUser.full_name}">` : `<span class="avatar">${initials}</span>`}<span class="max-xl:hidden">${currentUser.full_name}</span></a><button class="btn btn-ghost btn-sm" type="button" data-logout-trigger>ÄÄƒng xuáº¥t</button>` : `<a class="btn btn-primary btn-sm" href="login.html">ÄÄƒng nháº­p</a>`}
+            ${currentUser ? `<a class="btn btn-secondary btn-sm" href="/Profile">${avatar ? `<img class="avatar" src="${avatar}" alt="${currentUser.full_name}">` : `<span class="avatar">${initials}</span>`}<span class="max-xl:hidden">${currentUser.full_name}</span></a><button class="btn btn-ghost btn-sm" type="button" data-logout-trigger>Đăng xuất</button>` : `<a class="btn btn-primary btn-sm" href="/Login">Đăng nhập</a>`}
           </div>
         </div>
         <nav class="mx-auto hidden w-[min(1440px,100%)] px-5 pb-4 max-sm:px-4" id="appMobileNav" aria-label="Mobile navigation">
           <div class="grid gap-1 rounded-2xl border border-[#e6e4df] bg-white p-2 shadow-sm">
             ${navMarkup}
-            ${currentUser ? `<button class="btn btn-ghost btn-full justify-start" type="button" data-logout-trigger>ÄÄƒng xuáº¥t</button>` : `<a class="btn btn-primary btn-full" href="login.html">ÄÄƒng nháº­p</a>`}
+            ${currentUser ? `<button class="btn btn-ghost btn-full justify-start" type="button" data-logout-trigger>Đăng xuất</button>` : `<a class="btn btn-primary btn-full" href="/Login">Đăng nhập</a>`}
           </div>
         </nav>
       </header>`;
@@ -197,13 +199,13 @@
 
   function renderProfileSidebar(activeKey) {
     const items = [
-      ["profile", "ThÃ´ng tin cÃ¡ nhÃ¢n", "profile.html"],
-      ["profile-edit", "Chá»‰nh sá»­a há»“ sÆ¡", "profile-edit.html"],
-      ["driving-license", "Giáº¥y phÃ©p lÃ¡i xe", "driving-license.html"],
-      ["my-reviews", "ÄÃ¡nh giÃ¡ cá»§a tÃ´i", "my-reviews.html"],
-      ["bookings", "ÄÆ¡n thuÃª cá»§a tÃ´i", "my-bookings.html"]
+      ["profile", "Thông tin cá nhân", "/Profile"],
+      ["profile-edit", "Chỉnh sửa hồ sơ", "/Profile/Edit"],
+      ["driving-license", "Giấy phép lái xe", "/Profile/DrivingLicense"],
+      ["my-reviews", "Đánh giá của tôi", "/Profile/Reviews"],
+      ["bookings", "Đơn thuê của tôi", "/Booking/MyBookings"]
     ];
-    return `<aside class="profile-sidebar">${items.map(([key, label, href]) => `<a class="${activeKey === key ? "active" : ""}" href="${href}">${label}</a>`).join("")}<button type="button" data-logout-trigger>ÄÄƒng xuáº¥t</button></aside>`;
+    return `<aside class="profile-sidebar">${items.map(([key, label, href]) => `<a class="${activeKey === key ? "active" : ""}" href="${href}">${label}</a>`).join("")}<button type="button" data-logout-trigger>Đăng xuất</button></aside>`;
   }
 
   function renderBreadcrumb(items) {
@@ -214,8 +216,8 @@
     const initials = currentUser.full_name.split(" ").slice(-2).map((part) => part[0]).join("").toUpperCase();
     return `
       <header class="admin-header">
-        <button class="icon-button menu-toggle" type="button" data-menu-toggle aria-label="Má»Ÿ menu">â˜°</button>
-        <div class="header-search"><input type="search" placeholder="TÃ¬m xe, Ä‘Æ¡n thuÃª, sá»± cá»‘"></div>
+        <button class="icon-button menu-toggle" type="button" data-menu-toggle aria-label="Mở menu">â˜°</button>
+        <div class="header-search"><input type="search" placeholder="Tìm xe, Ä‘Æ¡n thuÃª, sá»± cá»‘"></div>
         <div class="header-user">
           <span class="name">${currentUser.full_name}</span>
           <span class="avatar">${initials}</span>
@@ -250,10 +252,10 @@
     const activeIndicator = '<span class="admin-nav-indicator" aria-hidden="true"></span>';
     const items = [
       ["owner-dashboard", "Dashboard", "owner-dashboard.html", ownerIcons.dashboard],
-      ["owner-cars", "Quáº£n lÃ½ xe", "owner-cars.html", ownerIcons.car],
+      ["owner-cars", "Quản lý xe", "owner-cars.html", ownerIcons.car],
       ["owner-bookings", "YÃªu cáº§u Ä‘áº·t xe", "owner-booking-requests.html", ownerIcons.booking],
-      ["owner-handover", "BÃ n giao & Tráº£ xe", "owner-handover-dashboard.html", ownerIcons.handover],
-      ["owner-support", "Há»— trá»£ khÃ¡ch hÃ ng", "owner-support-inbox.html", ownerIcons.support]
+      ["owner-handover", "Bàn giao & Trả xe", "owner-handover-dashboard.html", ownerIcons.handover],
+      ["owner-support", "Hỗ trợ khÃ¡ch hÃ ng", "owner-support-inbox.html", ownerIcons.support]
     ];
     return `
       <aside class="admin-sidebar owner-sidebar">
@@ -265,7 +267,7 @@
           }).join('')}
         </nav>
         <nav class="sidebar-nav mt-auto" aria-label="Owner account">
-          <button class="group" type="button" data-logout-trigger><span class="admin-nav-icon admin-nav-icon-logout">${ownerIcons.logout}</span>ÄÄƒng xuáº¥t</button>
+          <button class="group" type="button" data-logout-trigger><span class="admin-nav-icon admin-nav-icon-logout">${ownerIcons.logout}</span>Đăng xuất</button>
         </nav>
       </aside>`;
   }
@@ -331,8 +333,8 @@
       toggle.innerHTML = isDesktop && isSidebarCollapsed
         ? '<svg aria-hidden="true" viewBox="0 0 320 512" class="h-3.5 w-3.5 fill-current"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg>'
         : '<svg aria-hidden="true" viewBox="0 0 320 512" class="h-3.5 w-3.5 fill-current"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"/></svg>';
-      toggle.setAttribute("aria-label", isDesktop && isSidebarCollapsed ? "Má»Ÿ rá»™ng sidebar" : "Thu gá»n sidebar");
-      toggle.setAttribute("title", isDesktop && isSidebarCollapsed ? "Má»Ÿ rá»™ng sidebar" : "Thu gá»n sidebar");
+      toggle.setAttribute("aria-label", isDesktop && isSidebarCollapsed ? "Mở rộng sidebar" : "Thu gọn sidebar");
+      toggle.setAttribute("title", isDesktop && isSidebarCollapsed ? "Mở rộng sidebar" : "Thu gọn sidebar");
     }
   }
 
@@ -381,14 +383,28 @@
   window.addEventListener("resize", applyAdminSidebarState);
   applyAdminSidebarState();
   document.getElementById("btnConfirmLogout")?.addEventListener("click", () => {
-    document.getElementById("btnConfirmLogout").textContent = "Äang Ä‘Äƒng xuáº¥t...";
+    document.getElementById("btnConfirmLogout").textContent = "Đang đăng xuất...";
     setTimeout(Auth.logout, 250);
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") document.querySelectorAll(".modal-backdrop.show").forEach((modal) => U.closeModal(modal.id));
   });
 
-  window.VivuCarLayout = { renderAdminSidebar, renderAdminHeader, renderOwnerHeader, renderOwnerSidebar, renderUserHeader, renderAppHeader, renderProfileSidebar, renderBreadcrumb, refreshAdminSidebar };
+  // Allow real-auth pages to patch the header user display
+  function patchHeaderForRealUser(user) {
+    const headerMount = document.getElementById('headerMount');
+    if (!headerMount || !user) return;
+    // Find login link in header and replace with user name
+    const loginLink = headerMount.querySelector('a[href="/Login"], a[href*="login"]');
+    if (loginLink) {
+      const userArea = loginLink.parentElement;
+      if (userArea) {
+        loginLink.outerHTML = `<a class="btn btn-secondary btn-sm" href="/Profile"><span>${user.fullName || user.email || 'T\u00e0i kho\u1ea3n'}</span></a><button class="btn btn-ghost btn-sm" type="button" data-logout-trigger>\u0110\u0103ng xu\u1ea5t</button>`;
+      }
+    }
+  }
+
+  window.VivuCarLayout = { renderAdminSidebar, renderAdminHeader, renderOwnerHeader, renderOwnerSidebar, renderUserHeader, renderAppHeader, renderProfileSidebar, renderBreadcrumb, refreshAdminSidebar, patchHeaderForRealUser };
 })();
 
 

@@ -37,6 +37,29 @@ import { authService } from '/js/shared/auth-service.js';
     return;
   }
 
+  // Update header to show logged-in user (since layout.js uses mock auth, we patch it here)
+  function patchHeaderForRealAuth(user) {
+    // Use the exposed layout function if available
+    if (window.VivuCarLayout?.patchHeaderForRealUser) {
+      window.VivuCarLayout.patchHeaderForRealUser(user);
+      return;
+    }
+    // Fallback: directly patch the header
+    const headerMount = document.getElementById('headerMount');
+    if (!headerMount) return;
+    const loginLink = headerMount.querySelector('a[href="/Login"], a[href*="login"]');
+    if (loginLink) {
+      loginLink.textContent = user.fullName || user.email || 'Tài khoản';
+      loginLink.href = '/Profile';
+      loginLink.classList.remove('btn-primary');
+      loginLink.classList.add('btn-secondary');
+    }
+  }
+  // Wait for layout.js to finish rendering, then patch
+  requestAnimationFrame(() => patchHeaderForRealAuth(currentUser));
+  // Also patch after a short delay in case layout is async
+  setTimeout(() => patchHeaderForRealAuth(currentUser), 300);
+
   if (!carId) {
     root.innerHTML = `<div style="text-align:center;padding:48px;color:#6b7280"><h2>Không tìm thấy xe</h2><a href="/cars/search" style="color:#16a34a">← Tìm xe khác</a></div>`;
     return;
@@ -63,14 +86,26 @@ import { authService } from '/js/shared/auth-service.js';
   const afterTwo   = new Date(Date.now() + 3 * 864e5);
   const toDatetimeLocal = d => d.toISOString().slice(0, 16);
 
-  const urlPickup  = params.get('pickupDate')  ? `${params.get('pickupDate')}T08:00`  : toDatetimeLocal(tomorrow);
-  const urlReturn  = params.get('returnDate')  ? `${params.get('returnDate')}T18:00`  : toDatetimeLocal(afterTwo);
+  function formatUrlDate(val, defaultTime) {
+    if (!val) return null;
+    if (val.length === 10) return `${val}T${defaultTime}`;
+    if (val.length > 16) return val.slice(0, 16);
+    return val;
+  }
+  const rawPickup = params.get('pickup') || params.get('pickupDate');
+  const rawReturn = params.get('return') || params.get('returnDate');
+  const urlPickup  = formatUrlDate(rawPickup, '08:00') || toDatetimeLocal(tomorrow);
+  const urlReturn  = formatUrlDate(rawReturn, '18:00') || toDatetimeLocal(afterTwo);
+
+  const DB = window.VivuCarDB;
+  const docFront = DB?.user_documents?.find(d => d.user_id === currentUser.id && d.document_type === 'license_front');
+  const docBack = DB?.user_documents?.find(d => d.user_id === currentUser.id && d.document_type === 'license_back');
 
   // ── 4. Render form ────────────────────────────────────────────────────────
   const primaryImg = car.images?.find(i => i.isPrimary)?.imageUrl || car.images?.[0]?.imageUrl || '';
 
   root.innerHTML = `
-    <form class="checkout-main" id="checkoutForm" style="display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start">
+    <form class="checkout-main" id="checkoutForm" style="display:contents">
 
       <!-- LEFT COLUMN -->
       <div style="display:flex;flex-direction:column;gap:20px">
@@ -100,11 +135,42 @@ import { authService } from '/js/shared/auth-service.js';
               <input value="${currentUser.email || ''}" disabled
                 style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#6b7280;background:#f9fafb;outline:none">
             </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
+              Số điện thoại
+              <input id="driverPhone" type="tel" required placeholder="09xxxx"
+                style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
+              Số CCCD/CMND
+              <input id="driverNationalId" type="text" required placeholder="12 số"
+                style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151;grid-column:1/-1">
+              Số giấy phép lái xe
+              <input id="driverLicense" type="text" required placeholder="Số GPLX"
+                style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
+            </label>
             <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151;grid-column:1/-1">
               Ghi chú bàn giao
               <textarea id="driverNote" rows="3" placeholder="Thời điểm thuận tiện, yêu cầu giao xe..."
                 style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;resize:vertical;outline:none"></textarea>
             </label>
+          </div>
+        </div>
+
+        <!-- GPLX Upload -->
+        <div style="background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:20px">
+          <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0 0 16px">Giấy phép lái xe (GPLX)</h2>
+          <p style="font-size:.875rem;color:#6b7280;margin:0 0 16px">Để rút ngắn thời gian bàn giao xe, bạn có thể tải lên ảnh GPLX ngay bây giờ.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div>
+              <p style="font-size:.875rem;font-weight:600;color:#374151;margin:0 0 8px">Mặt trước</p>
+              ${docFront ? `<img src="${docFront.file_url}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid #e6e4df">` : `<input id="licenseFrontInput" type="file" accept="image/*" style="width:100%;font-size:.875rem">`}
+            </div>
+            <div>
+              <p style="font-size:.875rem;font-weight:600;color:#374151;margin:0 0 8px">Mặt sau</p>
+              ${docBack ? `<img src="${docBack.file_url}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid #e6e4df">` : `<input id="licenseBackInput" type="file" accept="image/*" style="width:100%;font-size:.875rem">`}
+            </div>
           </div>
         </div>
 
@@ -205,11 +271,15 @@ import { authService } from '/js/shared/auth-service.js';
 
   function renderSummary(p) {
     if (!p) return;
+    const rentalCost = (p.weekdayCost || 0) + (p.weekendCost || 0);
+    const hasWeekend = p.weekendCount > 0;
     summaryEl.innerHTML = `
       <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0 0 12px">Tóm tắt chi phí</h2>
       <p style="color:#6b7280;font-size:.875rem;margin:0 0 12px">${car.name} · ${p.rentalDays ?? '?'} ngày</p>
       <div style="display:flex;flex-direction:column;gap:8px;font-size:.875rem">
-        <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Giá thuê</span><strong>${fmt(p.basePrice)}</strong></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Ngày thường (${p.weekdayCount || 0} ngày × ${fmt(p.weekdayPrice || 0)})</span><strong>${fmt(p.weekdayCost || 0)}</strong></div>
+        ${hasWeekend ? `<div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Cuối tuần (${p.weekendCount} ngày × ${fmt(p.weekendPrice || 0)})</span><strong>${fmt(p.weekendCost || 0)}</strong></div>` : ''}
+        <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Giá thuê</span><strong>${fmt(rentalCost)}</strong></div>
         <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Bảo hiểm</span><strong>${fmt(p.insuranceFee)}</strong></div>
         <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Giao xe</span><strong>${fmt(p.deliveryFee ?? 0)}</strong></div>
         ${p.discountAmount > 0 ? `<div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Voucher</span><strong style="color:#16a34a">-${fmt(p.discountAmount)}</strong></div>` : ''}
@@ -220,6 +290,31 @@ import { authService } from '/js/shared/auth-service.js';
 
   pickupEl.addEventListener('change', () => { returnEl.min = pickupEl.value; updatePricingAndAvailability(); });
   returnEl.addEventListener('change', updatePricingAndAvailability);
+
+  // File preview logic
+  function bindPreview(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    input.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        let img = input.previousElementSibling;
+        if (img && img.tagName === 'IMG') {
+          img.src = ev.target.result;
+        } else {
+          img = document.createElement('img');
+          img.src = ev.target.result;
+          img.style.cssText = 'width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid #e6e4df;margin-bottom:8px';
+          input.parentNode.insertBefore(img, input);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  bindPreview('licenseFrontInput');
+  bindPreview('licenseBackInput');
 
   // Initial load
   await updatePricingAndAvailability();
@@ -237,8 +332,67 @@ import { authService } from '/js/shared/auth-service.js';
       return;
     }
 
+    // Validate: return must be after pickup by at least 1 hour
+    const pickupDt = new Date(pickup);
+    const returnDt = new Date(ret);
+    if (returnDt <= pickupDt) {
+      showToast('Thời gian trả xe phải sau thời gian nhận xe.', 'danger');
+      returnEl.focus();
+      return;
+    }
+    if ((returnDt - pickupDt) < 3600000) {
+      showToast('Thời gian thuê tối thiểu là 1 giờ.', 'danger');
+      returnEl.focus();
+      return;
+    }
+    // Pickup must be at least 30 min from now
+    if (pickupDt < new Date(Date.now() - 30 * 60000)) {
+      showToast('Thời gian nhận xe không thể ở trong quá khứ.', 'danger');
+      pickupEl.focus();
+      return;
+    }
+
     setLoading(btn, true);
+
     try {
+      // 1. Upload GPLX images if selected
+      const frontInput = document.getElementById('licenseFrontInput');
+      const backInput = document.getElementById('licenseBackInput');
+      let frontUrl = docFront?.file_url;
+      let backUrl = docBack?.file_url;
+
+      if (frontInput && frontInput.files[0]) {
+        const fd = new FormData();
+        fd.append('file', frontInput.files[0]);
+        fd.append('folder', 'user_documents');
+        try {
+          const res = await authService.apiFetch('uploads', { method: 'POST', body: fd });
+          if (res.ok) frontUrl = (await res.json()).url;
+        } catch (e) { console.error('Lỗi upload mặt trước', e); }
+      }
+
+      if (backInput && backInput.files[0]) {
+        const fd = new FormData();
+        fd.append('file', backInput.files[0]);
+        fd.append('folder', 'user_documents');
+        try {
+          const res = await authService.apiFetch('uploads', { method: 'POST', body: fd });
+          if (res.ok) backUrl = (await res.json()).url;
+        } catch (e) { console.error('Lỗi upload mặt sau', e); }
+      }
+
+      // Save uploaded URLs to mock DB so they persist in the UI for this user
+      if (frontUrl && !docFront && window.VivuCarDB) {
+        window.VivuCarDB.user_documents = window.VivuCarDB.user_documents || [];
+        window.VivuCarDB.user_documents.push({ id: window.VivuCarDB.user_documents.length + 1, user_id: currentUser.id, document_type: 'license_front', file_name: 'front.jpg', file_url: frontUrl, verified: false, created_at: new Date().toISOString() });
+      }
+      if (backUrl && !docBack && window.VivuCarDB) {
+        window.VivuCarDB.user_documents = window.VivuCarDB.user_documents || [];
+        window.VivuCarDB.user_documents.push({ id: window.VivuCarDB.user_documents.length + 1, user_id: currentUser.id, document_type: 'license_back', file_name: 'back.jpg', file_url: backUrl, verified: false, created_at: new Date().toISOString() });
+      }
+      window.VivuCarSaveDB?.();
+
+      // 2. Submit booking
       const r = await authService.apiFetch('bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -248,13 +402,23 @@ import { authService } from '/js/shared/auth-service.js';
           endDateTime: ret,
           pickupLocation: address,
           returnLocation: address,
-          voucherCode: null
+          voucherCode: null,
+          driverInfo: {
+            fullName: document.getElementById('driverName').value.trim(),
+            phoneNumber: document.getElementById('driverPhone').value.trim(),
+            citizenIdNumber: document.getElementById('driverNationalId').value.trim(),
+            driverLicenseNumber: document.getElementById('driverLicense').value.trim()
+          }
         })
       });
 
       if (!r.ok) {
         const err = await r.json().catch(() => ({}));
-        showToast(err.message || 'Không thể tạo đơn thuê. Vui lòng thử lại.', 'danger');
+        if (r.status === 401) {
+          showToast('Phiên đăng nhập đã hết hạn hoặc chưa đăng nhập. Vui lòng đăng nhập lại.', 'danger');
+        } else {
+          showToast(err.message || 'Không thể tạo đơn thuê. Vui lòng thử lại.', 'danger');
+        }
         setLoading(btn, false);
         return;
       }
