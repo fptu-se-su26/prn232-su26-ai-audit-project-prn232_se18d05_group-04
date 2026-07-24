@@ -55,4 +55,25 @@ public class OwnerIncidentsController(IIncidentService incidentService) : Contro
         if (result == null) return NotFound(new { message = "Không tìm thấy sự cố." });
         return Ok(result);
     }
+
+    [HttpPatch("incidents/{id:int}/status")]
+    public async Task<IActionResult> UpdateIncidentStatus(int id, [FromBody] UpdateIncidentStatusRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var ownerId = GetCurrentUserId();
+            var result = await incidentService.UpdateIncidentStatusAsync(ownerId, id, request.Status, cancellationToken);
+            if (!result) return NotFound(new { message = "Không tìm thấy sự cố." });
+            return Ok(new { message = "Cập nhật trạng thái sự cố thành công." });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+}
+
+public class UpdateIncidentStatusRequest
+{
+    public string Status { get; set; } = string.Empty;
 }

@@ -37,8 +37,8 @@ Mô tả ngắn gọn quá trình sử dụng AI trong bài tập/project này.
 ```text
 Nhóm đã sử dụng Stitch để phác thảo layout UI Admin, ChatGPT để khởi tạo
 nền tảng backend ASP.NET Core Web API cùng frontend Razor Pages, và Antigravity
-để tích hợp toàn bộ Backend API (Auth, Booking, Payment) vào Frontend HTML/JS,
-cũng như sửa DB thêm GPLX 2 mặt. Kết quả AI được dùng làm điểm khởi đầu,
+để tích hợp toàn bộ Backend API (Auth, Booking, Payment, Upload Cloudinary, User Profile, Reviews) 
+vào Frontend HTML/JS, cũng như sửa DB. Kết quả AI được dùng làm điểm khởi đầu,
 sau đó nhóm rà soát, build kiểm tra và xác nhận runtime trước khi áp dụng.
 ```
 

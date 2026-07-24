@@ -248,6 +248,9 @@ DD/MM/YYYY
 | 5 | Tự động lấy GPLX từ hồ sơ khi đặt xe | Antigravity AI | `booking-checkout.js` | Form đặt xe tự động nhận GPLX 2 mặt |
 | 6 | Fix: Đăng ký PayOS singleton vào DI container | Antigravity AI + DE180117 | `API/Configurations/ServiceConfiguration.cs` | API khởi động thành công sau fix, commit bdd1248 |
 | 7 | Fix: Gỡ bỏ UserSeedHostedService dùng schema cũ | Antigravity AI + DE180117 | `API/Configurations/AuthenticationConfiguration.cs` | Seed data chạy đúng với AppDbSeederHostedService mới |
+| 8 | Tích hợp Cloudinary Upload Image | Antigravity AI | `UploadsController.cs`, `booking-checkout.js` | Upload API trả URL Cloudinary |
+| 9 | Hoàn thiện User Profile & Hủy duyệt hồ sơ | Antigravity AI | `Profile.cshtml`, `profile.js` | Tính năng hoạt động đầy đủ |
+| 10 | Hoàn thiện Đánh giá & Phản hồi (Reviews) | Antigravity AI | `ReviewsController.cs`, `booking-detail.js` | Tích hợp Full API, Modal Tailwind CSS mượt mà |
 | 8 | Add: Razor Pages Booking + Payment + UserLayout | Ngô Sỹ Giá - DE180117 | `Pages/Booking/`, `Pages/Payment/`, `Pages/Shared/_UserLayout.cshtml` | Commit bdd1248, push feature/de180117-booking |
 | 9 | Add: Migration AddPayOSProvider | Ngô Sỹ Giá - DE180117 | `Migrations/20260711084739_AddPayOSProvider.*` | Migration applied thành công |
 | 10 | Tích hợp Cloudinary Upload Service | Antigravity AI | `CloudinaryStorageService.cs`, `UploadsController.cs`, `booking-checkout.js` | Tải ảnh GPLX thành công, có URL public |
@@ -313,6 +316,7 @@ DD/MM/YYYY
 | 6 | Lỗi DB lưu giá trị "undefined" khi upload ảnh | Cache trình duyệt giữ file JS cũ, đọc sai key JSON `url` thành `publicUrl` | Thêm cache-buster `?v=3` vào script src, ép trình duyệt tải JS mới | Fixed |
 | 7 | Cần nút hủy chờ duyệt hồ sơ | Thiếu luồng hủy yêu cầu chờ duyệt trên giao diện và hệ thống | Thêm API `/cancel`, nút bấm và state JS để hủy về `Unverified` | Fixed |
 | 8 | Compile Error: `DocumentVerificationStatus` thiếu `Unverified` | Khai báo thiếu trạng thái mặc định trong Enum của BusinessObjects | Thêm `Unverified = 0` vào enum | Fixed |
+| 9 | Lỗi không hiển thị Data của Chủ xe | Repositories thiếu `.Include()` navigation properties | Thêm Include và sửa lỗi bounds của pagination trong `BookingRepository` | Fixed |
 
 ## Thay đổi chi tiết
 
@@ -323,6 +327,7 @@ DD/MM/YYYY
 | 3 | Sửa lỗi proxy upload 400 Bad Request | Antigravity AI | `UploadsController.cs`, `Program.cs`, `profile.js` | Ảnh Cloudinary lên thành công |
 | 4 | Sửa lỗi lưu chữ "undefined" vào DB khi tải ảnh | Antigravity AI | `Profile.cshtml`, `profile.js` | Database lưu đúng đường dẫn URL |
 | 5 | Thêm tính năng "Hủy chờ duyệt" hồ sơ tài xế | Antigravity AI | `UserService.cs`, `profile.js`, `DriverDocumentsController.cs` | Bấm Hủy sẽ mở khóa form upload |
+| 6 | Fix lỗi thiếu Navigation Properties trong `BookingRepository` | Ngô Sỹ Giá - DE180117 | `BookingRepository.cs` | Dữ liệu Owner load đầy đủ (commit 17aec68) |
 
 ## AI có hỗ trợ không?
 

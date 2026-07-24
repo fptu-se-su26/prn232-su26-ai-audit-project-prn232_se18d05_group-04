@@ -154,8 +154,10 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 text-right space-x-3">
-                        <a href="/Owner/Cars/Images?id=${car.id}" class="text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:underline">Ảnh</a>
-                        <a href="/Owner/Cars/Form?id=${car.id}" class="text-sm font-medium text-primary hover:underline">Sửa</a>
+                         <a href="/Owner/Cars/Activity?id=${car.id}" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 hover:underline">Lịch sử</a>
+                         <a href="/Owner/Cars/Status?id=${car.id}" class="text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:underline">Trạng thái</a>
+                         <a href="/Owner/Cars/Images?id=${car.id}" class="text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:underline">Ảnh</a>
+                         <a href="/Owner/Cars/Form?id=${car.id}" class="text-sm font-medium text-primary hover:underline">Sửa</a>
                     </td>
                 </tr>
             `).join('');

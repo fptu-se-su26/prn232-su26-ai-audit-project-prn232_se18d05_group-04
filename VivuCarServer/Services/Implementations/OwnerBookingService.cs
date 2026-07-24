@@ -151,6 +151,23 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
             CreatedAt = DateTime.UtcNow
         });
 
+        if (!string.IsNullOrWhiteSpace(request.DamageNotes))
+        {
+            var imagesPart = request.ImageUrls != null && request.ImageUrls.Count > 0
+                ? " ||IMAGES|| " + string.Join(",", request.ImageUrls)
+                : "";
+
+            dbContext.IncidentReports.Add(new IncidentReport
+            {
+                BookingId = booking.Id,
+                ReporterId = ownerId,
+                Title = "Phát sinh hư hỏng lúc nhận xe",
+                Description = request.DamageNotes + imagesPart,
+                Status = IncidentStatus.Open,
+                CreatedAt = DateTime.UtcNow
+            });
+        }
+
         await dbContext.SaveChangesAsync(cancellationToken);
         return MapToDetailResponse(booking);
     }

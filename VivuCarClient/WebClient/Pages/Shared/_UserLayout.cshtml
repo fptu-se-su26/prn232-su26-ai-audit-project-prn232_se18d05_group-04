@@ -14,7 +14,7 @@
   @await RenderSectionAsync("HeadScripts", required: false)
 </head>
 <body data-layout="@(ViewData["DataLayout"] ?? "user")" data-page="@ViewData["DataPage"]" class="@(ViewData["BodyClass"] ?? "min-h-[100dvh] bg-[#f7f7f5] text-[#1f1f1f] font-sans antialiased overflow-x-hidden")">
-  <div id="headerMount"></div>
+  <partial name="_Navbar" />
   
   @RenderBody()
   

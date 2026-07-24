@@ -279,13 +279,13 @@
                 `;
             } else if (status === 'waitingpickup') {
                 html += `
-                    <a href="/Owner/Bookings/Handover?id=${b.id}" class="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 focus:outline-none transition-colors shadow-sm">
+                    <a href="/Owner/Bookings/Handover?id=${b.id}" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none transition-colors shadow-sm">
                         Bàn giao xe
                     </a>
                 `;
             } else if (status === 'returnrequested') {
                 html += `
-                    <a href="/Owner/Bookings/Return?id=${b.id}" class="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90 focus:outline-none transition-colors shadow-sm">
+                    <a href="/Owner/Bookings/Return?id=${b.id}" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none transition-colors shadow-sm">
                         Nhận lại xe
                     </a>
                 `;
@@ -293,7 +293,7 @@
                 // If it's in progress but no return requested, maybe owner can force return? 
                 // In VivuCar, usually Customer requests return, but Owner can also initiate.
                 html += `
-                    <a href="/Owner/Bookings/Return?id=${b.id}" class="inline-flex items-center justify-center rounded-lg bg-white border border-primary text-primary px-4 py-2 text-sm font-medium hover:bg-primary/5 focus:outline-none transition-colors">
+                    <a href="/Owner/Bookings/Return?id=${b.id}" class="inline-flex items-center justify-center rounded-lg bg-white border border-blue-600 text-blue-600 px-4 py-2 text-sm font-medium hover:bg-blue-50 focus:outline-none transition-colors">
                         Thực hiện nhận lại xe
                     </a>
                 `;
