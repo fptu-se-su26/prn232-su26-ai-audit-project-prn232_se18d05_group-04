@@ -33,7 +33,17 @@ import { authService } from '/js/shared/auth-service.js';
   const session = await authService.refresh();
   const currentUser = session?.user ?? null;
   if (!currentUser) {
-    location.href = '/';
+    // Show friendly message instead of silent redirect
+    root.innerHTML = `
+      <div style="text-align:center;padding:60px 24px;max-width:400px;margin:0 auto">
+        <div style="font-size:3rem;margin-bottom:16px">🔐</div>
+        <h2 style="font-size:1.25rem;font-weight:700;color:#1f1f1f;margin:0 0 8px">Bạn chưa đăng nhập</h2>
+        <p style="color:#6b7280;font-size:.875rem;margin:0 0 24px">Vui lòng đăng nhập để tiếp tục đặt xe. Sau khi đăng nhập bạn sẽ được đưa trở lại trang này.</p>
+        <a href="/?redirect=${encodeURIComponent(location.pathname + location.search)}"
+           style="display:inline-block;background:#16a34a;color:#fff;font-weight:700;padding:12px 28px;border-radius:12px;text-decoration:none;font-size:.9375rem">
+          Đăng nhập ngay
+        </a>
+      </div>`;
     return;
   }
 
@@ -47,7 +57,7 @@ import { authService } from '/js/shared/auth-service.js';
     // Fallback: directly patch the header
     const headerMount = document.getElementById('headerMount');
     if (!headerMount) return;
-    const loginLink = headerMount.querySelector('a[href="/Login"], a[href*="login"]');
+    const loginLink = headerMount.querySelector('a[href="/"], a[href="/Login"], a[href*="login"]');
     if (loginLink) {
       loginLink.textContent = user.fullName || user.email || 'Tài khoản';
       loginLink.href = '/Profile';
@@ -415,8 +425,10 @@ import { authService } from '/js/shared/auth-service.js';
       if (!r.ok) {
         const err = await r.json().catch(() => ({}));
         if (r.status === 401) {
-          showToast('Phiên đăng nhập đã hết hạn. Đang chuyển hướng đến trang đăng nhập...', 'danger');
-          setTimeout(() => location.href = '/', 1500);
+          showToast('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.', 'danger');
+          // Clear stale tokens, then redirect back here after re-login
+          await authService.logout().catch(() => {});
+          setTimeout(() => location.href = `/?redirect=${encodeURIComponent(location.pathname + location.search)}`, 1500);
         } else {
           showToast(err.message || 'Không thể tạo đơn thuê. Vui lòng thử lại.', 'danger');
           setLoading(btn, false);
