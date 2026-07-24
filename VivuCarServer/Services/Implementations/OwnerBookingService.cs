@@ -21,10 +21,26 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
             .Include(b => b.Customer)
             .Where(b => b.Car.OwnerId == ownerId);
 
-        if (!string.IsNullOrWhiteSpace(filter.Status) &&
-            Enum.TryParse<BookingStatus>(filter.Status, true, out var statusEnum))
+        if (!string.IsNullOrWhiteSpace(filter.Status) && filter.Status.ToUpper() != "ALL")
         {
-            query = query.Where(b => b.Status == statusEnum);
+            var mappedStatuses = filter.Status.ToLowerInvariant() switch
+            {
+                "pending" => new[] { BookingStatus.PendingApproval, BookingStatus.WaitingDeposit },
+                "approved" => new[] { BookingStatus.WaitingPickup, BookingStatus.InProgress, BookingStatus.ReturnRequested },
+                "completed" => new[] { BookingStatus.Completed },
+                "rejected" => new[] { BookingStatus.Rejected },
+                "cancelled" => new[] { BookingStatus.Cancelled, BookingStatus.Expired },
+                _ => Array.Empty<BookingStatus>()
+            };
+
+            if (mappedStatuses.Length > 0)
+            {
+                query = query.Where(b => mappedStatuses.Contains(b.Status));
+            }
+            else if (Enum.TryParse<BookingStatus>(filter.Status, true, out var statusEnum))
+            {
+                query = query.Where(b => b.Status == statusEnum);
+            }
         }
 
         var page = Math.Max(filter.Page, 1);
@@ -322,7 +338,19 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
             EndDateTime = b.EndDateTime,
             TotalAmount = b.TotalAmount,
             DepositAmount = b.DepositAmount,
-            Status = b.Status.ToString(),
+            Status = b.Status switch
+            {
+                BookingStatus.PendingApproval => "pending",
+                BookingStatus.WaitingDeposit => "pending",
+                BookingStatus.WaitingPickup => "approved",
+                BookingStatus.InProgress => "approved",
+                BookingStatus.ReturnRequested => "approved",
+                BookingStatus.Completed => "completed",
+                BookingStatus.Rejected => "rejected",
+                BookingStatus.Cancelled => "cancelled",
+                BookingStatus.Expired => "cancelled",
+                _ => "pending"
+            },
             CreatedAt = b.CreatedAt
         };
     }

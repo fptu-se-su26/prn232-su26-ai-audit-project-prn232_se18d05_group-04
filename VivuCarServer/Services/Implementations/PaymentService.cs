@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Enums;
+using BusinessObjects.Enums;
 using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
@@ -10,7 +10,7 @@ namespace Services.Implementations;
 
 public class PaymentService(IBookingRepository bookingRepository, global::Net.payOS.PayOS payOS) : IPaymentService
 {
-    public async Task<CreatePaymentResponse> CreateDepositPaymentAsync(int customerId, CreatePaymentRequest request, CancellationToken cancellationToken = default)
+    public async Task<CreatePaymentResponse> CreateDepositPaymentAsync(int customerId, string baseApiUrl, CreatePaymentRequest request, CancellationToken cancellationToken = default)
     {
         var booking = await bookingRepository.GetByIdAsync(request.BookingId, cancellationToken);
         if (booking == null)
@@ -56,13 +56,13 @@ public class PaymentService(IBookingRepository bookingRepository, global::Net.pa
         await bookingRepository.SaveChangesAsync(cancellationToken);
 
         // PayOS Return URL configuration
-        var frontendReturnUrl = Environment.GetEnvironmentVariable("PayOS__ReturnUrl") ?? request.ReturnUrl;
-        var frontendCancelUrl = Environment.GetEnvironmentVariable("PayOS__CancelUrl") ?? request.ReturnUrl;
+        var frontendReturnUrl = !string.IsNullOrWhiteSpace(request.ReturnUrl) ? request.ReturnUrl : Environment.GetEnvironmentVariable("PayOS__ReturnUrl");
+        var frontendCancelUrl = !string.IsNullOrWhiteSpace(request.ReturnUrl) ? request.ReturnUrl : Environment.GetEnvironmentVariable("PayOS__CancelUrl");
 
         // Route PayOS back to our backend callback endpoint first, then the backend will redirect to the frontend.
         // We inject the TransactionCode and expected status so the backend can process it.
-        var backendCallbackSuccess = $"https://localhost:7005/api/payments/callback?TransactionCode={txnCode}&Status=success&RedirectUrl={Uri.EscapeDataString(frontendReturnUrl)}";
-        var backendCallbackCancel = $"https://localhost:7005/api/payments/callback?TransactionCode={txnCode}&Status=failed&RedirectUrl={Uri.EscapeDataString(frontendCancelUrl)}";
+        var backendCallbackSuccess = $"{baseApiUrl}/api/payments/callback?TransactionCode={txnCode}&Status=success&RedirectUrl={Uri.EscapeDataString(frontendReturnUrl)}";
+        var backendCallbackCancel = $"{baseApiUrl}/api/payments/callback?TransactionCode={txnCode}&Status=failed&RedirectUrl={Uri.EscapeDataString(frontendCancelUrl)}";
 
         var paymentData = new global::Net.payOS.Types.PaymentData(
             orderCode: orderCode,

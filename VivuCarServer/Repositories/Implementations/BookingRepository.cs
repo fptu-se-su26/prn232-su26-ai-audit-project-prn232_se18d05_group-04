@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Data;
+using BusinessObjects.Data;
 using BusinessObjects.Models;
 using BusinessObjects.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -62,7 +62,21 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
 
         if (!string.IsNullOrWhiteSpace(status) && status.ToUpper() != "ALL")
         {
-            if (Enum.TryParse<BookingStatus>(status, true, out var bookingStatus))
+            var mappedStatuses = status.ToLowerInvariant() switch
+            {
+                "pending" => new[] { BookingStatus.PendingApproval, BookingStatus.WaitingDeposit },
+                "approved" => new[] { BookingStatus.WaitingPickup, BookingStatus.InProgress, BookingStatus.ReturnRequested },
+                "completed" => new[] { BookingStatus.Completed },
+                "rejected" => new[] { BookingStatus.Rejected },
+                "cancelled" => new[] { BookingStatus.Cancelled, BookingStatus.Expired },
+                _ => Array.Empty<BookingStatus>()
+            };
+
+            if (mappedStatuses.Length > 0)
+            {
+                query = query.Where(b => mappedStatuses.Contains(b.Status));
+            }
+            else if (Enum.TryParse<BookingStatus>(status, true, out var bookingStatus))
             {
                 query = query.Where(b => b.Status == bookingStatus);
             }
@@ -99,7 +113,21 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
 
         if (!string.IsNullOrWhiteSpace(status) && status.ToUpper() != "ALL")
         {
-            if (Enum.TryParse<BookingStatus>(status, true, out var bookingStatus))
+            var mappedStatuses = status.ToLowerInvariant() switch
+            {
+                "pending" => new[] { BookingStatus.PendingApproval, BookingStatus.WaitingDeposit },
+                "approved" => new[] { BookingStatus.WaitingPickup, BookingStatus.InProgress, BookingStatus.ReturnRequested },
+                "completed" => new[] { BookingStatus.Completed },
+                "rejected" => new[] { BookingStatus.Rejected },
+                "cancelled" => new[] { BookingStatus.Cancelled, BookingStatus.Expired },
+                _ => Array.Empty<BookingStatus>()
+            };
+
+            if (mappedStatuses.Length > 0)
+            {
+                query = query.Where(b => mappedStatuses.Contains(b.Status));
+            }
+            else if (Enum.TryParse<BookingStatus>(status, true, out var bookingStatus))
             {
                 query = query.Where(b => b.Status == bookingStatus);
             }

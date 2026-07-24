@@ -254,7 +254,7 @@ DD/MM/YYYY
 | 8 | Add: Razor Pages Booking + Payment + UserLayout | Ngô Sỹ Giá - DE180117 | `Pages/Booking/`, `Pages/Payment/`, `Pages/Shared/_UserLayout.cshtml` | Commit bdd1248, push feature/de180117-booking |
 | 9 | Add: Migration AddPayOSProvider | Ngô Sỹ Giá - DE180117 | `Migrations/20260711084739_AddPayOSProvider.*` | Migration applied thành công |
 | 10 | Tích hợp Cloudinary Upload Service | Antigravity AI | `CloudinaryStorageService.cs`, `UploadsController.cs`, `booking-checkout.js` | Tải ảnh GPLX thành công, có URL public |
-
+| 11 | Sửa đổi trạng thái Booking, Tích hợp cổng thanh toán PayOS | Antigravity AI | `PaymentService.cs`, `PaymentsController.cs`, `payment-deposit.js` | Xử lý redirect đúng luồng Callback về frontend, commit 617e853 |
 ## AI có hỗ trợ không?
 
 - [ x ] Có
