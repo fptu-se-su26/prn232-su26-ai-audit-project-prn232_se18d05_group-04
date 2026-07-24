@@ -316,6 +316,7 @@ DD/MM/YYYY
 | 6 | Lỗi DB lưu giá trị "undefined" khi upload ảnh | Cache trình duyệt giữ file JS cũ, đọc sai key JSON `url` thành `publicUrl` | Thêm cache-buster `?v=3` vào script src, ép trình duyệt tải JS mới | Fixed |
 | 7 | Cần nút hủy chờ duyệt hồ sơ | Thiếu luồng hủy yêu cầu chờ duyệt trên giao diện và hệ thống | Thêm API `/cancel`, nút bấm và state JS để hủy về `Unverified` | Fixed |
 | 8 | Compile Error: `DocumentVerificationStatus` thiếu `Unverified` | Khai báo thiếu trạng thái mặc định trong Enum của BusinessObjects | Thêm `Unverified = 0` vào enum | Fixed |
+| 9 | Lỗi không hiển thị Data của Chủ xe | Repositories thiếu `.Include()` navigation properties | Thêm Include và sửa lỗi bounds của pagination trong `BookingRepository` | Fixed |
 
 ## Thay đổi chi tiết
 
@@ -326,6 +327,7 @@ DD/MM/YYYY
 | 3 | Sửa lỗi proxy upload 400 Bad Request | Antigravity AI | `UploadsController.cs`, `Program.cs`, `profile.js` | Ảnh Cloudinary lên thành công |
 | 4 | Sửa lỗi lưu chữ "undefined" vào DB khi tải ảnh | Antigravity AI | `Profile.cshtml`, `profile.js` | Database lưu đúng đường dẫn URL |
 | 5 | Thêm tính năng "Hủy chờ duyệt" hồ sơ tài xế | Antigravity AI | `UserService.cs`, `profile.js`, `DriverDocumentsController.cs` | Bấm Hủy sẽ mở khóa form upload |
+| 6 | Fix lỗi thiếu Navigation Properties trong `BookingRepository` | Ngô Sỹ Giá - DE180117 | `BookingRepository.cs` | Dữ liệu Owner load đầy đủ (commit 17aec68) |
 
 ## AI có hỗ trợ không?
 
