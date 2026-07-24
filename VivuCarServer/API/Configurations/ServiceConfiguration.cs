@@ -31,6 +31,7 @@ public static class ServiceConfiguration
         services.AddScoped<IOwnerCarService, OwnerCarService>();
         services.AddScoped<IOwnerBookingService, OwnerBookingService>();
         services.AddScoped<IIncidentService, IncidentService>();
+        services.AddScoped<IReviewService, ReviewService>();
         services.AddHostedService<API.HostedServices.BookingExpirationHostedService>();
         services.AddHostedService<API.HostedServices.AppDbSeederHostedService>();
         services.AddHostedService<API.HostedServices.MiotoCarSeedHostedService>();

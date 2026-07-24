@@ -57,8 +57,8 @@ Sinh viên/nhóm cần ghi lại:
 | 3 | 07/07/2026 | Antigravity | Tích hợp Backend API Booking, Payment, Auth vào Frontend | Xem backend đã có gì, tích hợp API, thêm GPLX 2 mặt | Sửa DB + Migration; cập nhật 6 file JS tích hợp API thật | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 3 |
 | 4 | 20/07/2026 | Antigravity | Pull dev, debug lỗi DI + migration, push code | Pull origin/dev, fix PayOS DI, fix UserSeedHostedService schema cũ, reset DB | API chạy thành công, commit bdd1248 push lên feature/de180117-booking | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 4 |
 | 5 | 20/07/2026 | Antigravity | Tích hợp thư viện CloudinaryDotNet | Nhận thông tin .env và yêu cầu viết API UploadsController, sửa booking-checkout.js | File upload lên Cloudinary trả về link public thành công | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 5 |
-| 6 |  |  |  |  |  | Có / Không |  |
-| 7 |  |  |  |  |  | Có / Không |  |
+| 6 | 24/07/2026 | Antigravity | Hoàn thiện User Profile | Fix font lỗi, tính năng Hủy duyệt, bỏ Proxy API | Hoạt động đầy đủ | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 6 |
+| 7 | 24/07/2026 | Antigravity | Tính năng Customer Feedback | Đọc task 4, tích hợp Frontend & Backend cho đánh giá xe | Chạy mượt mà bằng Tailwind Modal | Có | `AI_AUDIT_LOG.md` - Lần sử dụng AI số 7 |
 | 8 |  |  |  |  |  | Có / Không |  |
 | 9 |  |  |  |  |  | Có / Không |  |
 | 10 |  |  |  |  |  | Có / Không |  |
@@ -335,39 +335,46 @@ trang owner-booking-requests.js vẫn chạy Mock Data. Cần BE bổ sung sau.
 #### 5.1. Prompt nguyên văn
 
 ```text
-Dán nguyên văn prompt đã hỏi AI tại đây.
+- đọc task 4 của thành viên 2 sau đó làm phần full BE, FE feedback của customer sau khi trả xe (điều kiện là quy trình trả xe đã được duyệt, booking status chuyển về completed...)
+- nút gửi đánh giá thì điều chỉnh lại cho đừng bị ẩn sau nền nữa khi đưa trỏ chuột vào mới thấy, navbar sửa lại thành navbar dùng chung, thông báo đừng kiểu alert
+- lúc tạo đánh giá lần đầu và sửa đánh giá phải reload lại trang mới chạy đúng, có lúc ấn sửa đánh giá vẫn đang chạy popup của tạo đánh giá lần đầu...
+- vẫn còn alert (bạn có chắc chắn muốn xóa đánh giá này)
 ```
 
 #### 5.2. Bối cảnh khi viết prompt
 
 ```text
-Viết tại đây...
+Frontend còn thiếu chức năng cho phép người dùng đánh giá và phản hồi (Reviews) 
+sau khi chuyến xe kết thúc. Và giao diện mặc định đang hiện alert() rất cơ bản.
 ```
 
 #### 5.3. Kết quả AI trả về
 
 ```text
-Viết tại đây...
+AI sửa controller Backend để nhận dạng JWT Auth Token chuẩn (ClaimTypes.NameIdentifier).
+Tạo mới mã JavaScript cho logic UI Modal để không bị đè lên trạng thái cũ (xóa DOM cũ tạo DOM mới). 
+Code Frontend không còn dùng alert() mặc định mà dùng component chuyên nghiệp.
 ```
 
 #### 5.4. Kết quả đã áp dụng vào bài
 
 ```text
-Viết tại đây...
+Sử dụng trọn vẹn phần thay đổi ở `ReviewsController.cs` và `booking-detail.js`. 
+Thay the^' toàn bộ alert bằng custom UI modal và component U.showToast().
 ```
 
 #### 5.5. Phần sinh viên/nhóm đã chỉnh sửa hoặc cải tiến
 
 ```text
-Viết tại đây...
+Khởi động lại Backend API, ấn Ctrl + F5 trình duyệt để xem sự thay đổi UI.
 ```
 
 #### 5.6. Đánh giá chất lượng prompt
 
-- [ ] Prompt rõ ràng
-- [ ] Prompt có đủ bối cảnh
+- [ x ] Prompt rõ ràng
+- [ x ] Prompt có đủ bối cảnh
 - [ ] Prompt còn thiếu thông tin
-- [ ] Prompt tạo ra kết quả tốt
+- [ x ] Prompt tạo ra kết quả tốt
 - [ ] Prompt tạo ra kết quả chưa phù hợp
 - [ ] Cần hỏi lại AI nhiều lần
 - [ ] Cần tự kiểm tra và chỉnh sửa nhiều
@@ -377,17 +384,17 @@ Viết tại đây...
 
 | Loại minh chứng | Nội dung |
 |---|---|
-| Link commit |  |
-| File liên quan |  |
-| Screenshot |  |
-| Kết quả chạy/test |  |
-| Link tài liệu/báo cáo |  |
-| Ghi chú khác |  |
+| Link commit | Chưa tạo commit |
+| File liên quan | `ReviewsController.cs`, `booking-detail.js` |
+| Screenshot | Đã xóa alert và hiển thị Tailwind Modal |
+| Kết quả chạy/test | Đánh giá, chỉnh sửa và xóa hoạt động thành công |
+| Link tài liệu/báo cáo | `AI_AUDIT_LOG.md` |
+| Ghi chú khác | Người thực hiện: Nguyễn Lê Tiểu Long - DE191106 |
 
 #### 5.8. Ghi chú thêm
 
 ```text
-Viết tại đây...
+Prompt đã giải quyết dứt điểm lỗi phân quyền (Authorization) và kẹt giao diện DOM.
 ```
 
 ---
