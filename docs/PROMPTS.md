@@ -392,6 +392,84 @@ Viết tại đây...
 
 ---
 
+### Prompt số 4
+
+| Nội dung | Thông tin |
+|---|---|
+| Ngày sử dụng | 24/07/2026 |
+| Công cụ AI | Antigravity |
+| Mục đích | Tạo giao diện User Profile, sửa font chữ, tải data user, upload ảnh Cloudinary |
+| Phần việc liên quan | Coding / Debug / Design |
+| Mức độ sử dụng | Hỏi sinh code / Hỏi debug |
+
+#### 6.1. Prompt nguyên văn
+
+```text
+- ở trang profile thì còn đang lỗi font chữ khá nhiều, phần mục lục bên trái tôi ấn vào mục nào cũng đều thấy báo lỗi...
+- phần Giấy tờ tùy thân & Bằng lái xe thì ý tôi là upload trực tiếp ảnh từ máy nhưng ảnh lưu lên cloud chứ không phải nhập link ảnh
+- thêm nút hủy chờ duyệt để có thể upload lại ảnh khác
+```
+
+#### 6.2. Bối cảnh khi viết prompt
+
+```text
+Sau khi hoàn thành phần Đặt xe, nhóm tiến hành làm phần Hồ sơ người dùng (User Profile). 
+Tuy nhiên UI bị lỗi font, chưa fetch data từ API và tính năng Upload ảnh bị kẹt do dùng proxy. 
+Ngoài ra khi tài liệu đang Pending thì UI không cho upload lại, cần tính năng Hủy duyệt.
+```
+
+#### 6.3. Kết quả AI trả về
+
+```text
+AI đã:
+- Tạo mới và hoàn thiện UI Profile.cshtml và profile.js
+- Debug và fix lỗi 400 Bad Request của API proxy bằng cách đẩy thẳng request qua backend và bật CORS
+- Fix lỗi trình duyệt cache khiến frontend gửi chuỗi "undefined" vào Database
+- Implement toàn bộ luồng Hủy chờ duyệt (Fullstack)
+```
+
+#### 6.4. Kết quả đã áp dụng vào bài
+
+```text
+Áp dụng toàn bộ. Cập nhật giao diện mượt mà và sửa triệt để luồng upload ảnh Cloudinary.
+```
+
+#### 6.5. Phần sinh viên/nhóm đã chỉnh sửa hoặc cải tiến
+
+```text
+Khởi động lại server và reload cache trình duyệt.
+```
+
+#### 6.6. Đánh giá chất lượng prompt
+
+- [ x ] Prompt rõ ràng
+- [ x ] Prompt có đủ bối cảnh
+- [ ] Prompt còn thiếu thông tin
+- [ x ] Prompt tạo ra kết quả tốt
+- [ ] Prompt tạo ra kết quả chưa phù hợp
+- [ ] Cần hỏi lại AI nhiều lần
+- [ ] Cần tự kiểm tra và chỉnh sửa nhiều
+- [ ] Kết quả AI có lỗi hoặc chưa chính xác
+
+#### 6.7. Minh chứng liên quan
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | Chưa tạo commit |
+| File liên quan | `Profile.cshtml`, `profile.js`, `UploadsController.cs`, `DriverDocumentsController.cs`, `Program.cs` |
+| Screenshot |  |
+| Kết quả chạy/test | Build backend thành công. |
+| Link tài liệu/báo cáo |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
+
+#### 6.8. Ghi chú thêm
+
+```text
+AI xử lý bug cực kỳ nhanh và chính xác.
+```
+
+---
+
 ## 6. Prompt quan trọng nhất
 
 Chọn một prompt có ảnh hưởng lớn nhất đến bài tập/project.

@@ -1,45 +1,102 @@
-(function () {
-  const DB = window.VivuCarDB;
+/**
+ * my-bookings.js
+ * Uses real API instead of window.VivuCarDB
+ */
+import { authService } from '/js/shared/auth-service.js';
+
+(async function () {
   const U = window.VivuCarUtils;
-  const Auth = window.VivuCarAuth;
-  const currentUser = Auth.getCurrentUser();
-  if (!currentUser) return;
+  
+  const session = await authService.refresh();
+  const currentUser = session?.user ?? null;
+  if (!currentUser) {
+    location.href = '/';
+    return;
+  }
+  
   const root = U.byId("myBookingsRoot");
   const state = { filter: "all", keyword: "", sort: "newest" };
+  
+  let allBookings = [];
+  let paymentStatuses = {};
 
-  function records() {
-    return DB.bookings
-      .filter((booking) => booking.user_id === currentUser.id)
-      .map((booking) => {
-        const car = DB.cars.find((item) => item.id === booking.car_id);
-        const payment = U.paymentForBooking(booking.id);
-        const inspections = U.inspectionsForBooking(booking.id);
-        return { booking, car, payment, inspections, ui: U.resolveBookingUiState(booking, payment, inspections) };
-      });
+  async function loadData() {
+    root.innerHTML = `<div style="text-align:center;padding:48px;color:#6b7280">Đang tải danh sách đơn thuê...</div>`;
+    try {
+      const r = await authService.apiFetch('bookings/my-bookings?pageSize=100');
+      if (r.ok) {
+        allBookings = await r.json();
+        
+        // Fetch payment statuses for pending/approved bookings to determine UI state accurately
+        const activeBookings = allBookings.filter(b => b.status === 'pending' || b.status === 'approved');
+        await Promise.all(activeBookings.map(async (b) => {
+          try {
+            const pr = await authService.apiFetch(`payments/status/${b.id}`);
+            if (pr.ok) {
+              paymentStatuses[b.id] = await pr.json();
+            }
+          } catch (e) {
+            console.warn("Could not fetch payment status for", b.id);
+          }
+        }));
+      }
+      render();
+    } catch (err) {
+      console.error(err);
+      root.innerHTML = `<div style="text-align:center;padding:48px;color:#dc2626">Lỗi tải dữ liệu. Vui lòng tải lại trang.</div>`;
+    }
+  }
+
+  function resolveUiState(booking) {
+    const payment = paymentStatuses[booking.id];
+    const paid = payment?.paymentStatus === 'success';
+    
+    let key = "unknown", label = "Không xác định", tone = "neutral";
+    
+    if (booking.status === "cancelled") { key = "cancelled"; label = "Đã hủy"; tone = "danger"; }
+    else if (booking.status === "rejected") { key = "rejected"; label = "Đã từ chối"; tone = "danger"; }
+    else if (booking.status === "completed") { key = "completed"; label = "Hoàn tất"; tone = "success"; }
+    else if (booking.status === "pending") {
+      if (paid) { key = "handover_pending"; label = "Đã cọc - chờ xác nhận"; tone = "primary"; }
+      else { key = "payment_pending"; label = "Chờ thanh toán"; tone = "warning"; }
+    }
+    else if (booking.status === "approved") {
+      // Missing inspection check for simplicity, default to renting/wait handover
+      const pickupDate = new Date(booking.startDateTime);
+      if (Date.now() < pickupDate.getTime()) { key = "handover_pending"; label = "Chờ bàn giao"; tone = "primary"; }
+      else { key = "renting"; label = "Đang thuê"; tone = "primary"; }
+    }
+    return { key, label, tone };
   }
 
   function applyFilters(items) {
     const keyword = state.keyword.trim().toLowerCase();
-    let output = items.filter(({ booking, car, ui }) => {
-      const haystack = `${booking.id} ${car?.brand} ${car?.model} ${car?.license_plate}`.toLowerCase();
+    let output = items.map(booking => {
+      const ui = resolveUiState(booking);
+      return { booking, ui };
+    }).filter(({ booking, ui }) => {
+      const haystack = `${booking.bookingCode || booking.id} ${booking.carName} ${booking.licensePlate}`.toLowerCase();
       const filterOk = state.filter === "all" || ui.key === state.filter || booking.status === state.filter;
       return filterOk && (!keyword || haystack.includes(keyword));
     });
+    
     output.sort((a, b) => {
-      if (state.sort === "oldest") return new Date(a.booking.created_at) - new Date(b.booking.created_at);
-      if (state.sort === "pickup") return new Date(a.booking.pickup_datetime) - new Date(b.booking.pickup_datetime);
-      if (state.sort === "amount") return b.booking.total_amount - a.booking.total_amount;
-      return new Date(b.booking.created_at) - new Date(a.booking.created_at);
+      if (state.sort === "oldest") return new Date(a.booking.createdAt) - new Date(b.booking.createdAt);
+      if (state.sort === "pickup") return new Date(a.booking.startDateTime) - new Date(b.booking.startDateTime);
+      if (state.sort === "amount") return b.booking.totalAmount - a.booking.totalAmount;
+      return new Date(b.booking.createdAt) - new Date(a.booking.createdAt); // newest
     });
     return output;
   }
 
   function render() {
     document.getElementById("breadcrumbMount").innerHTML = window.VivuCarLayout.renderBreadcrumb([
-      { label: "Trang chủ", href: "home.html" },
+      { label: "Trang chủ", href: "/cars" },
       { label: "Đơn thuê" }
     ]);
-    const rows = applyFilters(records());
+    
+    const rows = applyFilters(allBookings);
+    
     root.innerHTML = `
       <div class="booking-toolbar">
         <div class="chip-row" id="bookingTabs">
@@ -63,27 +120,30 @@
         </div>
       </div>
       <div class="booking-list">
-        ${rows.length ? rows.map(card).join("") : U.renderEmptyState({ title: "Chưa có đơn phù hợp", text: "Thử đổi bộ lọc hoặc tìm xe để tạo booking mới.", href: "search.html", action: "Tìm xe" })}
+        ${rows.length ? rows.map(card).join("") : U.renderEmptyState({ title: "Chưa có đơn phù hợp", text: "Thử đổi bộ lọc hoặc tìm xe để tạo booking mới.", href: "/cars/search", action: "Tìm xe" })}
       </div>`;
     bind();
   }
 
-  function card({ booking, car, payment, ui }) {
-    const paid = payment?.status === "success";
+  function card({ booking, ui }) {
+    const payment = paymentStatuses[booking.id];
+    const paid = payment?.paymentStatus === "success";
+    const canCancel = booking.status === "pending" || booking.status === "approved";
+    
     return `
       <article class="booking-card-wide">
-        <img src="${U.carImage(car.id)}" alt="${U.carTitle(car)}">
+        <img src="${booking.carImageUrl || '/img/placeholder-car.png'}" alt="${booking.carName}" style="object-fit:cover">
         <div>
-          <div class="car-meta"><span>#${booking.id}</span>${U.statusBadge(ui.tone, ui.key, ui.label)}${U.renderStatusBadge("neutral", booking.status)}</div>
-          <h2>${U.carTitle(car)}</h2>
-          <p class="muted">${U.formatDateTime(booking.pickup_datetime)} - ${U.formatDateTime(booking.return_datetime)} · ${car.license_plate}</p>
-          <strong>${U.formatVnd(booking.total_amount)}</strong>
+          <div class="car-meta"><span>#${booking.bookingCode || booking.id}</span>${U.renderStatusBadge(ui.tone, ui.label)}${U.renderStatusBadge("neutral", booking.status)}</div>
+          <h2>${booking.carName}</h2>
+          <p class="muted">${new Date(booking.startDateTime).toLocaleString('vi-VN')} - ${new Date(booking.endDateTime).toLocaleString('vi-VN')} · ${booking.licensePlate}</p>
+          <strong>${U.formatVnd(booking.totalAmount)}</strong>
         </div>
         <div class="booking-actions">
-          <a class="btn btn-secondary btn-sm" href="/Booking/Detail?bookingId=${booking.id}">Chi tiết</a>
-          ${!paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán</a>` : ""}
-          ${U.canCancelBooking(booking) ? `<button class="btn btn-danger btn-sm" type="button" data-cancel="${booking.id}">Hủy đơn</button>` : ""}
-          ${booking.status === "completed" ? `<a class="btn btn-ghost btn-sm" href="post-trip-review.html?bookingId=${booking.id}&carId=${car.id}">Đánh giá</a>` : ""}
+          <a class="btn btn-secondary btn-sm" href="/Booking/Detail?id=${booking.id}">Chi tiết</a>
+          ${booking.status === "pending" && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán</a>` : ""}
+          ${canCancel ? `<button class="btn btn-danger btn-sm" type="button" data-cancel="${booking.id}">Hủy đơn</button>` : ""}
+          ${booking.status === "completed" ? `<a class="btn btn-ghost btn-sm" href="/Review/Create?bookingId=${booking.id}">Đánh giá</a>` : ""}
         </div>
       </article>`;
   }
@@ -102,11 +162,13 @@
       render();
     });
     document.querySelectorAll("[data-cancel]").forEach((button) => button.addEventListener("click", () => {
-      window.VivuCarBookingCancellation.openCancelBookingModal(button.dataset.cancel, render);
+      if(window.VivuCarBookingCancellation) {
+        window.VivuCarBookingCancellation.openCancelBookingModal(button.dataset.cancel, loadData);
+      } else {
+        alert("Chức năng hủy đang được cập nhật.");
+      }
     }));
   }
 
-  render();
+  loadData();
 })();
-
-

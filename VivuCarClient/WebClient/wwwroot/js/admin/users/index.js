@@ -1,182 +1,56 @@
-import { getUsers, lockUser, unlockUser } from "./user-api.js";
+import { getUsers, lockUser, softDeleteCustomer, unlockUser } from "./user-api.js";
 import { escapeHtml } from "../../shared/dom.js";
 import { paginate } from "../../shared/pagination.js";
 import { showToast } from "../../shared/toast.js";
-
-const state = {
-    users: [],
-    keyword: "",
-    role: "",
-    isBlocked: "",
-    page: 1,
-    pageSize: 10,
-    selectedUserId: null,
-    selectedAction: null
-};
-
-const elements = {};
-
-function cacheElements() {
-    elements.root = document.querySelector("[data-admin-users-page]");
-    if (!elements.root) return false;
-
-    elements.search = document.getElementById("searchUserInput");
-    elements.role = document.getElementById("roleFilter");
-    elements.blocked = document.getElementById("blockedFilter");
-    elements.apply = document.getElementById("btnApplyFilter");
-    elements.reset = document.getElementById("btnResetFilter");
-    elements.body = document.getElementById("usersTableBody");
-    elements.info = document.getElementById("userPaginationInfo");
-    elements.prev = document.getElementById("userPrevPage");
-    elements.next = document.getElementById("userNextPage");
-    elements.modal = document.getElementById("userStatusModal");
-    elements.confirm = document.getElementById("btnConfirmUserStatus");
-    return true;
+const root=document.querySelector("[data-admin-users-page]"),byId=id=>document.getElementById(id);
+const state={users:[],keyword:"",role:"",blocked:"",page:1,pageSize:10,selectedId:null,action:null,selected:new Set(),softDeleteIds:[]};
+const roles={user:"Khách thuê",car_owner:"Chủ xe",admin:"Quản trị viên"};
+function filtered(){const k=state.keyword.toLowerCase();return state.users.filter(u=>(!k||u.fullName.toLowerCase().includes(k)||u.email.toLowerCase().includes(k))&&(!state.role||u.role===state.role)&&(!state.blocked||String(u.isBlocked)===state.blocked))}
+function row(u){const action=u.isBlocked?"unlock":"lock";return'<tr><td><input type="checkbox" data-select-user="'+u.id+'" '+(state.selected.has(u.id)?"checked":"")+' aria-label="Chọn '+escapeHtml(u.fullName)+'"></td><td><strong>'+escapeHtml(u.fullName)+'</strong><small class="block text-zinc-500">'+escapeHtml(u.email)+'</small></td><td>'+escapeHtml(roles[u.role]||u.role)+'</td><td><span class="status-badge status-'+(u.isBlocked?"danger":"success")+'">'+(u.isBlocked?"Đã khóa":"Đang hoạt động")+'</span></td><td><span class="status-badge status-info">Chưa xác minh</span></td><td>—</td><td>0</td><td>0</td><td>'+new Date(u.createdAt).toLocaleDateString("vi-VN")+'</td><td><button class="btn btn-secondary btn-sm" type="button" data-user-action="'+action+'" data-user-id="'+u.id+'">'+(action==="lock"?"Khóa":"Mở khóa")+'</button></td></tr>'}
+function renderStats(){const total=state.users.length,blocked=state.users.filter(u=>u.isBlocked).length,owners=state.users.filter(u=>u.role==="car_owner").length,admins=state.users.filter(u=>u.role==="admin").length;byId("userStats").innerHTML=[["Tổng người dùng",total],["Đang hoạt động",total-blocked],["Đã khóa",blocked],["Chủ xe",owners],["Khách thuê",total-owners-admins],["Quản trị viên",admins]].map(item=>'<article class="summary-card"><span>'+item[0]+'</span><strong>'+item[1]+'</strong></article>').join("");byId("userQuickTabs").innerHTML='<button class="btn btn-primary btn-sm" data-role-tab="">Tất cả</button><button class="btn btn-secondary btn-sm" data-role-tab="user">Khách thuê</button><button class="btn btn-secondary btn-sm" data-role-tab="car_owner">Chủ xe</button><button class="btn btn-secondary btn-sm" data-role-tab="admin">Quản trị viên</button>'}
+function renderBulk(){byId("userBulkCount").textContent="Đã chọn "+state.selected.size+" người dùng";byId("userBulkBar").classList.toggle("hidden",!state.selected.size);byId("userBulkBar").classList.toggle("flex",!!state.selected.size)}
+function renderPages(total,current){byId("userPageNumbers").innerHTML=Array.from({length:total},(_,i)=>i+1).map(page=>'<button class="btn btn-sm '+(page===current?"btn-primary":"btn-secondary")+'" data-page="'+page+'">'+page+'</button>').join("")}
+function render(){const page=paginate(filtered(),state.page,state.pageSize);state.page=page.page;byId("userPaginationInfo").textContent="Hiển thị "+page.start+"-"+page.end+" / "+page.totalItems+" người dùng";byId("userPrevPage").disabled=page.page<=1;byId("userNextPage").disabled=page.page>=page.totalPages;byId("usersTableBody").innerHTML=page.items.map(row).join("");byId("usersEmpty").classList.toggle("hidden",!!page.items.length);byId("usersTableBody").closest(".table-wrap").classList.toggle("hidden",!page.items.length);renderPages(page.totalPages,page.page);renderBulk()}
+async function load(){byId("usersTableBody").innerHTML='<tr><td colspan="10" class="empty-cell">Đang tải dữ liệu...</td></tr>';try{state.users=(await getUsers()).map(item=>({id:item.id,email:item.email,fullName:item.full_name,role:item.role,isBlocked:item.is_blocked,createdAt:item.created_at}));renderStats();render()}catch(error){byId("usersTableBody").innerHTML='<tr><td colspan="10" class="empty-cell">'+escapeHtml(error.message)+'</td></tr>'}}
+function closeModal(){byId("userStatusModal").classList.remove("is-open");state.selectedId=null;state.action=null}
+function openModal(id,action){state.selectedId=Number(id);state.action=action;byId("userStatusTitle").textContent=action==="lock"?"Khóa người dùng":"Mở khóa người dùng";byId("userStatusText").textContent=action==="lock"?"Phiên đăng nhập hiện tại sẽ bị thu hồi.":"Tài khoản sẽ có thể đăng nhập trở lại.";byId("blockReasonWrap").classList.toggle("hidden",action!=="lock");byId("userStatusModal").classList.add("is-open")}
+async function applyOne(id,action){action==="lock"?await lockUser(id):await unlockUser(id)}
+async function confirmChange(){if(!state.selectedId)return;const button=byId("btnConfirmUserStatus");button.disabled=true;try{await applyOne(state.selectedId,state.action);showToast("Đã cập nhật tài khoản.","success");closeModal();await load()}catch(error){showToast(error.message,"error")}finally{button.disabled=false}}
+async function bulk(action){if(!state.selected.size)return;try{for(const id of state.selected)await applyOne(id,action);state.selected.clear();showToast("Đã cập nhật các tài khoản đã chọn.","success");await load()}catch(error){showToast(error.message,"error")}}
+function openSoftDeleteModal(){
+ const selectedUsers=state.users.filter(user=>state.selected.has(user.id));
+ if(!selectedUsers.length){showToast("Chọn ít nhất một khách thuê.","info");return}
+ if(selectedUsers.some(user=>user.role!=="user")){showToast("Chỉ có thể xóa mềm tài khoản khách thuê.","info");return}
+ state.softDeleteIds=selectedUsers.map(user=>user.id);
+ byId("userSoftDeleteInfo").textContent=selectedUsers.length===1?selectedUsers[0].fullName:selectedUsers.length+" khách thuê đã chọn";
+ byId("userSoftDeleteModal").classList.add("is-open")
 }
-
-function normalizeUser(item) {
-    return {
-        id: item.id ?? item.Id,
-        email: item.email ?? item.Email ?? "",
-        fullName: item.fullName ?? item.full_name ?? item.FullName ?? "",
-        role: item.role ?? item.Role ?? "user",
-        isBlocked: item.isBlocked ?? item.is_blocked ?? item.IsBlocked ?? false,
-        createdAt: item.createdAt ?? item.created_at ?? item.CreatedAt ?? ""
-    };
+function closeSoftDeleteModal(){byId("userSoftDeleteModal").classList.remove("is-open");state.softDeleteIds=[]}
+async function confirmSoftDelete(){
+ if(!state.softDeleteIds.length)return;
+ const button=byId("btnConfirmSoftDeleteUser"),ids=[...state.softDeleteIds];
+ button.disabled=true;
+ try{
+  for(const id of ids)await softDeleteCustomer(id);
+  ids.forEach(id=>state.selected.delete(id));
+  closeSoftDeleteModal();
+  showToast("Đã xóa mềm khách thuê.","success");
+  await load()
+ }catch(error){showToast(error.message,"error")}
+ finally{button.disabled=false}
 }
-
-function filteredUsers() {
-    const keyword = state.keyword.toLowerCase();
-
-    return state.users.filter(user => {
-        const matchesKeyword = !keyword
-            || user.fullName.toLowerCase().includes(keyword)
-            || user.email.toLowerCase().includes(keyword);
-        const matchesRole = !state.role || user.role === state.role;
-        const matchesBlocked = !state.isBlocked || String(user.isBlocked) === state.isBlocked;
-        return matchesKeyword && matchesRole && matchesBlocked;
-    });
-}
-
-function statusBadge(user) {
-    const label = user.isBlocked ? "�� kh�a" : "�ang ho?t d?ng";
-    const tone = user.isBlocked ? "danger" : "success";
-    return `<span class="status-badge status-${tone}">${label}</span>`;
-}
-
-function renderRow(user) {
-    const action = user.isBlocked ? "unlock" : "lock";
-    const label = user.isBlocked ? "M? kh�a" : "Kh�a";
-
-    return `<tr>
-        <td><input type="checkbox" aria-label="Ch?n ${escapeHtml(user.fullName)}" /></td>
-        <td>${escapeHtml(user.id)}</td>
-        <td>${escapeHtml(user.fullName)}</td>
-        <td>${escapeHtml(user.email)}</td>
-        <td>${escapeHtml(user.role)}</td>
-        <td>${statusBadge(user)}</td>
-        <td>${escapeHtml(user.createdAt || "-")}</td>
-        <td><button class="button button-secondary" type="button" data-user-action="${action}" data-user-id="${escapeHtml(user.id)}">${label}</button></td>
-    </tr>`;
-}
-
-function render() {
-    const filtered = filteredUsers();
-    const page = paginate(filtered, state.page, state.pageSize);
-    state.page = page.page;
-
-    elements.info.textContent = `Hi?n th? ${page.start}-${page.end} tr�n ${page.totalItems} ngu?i d�ng`;
-    elements.prev.disabled = page.page <= 1;
-    elements.next.disabled = page.page >= page.totalPages;
-
-    if (!page.items.length) {
-        elements.body.innerHTML = `<tr><td colspan="8" class="empty-cell">Kh�ng t�m th?y ngu?i d�ng ph� h?p.</td></tr>`;
-        return;
-    }
-
-    elements.body.innerHTML = page.items.map(renderRow).join("");
-}
-
-function collectFilters() {
-    state.keyword = elements.search?.value.trim() ?? "";
-    state.role = elements.role?.value ?? "";
-    state.isBlocked = elements.blocked?.value ?? "";
-    state.page = 1;
-}
-
-async function loadUsers() {
-    elements.body.innerHTML = `<tr><td colspan="8" class="empty-cell">�ang t?i d? li?u ngu?i d�ng...</td></tr>`;
-
-    try {
-        const users = await getUsers();
-        state.users = (Array.isArray(users) ? users : []).map(normalizeUser);
-        render();
-    } catch (error) {
-        elements.body.innerHTML = `<tr><td colspan="8" class="empty-cell">${escapeHtml(error.message)}</td></tr>`;
-    }
-}
-
-function openUserStatusModal(userId, action) {
-    state.selectedUserId = userId;
-    state.selectedAction = action;
-    elements.modal?.classList.add("is-open");
-    elements.modal?.setAttribute("aria-hidden", "false");
-}
-
-async function confirmUserStatusChange() {
-    if (!state.selectedUserId || !state.selectedAction) return;
-    elements.confirm.disabled = true;
-
-    try {
-        if (state.selectedAction === "lock") await lockUser(state.selectedUserId);
-        else await unlockUser(state.selectedUserId);
-        showToast(state.selectedAction === "lock" ? "�� kh�a t�i kho?n th�nh c�ng." : "�� m? kh�a t�i kho?n th�nh c�ng.", "success");
-        await loadUsers();
-    } catch (error) {
-        showToast(error.message, "error");
-    } finally {
-        elements.confirm.disabled = false;
-        state.selectedUserId = null;
-        state.selectedAction = null;
-        elements.modal?.classList.remove("is-open");
-        elements.modal?.setAttribute("aria-hidden", "true");
-    }
-}
-
-function bindEvents() {
-    elements.apply.addEventListener("click", () => {
-        collectFilters();
-        render();
-    });
-
-    elements.reset.addEventListener("click", () => {
-        elements.search.value = "";
-        elements.role.value = "";
-        elements.blocked.value = "";
-        collectFilters();
-        render();
-    });
-
-    elements.prev.addEventListener("click", () => {
-        state.page -= 1;
-        render();
-    });
-
-    elements.next.addEventListener("click", () => {
-        state.page += 1;
-        render();
-    });
-
-    elements.body.addEventListener("click", event => {
-        const button = event.target.closest("[data-user-action]");
-        if (!button) return;
-        openUserStatusModal(button.dataset.userId, button.dataset.userAction);
-    });
-
-    elements.confirm?.addEventListener("click", confirmUserStatusChange);
-}
-
-if (cacheElements()) {
-    bindEvents();
-    loadUsers();
+if(root){byId("btnApplyFilter").onclick=()=>{state.keyword=byId("searchUserInput").value.trim();state.role=byId("roleFilter").value;state.blocked=byId("blockedFilter").value;state.page=1;render()};byId("btnResetFilter").onclick=()=>{byId("searchUserInput").value="";byId("roleFilter").value="";byId("blockedFilter").value="";byId("verificationFilter").value="";state.keyword=state.role=state.blocked="";state.page=1;render()};byId("userPageSize").onchange=()=>{state.pageSize=Number(byId("userPageSize").value);state.page=1;render()};byId("userPrevPage").onclick=()=>{state.page--;render()};byId("userNextPage").onclick=()=>{state.page++;render()};byId("userPageNumbers").onclick=e=>{const b=e.target.closest("[data-page]");if(b){state.page=Number(b.dataset.page);render()}};byId("userQuickTabs").onclick=e=>{const b=e.target.closest("[data-role-tab]");if(b){state.role=b.dataset.roleTab;byId("roleFilter").value=state.role;state.page=1;render()}};byId("usersTableBody").onclick=e=>{const check=e.target.closest("[data-select-user]");if(check){const id=Number(check.dataset.selectUser);check.checked?state.selected.add(id):state.selected.delete(id);renderBulk();return}const b=e.target.closest("[data-user-action]");if(b)openModal(b.dataset.userId,b.dataset.userAction)};byId("userSelectAll").onchange=e=>{const ids=paginate(filtered(),state.page,state.pageSize).items.map(u=>u.id);ids.forEach(id=>e.target.checked?state.selected.add(id):state.selected.delete(id));render()};document.querySelectorAll("#userStatusModal [data-close-modal]").forEach(b=>b.onclick=closeModal);document.querySelectorAll("#userSoftDeleteModal [data-close-modal]").forEach(b=>b.onclick=closeSoftDeleteModal);byId("btnCancelUserStatus").onclick=closeModal;byId("btnConfirmUserStatus").onclick=confirmChange;byId("btnBulkBlock").onclick=()=>bulk("lock");byId("btnBulkUnblock").onclick=()=>bulk("unlock");byId("btnBulkClear").onclick=()=>{state.selected.clear();render()};byId("btnBulkSoftDelete").onclick=openSoftDeleteModal;byId("btnCancelSoftDeleteUser").onclick=closeSoftDeleteModal;byId("btnConfirmSoftDeleteUser").onclick=confirmSoftDelete;load()}
+if(root){
+ const quickTabs=byId("userQuickTabs");
+ const syncRoleTabs=()=>quickTabs.querySelectorAll("[data-role-tab]").forEach(button=>{
+  const isActive=button.dataset.roleTab===state.role;
+  button.className=`btn ${isActive?"btn-primary":"btn-secondary"} btn-sm`;
+  window.VivuCarTailwindUI?.applyTailwind(button);
+  button.setAttribute("aria-pressed",String(isActive));
+ });
+ quickTabs.addEventListener("click",()=>queueMicrotask(syncRoleTabs));
+ byId("btnApplyFilter").addEventListener("click",()=>queueMicrotask(syncRoleTabs));
+ byId("btnResetFilter").addEventListener("click",()=>queueMicrotask(syncRoleTabs));
+ new MutationObserver(syncRoleTabs).observe(quickTabs,{childList:true});
+ syncRoleTabs();
 }

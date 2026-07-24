@@ -17,12 +17,14 @@ public static class ServiceConfiguration
         services.AddSingleton(new Net.payOS.PayOS(payOsClientId, payOsApiKey, payOsChecksumKey));
 
         services.AddScoped<IAdminUserService, AdminUserService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITokenService, JwtTokenService>();
         services.AddScoped<IUserSecurityStateService, UserSecurityStateService>();
         services.AddScoped<IBookingService, BookingService>();
         services.AddScoped<IPaymentService, PaymentService>();
         services.AddScoped<IAdminCarService, AdminCarService>();
+        services.AddScoped<IAdminVoucherService, AdminVoucherService>();
         services.AddScoped<IAdminReportService, AdminReportService>();
         services.AddScoped<IFileStorageService, CloudinaryStorageService>();
         services.AddScoped<ICarService, CarService>();
@@ -36,3 +38,5 @@ public static class ServiceConfiguration
         return services;
     }
 }
+
+

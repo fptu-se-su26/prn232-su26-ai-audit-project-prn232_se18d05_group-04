@@ -1,4 +1,4 @@
-﻿import { createCar, getCarById, getCarModels, getCarOwners, getCarTypes, updateCar, uploadCarImages } from "./car-api.js";
+import { createCar, getCarById, getCarModels, getCarOwners, getCarTypes, updateCar, uploadCarImages } from "./car-api.js";
 import { escapeHtml } from "../../shared/dom.js";
 import { toNumber } from "../../shared/utils.js";
 import { showToast } from "../../shared/toast.js";
@@ -9,6 +9,7 @@ const state = {
     carId: null,
     selectedImages: [],
     compressedImages: [],
+    existingImages: [],
     submitting: false
 };
 
@@ -25,7 +26,12 @@ function cacheElements() {
     elements.brand = document.getElementById("brand");
     elements.model = document.getElementById("model");
     elements.images = document.getElementById("carImages");
-    elements.preview = document.getElementById("imagePreviewGrid");
+    elements.existingGallery = document.getElementById("imagePreviewGrid");
+    elements.existingCount = document.getElementById("existingImageCount");
+    elements.selectedSection = document.getElementById("selectedImageSection");
+    elements.selectedPreview = document.getElementById("selectedImagePreviewGrid");
+    elements.selectedCount = document.getElementById("selectedImageCount");
+    elements.clearImages = document.getElementById("btnClearImages");
     elements.submit = document.getElementById("btnSaveCar");
     state.carId = elements.root.dataset.carId || null;
     return Boolean(elements.form);
@@ -97,21 +103,80 @@ function syncBrandModelFromModel() {
     elements.model.value = selected.dataset.model ?? "";
 }
 
+function normalizeExistingImages(images) {
+    return (images ?? [])
+        .map(image => ({
+            id: image.id ?? image.Id,
+            imageUrl: image.image_url ?? image.imageUrl ?? image.ImageUrl ?? "",
+            isPrimary: Boolean(image.is_primary ?? image.isPrimary ?? image.IsPrimary),
+            displayOrder: Number(image.display_order ?? image.displayOrder ?? image.DisplayOrder ?? 0)
+        }))
+        .filter(image => image.imageUrl)
+        .sort((left, right) => Number(right.isPrimary) - Number(left.isPrimary) || left.displayOrder - right.displayOrder);
+}
+
+function renderExistingImages(images) {
+    if (images === null) {
+        elements.existingCount.textContent = "Đang tải";
+        elements.existingGallery.innerHTML = Array.from({ length: 3 }, () => '<div class="skeleton min-h-32"></div>').join("");
+        return;
+    }
+
+    const normalizedImages = normalizeExistingImages(images);
+    state.existingImages = normalizedImages;
+    elements.existingCount.textContent = `${normalizedImages.length} ảnh hiện có`;
+
+    if (!normalizedImages.length) {
+        elements.existingGallery.innerHTML = `
+            <div class="col-span-full rounded-xl border border-dashed border-zinc-300 bg-zinc-50 px-5 py-10 text-center">
+                <strong class="block text-sm text-zinc-800">Xe chưa có hình ảnh</strong>
+                <span class="mt-1 block text-sm text-zinc-500">Chọn ảnh bên dưới để bổ sung gallery cho xe.</span>
+            </div>
+        `;
+        return;
+    }
+
+    elements.existingGallery.innerHTML = normalizedImages.map((image, index) => `
+        <figure class="group relative overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100 ${index === 0 ? "sm:col-span-2" : ""}">
+            <img
+                src="${escapeHtml(image.imageUrl)}"
+                alt="Ảnh xe ${index + 1}"
+                class="${index === 0 ? "aspect-[16/9]" : "aspect-[4/3]"} h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                loading="${index === 0 ? "eager" : "lazy"}"
+            />
+            <figcaption class="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-zinc-950/70 px-3 py-2 text-xs font-medium text-white backdrop-blur-sm">
+                <span>${image.isPrimary ? "Ảnh chính" : `Ảnh ${index + 1}`}</span>
+                <span class="font-mono text-white/70">${index + 1}/${normalizedImages.length}</span>
+            </figcaption>
+        </figure>
+    `).join("");
+}
+
 function renderImagePreview(files) {
     revokeAllPreviewUrls();
-    elements.preview.innerHTML = "";
+    elements.selectedPreview.innerHTML = "";
+    elements.selectedSection.classList.toggle("hidden", files.length === 0);
+    elements.clearImages.classList.toggle("hidden", files.length === 0);
+    elements.selectedCount.textContent = files.length ? `${files.length} ảnh mới` : "";
 
     files.forEach(file => {
         const image = document.createElement("img");
         image.src = createPreviewUrl(file);
         image.alt = file.name;
-        elements.preview.appendChild(image);
+        elements.selectedPreview.appendChild(image);
     });
 }
 
 async function handleImageChange() {
+    const maxImageCount = 8;
+    const availableSlots = Math.max(0, maxImageCount - state.existingImages.length);
     const files = Array.from(elements.images.files ?? []);
-    const result = validateSelectedImages(files);
+    const limitedFiles = files.slice(0, availableSlots);
+    const result = validateSelectedImages(limitedFiles);
+
+    if (files.length > availableSlots) {
+        result.errors.push(`Xe chỉ được có tối đa ${maxImageCount} ảnh; bạn còn ${availableSlots} vị trí trống.`);
+    }
 
     if (result.errors.length) {
         showToast(result.errors.join(" "), "error");
@@ -126,6 +191,7 @@ async function loadLookups() {
     try {
         const [owners, types, models] = await Promise.all([getCarOwners(), getCarTypes(), getCarModels()]);
         renderOwnerOptions(owners);
+        if (!state.carId && owners.length) elements.owner.value = String(owners[0].id);
         renderTypeOptions(types);
         renderModelOptions(models);
     } catch (error) {
@@ -137,12 +203,20 @@ async function loadLookups() {
 }
 
 async function loadExistingCar() {
-    if (!state.carId) return;
+    if (!state.carId) {
+        renderExistingImages([]);
+        return;
+    }
 
+    renderExistingImages(null);
     try {
         const car = await getCarById(state.carId);
+        document.getElementById("carFormTitle").textContent = "Chỉnh sửa phương tiện";
         populateForm(car);
+        renderExistingImages(car.images);
     } catch (error) {
+        elements.existingCount.textContent = "Không tải được";
+        elements.existingGallery.innerHTML = `<div class="col-span-full alert alert-error">${escapeHtml(error.message)}</div>`;
         showToast(error.message, "error");
     }
 }
@@ -184,10 +258,19 @@ async function handleSubmit(event) {
     }
 }
 
+function clearSelectedImages() {
+    state.selectedImages = [];
+    state.compressedImages = [];
+    elements.images.value = "";
+    renderImagePreview([]);
+}
+
 function bindEvents() {
     elements.images?.addEventListener("change", handleImageChange);
     elements.carModel?.addEventListener("change", syncBrandModelFromModel);
     elements.form.addEventListener("submit", handleSubmit);
+    elements.clearImages?.addEventListener("click", clearSelectedImages);
+    document.getElementById("btnSaveDraft")?.addEventListener("click", () => showToast("Bản nháp chỉ được giữ trên UI vì DB chưa có trạng thái draft.", "info"));
 }
 
 async function init() {

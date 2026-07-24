@@ -12,10 +12,7 @@ namespace API.Controllers;
 [ApiController]
 [Route("api/admin/cars")]
 [Authorize(Roles = AppRoles.Admin)]
-public class AdminCarsController(
-    IAdminCarService adminCarService,
-    IFileStorageService fileStorageService
-) : ControllerBase
+public class AdminCarsController(IAdminCarService adminCarService) : ControllerBase
 {
     [HttpGet]
     [ProducesResponseType<PagedResult<AdminCarResponse>>(StatusCodes.Status200OK)]
@@ -149,6 +146,7 @@ public class AdminCarsController(
         int carId,
         List<IFormFile> files,
         [FromForm] bool isPrimary,
+        [FromServices] IFileStorageService fileStorageService,
         CancellationToken cancellationToken
     )
     {
@@ -179,7 +177,7 @@ public class AdminCarsController(
             var images = await adminCarService.AddImagesAsync(adminUserId, carId, imageRequests, cancellationToken);
             if (images is null)
             {
-                await DeleteStoredFilesAsync(storedFiles, cancellationToken);
+                await DeleteStoredFilesAsync(storedFiles, fileStorageService, cancellationToken);
                 return ApiErrorFactory.Error(HttpContext, StatusCodes.Status404NotFound, "Car was not found.");
             }
 
@@ -187,7 +185,7 @@ public class AdminCarsController(
         }
         catch (InvalidFileUploadException exception)
         {
-            await DeleteStoredFilesAsync(storedFiles, cancellationToken);
+            await DeleteStoredFilesAsync(storedFiles, fileStorageService, cancellationToken);
             return ApiErrorFactory.Error(HttpContext, StatusCodes.Status400BadRequest, "Validation failed.", new Dictionary<string, string[]>
             {
                 ["files"] = [exception.Message]
@@ -195,7 +193,7 @@ public class AdminCarsController(
         }
         catch (AdminCarServiceException exception)
         {
-            await DeleteStoredFilesAsync(storedFiles, cancellationToken);
+            await DeleteStoredFilesAsync(storedFiles, fileStorageService, cancellationToken);
             return ApiErrorFactory.FromServiceException(HttpContext, exception);
         }
     }
@@ -203,7 +201,12 @@ public class AdminCarsController(
     [HttpDelete("{carId:int}/images/{imageId:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType<ApiErrorResponse>(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteImage(int carId, int imageId, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteImage(
+        int carId,
+        int imageId,
+        [FromServices] IFileStorageService fileStorageService,
+        CancellationToken cancellationToken
+    )
     {
         if (!TryGetAdminUserId(out var adminUserId)) return UnauthorizedError();
 
@@ -248,7 +251,11 @@ public class AdminCarsController(
         return ApiErrorFactory.Error(HttpContext, StatusCodes.Status401Unauthorized, "Authentication is required.");
     }
 
-    private async Task DeleteStoredFilesAsync(IEnumerable<StoredFileResult> storedFiles, CancellationToken cancellationToken)
+    private static async Task DeleteStoredFilesAsync(
+        IEnumerable<StoredFileResult> storedFiles,
+        IFileStorageService fileStorageService,
+        CancellationToken cancellationToken
+    )
     {
         foreach (var storedFile in storedFiles)
         {

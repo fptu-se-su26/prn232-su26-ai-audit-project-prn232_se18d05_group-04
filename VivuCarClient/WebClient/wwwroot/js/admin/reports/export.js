@@ -1,73 +1,14 @@
-import { apiFetch, fetchJson } from "../../shared/api-client.js";
+import { apiFetch, fetchJson, sendJson } from "../../shared/api-client.js";
 import { escapeHtml } from "../../shared/dom.js";
 import { showToast } from "../../shared/toast.js";
-
-const root = document.querySelector("[data-admin-reports-page]");
-
-function selectedType() {
-    return document.querySelector('input[name="export_type"]:checked')?.value ?? "transactions";
-}
-
-function queryString() {
-    const query = new URLSearchParams({ type: selectedType() });
-    const from = document.getElementById("exportDateFrom")?.value;
-    const to = document.getElementById("exportDateTo")?.value;
-    const paymentStatus = document.getElementById("paymentStatusFilter")?.value;
-    if (from) query.set("from", from);
-    if (to) query.set("to", to);
-    if (paymentStatus) query.set("paymentStatus", paymentStatus);
-    return query;
-}
-
-function renderPreview(data) {
-    const preview = document.getElementById("reportPreview");
-    const rows = Array.isArray(data) ? data : data.rows ?? data.Rows ?? [];
-    if (!preview) return;
-
-    if (!rows.length) {
-        preview.textContent = "Kh�ng c� d? li?u preview.";
-        return;
-    }
-
-    const headers = Object.keys(rows[0]);
-    preview.innerHTML = `<div class="table-wrap"><table><thead><tr>${headers.map(header => `<th>${escapeHtml(header)}</th>`).join("")}</tr></thead><tbody>${rows.map(row => `<tr>${headers.map(header => `<td>${escapeHtml(row[header])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
-}
-
-async function previewReport() {
-    const preview = document.getElementById("reportPreview");
-    if (preview) preview.textContent = "�ang t?i preview...";
-
-    try {
-        renderPreview(await fetchJson(`api/admin/reports/preview?${queryString()}`));
-    } catch (error) {
-        if (preview) preview.textContent = error.message;
-    }
-}
-
-async function exportReport(format) {
-    const button = document.getElementById(format === "excel" ? "btnExportExcel" : "btnExportPdf");
-    button.disabled = true;
-
-    try {
-        const response = await apiFetch(`api/admin/reports/export/${format}?${queryString()}`);
-        if (!response.ok) throw new Error(`Unable to export ${format}.`);
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `vivucar-${selectedType()}-${Date.now()}.${format === "excel" ? "xlsx" : "pdf"}`;
-        link.click();
-        URL.revokeObjectURL(url);
-        showToast("Xu?t file th�nh c�ng.", "success");
-    } catch (error) {
-        showToast(error.message, "error");
-    } finally {
-        button.disabled = false;
-    }
-}
-
-if (root) {
-    document.getElementById("btnPreviewReport")?.addEventListener("click", previewReport);
-    document.getElementById("btnExportExcel")?.addEventListener("click", () => exportReport("excel"));
-    document.getElementById("btnExportPdf")?.addEventListener("click", () => exportReport("pdf"));
-}
+const root=document.querySelector("[data-admin-reports-page]"),byId=id=>document.getElementById(id);
+const type=()=>document.querySelector('input[name="reportType"]:checked')?.value||"payments";
+function filter(){return{type:type(),from:byId("exportDateFrom").value,to:byId("exportDateTo").value,paymentStatus:byId("paymentStatusFilter").value||null,bookingStatus:byId("bookingStatusFilter").value||null}}
+function query(){const f=filter(),q=new URLSearchParams({type:f.type,from:f.from,to:f.to});if(f.paymentStatus)q.set("paymentStatus",f.paymentStatus);if(f.bookingStatus)q.set("bookingStatus",f.bookingStatus);return q}
+function renderPreview(data){if(!data.rows.length){byId("reportPreview").innerHTML='<div class="empty-state"><h3>Không có dữ liệu</h3><p>Thử thay đổi khoảng ngày hoặc bộ lọc trạng thái.</p></div>';return}byId("reportPreview").innerHTML='<table><thead><tr>'+data.headers.map(v=>'<th>'+escapeHtml(v)+'</th>').join("")+'</tr></thead><tbody>'+data.rows.map(row=>'<tr>'+row.map(v=>'<td>'+escapeHtml(v)+'</td>').join("")+'</tr>').join("")+'</tbody></table>'}
+async function loadPreview(){byId("reportPreview").innerHTML='<div class="skeleton h-52 rounded-xl"></div>';try{renderPreview(await fetchJson("api/admin/reports/preview?"+query()))}catch(error){byId("reportPreview").innerHTML='<div class="empty-state"><h3>Không tải được dữ liệu</h3><p>'+escapeHtml(error.message)+'</p></div>';showToast(error.message,"error")}}
+async function loadJobs(){try{const jobs=await fetchJson("api/admin/export-jobs");byId("exportJobsBody").innerHTML=jobs.length?jobs.map(job=>'<tr><td>#'+job.id+'</td><td>'+escapeHtml(job.exportType)+'</td><td><span class="status-badge status-'+escapeHtml(job.status)+'">'+escapeHtml(job.status)+'</span></td><td>'+(job.status==="done"?'<button class="btn btn-ghost btn-sm" data-download="'+job.id+'">Tải file</button>':escapeHtml(job.errorMessage||"-"))+'</td><td>'+new Date(job.createdAt).toLocaleString("vi-VN")+'</td></tr>').join(""):'<tr><td colspan="5" class="empty-cell">Chưa có lịch sử xuất báo cáo.</td></tr>'}catch(error){showToast(error.message,"error")}}
+async function create(format){try{const job=await sendJson("api/admin/export-jobs",{exportType:type()+"_"+format,filter:filter()});showToast(job.status==="done"?"File đã sẵn sàng.":"Không thể tạo file.",job.status==="done"?"success":"error");closePdf();await loadJobs()}catch(error){showToast(error.message,"error")}}
+async function download(id){const response=await apiFetch("api/admin/export-jobs/"+id+"/download");if(!response.ok)throw new Error("Không thể tải file.");const blob=await response.blob(),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="vivucar-report";a.click();URL.revokeObjectURL(url)}
+function openPdf(){byId("pdfExportModal").classList.add("is-open")}function closePdf(){byId("pdfExportModal").classList.remove("is-open")}
+if(root){const now=new Date(),from=new Date(now.getFullYear(),now.getMonth(),1);byId("exportDateFrom").value=from.toISOString().slice(0,10);byId("exportDateTo").value=now.toISOString().slice(0,10);byId("btnPreviewReport").onclick=loadPreview;byId("btnExportExcel").onclick=()=>create("csv");byId("btnExportPdf").onclick=openPdf;byId("btnCreatePdf").onclick=()=>create("pdf");document.querySelectorAll("#pdfExportModal [data-close-modal]").forEach(button=>button.onclick=closePdf);byId("pdfExportModal").onclick=event=>{if(event.target===byId("pdfExportModal"))closePdf()};byId("exportJobsBody").onclick=event=>{const button=event.target.closest("[data-download]");if(button)download(button.dataset.download).catch(error=>showToast(error.message,"error"))};document.querySelectorAll('input[name="reportType"]').forEach(input=>input.onchange=loadPreview);loadPreview();loadJobs()}

@@ -1,3 +1,9 @@
+/**
+ * booking-cancellation.js
+ * Uses API for cancelling bookings
+ */
+import { authService } from '/js/shared/auth-service.js';
+
 (function () {
   const U = window.VivuCarUtils;
 
@@ -22,29 +28,50 @@
     });
   }
 
-  function cancelBooking(bookingId) {
-    const booking = window.VivuCarDB.bookings.find((item) => item.id === Number(bookingId));
-    if (!U.canCancelBooking(booking)) return { ok: false, message: "Đơn này không còn đủ điều kiện hủy." };
-    booking.status = "cancelled";
-    // UI-only field. Not present in current DB schema. Requires migration before backend integration.
-    booking.cancellation_reason = document.getElementById("cancelReason")?.value?.trim() || "";
-    window.VivuCarSaveDB();
-    return { ok: true, message: "Đã hủy đơn thuê." };
+  async function cancelBooking(bookingId) {
+    try {
+      const reason = document.getElementById("cancelReason")?.value?.trim() || "Người dùng không cung cấp lý do";
+      
+      const r = await authService.apiFetch(`bookings/${bookingId}/cancel`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason: reason, note: "", confirmed: true })
+      });
+      
+      if (!r.ok) {
+        const err = await r.json().catch(()=>({}));
+        return { ok: false, message: err.message || "Không thể hủy đơn. Vui lòng thử lại sau." };
+      }
+      
+      return { ok: true, message: "Đã hủy đơn thuê." };
+    } catch (e) {
+      console.error(e);
+      return { ok: false, message: "Lỗi kết nối. Vui lòng thử lại sau." };
+    }
   }
 
-  function openCancelBookingModal(bookingId, onDone) {
+  async function openCancelBookingModal(bookingId, onDone) {
     ensureModal();
-    const booking = window.VivuCarDB.bookings.find((item) => item.id === Number(bookingId));
-    document.getElementById("cancelBookingText").textContent = `Bạn đang hủy đơn #${bookingId}. Trạng thái gốc hiện tại: ${booking?.status || "unknown"}.`;
-    document.getElementById("confirmCancelBooking").onclick = () => {
-      const result = cancelBooking(bookingId);
+    const btn = document.getElementById("confirmCancelBooking");
+    document.getElementById("cancelBookingText").textContent = `Bạn đang thực hiện hủy đơn #${bookingId}. Hành động này không thể hoàn tác.`;
+    
+    btn.onclick = async () => {
+      btn.disabled = true;
+      btn.textContent = "Đang xử lý...";
+      
+      const result = await cancelBooking(bookingId);
+      
+      btn.disabled = false;
+      btn.textContent = "Xác nhận hủy";
+      
       U.renderToast(result.message, result.ok ? "success" : "danger");
-      U.closeModal("cancelBookingModal");
-      if (result.ok && typeof onDone === "function") onDone();
+      if (result.ok) {
+        U.closeModal("cancelBookingModal");
+        if (typeof onDone === "function") onDone();
+      }
     };
     U.openModal("cancelBookingModal");
   }
 
-  window.VivuCarBookingCancellation = { openCancelBookingModal, cancelBooking };
+  window.VivuCarBookingCancellation = { openCancelBookingModal };
 })();
-

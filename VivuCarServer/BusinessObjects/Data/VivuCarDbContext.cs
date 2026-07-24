@@ -1,3 +1,4 @@
+using BusinessObjects.Data.Seed;
 using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +27,33 @@ public class VivuCarDbContext(DbContextOptions<VivuCarDbContext> options) : DbCo
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<AdminAuditLog> AdminAuditLogs => Set<AdminAuditLog>();
     public DbSet<DailyRevenueSnapshot> DailyRevenueSnapshots => Set<DailyRevenueSnapshot>();
+    public DbSet<ExportJob> ExportJobs => Set<ExportJob>();
+
+    public async Task<SeedSummary> SeedAsync(
+        UserSeedOptions userOptions,
+        Func<AppUser, string> passwordHashFactory,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var usersAdded = await UserSeed.SeedAsync(
+            this,
+            userOptions,
+            passwordHashFactory,
+            cancellationToken
+        );
+        var carResult = await CarSeed.SeedAsync(this, cancellationToken);
+        var baseResult = await BaseSeed.SeedAsync(this, carResult.Cars, cancellationToken);
+
+        return new SeedSummary(
+            usersAdded,
+            carResult.CarsAdded,
+            carResult.ImagesAdded,
+            baseResult.BookingsAdded,
+            baseResult.ReviewsAdded,
+            baseResult.PaymentsAdded,
+            baseResult.RevenueSnapshotsAdded
+        );
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

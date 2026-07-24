@@ -100,4 +100,35 @@ public class BookingServiceTests
         await Assert.ThrowsAsync<ArgumentException>(() =>
             _bookingService.CreateBookingAsync(99, request));
     }
+
+    [Fact]
+    public async Task CalculatePricePreview_DoesNotApplyUsedUpVoucher()
+    {
+        var car = new Car { Id = 1, DailyPrice = 500000m };
+        var voucher = new Voucher
+        {
+            Id = 7,
+            Code = "FULL",
+            DiscountType = DiscountType.Fixed,
+            DiscountValue = 100000m,
+            MaxDiscount = 100000m,
+            Quantity = 1,
+            BookingVouchers = [new BookingVoucher()]
+        };
+        _mockRepo.Setup(r => r.GetCarByIdAsync(1, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(car);
+        _mockRepo.Setup(r => r.GetVoucherByCodeAsync("FULL", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(voucher);
+
+        var result = await _bookingService.CalculatePricePreviewAsync(new PricePreviewRequest
+        {
+            CarId = 1,
+            StartDateTime = new DateTime(2026, 8, 3, 8, 0, 0),
+            EndDateTime = new DateTime(2026, 8, 4, 8, 0, 0),
+            VoucherCode = "FULL"
+        });
+
+        Assert.Equal(0m, result.DiscountAmount);
+        Assert.Equal(500000m, result.TotalAmount);
+    }
 }

@@ -1,9 +1,10 @@
-﻿@page "/admin/moderation/content"
+@page "/admin/moderation/content"
 @model WebClient.Pages.Admin.Moderation.ContentModel
 @{
     ViewData["Title"] = "Kiểm duyệt nội dung";
     ViewData["AdminPage"] = "moderation-content";
 }
+<div data-admin-content-page>
 
 <div class="page-heading">
           <div>
@@ -44,6 +45,5 @@
       <div class="modal-actions"><button class="btn btn-secondary" type="button" data-close-modal>Đóng</button></div>
     </div>
   </div>
-@section Scripts {
-    <script src="~/js/html/admin-moderation-content.js" asp-append-version="true"></script>
-}
+</div>
+@section Scripts { <script type="module" src="~/js/admin/moderation/content.js" asp-append-version="true"></script> }

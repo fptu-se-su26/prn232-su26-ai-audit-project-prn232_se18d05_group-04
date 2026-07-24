@@ -22,8 +22,18 @@ body {
 }
 
 .navbar-brand {
+  align-items: center;
   color: #18392c;
+  display: inline-flex;
+  gap: 10px;
   font-weight: 700;
+}
+
+.navbar-brand-logo {
+  border-radius: 8px;
+  height: 36px;
+  object-fit: contain;
+  width: 36px;
 }
 
 .navbar-note {
@@ -46,8 +56,8 @@ body {
 
 .brand-mark {
   align-items: center;
-  background: #d8e9df;
-  border: 1px solid #afcbb9;
+  background: transparent;
+  border: 0;
   border-radius: 8px;
   color: #174f35;
   display: grid;
@@ -56,6 +66,7 @@ body {
   height: 56px;
   justify-content: center;
   margin-bottom: 28px;
+  object-fit: contain;
   width: 56px;
 }
 

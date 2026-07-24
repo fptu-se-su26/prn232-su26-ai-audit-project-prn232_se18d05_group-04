@@ -1,0 +1,14 @@
+{
+  "name": "webclient",
+  "version": "1.0.0",
+  "description": "Tailwind CSS build pipeline for the VivuCar WebClient",
+  "scripts": {
+    "build:css": "tailwindcss -c tailwind.config.js -i ./Styles/admin-tailwind.css -o ./wwwroot/css/admin-tailwind.css --minify",
+    "watch:css": "tailwindcss -c tailwind.config.js -i ./Styles/admin-tailwind.css -o ./wwwroot/css/admin-tailwind.css --watch"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  },
+  "private": true
+}
