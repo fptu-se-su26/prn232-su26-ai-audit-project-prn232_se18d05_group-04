@@ -124,7 +124,7 @@
           <a class="${activeKey === "profile" ? "active" : ""}" href="/Profile">Hồ sơ</a>
         </nav>
         <div class="header-user">
-          ${currentUser ? `<a class="btn btn-secondary btn-sm" href="/Profile">${avatar ? `<img class="avatar" src="${avatar}" alt="${currentUser.full_name}">` : `<span class="avatar">${currentUser.full_name[0]}</span>`}<span class="name">${currentUser.full_name}</span></a><button class="btn btn-ghost btn-sm" type="button" data-logout-trigger>Đăng xuất</button>` : `<a class="btn btn-primary btn-sm" href="/Login">Đăng nhập</a>`}
+          ${currentUser ? `<a class="btn btn-secondary btn-sm" href="/Profile">${avatar ? `<img class="avatar" src="${avatar}" alt="${currentUser.full_name}">` : `<span class="avatar">${currentUser.full_name[0]}</span>`}<span class="name">${currentUser.full_name}</span></a><button class="btn btn-ghost btn-sm" type="button" data-logout-trigger>Đăng xuất</button>` : `<a class="btn btn-primary btn-sm" href="/">Đăng nhập</a>`}
         </div>
       </header>`;
   }
@@ -185,13 +185,13 @@
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
           </button>
           <div class="hidden items-center gap-2 text-sm text-neutral-500 lg:flex">
-            ${currentUser ? `<a class="btn btn-secondary btn-sm" href="/Profile">${avatar ? `<img class="avatar" src="${avatar}" alt="${currentUser.full_name}">` : `<span class="avatar">${initials}</span>`}<span class="max-xl:hidden">${currentUser.full_name}</span></a><button class="btn btn-ghost btn-sm" type="button" data-logout-trigger>Đăng xuất</button>` : `<a class="btn btn-primary btn-sm" href="/Login">Đăng nhập</a>`}
+            ${currentUser ? `<a class="btn btn-secondary btn-sm" href="/Profile">${avatar ? `<img class="avatar" src="${avatar}" alt="${currentUser.full_name}">` : `<span class="avatar">${initials}</span>`}<span class="max-xl:hidden">${currentUser.full_name}</span></a><button class="btn btn-ghost btn-sm" type="button" data-logout-trigger>Đăng xuất</button>` : `<a class="btn btn-primary btn-sm" href="/">Đăng nhập</a>`}
           </div>
         </div>
         <nav class="mx-auto hidden w-[min(1440px,100%)] px-5 pb-4 max-sm:px-4" id="appMobileNav" aria-label="Mobile navigation">
           <div class="grid gap-1 rounded-2xl border border-[#e6e4df] bg-white p-2 shadow-sm">
             ${navMarkup}
-            ${currentUser ? `<button class="btn btn-ghost btn-full justify-start" type="button" data-logout-trigger>Đăng xuất</button>` : `<a class="btn btn-primary btn-full" href="/Login">Đăng nhập</a>`}
+            ${currentUser ? `<button class="btn btn-ghost btn-full justify-start" type="button" data-logout-trigger>Đăng xuất</button>` : `<a class="btn btn-primary btn-full" href="/">Đăng nhập</a>`}
           </div>
         </nav>
       </header>`;
@@ -395,7 +395,7 @@
     const headerMount = document.getElementById('headerMount');
     if (!headerMount || !user) return;
     // Find login link in header and replace with user name
-    const loginLink = headerMount.querySelector('a[href="/Login"], a[href*="login"]');
+    const loginLink = headerMount.querySelector('a[href="/"], a[href="/Login"], a[href*="login"]');
     if (loginLink) {
       const userArea = loginLink.parentElement;
       if (userArea) {

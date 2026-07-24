@@ -199,6 +199,7 @@
 
     <script type="module">
         import { authService } from '/js/shared/auth-service.js';
+        window.VivuCarAuthService = authService;
         authService.refresh().then(s => {
             const u = s?.user ?? null;
             if (u) {
@@ -423,9 +424,18 @@
         });
 
         // Book Car click - validate dates first
-        document.getElementById('btnBook').addEventListener('click', () => {
+        document.getElementById('btnBook').addEventListener('click', async () => {
             const btn = document.getElementById('btnBook');
             if (!CAR || btn.dataset.available === 'false') return;
+
+            if (window.VivuCarAuthService) {
+                const s = await window.VivuCarAuthService.refresh();
+                if (!s || !s.user) {
+                    alert('Phiên đăng nhập đã hết hạn hoặc chưa đăng nhập. Vui lòng đăng nhập để đặt xe.');
+                    window.location.href = '/';
+                    return;
+                }
+            }
 
             const pickup = document.getElementById('pickupDate').value;
             const ret    = document.getElementById('returnDate').value;
