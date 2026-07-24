@@ -7,8 +7,8 @@ import { authService } from '/js/shared/auth-service.js';
 (async function () {
   const U = window.VivuCarUtils;
   
-  const session = await authService.refresh();
-  const currentUser = session?.user ?? null;
+  const session = await authService.getValidSession();
+  const currentUser = session?.user ?? authService.getUser();
 
   // Patch header to show logged-in user (layout.js uses mock auth, so we bridge)
   function patchHeader(user) {

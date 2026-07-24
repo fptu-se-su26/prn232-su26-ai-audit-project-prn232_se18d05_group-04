@@ -30,8 +30,8 @@ import { authService } from '/js/shared/auth-service.js';
   }
 
   // ── 1. Auth check ─────────────────────────────────────────────────────────
-  const session = await authService.refresh();
-  const currentUser = session?.user ?? null;
+  const session = await authService.getValidSession();
+  const currentUser = session?.user ?? authService.getUser();
   if (!currentUser) {
     // Show friendly message instead of silent redirect
     root.innerHTML = `
@@ -374,20 +374,28 @@ import { authService } from '/js/shared/auth-service.js';
       if (frontInput && frontInput.files[0]) {
         const fd = new FormData();
         fd.append('file', frontInput.files[0]);
-        fd.append('folder', 'user_documents');
         try {
-          const res = await authService.apiFetch('uploads', { method: 'POST', body: fd });
-          if (res.ok) frontUrl = (await res.json()).url;
+          const res = await authService.apiFetch('uploads?folder=user_documents', { method: 'POST', body: fd });
+          if (res.ok) {
+            const uploaded = await res.json();
+            frontUrl = uploaded.publicUrl ?? uploaded.url;
+          } else {
+            console.warn('Upload front failed:', res.status, await res.text().catch(() => ''));
+          }
         } catch (e) { console.error('Lỗi upload mặt trước', e); }
       }
 
       if (backInput && backInput.files[0]) {
         const fd = new FormData();
         fd.append('file', backInput.files[0]);
-        fd.append('folder', 'user_documents');
         try {
-          const res = await authService.apiFetch('uploads', { method: 'POST', body: fd });
-          if (res.ok) backUrl = (await res.json()).url;
+          const res = await authService.apiFetch('uploads?folder=user_documents', { method: 'POST', body: fd });
+          if (res.ok) {
+            const uploaded = await res.json();
+            backUrl = uploaded.publicUrl ?? uploaded.url;
+          } else {
+            console.warn('Upload back failed:', res.status, await res.text().catch(() => ''));
+          }
         } catch (e) { console.error('Lỗi upload mặt sau', e); }
       }
 
@@ -401,6 +409,16 @@ import { authService } from '/js/shared/auth-service.js';
         window.VivuCarDB.user_documents.push({ id: window.VivuCarDB.user_documents.length + 1, user_id: currentUser.id, document_type: 'license_back', file_name: 'back.jpg', file_url: backUrl, verified: false, created_at: new Date().toISOString() });
       }
       window.VivuCarSaveDB?.();
+
+      // Ensure valid session before booking
+      const freshSession = await authService.getValidSession();
+      if (!freshSession?.accessToken) {
+        showToast('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.', 'danger');
+        await authService.logout().catch(() => {});
+        setLoading(btn, false);
+        setTimeout(() => location.href = `/?redirect=${encodeURIComponent(location.pathname + location.search)}`, 1500);
+        return;
+      }
 
       // 2. Submit booking
       const r = await authService.apiFetch('bookings', {

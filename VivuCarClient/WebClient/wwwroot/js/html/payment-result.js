@@ -10,8 +10,8 @@ import { authService } from '/js/shared/auth-service.js';
   const root = document.getElementById('paymentResultRoot');
 
   // ── 1. Auth ──────────────────────────────────────────────────────────────
-  const session = await authService.refresh();
-  const currentUser = session?.user ?? null;
+  const session = await authService.getValidSession();
+  const currentUser = session?.user ?? authService.getUser();
 
   // Patch header for real auth (same pattern as checkout)
   function patchHeader(user) {

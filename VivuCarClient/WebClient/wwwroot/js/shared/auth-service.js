@@ -1,4 +1,9 @@
 let accessToken = localStorage.getItem("vivucar_token");
+let tokenExpiresAt = null;
+try {
+    const stored = localStorage.getItem("vivucar_token_exp");
+    if (stored) tokenExpiresAt = new Date(stored);
+} catch {}
 let currentUser = null;
 let refreshPromise = null;
 
@@ -7,14 +12,60 @@ async function readJson(response) {
     return text ? JSON.parse(text) : null;
 }
 
+function decodeJwtPayload(token) {
+    let base64 = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+    while (base64.length % 4) base64 += "=";
+    
+    // Properly decode UTF-8 to avoid JSON.parse throwing exceptions on Vietnamese names
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    const decoder = new TextDecoder('utf-8');
+    const jsonString = decoder.decode(bytes);
+    
+    return JSON.parse(jsonString);
+}
+
+function restoreSessionFromStorage() {
+    if (!accessToken) return;
+
+    try {
+        const payload = decodeJwtPayload(accessToken);
+        tokenExpiresAt = new Date(payload.exp * 1000);
+        localStorage.setItem("vivucar_token_exp", tokenExpiresAt.toISOString());
+
+        if (!currentUser) {
+            currentUser = {
+                id: Number.parseInt(payload.sub, 10),
+                email: payload.email ?? "",
+                fullName: payload.fullName ?? payload.name ?? "",
+                role: payload.role
+                    ?? payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+                    ?? ""
+            };
+        }
+    } catch {}
+}
+
+restoreSessionFromStorage();
+
 function setSession(session) {
     accessToken = session?.accessToken ?? null;
     currentUser = session?.user ?? null;
-    
+    tokenExpiresAt = session?.expiresAt ? new Date(session.expiresAt) : null;
+
     if (accessToken) {
-        localStorage.setItem('vivucar_token', accessToken);
+        localStorage.setItem("vivucar_token", accessToken);
+        try {
+            const payload = decodeJwtPayload(accessToken);
+            tokenExpiresAt = new Date(payload.exp * 1000);
+            localStorage.setItem("vivucar_token_exp", tokenExpiresAt.toISOString());
+        } catch {}
     } else {
-        localStorage.removeItem('vivucar_token');
+        localStorage.removeItem("vivucar_token");
+        localStorage.removeItem("vivucar_token_exp");
     }
 
     document.dispatchEvent(
@@ -22,6 +73,13 @@ function setSession(session) {
             detail: currentUser
         })
     );
+}
+
+/** Returns true if the current access token is missing or within 60s of expiry */
+function isTokenExpiredOrNearExpiry() {
+    if (!accessToken) return true;
+    if (!tokenExpiresAt) return false;
+    return tokenExpiresAt.getTime() - Date.now() < 60_000;
 }
 
 async function login(email, password) {
@@ -51,7 +109,9 @@ async function refresh() {
                 const payload = await readJson(response);
 
                 if (!response.ok) {
-                    setSession(null);
+                    if (isTokenExpiredOrNearExpiry()) {
+                        setSession(null);
+                    }
                     return null;
                 }
 
@@ -66,11 +126,34 @@ async function refresh() {
     return refreshPromise;
 }
 
+/** Only refresh when token is expired or near expiry; otherwise return current session */
+async function getValidSession() {
+    restoreSessionFromStorage();
+
+    if (!accessToken) {
+        return refresh();
+    }
+
+    if (!isTokenExpiredOrNearExpiry()) {
+        return { user: currentUser, accessToken };
+    }
+
+    return refresh();
+}
+
 async function apiFetch(path, options = {}, allowRefresh = true) {
+    restoreSessionFromStorage();
+
+    const isFormData = typeof FormData !== "undefined" && options.body instanceof FormData;
     const headers = new Headers(options.headers ?? {});
 
     if (accessToken) {
         headers.set("Authorization", `Bearer ${accessToken}`);
+    }
+
+    // Browser must set multipart boundary; a manual Content-Type breaks uploads.
+    if (isFormData) {
+        headers.delete("Content-Type");
     }
 
     const response = await fetch(`/api/proxy/${path.replace(/^\/+/, "")}`, {
@@ -79,7 +162,8 @@ async function apiFetch(path, options = {}, allowRefresh = true) {
         credentials: "same-origin"
     });
 
-    if (response.status !== 401 || !allowRefresh) {
+    // FormData streams cannot be replayed after a 401 refresh retry.
+    if (response.status !== 401 || !allowRefresh || isFormData) {
         return response;
     }
 
@@ -106,6 +190,7 @@ async function logout() {
 export const authService = {
     login,
     refresh,
+    getValidSession,
     apiFetch,
     logout,
     getUser: () => currentUser
