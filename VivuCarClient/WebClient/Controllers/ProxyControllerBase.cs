@@ -18,7 +18,7 @@ public abstract class ProxyControllerBase(
             upstreamPath
         );
 
-        if (Request.ContentLength > 0 || Request.Headers.TransferEncoding.Count > 0)
+        if (Request.ContentLength > 0 || Request.Headers.TransferEncoding.Count > 0 || Request.ContentType is not null)
         {
             var memoryStream = new MemoryStream();
             await Request.Body.CopyToAsync(memoryStream, cancellationToken);

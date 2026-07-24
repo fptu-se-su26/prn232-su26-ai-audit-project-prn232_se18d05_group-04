@@ -73,6 +73,7 @@
             try {
                 const params = new URLSearchParams({ page, pageSize: 10 });
                 if (status) params.append('status', status);
+                params.append('_', Date.now().toString());
 
                 const response = await fetch(`/api/proxy/owner/incidents?${params.toString()}`, {
                     headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
