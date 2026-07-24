@@ -309,6 +309,7 @@ DD/MM/YYYY
 | 2 | Lỗi tham chiếu `DriverLicenseImageUrl` | DB Model đổi tên field nhưng Service chưa đổi theo | Dùng grep search tìm và sửa tất cả tham chiếu cũ | Fixed |
 | 3 | Lỗi lấy danh sách đơn của Chủ xe | Backend chưa có API `owner-requests` | Viết bổ sung `GetOwnerBookingsAsync` API | Fixed |
 | 4 | Chưa có API upload ảnh thực tế | Thiếu implementation Cloud Storage | Tạo `CloudinaryStorageService` và `UploadsController` | Fixed |
+| 5 | Lỗi không hiển thị Data của Chủ xe | Repositories thiếu `.Include()` navigation properties | Thêm Include và sửa lỗi bounds của pagination trong `BookingRepository` | Fixed |
 
 ## Thay đổi chi tiết
 
@@ -316,6 +317,7 @@ DD/MM/YYYY
 |---:|---|---|---|---|
 | 1 | Thực hiện smoke test toàn bộ luồng Auth, Booking, Payment | Ngô Sỹ Giá - DE180117 | Frontend/Backend | Hệ thống không crash |
 | 2 | Sửa lỗi giao diện hiển thị 2 ảnh GPLX | Ngô Sỹ Giá - DE180117 | `booking-checkout.js` | UI hiển thị đúng 2 ảnh nếu có |
+| 3 | Fix lỗi thiếu Navigation Properties trong `BookingRepository` | Ngô Sỹ Giá - DE180117 | `BookingRepository.cs` | Dữ liệu Owner load đầy đủ (commit 17aec68) |
 
 ## AI có hỗ trợ không?
 

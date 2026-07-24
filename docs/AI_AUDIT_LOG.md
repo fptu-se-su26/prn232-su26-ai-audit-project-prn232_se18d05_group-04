@@ -413,6 +413,56 @@ sang Cloud Storage trơn tru. Quản lý tác vụ rất tốt với Implementat
 
 ---
 
+### Lần sử dụng AI số 6: Fix lỗi BookingRepository và debug 404 Proxy
+
+#### 6.1. Mô tả vấn đề hoặc yêu cầu
+
+```text
+Trang owner bị lỗi không load được dữ liệu seed từ database. Nguyên nhân do BookingRepository
+thiếu Include các bảng liên quan dẫn đến lỗi null reference, và lỗi phân trang bị âm. Đồng thời có
+hiện tượng trình duyệt gọi nhầm API /api/proxy/api/supplier/dashboard trả về 404.
+```
+
+#### 6.2. Các prompt đã sử dụng
+
+```text
+"bị lỗi car owner không load được database và seed data, do lỗi cái bookingrepository . sửa và test thật chuẩn để lên lại data cho tôi"
+"lỗi vẫn chưa được , chưa load được seed data và các trang của owner đang bị trống"
+"vẫn không được ,dù tôi mở tab ẩn danh hay ctrl f5 rồi,đọc thật kỹ và fix lỗi cho tôi"
+```
+
+#### 6.3. Kết quả do AI sinh ra
+
+```text
+- Sửa lại file BookingRepository.cs (GetListAsync và GetOwnerListAsync), thêm .Include() cho DriverInfo, BookingVoucher, PaymentTransactions, RentalContract và fix pagination bounds.
+- Rà soát toàn bộ project tìm từ khóa "supplier" và chứng minh lỗi 404 là do project WebClient/RazorPages (port 7072) load file JS từ môi trường ngoài/cache chứ không nằm trong source code hiện tại.
+```
+
+#### 6.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Xác nhận và push code sửa BookingRepository lên nhánh feat/owner_fix. Đóng URL/project sai và chạy đúng UI.
+```
+
+#### 6.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | 17aec68 — feat/owner_fix |
+| File liên quan | `BookingRepository.cs` |
+| Screenshot | Đã load data thành công |
+| Kết quả chạy/test | dotnet build: 0 errors. Chạy UI trang Owner dashboard load dữ liệu. |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
+
+#### 6.6. Nhận xét cá nhân/nhóm
+
+```text
+AI sửa đúng lỗi thiếu Include trong EF Core và rà soát bug 404 cực kỳ chuyên sâu bằng các lệnh terminal để tìm ra nguyên nhân không nằm trong source code.
+```
+
+---
+
 ## 5. Bảng tổng hợp mức độ sử dụng AI
 
 Đánh dấu mức độ AI hỗ trợ ở từng hạng mục.
