@@ -28,23 +28,7 @@
 <body class="bg-zinc-50 text-zinc-900 font-sans antialiased">
 
     <!-- Navbar -->
-    <nav class="bg-white border-b border-zinc-200 sticky top-0 z-40 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <a href="/cars" class="flex items-center gap-2 font-bold text-xl text-primary">
-                <svg viewBox="0 0 512 512" class="h-7 w-7 fill-primary"><path d="M135.2 117.4 109.1 192h293.8l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8 74.8 96.3C88.3 57.8 124.6 32 165.4 32h181.2c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5C495.6 207.6 512 231.1 512 258.5V400c0 26.5-21.5 48-48 48h-16v32c0 17.7-14.3 32-32 32h-32c-17.7 0-32-14.3-32-32v-32H160v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32v-32H48c-26.5 0-48-21.5-48-48V258.5c0-27.4 16.4-50.9 39.6-61.7z"/></svg>
-                VivuCar
-            </a>
-            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-600">
-                <a href="/cars" class="hover:text-zinc-900 transition-colors">Home</a>
-                <a href="/cars/search" class="hover:text-zinc-900 transition-colors">Search Cars</a>
-            </div>
-            <div class="flex items-center gap-3">
-                <span id="navUserName" class="hidden text-sm font-medium text-zinc-700"></span>
-                <a id="navLoginBtn" href="/" class="px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-green-700 transition-colors">Sign In</a>
-                <button id="navLogoutBtn" class="hidden px-4 py-2 rounded-lg border border-zinc-200 text-sm text-zinc-700 hover:bg-zinc-50">Sign Out</button>
-            </div>
-        </div>
-    </nav>
+    <partial name="_Navbar" />
 
     <!-- Breadcrumb -->
     <div class="bg-white border-b border-zinc-100 px-4 py-3 text-sm text-zinc-500">
