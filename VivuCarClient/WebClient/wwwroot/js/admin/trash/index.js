@@ -90,7 +90,7 @@ async function load() {
   body.innerHTML = '<tr><td colspan="6" class="empty-cell">Đang tải dữ liệu...</td></tr>';
 
   try {
-    const data = await fetchJson("api/admin/trash");
+    const data = await fetchJson("admin/trash");
     state.items = Array.isArray(data) ? data : data.items ?? [];
     renderSummary();
     render();

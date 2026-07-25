@@ -38,6 +38,9 @@ public class AdminReportsController(IAdminReportService reportService) : Control
         [FromQuery] DateOnly? to,
         [FromQuery] int? page,
         [FromQuery] int? pageSize,
+        [FromQuery] string? search,
+        [FromQuery] string? bookingStatus,
+        [FromQuery] string? paymentStatus,
         CancellationToken cancellationToken)
     {
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
@@ -51,6 +54,9 @@ public class AdminReportsController(IAdminReportService reportService) : Control
                 resolvedTo,
                 page ?? 1,
                 pageSize ?? 5,
+                search,
+                bookingStatus,
+                paymentStatus,
                 cancellationToken));
         }
         catch (AdminReportValidationException exception)

@@ -1,0 +1,350 @@
+/* ═══════════════════════════════════════════
+   VivuCar – Register page styles
+   ═══════════════════════════════════════════ */
+
+/* ── Step slide animations ── */
+
+.register-step {
+  display: none;
+}
+
+.register-step.is-active {
+  display: block;
+}
+
+.register-step.is-active.is-slide-forward {
+  animation: reg-slide-fwd 0.3s ease;
+}
+
+.register-step.is-active.is-slide-back {
+  animation: reg-slide-back 0.3s ease;
+}
+
+@keyframes reg-slide-fwd {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes reg-slide-back {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Stepper ── */
+
+.reg-stepper {
+  align-items: flex-start;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.reg-step-dot-row {
+  align-items: center;
+  display: flex;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.reg-step-dot-wrap {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.reg-step-dot {
+  align-items: center;
+  background: var(--vc-gray-100);
+  border: 2px solid var(--vc-gray-200);
+  border-radius: 50%;
+  color: var(--vc-gray-500);
+  display: flex;
+  font-size: 0.75rem;
+  font-weight: 700;
+  height: 32px;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+  width: 32px;
+}
+
+.reg-step-dot.is-active {
+  background: var(--vc-green-700);
+  border-color: var(--vc-green-700);
+  color: #fff;
+  transform: scale(1.15);
+}
+
+.reg-step-dot.is-done {
+  background: var(--vc-green-500);
+  border-color: var(--vc-green-500);
+  color: #fff;
+}
+
+.reg-step-label {
+  color: var(--vc-gray-400);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: center;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.reg-step-dot.is-active ~ .reg-step-label,
+.reg-step-dot-wrap:has(.reg-step-dot.is-active) .reg-step-label {
+  color: var(--vc-gray-700);
+}
+
+.reg-step-dot.is-done ~ .reg-step-label,
+.reg-step-dot-wrap:has(.reg-step-dot.is-done) .reg-step-label {
+  color: var(--vc-green-500);
+}
+
+/* Track connecting dots */
+.reg-step-connector {
+  background: var(--vc-gray-200);
+  height: 2px;
+  margin: 0 8px;
+  width: 48px;
+  align-self: center;
+  margin-bottom: 20px;
+  transition: background 0.3s;
+}
+
+.reg-step-connector.is-done {
+  background: var(--vc-green-500);
+}
+
+/* ── Step content ── */
+
+.reg-step-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: var(--vc-gray-900);
+}
+
+.reg-step-sub {
+  color: var(--vc-gray-500);
+  font-size: 0.875rem;
+  margin: 0 0 20px;
+}
+
+/* ── Navigation buttons ── */
+
+.reg-btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.reg-btn-next,
+.reg-btn-primary {
+  background: var(--vc-green-700);
+  border: none;
+  border-radius: var(--vc-radius-sm);
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  min-height: 44px;
+  padding: 10px 24px;
+  transition: background 0.15s;
+}
+
+.reg-btn-next:hover,
+.reg-btn-primary:hover {
+  background: var(--vc-green-800);
+}
+
+.reg-btn-next:disabled,
+.reg-btn-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.reg-btn-back {
+  background: var(--vc-surface);
+  border: 1px solid var(--vc-gray-200);
+  border-radius: var(--vc-radius-sm);
+  color: var(--vc-gray-700);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-height: 44px;
+  padding: 10px 16px;
+  transition: background 0.15s;
+}
+
+.reg-btn-back:hover {
+  background: var(--vc-bg);
+}
+
+/* ── Date of Birth selects ── */
+
+.reg-dob-row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.reg-dob-row select {
+  background: var(--vc-input-bg);
+  border: 1px solid var(--vc-input-border);
+  border-radius: var(--vc-radius-sm);
+  color: var(--vc-gray-900);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  min-height: 44px;
+  padding: 10px 12px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23647168' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 32px;
+}
+
+.reg-dob-row select:focus {
+  border-color: var(--vc-input-border-focus);
+  box-shadow: 0 0 0 3px var(--vc-focus-ring);
+  outline: 0;
+}
+
+/* ── Password strength ── */
+
+.reg-strength {
+  margin-top: 8px;
+}
+
+.reg-strength-bars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.reg-strength-bar {
+  background: var(--vc-gray-200);
+  border-radius: 2px;
+  flex: 1;
+  height: 4px;
+  transition: background 0.2s;
+}
+
+.reg-strength-bar.is-filled.is-score-1 { background: #ef4444; }
+.reg-strength-bar.is-filled.is-score-2 { background: #f97316; }
+.reg-strength-bar.is-filled.is-score-3 { background: #eab308; }
+.reg-strength-bar.is-filled.is-score-4 { background: #22c55e; }
+.reg-strength-bar.is-filled.is-score-5 { background: #16a34a; }
+
+.reg-strength-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.reg-strength-checks {
+  display: grid;
+  gap: 4px 16px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.reg-strength-check {
+  align-items: center;
+  color: var(--vc-gray-400);
+  display: flex;
+  font-size: 0.75rem;
+  gap: 4px;
+}
+
+.reg-strength-check.is-pass {
+  color: var(--vc-green-700);
+}
+
+/* ── OTP inputs ── */
+
+.reg-otp-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.reg-otp-input {
+  background: var(--vc-input-bg);
+  border: 2px solid var(--vc-gray-200);
+  border-radius: var(--vc-radius-md);
+  font-family: inherit;
+  font-size: 1.5rem;
+  font-weight: 700;
+  height: 52px;
+  text-align: center;
+  transition: border-color 0.15s;
+  width: 46px;
+}
+
+.reg-otp-input:focus {
+  border-color: var(--vc-green-500);
+  box-shadow: 0 0 0 3px var(--vc-focus-ring);
+  outline: 0;
+}
+
+.reg-otp-input.is-filled {
+  border-color: var(--vc-green-500);
+}
+
+.reg-otp-hint {
+  color: var(--vc-gray-500);
+  font-size: 0.8rem;
+  margin: 0;
+  text-align: center;
+}
+
+/* ── Spinner (reuse from auth.css pattern) ── */
+
+.reg-btn-spinner {
+  animation: reg-spin 0.6s linear infinite;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  display: inline-block;
+  height: 16px;
+  margin-right: 8px;
+  vertical-align: middle;
+  width: 16px;
+}
+
+@keyframes reg-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Error (reuses auth.css field-error pattern) ── */
+
+.reg-global-error {
+  background: var(--vc-error-bg);
+  border: 1px solid var(--vc-error-border);
+  border-radius: var(--vc-radius-sm);
+  color: var(--vc-error);
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 480px) {
+  .reg-step-connector {
+    width: 24px;
+  }
+
+  .reg-otp-input {
+    height: 46px;
+    width: 40px;
+    font-size: 1.25rem;
+  }
+}

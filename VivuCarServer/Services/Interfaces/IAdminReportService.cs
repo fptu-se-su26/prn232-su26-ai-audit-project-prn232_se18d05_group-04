@@ -9,5 +9,8 @@ public interface IAdminReportService
         DateOnly to,
         int page = 1,
         int pageSize = 5,
+        string? search = null,
+        string? bookingStatus = null,
+        string? paymentStatus = null,
         CancellationToken cancellationToken = default);
 }

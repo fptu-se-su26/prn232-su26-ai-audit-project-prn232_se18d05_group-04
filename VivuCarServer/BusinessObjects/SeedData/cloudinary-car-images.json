@@ -45,9 +45,9 @@
       "fuel_type": "electric",
       "price_per_day": 481000,
       "address": "Phường Tam Thuận, Quận Thanh Khê",
-      "description": "",
+      "description": "VinFast VF 3 2025 là mẫu xe SUV 4 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xanh dương"
     },
     {
       "source_order": 6,
@@ -86,9 +86,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 934000,
       "address": "Phường Tam Thuận, Quận Thanh Khê",
-      "description": "",
+      "description": "Kia K3 Premium 2022 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đen"
     },
     {
       "source_order": 8,
@@ -132,9 +132,9 @@
       "fuel_type": "electric",
       "price_per_day": 565000,
       "address": "Phường Nại Hiên Đông, Quận Sơn Trà",
-      "description": "",
+      "description": "VinFast VF 3 2026 là mẫu xe SUV 4 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xám"
     },
     {
       "source_order": 11,
@@ -173,9 +173,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1028000,
       "address": "Phường An Hải Bắc, Quận Sơn Trà",
-      "description": "",
+      "description": "VinFast Lux Sa 2021 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 12,
@@ -219,9 +219,9 @@
       "fuel_type": "electric",
       "price_per_day": 1298000,
       "address": "Phường Hải Châu I, Quận Hải Châu",
-      "description": "",
+      "description": "VinFast VF 7 Eco 2026 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xám"
     },
     {
       "source_order": 13,
@@ -265,9 +265,9 @@
       "fuel_type": "electric",
       "price_per_day": 1079000,
       "address": "Phường Thạch Thang, Quận Hải Châu",
-      "description": "",
+      "description": "VinFast Limo Green 2025 là mẫu xe MPV 7 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xám"
     },
     {
       "source_order": 15,
@@ -311,9 +311,9 @@
       "fuel_type": "electric",
       "price_per_day": 807000,
       "address": "Phường Thạch Thang, Quận Hải Châu",
-      "description": "",
+      "description": "VinFast VF 5 2024 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 20,
@@ -352,9 +352,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 876000,
       "address": "Phường An Hải Bắc, Quận Sơn Trà",
-      "description": "",
+      "description": "Chevrolet Captiva 2016 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 23,
@@ -398,9 +398,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 807000,
       "address": "Phường Tân Chính, Quận Thanh Khê",
-      "description": "",
+      "description": "Mazda 3 Luxury 2020 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 24,
@@ -434,9 +434,9 @@
       "fuel_type": "diesel",
       "price_per_day": 895000,
       "address": "Phường An Hải Đông, Quận Sơn Trà",
-      "description": "",
+      "description": "Chevrolet Colorado 4X2 2018 là mẫu xe bán tải 5 chỗ, hộp số số sàn, sử dụng động cơ dầu. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đỏ"
     },
     {
       "source_order": 26,
@@ -480,9 +480,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1033000,
       "address": "Phường Tam Thuận, Quận Thanh Khê",
-      "description": "",
+      "description": "Omoda C5 Flagship Turbo 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 31,
@@ -526,9 +526,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 865000,
       "address": "Phường Thạch Thang, Quận Hải Châu",
-      "description": "",
+      "description": "Toyota Fortuner 2009 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xám"
     },
     {
       "source_order": 36,
@@ -572,9 +572,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 952000,
       "address": "Phường Thạch Thang, Quận Hải Châu",
-      "description": "",
+      "description": "Mitsubishi Outlander 2019 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 38,
@@ -618,9 +618,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1068000,
       "address": "Phường Nại Hiên Đông, Quận Sơn Trà",
-      "description": "",
+      "description": "Toyota Avanza 2023 là mẫu xe MPV 7 chỗ, hộp số số sàn, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Bạc"
     },
     {
       "source_order": 51,
@@ -659,9 +659,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1244000,
       "address": "Phường Mỹ An, Quận Ngũ Hành Sơn",
-      "description": "",
+      "description": "Kia Sorento Premium 2018 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đen"
     },
     {
       "source_order": 58,
@@ -695,9 +695,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 818000,
       "address": "Phường Xuân Hà, Quận Thanh Khê",
-      "description": "",
+      "description": "Hyundai Accent 2020 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 60,
@@ -731,9 +731,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 645000,
       "address": "Phường Hòa Khê, Quận Thanh Khê",
-      "description": "",
+      "description": "Kia Soluto 2021 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 69,
@@ -772,9 +772,9 @@
       "fuel_type": "electric",
       "price_per_day": 912000,
       "address": "Phường An Hải Tây, Quận Sơn Trà",
-      "description": "",
+      "description": "VinFast VF 6 Eco 2024 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đỏ"
     },
     {
       "source_order": 76,
@@ -818,9 +818,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 971000,
       "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
-      "description": "",
+      "description": "Kia Sonet Luxury 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 77,
@@ -864,9 +864,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1105000,
       "address": "Phường Mỹ An, Quận Ngũ Hành Sơn",
-      "description": "",
+      "description": "Mitsubishi Outlander 2022 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đen"
     },
     {
       "source_order": 84,
@@ -904,10 +904,10 @@
       "transmission": "automatic",
       "fuel_type": "gasoline",
       "price_per_day": 861000,
-      "address": "Ph��ng Th�c Gi�n, Qu�n Thanh Kh�",
-      "description": "",
+      "address": "Phường Thạc Gián, Quận Thanh Khê",
+      "description": "Peugeot 3008 2018 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 85,
@@ -941,9 +941,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1186000,
       "address": "Phường An Hải Bắc, Quận Sơn Trà",
-      "description": "",
+      "description": "Hyundai Creta Luxury 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xám"
     },
     {
       "source_order": 87,
@@ -987,9 +987,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1263000,
       "address": "Phường Vĩnh Trung, Quận Thanh Khê",
-      "description": "",
+      "description": "Ford Territory Titanium 2023 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đen"
     },
     {
       "source_order": 95,
@@ -1033,9 +1033,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1547000,
       "address": "Phường Nại Hiên Đông, Quận Sơn Trà",
-      "description": "",
+      "description": "Mazda CX-8 Premium 2023 là mẫu xe SUV 6 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 96,
@@ -1074,9 +1074,9 @@
       "fuel_type": "electric",
       "price_per_day": 838000,
       "address": "Phường Hòa Khê, Quận Thanh Khê",
-      "description": "",
+      "description": "VinFast VF 5 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xanh lá"
     },
     {
       "source_order": 100,
@@ -1120,9 +1120,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1104000,
       "address": "Phường Mỹ An, Quận Ngũ Hành Sơn",
-      "description": "",
+      "description": "Mitsubishi Outlander Premium 2020 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đỏ"
     },
     {
       "source_order": 101,
@@ -1161,9 +1161,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 918000,
       "address": "Phường Hòa Khê, Quận Thanh Khê",
-      "description": "",
+      "description": "Hyundai Venue 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đen"
     },
     {
       "source_order": 107,
@@ -1202,9 +1202,9 @@
       "fuel_type": "diesel",
       "price_per_day": 1027000,
       "address": "Phường Hòa An, Quận Cẩm Lệ",
-      "description": "",
+      "description": "Ford Ranger XLS 4x4 2025 là mẫu xe bán tải 5 chỗ, hộp số tự động, sử dụng động cơ dầu. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đen"
     },
     {
       "source_order": 108,
@@ -1243,9 +1243,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 531000,
       "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
-      "description": "",
+      "description": "Suzuki Ciaz 2017 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Nâu"
     },
     {
       "source_order": 111,
@@ -1284,9 +1284,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 646000,
       "address": "Phường Hòa Khê, Quận Thanh Khê",
-      "description": "",
+      "description": "Honda City 2018 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 118,
@@ -1330,9 +1330,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 818000,
       "address": "Phường Hòa Cường Nam, Quận Hải Châu",
-      "description": "",
+      "description": "Mazda 2 2025 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đỏ"
     },
     {
       "source_order": 120,
@@ -1376,9 +1376,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1611000,
       "address": "Phường An Khê, Quận Thanh Khê",
-      "description": "",
+      "description": "Kia Sportage Signature 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đen"
     },
     {
       "source_order": 129,
@@ -1422,9 +1422,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1033000,
       "address": "Phường Khuê Mỹ, Quận Ngũ Hành Sơn",
-      "description": "",
+      "description": "Hyundai Venue 2024 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xám"
     },
     {
       "source_order": 134,
@@ -1468,9 +1468,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1097000,
       "address": "Phường Khuê Mỹ, Quận Ngũ Hành Sơn",
-      "description": "",
+      "description": "Kia Carens 2024 là mẫu xe MPV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 135,
@@ -1509,9 +1509,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 646000,
       "address": "Phường Khuê Trung, Quận Cẩm Lệ",
-      "description": "",
+      "description": "Nissan Almera El 2022 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 145,
@@ -1550,9 +1550,9 @@
       "fuel_type": "electric",
       "price_per_day": 1246000,
       "address": "Phường Thanh Khê Đông, Quận Thanh Khê",
-      "description": "",
+      "description": "VinFast VF 7 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 153,
@@ -1591,9 +1591,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 620000,
       "address": "Phường Khuê Trung, Quận Cẩm Lệ",
-      "description": "",
+      "description": "Honda Jazz 2018 là mẫu xe hatchback 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xám"
     },
     {
       "source_order": 155,
@@ -1632,9 +1632,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1246000,
       "address": "Phường Hòa Thọ Đông, Quận Cẩm Lệ",
-      "description": "",
+      "description": "Honda CR-V L AWD 2018 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xanh dương"
     },
     {
       "source_order": 162,
@@ -1678,9 +1678,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 897000,
       "address": "Phường Hòa Minh, Quận Liên Chiểu",
-      "description": "",
+      "description": "Mitsubishi Xpander 2026 là mẫu xe MPV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xám"
     },
     {
       "source_order": 164,
@@ -1724,9 +1724,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 624000,
       "address": "Phường Khuê Mỹ, Quận Ngũ Hành Sơn",
-      "description": "",
+      "description": "Ford Focus 2017 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 177,
@@ -1770,9 +1770,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 969000,
       "address": "Phường Hòa Minh, Quận Liên Chiểu",
-      "description": "",
+      "description": "Hyundai Creta Luxury 2023 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đỏ"
     },
     {
       "source_order": 183,
@@ -1816,9 +1816,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1037000,
       "address": "Phường Hòa Xuân, Quận Cẩm Lệ",
-      "description": "",
+      "description": "Mazda 6 Premium 2021 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 184,
@@ -1862,9 +1862,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1091000,
       "address": "Phường Hòa Xuân, Quận Cẩm Lệ",
-      "description": "",
+      "description": "Mitsubishi Xforce Ultimate 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đỏ"
     },
     {
       "source_order": 185,
@@ -1908,9 +1908,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1275000,
       "address": "Phường Khuê Mỹ, Quận Ngũ Hành Sơn",
-      "description": "",
+      "description": "Toyota Corolla Cross V 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 187,
@@ -1944,9 +1944,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 917000,
       "address": "Phường Hòa Minh, Quận Liên Chiểu",
-      "description": "",
+      "description": "Geely Coolray Standard 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 189,
@@ -1990,9 +1990,9 @@
       "fuel_type": "diesel",
       "price_per_day": 1147000,
       "address": "Phường Hòa Thọ Đông, Quận Cẩm Lệ",
-      "description": "",
+      "description": "Mitsubishi Pajero 2018 là mẫu xe SUV 7 chỗ, hộp số số sàn, sử dụng động cơ dầu. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xanh dương"
     },
     {
       "source_order": 190,
@@ -2036,9 +2036,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1263000,
       "address": "Phường Hòa An, Quận Cẩm Lệ",
-      "description": "",
+      "description": "Honda HR-V G 2023 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đen"
     },
     {
       "source_order": 191,
@@ -2077,9 +2077,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1458000,
       "address": "Phường Hòa Minh, Quận Liên Chiểu",
-      "description": "",
+      "description": "Honda CR-V L 2022 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đen"
     },
     {
       "source_order": 202,
@@ -2123,9 +2123,9 @@
       "fuel_type": "electric",
       "price_per_day": 1068000,
       "address": "Phường Hòa Minh, Quận Liên Chiểu",
-      "description": "",
+      "description": "VinFast VF 6 Plus 2024 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đỏ"
     },
     {
       "source_order": 203,
@@ -2164,9 +2164,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 899000,
       "address": "Phường Hòa Minh, Quận Liên Chiểu",
-      "description": "",
+      "description": "Kia Cerato 2020 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đỏ"
     },
     {
       "source_order": 204,
@@ -2204,10 +2204,10 @@
       "transmission": "automatic",
       "fuel_type": "electric",
       "price_per_day": 1195000,
-      "address": "Ph��ng H�a Kh�nh Nam, Qu�n Li�n Chi�u",
-      "description": "",
+      "address": "Phường Hòa Khánh Nam, Quận Liên Chiểu",
+      "description": "VinFast Limo Green 2026 là mẫu xe MPV 7 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 206,
@@ -2240,10 +2240,10 @@
       "transmission": "automatic",
       "fuel_type": "gasoline",
       "price_per_day": 775000,
-      "address": "Ph��ng H�a Kh�nh Nam, Qu�n Li�n Chi�u",
-      "description": "",
+      "address": "Phường Hòa Khánh Nam, Quận Liên Chiểu",
+      "description": "Suzuki Ertiga 2020 là mẫu xe MPV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 214,
@@ -2297,9 +2297,9 @@
       "fuel_type": "diesel",
       "price_per_day": 2084000,
       "address": "Phường Hòa Xuân, Quận Cẩm Lệ",
-      "description": "",
+      "description": "Kia Carnival Premium 2024 là mẫu xe MPV 8 chỗ, hộp số tự động, sử dụng động cơ dầu. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 215,
@@ -2342,10 +2342,10 @@
       "transmission": "automatic",
       "fuel_type": "electric",
       "price_per_day": 1132000,
-      "address": "Ph��ng H�a Kh�nh B�c, Qu�n Li�n Chi�u",
-      "description": "",
+      "address": "Phường Hòa Khánh Bắc, Quận Liên Chiểu",
+      "description": "VinFast VF 6 Plus 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 225,
@@ -2388,10 +2388,10 @@
       "transmission": "automatic",
       "fuel_type": "electric",
       "price_per_day": 472000,
-      "address": "Phường Hoà Hải, Quận Ngũ Hành Sơn",
-      "description": "",
+      "address": "Phường Hòa Hải, Quận Ngũ Hành Sơn",
+      "description": "VinFast Minio Green 2026 là mẫu xe hatchback 4 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 229,
@@ -2434,10 +2434,10 @@
       "transmission": "automatic",
       "fuel_type": "electric",
       "price_per_day": 1298000,
-      "address": "Phường Hoà Hải, Quận Ngũ Hành Sơn",
-      "description": "",
+      "address": "Phường Hòa Hải, Quận Ngũ Hành Sơn",
+      "description": "VinFast VF 7 Plus 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 234,
@@ -2475,10 +2475,10 @@
       "transmission": "automatic",
       "fuel_type": "gasoline",
       "price_per_day": 1965000,
-      "address": "Ph��ng H�a Kh�nh Nam, Qu�n Li�n Chi�u",
-      "description": "",
+      "address": "Phường Hòa Khánh Nam, Quận Liên Chiểu",
+      "description": "Mercedes-Benz C200 Exclusive 2023 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Đen"
     },
     {
       "source_order": 235,
@@ -2516,10 +2516,10 @@
       "transmission": "automatic",
       "fuel_type": "gasoline",
       "price_per_day": 1277000,
-      "address": "Phường Hoà Hải, Quận Ngũ Hành Sơn",
-      "description": "",
+      "address": "Phường Hòa Hải, Quận Ngũ Hành Sơn",
+      "description": "Mercedes-Benz C250 2016 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Trắng"
     },
     {
       "source_order": 237,
@@ -2563,9 +2563,9 @@
       "fuel_type": "gasoline",
       "price_per_day": 1074000,
       "address": "Xã Hòa Phước, Huyện Hòa Vang",
-      "description": "",
+      "description": "Toyota Yaris Cross 2024 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
       "status": "available",
-      "color": null
+      "color": "Xám"
     }
   ]
 }

@@ -16,6 +16,9 @@ public static class RepositoryConfiguration
         services.AddScoped<IAdminExportRepository, AdminExportRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
         services.AddScoped<IChatRepository, ChatRepository>();
+        services.AddScoped<IAdminModerationRepository, AdminModerationRepository>();
+        services.AddScoped<IOtpVerificationRepository, OtpVerificationRepository>();
+
         return services;
     }
 }
