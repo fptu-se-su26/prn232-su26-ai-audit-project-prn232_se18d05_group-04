@@ -1,0 +1,186 @@
+@page "/login"
+@model LoginModel
+@{
+    Layout = "_AuthLayout";
+    ViewData["Title"] = "Sign in - VivuCar";
+}
+
+@section HeadStyles {
+    <link rel="stylesheet" href="~/css/auth/login.css" asp-append-version="true" />
+}
+
+<div class="lm-auth-container">
+
+    @* ══════════════ LEFT PANEL ══════════════ *@
+    <div class="lm-left-panel">
+        <div>
+            <div class="lm-logo-row">
+                <a href="/" class="lm-logo-link">
+                    <img src="~/logo.webp" class="lm-logo-img" alt="VivuCar" />
+                    <span class="lm-logo-brand">VivuCar</span>
+                </a>
+            </div>
+            <div class="lm-left-hero">
+                <h1 class="lm-welcome-heading">Welcome back</h1>
+                <p class="lm-welcome-sub">
+                    Access your account securely and continue your car rental journey from where you left off.
+                </p>
+            </div>
+        </div>
+
+        <div class="lm-recent-accounts">
+            <p class="lm-recent-label">Recent accounts</p>
+            <div class="lm-avatar-row">
+                <button class="lm-avatar-btn" data-email="user@vivucar.vn" data-name="Nguyen Van A" data-avatar="https://placehold.co/400?text=User" title="Nguyen Van A">
+                    <img src="https://placehold.co/400?text=User" alt="Nguyen Van A" class="lm-avatar-img" />
+                    <span class="lm-avatar-tooltip">Nguyen Van A</span>
+                </button>
+                <button class="lm-avatar-btn" data-email="owner@vivucar.vn" data-name="Le Thi B" data-avatar="https://placehold.co/400?text=Owner" title="Le Thi B">
+                    <img src="https://placehold.co/400?text=Owner" alt="Le Thi B" class="lm-avatar-img" />
+                    <span class="lm-avatar-tooltip">Le Thi B</span>
+                </button>
+                <button class="lm-avatar-btn" data-email="admin@vivucar.vn" data-name="Tran Van C" data-avatar="https://placehold.co/400?text=Admin" title="Tran Van C">
+                    <img src="https://placehold.co/400?text=Admin" alt="Tran Van C" class="lm-avatar-img" />
+                    <span class="lm-avatar-tooltip">Tran Van C</span>
+                </button>
+                <button class="lm-avatar-btn lm-avatar-add" title="Add account">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @* ══════════════ RIGHT PANEL ══════════════ *@
+    <div class="lm-right-panel">
+        <div class="lm-form-container">
+
+            <div class="lm-mobile-logo">
+                <a href="/" class="lm-logo-link">
+                    <img src="~/logo.webp" class="lm-logo-img" alt="VivuCar" />
+                    <span class="lm-logo-brand lm-logo-brand--dark">VivuCar</span>
+                </a>
+            </div>
+
+            <h2 class="lm-signin-heading">Sign in</h2>
+            <p class="lm-signin-sub">Enter your credentials to access your account</p>
+
+            <div class="lm-global-error" id="globalError" style="display:none" role="alert"></div>
+
+            <form class="lm-form" id="loginForm" novalidate>
+
+                @* Email *@
+                <div class="lm-field">
+                    <label class="lm-label" for="email">
+                        Email address <span class="lm-required">*</span>
+                    </label>
+                    <div class="lm-input-wrapper">
+                        <input id="email" type="email"
+                               class="lm-input"
+                               placeholder="you@example.com"
+                               autocomplete="email" />
+                    </div>
+                    <span class="lm-error-text" id="emailError" role="alert"></span>
+                </div>
+
+                @* Password *@
+                <div class="lm-field">
+                    <div class="lm-label-row">
+                        <label class="lm-label" for="password">
+                            Password <span class="lm-required">*</span>
+                        </label>
+                        <a href="/forgot-password" class="lm-forgot-link" id="forgotLink">Forgot your password?</a>
+                    </div>
+                    <div class="lm-input-wrapper">
+                        <input id="password"
+                               type="password"
+                               class="lm-input lm-input--icon-right"
+                               placeholder="••••••••"
+                               autocomplete="current-password" />
+                        <button type="button" class="lm-eye-btn" id="passwordEye" tabindex="-1" aria-label="Toggle password visibility">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="lm-error-text" id="passwordError" role="alert"></span>
+                </div>
+
+                @* Sign in button *@
+                <button class="lm-btn-primary" id="loginBtn" type="submit">
+                    <span id="loginBtnText">Sign in</span>
+                    <span class="lm-spinner" id="loginSpinner" style="display:none" aria-label="Signing in..."></span>
+                </button>
+
+                @* Divider *@
+                <div class="lm-divider">
+                    <div class="lm-divider-line"></div>
+                    <span class="lm-divider-label">Or continue with</span>
+                    <div class="lm-divider-line"></div>
+                </div>
+
+                @* Google *@
+                <button class="lm-btn-google" type="button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
+                    </svg>
+                    <span>Google</span>
+                </button>
+
+                <p class="lm-signup-text">
+                    Don't have an account? <a href="/register" class="lm-signup-link">Sign up</a>
+                </p>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@* Account Modal *@
+<div class="lm-modal-overlay" id="accountModal" style="display:none" role="dialog" aria-modal="true">
+    <div class="lm-modal">
+        <h3 class="lm-modal-title" id="modal-title">Sign in</h3>
+
+        <div class="lm-modal-avatar-row">
+            <img src="" alt="" class="lm-modal-avatar" id="modalAvatar" />
+            <div>
+                <p class="lm-modal-name" id="modalName"></p>
+                <p class="lm-modal-email" id="modalEmail"></p>
+            </div>
+        </div>
+
+        <div class="lm-modal-input-wrapper">
+            <input type="password"
+                   class="lm-modal-input"
+                   id="modalPass"
+                   placeholder="Enter password"
+                   autocomplete="current-password" />
+            <button type="button" class="lm-eye-btn" id="modalEye" tabindex="-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                    <circle cx="12" cy="12" r="3" />
+                </svg>
+            </button>
+        </div>
+
+        <span class="lm-error-text" id="modalPassError"></span>
+
+        <button class="lm-modal-continue-btn" id="modalContinue">
+            <span id="modalContinueText">Continue</span>
+            <span class="lm-spinner" id="modalContinueSpin" style="display:none" aria-label="Signing in..."></span>
+        </button>
+        <button class="lm-modal-notyou-btn" id="notYouBtn" type="button">Not you?</button>
+        <a href="#" class="lm-modal-other-link" id="useOtherBtn">Use another account</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/auth/login.js" asp-append-version="true"></script>
+}

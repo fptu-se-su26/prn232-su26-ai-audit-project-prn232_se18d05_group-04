@@ -25,10 +25,9 @@ if errorlevel 1 goto :fail
 echo [4/4] Starting VivuCar WebClient at http://localhost:5162...
 set "ASPNETCORE_ENVIRONMENT=Development"
 set "ASPNETCORE_URLS=http://localhost:5162"
-dotnet ".\bin\Debug\net8.0\WebClient.dll"
-set "EXIT_CODE=%ERRORLEVEL%"
+start "" /b /wait dotnet ".\bin\Debug\net8.0\WebClient.dll"
 popd
-exit /b %EXIT_CODE%
+exit /b
 
 :fail
 set "EXIT_CODE=%ERRORLEVEL%"

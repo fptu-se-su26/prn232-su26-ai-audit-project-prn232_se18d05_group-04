@@ -3,7 +3,6 @@ import { escapeHtml } from "../../shared/dom.js";
 import { closeModal, openModal } from "../../shared/modal.js";
 import { showToast } from "../../shared/toast.js";
 
-const OFFICIAL_GPLX_URL = "https://gplx.csgt.bocongan.gov.vn/";
 const root = document.querySelector("[data-admin-licenses-page]");
 const body = document.getElementById("licenseModerationTableBody");
 const detailModal = document.getElementById("licenseDetailModal");
@@ -201,29 +200,6 @@ async function copyLicenseValue(button) {
     }
 }
 
-function reloadOfficialLookup() {
-    const frame = document.getElementById("officialLicenseLookupFrame");
-    const button = document.getElementById("btnReloadOfficialLookup");
-    if (!frame || !button) return;
-
-    button.disabled = true;
-    button.textContent = "Đang tải lại...";
-    frame.src = "about:blank";
-    window.setTimeout(() => {
-        frame.src = OFFICIAL_GPLX_URL + "?reload=" + Date.now();
-        button.disabled = false;
-        button.textContent = "Tải lại CAPTCHA";
-        showToast("Đã tạo phiên tra cứu mới. Hãy nhập CAPTCHA vừa hiển thị.", "success");
-    }, 120);
-}
-function openOfficialLookup() {
-    const width = Math.min(920, window.screen.availWidth);
-    const height = Math.min(900, window.screen.availHeight);
-    const left = Math.max(0, window.screenX + window.outerWidth - width);
-    const top = Math.max(0, window.screenY + 30);
-    window.open(OFFICIAL_GPLX_URL, "officialGplxLookup", `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`);
-}
-
 async function load() {
     body.innerHTML = '<tr><td colspan="6" class="empty-cell">Đang tải hồ sơ GPLX...</td></tr>';
     try {
@@ -262,8 +238,6 @@ if (root) {
     });
     document.getElementById("btnFlipLicenseImage").addEventListener("click", toggleLicenseImage);
     document.getElementById("btnScanLicenseOcr").addEventListener("click", scanLicenseOcr);
-    document.getElementById("btnReloadOfficialLookup").addEventListener("click", reloadOfficialLookup);
-    document.getElementById("btnOpenOfficialLookup").addEventListener("click", openOfficialLookup);
     document.getElementById("btnLicenseApprove").addEventListener("click", () => activeLicenseId && updateStatus(activeLicenseId, "approve"));
     document.getElementById("btnLicenseMismatch").addEventListener("click", () => activeLicenseId && updateStatus(activeLicenseId, "reject"));
     document.getElementById("btnLicenseLookupUnavailable").addEventListener("click", () => {

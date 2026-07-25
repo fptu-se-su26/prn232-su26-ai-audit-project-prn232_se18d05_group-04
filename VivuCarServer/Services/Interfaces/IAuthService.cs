@@ -27,4 +27,15 @@ public interface IAuthService
         string? ipAddress,
         CancellationToken cancellationToken = default
     );
+
+    Task<RegisterResult> RegisterAsync(
+        RegisterRequest request,
+        CancellationToken cancellationToken = default
+    );
+
+    Task<VerifyOtpResult> VerifyOtpAsync(
+        VerifyOtpRequest request,
+        string? ipAddress,
+        CancellationToken cancellationToken = default
+    );
 }

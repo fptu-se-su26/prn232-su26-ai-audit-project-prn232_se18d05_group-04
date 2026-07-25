@@ -39,14 +39,7 @@
         </section>
 
 <div class="modal-backdrop license-review-backdrop" id="licenseDetailModal" aria-hidden="true">
-    <section class="license-review-modal" role="dialog" aria-modal="true" aria-labelledby="licenseReviewTitle">
-      <header class="license-review-modal__header">
-        <div>
-          <h2 id="licenseReviewTitle">Kiểm tra giấy phép lái xe</h2>
-          <p>Đối chiếu hồ sơ với hệ thống tra cứu chính thức của Cục CSGT.</p>
-        </div>
-        <button class="icon-button" type="button" data-close-modal aria-label="Đóng popup">×</button>
-      </header>
+    <section class="license-review-modal" role="dialog" aria-modal="true" aria-label="Kiểm tra giấy phép lái xe">
 
       <div class="license-review-modal__body">
         <section class="license-review-panel license-review-panel--document" aria-labelledby="licenseProfileTitle">
@@ -68,17 +61,7 @@
           <div class="license-ocr-fields" id="licenseOcrFields"></div>
         </section>
 
-        <section class="license-review-panel license-review-panel--lookup" aria-labelledby="licenseLookupTitle">
-          <div class="license-lookup-header">
-            <div><h3 id="licenseLookupTitle">Tra cứu trên Cục CSGT</h3><p>Nhập CAPTCHA và đối chiếu trực tiếp trên trang chính thức.</p></div>
-            <div class="license-lookup-actions">
-              <button class="btn btn-ghost btn-sm" id="btnReloadOfficialLookup" type="button">Tải lại CAPTCHA</button>
-              <button class="btn btn-secondary btn-sm" id="btnOpenOfficialLookup" type="button">Mở riêng</button>
-            </div>
-          </div>
-          <div class="license-lookup-notice" role="note">
-            Nếu CAPTCHA đúng vẫn báo lỗi, hãy tải lại mã. Nếu lỗi lặp lại, trình duyệt đang giới hạn cookie iframe và cần dùng “Mở riêng”.
-          </div>
+        <section class="license-review-panel license-review-panel--lookup" aria-label="Tra cứu giấy phép lái xe trên Cục CSGT">
           <div class="license-lookup-frame">
             <iframe id="officialLicenseLookupFrame" src="https://gplx.csgt.bocongan.gov.vn/" title="Tra cứu giấy phép lái xe trên Cục CSGT" loading="lazy"></iframe>
           </div>
@@ -92,6 +75,7 @@
           <small>Ghi chú chưa được lưu vì API hiện tại chưa có trường tương ứng.</small>
         </div>
         <div class="license-review-actions">
+          <button class="btn btn-secondary" type="button" data-close-modal>Đóng</button>
           <button class="btn btn-secondary" id="btnLicenseLookupUnavailable" type="button">Không tra cứu được</button>
           <button class="btn btn-danger" id="btnLicenseMismatch" type="button">Thông tin không khớp</button>
           <button class="btn btn-primary" id="btnLicenseApprove" type="button">Xác nhận hợp lệ</button>

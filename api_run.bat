@@ -1,3 +1,4 @@
 @echo off
 cd /d "%~dp0VivuCarServer\API"
-dotnet run
+start "" /b /wait dotnet run
+exit /b

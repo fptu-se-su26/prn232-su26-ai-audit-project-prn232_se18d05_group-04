@@ -52,6 +52,11 @@ public class UserRepository(VivuCarDbContext dbContext) : IUserRepository
             .ToListAsync(cancellationToken);
     }
 
+    public Task AddAsync(AppUser user, CancellationToken cancellationToken = default)
+    {
+        return dbContext.Users.AddAsync(user, cancellationToken).AsTask();
+    }
+
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         return dbContext.SaveChangesAsync(cancellationToken);

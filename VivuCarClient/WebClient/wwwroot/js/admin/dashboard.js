@@ -1,30 +1,48 @@
 import { fetchJson } from "../shared/api-client.js";
 import { escapeHtml } from "../shared/dom.js";
-import { formatVnd } from "../shared/utils.js";
+import { debounce, formatVnd } from "../shared/utils.js";
 
 const root = document.querySelector("[data-admin-dashboard-page]");
 const byId = (id) => document.getElementById(id);
-const presets = [
-    ["YESTERDAY", "Hôm qua"],
-    ["TODAY", "Hôm nay"],
-    ["THIS_WEEK", "Tuần này"],
-    ["THIS_MONTH", "Tháng này"],
-    ["LAST_MONTH", "Tháng trước"],
-    ["THIS_YEAR", "Năm nay"],
-    ["LAST_YEAR", "Năm trước"],
-    ["CUSTOM", "Tùy chỉnh"]
+
+const primaryPresets = [
+    { key: "TODAY", label: "Hôm nay" },
+    { key: "THIS_WEEK", label: "Tuần này" },
+    { key: "THIS_MONTH", label: "Tháng này" }
 ];
+const secondaryPresets = [
+    { key: "YESTERDAY", label: "Hôm qua" },
+    { key: "LAST_MONTH", label: "Tháng trước" },
+    { key: "THIS_YEAR", label: "Năm nay" },
+    { key: "LAST_YEAR", label: "Năm trước" },
+    { key: "CUSTOM", label: "Tùy chỉnh" }
+];
+const allPresets = [...primaryPresets, ...secondaryPresets];
 const state = {
     preset: "THIS_MONTH",
     from: "",
     to: "",
     page: 1,
-    pageSize: 5
+    pageSize: 5,
+    search: "",
+    bookingStatus: "",
+    paymentStatus: ""
 };
+let loadSequence = 0;
 
 function iso(date) {
     const offset = date.getTimezoneOffset();
-    return new Date(date.getTime() - offset * 60000).toISOString().slice(0, 10);
+    return new Date(date.getTime() - offset * 60_000).toISOString().slice(0, 10);
+}
+
+function parseDate(value) {
+    return new Date(`${value}T00:00:00`);
+}
+
+function addDays(date, days) {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
 }
 
 function rangeFor(key) {
@@ -37,8 +55,8 @@ function rangeFor(key) {
         start.setDate(start.getDate() - 1);
         end = new Date(start);
     } else if (key === "THIS_WEEK") {
-        const day = start.getDay() || 7;
-        start.setDate(start.getDate() - day + 1);
+        const weekday = start.getDay() || 7;
+        start.setDate(start.getDate() - weekday + 1);
     } else if (key === "THIS_MONTH") {
         start = new Date(today.getFullYear(), today.getMonth(), 1);
     } else if (key === "LAST_MONTH") {
@@ -55,113 +73,153 @@ function rangeFor(key) {
 }
 
 function rangeLabel() {
-    return (presets.find((item) => item[0] === state.preset) || ["", "Tùy chỉnh"])[1];
+    return allPresets.find((item) => item.key === state.preset)?.label || "Tùy chỉnh";
 }
 
-function renderPresets() {
-    byId("revenueRangeButtons").innerHTML = presets.map((item) => {
-        const active = item[0] === state.preset;
-        const classes = active
-            ? "border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700"
-            : "border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-100";
-        const suffix = item[0] === "CUSTOM" ? '<span class="ml-1 text-xs">▾</span>' : "";
-        return `<button class="rounded-lg border px-4 py-2 text-sm font-medium transition-all duration-200 ease-out ${classes}" type="button" data-range-preset="${item[0]}">${item[1]}${suffix}</button>`;
+function formattedRange() {
+    if (!state.from || !state.to) return "";
+    const formatter = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
+    return `${formatter.format(parseDate(state.from))} – ${formatter.format(parseDate(state.to))}`;
+}
+
+function renderRangeControls() {
+    byId("revenueRangeButtons").innerHTML = primaryPresets.map((item) => {
+        const active = item.key === state.preset;
+        return `<button class="revenue-range-button${active ? " is-active" : ""}" type="button" data-range-preset="${item.key}"${active ? ' aria-pressed="true"' : ' aria-pressed="false"'}>${item.label}</button>`;
     }).join("");
-    byId("customRangePanel").classList.toggle("hidden", state.preset !== "CUSTOM");
+
+    const more = byId("revenueRangeMore");
+    more.innerHTML = `<option value="">Khoảng khác</option>${secondaryPresets.map((item) => `<option value="${item.key}">${item.label}</option>`).join("")}`;
+    more.value = secondaryPresets.some((item) => item.key === state.preset) ? state.preset : "";
+    byId("customRangePanel").hidden = state.preset !== "CUSTOM";
+    byId("selectedRangeText").textContent = `${rangeLabel()} · ${formattedRange()}`;
 }
 
-function badge(value, type) {
+function paymentBadge(value) {
     const key = String(value || "pending").toLowerCase();
-    const labels = type === "payment"
-        ? { pending: "Chờ thanh toán", success: "Thành công", failed: "Thất bại", refunded: "Đã hoàn tiền" }
-        : { pending: "Chờ xử lý", approved: "Đã xác nhận", rejected: "Đã từ chối", completed: "Hoàn tất", cancelled: "Đã hủy" };
-    const tone = ["success", "completed", "approved"].includes(key)
-        ? "success"
-        : ["failed", "rejected"].includes(key)
-            ? "danger"
-            : ["cancelled", "refunded"].includes(key) ? "warning" : "info";
+    const labels = {
+        pending: "Chờ thanh toán",
+        success: "Đã thanh toán",
+        failed: "Thanh toán thất bại",
+        refunded: "Đã hoàn tiền"
+    };
+    const tone = key === "success" ? "success" : key === "failed" ? "danger" : key === "refunded" ? "neutral" : "warning";
     return `<span class="status-badge status-${tone}">${escapeHtml(labels[key] || key)}</span>`;
+}
+
+function bookingBadge(value) {
+    const key = String(value || "pending").toLowerCase();
+    const labels = {
+        pending: "Chờ xử lý",
+        approved: "Đã xác nhận",
+        rejected: "Đã từ chối",
+        completed: "Hoàn tất",
+        cancelled: "Đã hủy"
+    };
+    const tone = key === "completed" ? "success" : ["rejected", "cancelled"].includes(key) ? "danger" : key === "approved" ? "info" : "warning";
+    return `<span class="status-badge status-${tone}">${escapeHtml(labels[key] || key)}</span>`;
+}
+
+function percentage(value, total) {
+    return total > 0 ? value * 100 / total : 0;
 }
 
 function renderSummary(data) {
     const summary = data.summary || {};
-    const pending = Math.max(
-        0,
-        (summary.totalBookings || 0) - (summary.completedBookings || 0) - (summary.cancelledBookings || 0)
-    );
+    const total = Number(summary.totalBookings || 0);
+    const paid = Number(summary.paidBookings ?? summary.completedBookings ?? 0);
+    const cancelled = Number(summary.cancelledWithoutPaymentBookings ?? summary.cancelledBookings ?? 0);
+    const pending = Number(summary.pendingPaymentBookings ?? Math.max(0, total - paid - cancelled));
+    const paidAverage = paid > 0 ? Number(summary.grossRevenue || 0) / paid : 0;
 
-    byId("revenueCardRangeTitle").textContent = `Tổng doanh thu ${rangeLabel().toLowerCase()}`;
-    byId("completedOrdersTitle").textContent = `Tổng đơn hoàn thành ${rangeLabel().toLowerCase()}`;
     byId("successfulRevenue").textContent = formatVnd(summary.grossRevenue || 0);
-    byId("successfulOrderCount").textContent = `${summary.completedBookings || 0} đơn đã thanh toán`;
-    byId("averageOrderValue").textContent = formatVnd(summary.averageOrderValue || 0);
-    byId("netRevenue").textContent = formatVnd(summary.netRevenue || 0);
-    byId("totalOrders").textContent = summary.totalBookings || 0;
+    byId("successfulOrderCount").textContent = `${paid.toLocaleString("vi-VN")} đơn đã thanh toán`;
+    byId("completedOrders").textContent = `${Number(summary.completedBookings || 0).toLocaleString("vi-VN")} đơn`;
+    byId("completedOrdersHint").textContent = `${rangeLabel()} · ${formattedRange()}`;
+    byId("averageOrderValue").textContent = formatVnd(paidAverage);
+    byId("totalOrders").textContent = total.toLocaleString("vi-VN");
     byId("revenueRangeBadge").textContent = rangeLabel();
 
     const stats = [
-        ["#059669", "Đã thanh toán", summary.completedBookings || 0],
-        ["#fbbf24", "Hủy", summary.cancelledBookings || 0],
-        ["#38bdf8", "Chờ thanh toán", pending]
+        { color: "#059669", label: "Đã thu", count: paid, className: "is-paid" },
+        { color: "#94a3b8", label: "Chờ thanh toán", count: pending, className: "is-pending" },
+        { color: "#d96c4f", label: "Đã hủy chưa thu", count: cancelled, className: "is-cancelled" }
     ];
     let current = 0;
     const segments = stats.map((item) => {
-        const start = summary.totalBookings ? current / summary.totalBookings * 100 : 0;
-        current += item[2];
-        const end = summary.totalBookings ? current / summary.totalBookings * 100 : 0;
-        return `${item[0]} ${start}% ${end}%`;
+        const start = percentage(current, total);
+        current += item.count;
+        const end = percentage(current, total);
+        return `${item.color} ${start}% ${end}%`;
     });
-    byId("orderStatusDonut").style.background = summary.totalBookings
-        ? `conic-gradient(${segments.join(",")})`
-        : "conic-gradient(#e4e4e7 0 100%)";
-    byId("orderStatusLegend").innerHTML = stats.map((item) =>
-        `<span class="inline-flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full" style="background:${item[0]}"></span><span>${item[1]}</span><strong class="font-semibold text-zinc-900">${item[2]}</strong></span>`
-    ).join("");
+    const donut = byId("orderStatusDonut");
+    donut.style.background = total > 0 ? `conic-gradient(${segments.join(",")})` : "#e4e4e7";
+    donut.setAttribute("aria-label", total > 0
+        ? `Tổng ${total} đơn: ${paid} đã thu, ${pending} chờ thanh toán, ${cancelled} đã hủy chưa thu.`
+        : "Chưa có đơn hàng trong khoảng thời gian này.");
+    byId("orderStatusLegend").innerHTML = stats.map((item) => {
+        const ratio = percentage(item.count, total);
+        return `<div class="revenue-donut-row${item.count === 0 ? " is-zero" : ""}">
+            <i class="revenue-donut-dot ${item.className}"></i>
+            <span>${item.label}</span>
+            <strong>${item.count.toLocaleString("vi-VN")} · ${ratio.toLocaleString("vi-VN", { maximumFractionDigits: 1 })}%</strong>
+        </div>`;
+    }).join("");
 }
 
 const DAY_IN_MILLISECONDS = 86_400_000;
-
-function parseDate(value) {
-    return new Date(`${value}T00:00:00`);
-}
-
-function dateKey(date) {
-    return iso(date);
-}
-
-function addDays(date, numberOfDays) {
-    const result = new Date(date);
-    result.setDate(result.getDate() + numberOfDays);
-    return result;
-}
 
 function inclusiveDayCount(from, to) {
     return Math.round((to.getTime() - from.getTime()) / DAY_IN_MILLISECONDS) + 1;
 }
 
 function resolveChartGrouping() {
-    const from = parseDate(state.from);
-    const to = parseDate(state.to);
-    const numberOfDays = inclusiveDayCount(from, to);
-
-    if (["THIS_YEAR", "LAST_YEAR"].includes(state.preset) || numberOfDays > 180) return "month";
-    if (["THIS_MONTH", "LAST_MONTH"].includes(state.preset) || numberOfDays > 14) return "week";
+    const dayCount = inclusiveDayCount(parseDate(state.from), parseDate(state.to));
+    if (["THIS_YEAR", "LAST_YEAR"].includes(state.preset) || dayCount > 180) return "month";
+    if (["THIS_MONTH", "LAST_MONTH"].includes(state.preset) || dayCount > 14) return "week";
     return "day";
 }
 
-function buildRevenueMap(items) {
-    const revenueByDate = new Map();
-    items.forEach((item) => {
-        const key = String(item.date).slice(0, 10);
-        revenueByDate.set(key, (revenueByDate.get(key) || 0) + Number(item.grossRevenue || 0));
-    });
-    return revenueByDate;
+function emptyRevenueStatus() {
+    return {
+        paidAmount: 0,
+        pendingPaymentAmount: 0,
+        cancelledAmount: 0,
+        totalBookings: 0,
+        paidBookings: 0,
+        pendingPaymentBookings: 0,
+        completedBookings: 0,
+        cancelledBookings: 0
+    };
 }
 
-function sumRevenue(from, to, revenueByDate) {
-    let total = 0;
+function buildRevenueStatusMap(items) {
+    const statusByDate = new Map();
+    items.forEach((item) => {
+        const key = String(item.date).slice(0, 10);
+        const current = statusByDate.get(key) || emptyRevenueStatus();
+        current.paidAmount += Number(item.grossRevenue || 0);
+        current.pendingPaymentAmount += Number(item.pendingPaymentAmount || 0);
+        current.cancelledAmount += Number(item.cancelledAmount || 0);
+        current.totalBookings += Number(item.totalBookings || 0);
+        current.paidBookings += Number(item.paidBookings || 0);
+        current.pendingPaymentBookings += Number(item.pendingPaymentBookings || 0);
+        current.completedBookings += Number(item.completedBookings || 0);
+        current.cancelledBookings += Number(item.cancelledBookings || 0);
+        statusByDate.set(key, current);
+    });
+    return statusByDate;
+}
+
+function dateKey(date) {
+    return iso(date);
+}
+
+function sumRevenueStatus(from, to, statusByDate) {
+    const total = emptyRevenueStatus();
     for (let cursor = new Date(from); cursor <= to; cursor = addDays(cursor, 1)) {
-        total += revenueByDate.get(dateKey(cursor)) || 0;
+        const item = statusByDate.get(dateKey(cursor)) || emptyRevenueStatus();
+        Object.keys(total).forEach((key) => { total[key] += item[key]; });
     }
     return total;
 }
@@ -171,52 +229,34 @@ function buildChartBuckets(items) {
     const selectedStart = parseDate(state.from);
     const selectedEnd = parseDate(state.to);
     const isYearPreset = ["THIS_YEAR", "LAST_YEAR"].includes(state.preset);
-    const rangeStart = isYearPreset
-        ? new Date(selectedStart.getFullYear(), 0, 1)
-        : selectedStart;
-    const rangeEnd = isYearPreset
-        ? new Date(selectedStart.getFullYear(), 11, 31)
-        : selectedEnd;
-    const revenueByDate = buildRevenueMap(items);
+    const rangeStart = isYearPreset ? new Date(selectedStart.getFullYear(), 0, 1) : selectedStart;
+    const rangeEnd = isYearPreset ? new Date(selectedStart.getFullYear(), 11, 31) : selectedEnd;
+    const statusByDate = buildRevenueStatusMap(items);
     const dayMonthFormatter = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit" });
     const fullDateFormatter = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
     const buckets = [];
 
     if (grouping === "month") {
-        let cursor = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1);
-        while (cursor <= rangeEnd) {
+        for (let cursor = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1); cursor <= rangeEnd; cursor = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1)) {
             const bucketStart = cursor < rangeStart ? rangeStart : new Date(cursor);
-            const lastDayOfMonth = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0);
-            const bucketEnd = lastDayOfMonth > rangeEnd ? rangeEnd : lastDayOfMonth;
+            const monthEnd = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0);
+            const bucketEnd = monthEnd > rangeEnd ? rangeEnd : monthEnd;
             const month = cursor.getMonth() + 1;
-            buckets.push({
-                label: `T${month}`,
-                tooltipLabel: `Tháng ${month}/${cursor.getFullYear()}`,
-                grossRevenue: sumRevenue(bucketStart, bucketEnd, revenueByDate)
-            });
-            cursor = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1);
+            buckets.push({ label: `T${month}`, tooltipLabel: `Tháng ${month}/${cursor.getFullYear()}`, ...sumRevenueStatus(bucketStart, bucketEnd, statusByDate) });
         }
     } else if (grouping === "week") {
         let cursor = new Date(rangeStart);
-        let weekNumber = 1;
+        let week = 1;
         while (cursor <= rangeEnd) {
-            const bucketEndCandidate = addDays(cursor, 6);
-            const bucketEnd = bucketEndCandidate > rangeEnd ? rangeEnd : bucketEndCandidate;
-            buckets.push({
-                label: `Tuần ${weekNumber}`,
-                tooltipLabel: `${fullDateFormatter.format(cursor)} – ${fullDateFormatter.format(bucketEnd)}`,
-                grossRevenue: sumRevenue(cursor, bucketEnd, revenueByDate)
-            });
+            const candidate = addDays(cursor, 6);
+            const bucketEnd = candidate > rangeEnd ? rangeEnd : candidate;
+            buckets.push({ label: `Tuần ${week}`, tooltipLabel: `${fullDateFormatter.format(cursor)} – ${fullDateFormatter.format(bucketEnd)}`, ...sumRevenueStatus(cursor, bucketEnd, statusByDate) });
             cursor = addDays(bucketEnd, 1);
-            weekNumber++;
+            week += 1;
         }
     } else {
         for (let cursor = new Date(rangeStart); cursor <= rangeEnd; cursor = addDays(cursor, 1)) {
-            buckets.push({
-                label: dayMonthFormatter.format(cursor).replace("/", "-"),
-                tooltipLabel: `Ngày ${fullDateFormatter.format(cursor)}`,
-                grossRevenue: revenueByDate.get(dateKey(cursor)) || 0
-            });
+            buckets.push({ label: dayMonthFormatter.format(cursor).replace("/", "-"), tooltipLabel: `Ngày ${fullDateFormatter.format(cursor)}`, ...(statusByDate.get(dateKey(cursor)) || emptyRevenueStatus()) });
         }
     }
 
@@ -231,62 +271,165 @@ function niceScaleMaximum(value) {
     return multiplier * magnitude;
 }
 
-function renderChart(items) {
+function formatChartValue(value) {
+    const amount = Number(value || 0);
+    if (amount >= 1_000_000_000) return `${(amount / 1_000_000_000).toLocaleString("vi-VN", { maximumFractionDigits: 1 })} tỷ`;
+    if (amount >= 1_000_000) return `${(amount / 1_000_000).toLocaleString("vi-VN", { maximumFractionDigits: 1 })} tr`;
+    if (amount >= 1_000) return `${Math.round(amount / 1_000).toLocaleString("vi-VN")}k`;
+    return amount.toLocaleString("vi-VN");
+}
+
+function renderHourlyLineChart(items) {
+    const hourlyByHour = new Map((items || []).map((item) => [Number(item.hour), item]));
+    const hours = Array.from({ length: 24 }, (_, hour) => ({
+        hour,
+        grossRevenue: Number(hourlyByHour.get(hour)?.grossRevenue || 0),
+        paidTransactions: Number(hourlyByHour.get(hour)?.paidTransactions || 0)
+    }));
+    const maximumValue = Math.max(0, ...hours.map((item) => item.grossRevenue));
+    const scaleMaximum = niceScaleMaximum(maximumValue);
+    const ticks = Array.from({ length: 6 }, (_, index) => Math.round(scaleMaximum - scaleMaximum / 5 * index));
+    const width = 960;
+    const height = 286;
+    const plot = { left: 64, right: 18, top: 22, bottom: 42 };
+    const plotWidth = width - plot.left - plot.right;
+    const plotHeight = height - plot.top - plot.bottom;
+    const pointFor = (item) => ({
+        x: plot.left + item.hour / 23 * plotWidth,
+        y: plot.top + (1 - item.grossRevenue / scaleMaximum) * plotHeight
+    });
+    const points = hours.map(pointFor);
+    const selectedDate = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" })
+        .format(parseDate(state.from));
+
+    byId("revenueChartTitle").textContent = "Doanh thu đã thu theo giờ";
+    byId("chartGranularityBadge").textContent = "Theo giờ";
+    byId("revenueChartDescription").textContent = `24 giờ ngày ${selectedDate}. Mỗi điểm thể hiện tiền thanh toán thành công trong một giờ.`;
+    byId("revenueChartLegend").innerHTML = '<span><i class="is-paid"></i>Doanh thu đã thu</span>';
+
+    const highest = hours.reduce((best, item) => item.grossRevenue > best.grossRevenue ? item : best, hours[0]);
+    byId("chartTextSummary").textContent = maximumValue > 0
+        ? `Doanh thu theo giờ ngày ${selectedDate}. Khung ${String(highest.hour).padStart(2, "0")}:00 đạt cao nhất với ${formatVnd(highest.grossRevenue)}.`
+        : `Chưa có thanh toán thành công trong ngày ${selectedDate}.`;
+
+    const grid = ticks.map((tick, index) => {
+        const y = plot.top + index / 5 * plotHeight;
+        return `<line class="revenue-line-grid" x1="${plot.left}" y1="${y}" x2="${width - plot.right}" y2="${y}"></line>
+            <text class="revenue-line-axis-value" x="${plot.left - 12}" y="${y + 4}" text-anchor="end">${escapeHtml(formatChartValue(tick))}</text>`;
+    }).join("");
+    const xLabels = hours.filter((item) => item.hour % 2 === 0 || item.hour === 23).map((item) => {
+        const point = pointFor(item);
+        return `<text class="revenue-line-hour" x="${point.x}" y="${height - 12}" text-anchor="middle">${String(item.hour).padStart(2, "0")}:00</text>`;
+    }).join("");
+    const markers = hours.map((item, index) => {
+        const point = points[index];
+        const labelY = Math.max(13, point.y - 11);
+        const label = item.grossRevenue > 0
+            ? `<text class="revenue-line-value" x="${point.x}" y="${labelY}" text-anchor="middle">${escapeHtml(formatChartValue(item.grossRevenue))}</text>`
+            : "";
+        const accessibleLabel = `${String(item.hour).padStart(2, "0")}:00–${String((item.hour + 1) % 24).padStart(2, "0")}:00: ${formatVnd(item.grossRevenue)}, ${item.paidTransactions} giao dịch.`;
+        return `<g class="revenue-line-point-group" tabindex="0" role="img" aria-label="${escapeHtml(accessibleLabel)}">
+            ${label}
+            <circle class="revenue-line-point${item.grossRevenue <= 0 ? " is-zero" : ""}" cx="${point.x}" cy="${point.y}" r="${item.grossRevenue > 0 ? 5 : 3}"></circle>
+            <title>${escapeHtml(accessibleLabel)}</title>
+        </g>`;
+    }).join("");
+    const polyline = points.map((point) => `${point.x},${point.y}`).join(" ");
+
+    byId("monthlyRevenueChart").innerHTML = `<div class="revenue-line-viewport">
+        <svg class="revenue-line-chart" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="hourlyLineTitle hourlyLineDescription">
+            <title id="hourlyLineTitle">Doanh thu đã thu theo từng giờ</title>
+            <desc id="hourlyLineDescription">Biểu đồ đường gồm 24 điểm từ 00:00 đến 23:00 ngày ${escapeHtml(selectedDate)}.</desc>
+            ${grid}
+            <polyline class="revenue-line-path" points="${polyline}"></polyline>
+            ${markers}
+            ${xLabels}
+        </svg>
+        ${maximumValue <= 0 ? '<div class="revenue-zero-note revenue-line-zero-note">Chưa có thanh toán thành công trong ngày này.</div>' : ""}
+    </div>`;
+}
+
+function renderChart(items, hourlyItems = []) {
+    if (state.from === state.to) {
+        renderHourlyLineChart(hourlyItems);
+        return;
+    }
+
+    byId("revenueChartLegend").innerHTML = '<span><i class="is-paid"></i>Đã thu</span><span><i class="is-pending"></i>Chờ thanh toán</span><span><i class="is-cancelled"></i>Giá trị đơn đã hủy</span>';
     const { grouping, buckets } = buildChartBuckets(items);
-    const groupingMeta = {
-        day: {
-            title: "Doanh thu theo ngày",
-            badge: "Theo ngày",
-            description: `Hiển thị đủ ${buckets.length} ngày trong khoảng lọc, kể cả ngày không phát sinh doanh thu.`
-        },
-        week: {
-            title: "Doanh thu theo tuần",
-            badge: "Theo tuần",
-            description: `Doanh thu được cộng theo ${buckets.length} tuần để biểu đồ dễ theo dõi.`
-        },
-        month: {
-            title: "Doanh thu theo tháng",
-            badge: "Theo tháng",
-            description: `Doanh thu được cộng theo ${buckets.length} tháng; tháng không phát sinh được hiển thị 0 đ.`
-        }
+    const meta = {
+        day: ["Cơ cấu giá trị đơn theo ngày", "Theo ngày", `${buckets.length} ngày trong khoảng đang chọn.`],
+        week: ["Cơ cấu giá trị đơn theo tuần", "Theo tuần", `${buckets.length} tuần trong khoảng đang chọn.`],
+        month: ["Cơ cấu giá trị đơn theo tháng", "Theo tháng", "Hiển thị đủ 12 tháng, kể cả tháng không phát sinh dữ liệu."]
     }[grouping];
+    byId("revenueChartTitle").textContent = meta[0];
+    byId("chartGranularityBadge").textContent = meta[1];
+    byId("revenueChartDescription").textContent = `${meta[2]} Phần “Đã thu” luôn khớp KPI doanh thu.`;
 
-    byId("revenueChartTitle").textContent = groupingMeta.title;
-    byId("chartGranularityBadge").textContent = groupingMeta.badge;
-    byId("revenueChartDescription").textContent = groupingMeta.description;
-
-    const maximumRevenue = Math.max(0, ...buckets.map((item) => item.grossRevenue));
-    const scaleMaximum = niceScaleMaximum(maximumRevenue);
+    const bucketTotal = (item) => item.paidAmount + item.pendingPaymentAmount + item.cancelledAmount;
+    const groupedChart = grouping === "week";
+    const seriesFor = (item) => [
+        ["paid", item.paidAmount],
+        ["pending", item.pendingPaymentAmount],
+        ["cancelled", item.cancelledAmount]
+    ];
+    const maximumValue = groupedChart
+        ? Math.max(0, ...buckets.flatMap((item) => seriesFor(item).map((series) => series[1])))
+        : Math.max(0, ...buckets.map(bucketTotal));
+    const scaleMaximum = niceScaleMaximum(maximumValue);
     const ticks = Array.from({ length: 6 }, (_, index) => Math.round(scaleMaximum - scaleMaximum / 5 * index));
     const denseDailyChart = grouping === "day" && buckets.length > 20;
-    const columnWidth = denseDailyChart ? 28 : grouping === "week" ? 52 : 44;
-    const columnGap = denseDailyChart ? 12 : grouping === "month" ? 24 : 20;
-    const plotWidth = Math.max(520, buckets.length * (columnWidth + columnGap) + 40);
+    const periodChart = grouping === "week" || grouping === "month";
+    const distributedChart = grouping !== "month" && buckets.length >= 4 && buckets.length <= 7;
+    const distributionClass = `${distributedChart ? ` is-distributed is-${grouping}` : ""}${groupedChart ? " is-grouped" : ""}`;
+    const columnWidth = denseDailyChart ? 34 : groupedChart ? 120 : periodChart ? 48 : 56;
+    const columnGap = denseDailyChart ? 10 : periodChart ? 12 : 14;
+    const plotWidth = distributedChart ? 0 : Math.max(520, buckets.length * (columnWidth + columnGap) + 32);
 
-    const bars = buckets.map((item) => {
-        const height = Math.min(100, item.grossRevenue / scaleMaximum * 100);
-        const hasRevenue = item.grossRevenue > 0;
-        const barClass = hasRevenue ? "bg-emerald-600 hover:bg-emerald-700" : "bg-zinc-200";
-        const barStyle = hasRevenue ? `height:${Math.max(3, height)}%` : "height:2px";
-        const accessibleLabel = `${item.tooltipLabel}: ${formatVnd(item.grossRevenue)}`;
-        return `<div class="group grid h-full grid-rows-[1fr_auto] gap-3" role="img" aria-label="${escapeHtml(accessibleLabel)}">
-            <div class="relative flex items-end justify-center">
-                <span class="pointer-events-none absolute bottom-full z-20 mb-2 hidden min-w-max rounded-lg border border-zinc-200 bg-white px-3 py-2 text-center text-xs text-zinc-600 shadow-sm group-hover:block">
-                    <span class="block font-medium">${escapeHtml(item.tooltipLabel)}</span>
-                    <strong class="mt-0.5 block font-semibold text-zinc-900">${escapeHtml(formatVnd(item.grossRevenue))}</strong>
-                </span>
-                <div class="w-full rounded-t-lg transition-colors ${barClass}" style="${barStyle}"></div>
+    const bars = buckets.map((item, index) => {
+        const totalValue = bucketTotal(item);
+        const height = totalValue > 0 ? Math.max(3, Math.min(100, totalValue / scaleMaximum * 100)) : 0;
+        const series = seriesFor(item);
+        const segments = groupedChart
+            ? series.map((segment, seriesIndex) => {
+                const seriesHeight = segment[1] > 0 ? Math.max(3, Math.min(100, segment[1] / scaleMaximum * 100)) : 0;
+                const seriesLabelPlacement = segment[1] <= 0 ? "is-zero" : seriesHeight >= 15 ? "is-inside" : "is-outside";
+                return `<span class="revenue-bar-segment revenue-series-bar is-${segment[0]}${segment[1] <= 0 ? " is-zero" : ""}" style="--series-height:${seriesHeight > 0 ? seriesHeight : 0.8}%;--series-index:${seriesIndex}" aria-hidden="true"><span class="revenue-series-value ${seriesLabelPlacement}">${escapeHtml(formatChartValue(segment[1]))}</span></span>`;
+            }).join("")
+            : totalValue > 0
+            ? series.filter((segment) => segment[1] > 0).map((segment) => `<span class="revenue-bar-segment is-${segment[0]}" style="flex-basis:${segment[1] / totalValue * 100}%" aria-hidden="true"></span>`).join("")
+            : '<span class="revenue-bar-segment is-empty" aria-hidden="true"></span>';
+        const accessibleLabel = `${item.tooltipLabel}: đã thu ${formatVnd(item.paidAmount)}, chờ thanh toán ${formatVnd(item.pendingPaymentAmount)}, giá trị đơn đã hủy ${formatVnd(item.cancelledAmount)}, tổng giá trị đơn ${formatVnd(totalValue)}.`;
+        const labelPlacement = totalValue <= 0 ? "is-zero" : height >= 15 ? "is-inside" : "is-outside";
+        return `<div class="revenue-chart-column${groupedChart ? " is-grouped" : ""}" tabindex="0" role="img" aria-label="${escapeHtml(accessibleLabel)}" style="--bar-height:${groupedChart ? 100 : height > 0 ? height : 0.8}%;--bar-index:${index}">
+            <div class="revenue-chart-bar-area">
+                <div class="revenue-chart-tooltip" role="tooltip">
+                    <strong>${escapeHtml(item.tooltipLabel)}</strong>
+                    <span><i class="is-paid"></i>Đã thu <b>${escapeHtml(formatVnd(item.paidAmount))}</b></span>
+                    <span><i class="is-pending"></i>Chờ thanh toán <b>${escapeHtml(formatVnd(item.pendingPaymentAmount))}</b></span>
+                    <span><i class="is-cancelled"></i>Giá trị đơn đã hủy <b>${escapeHtml(formatVnd(item.cancelledAmount))}</b></span>
+                    <small>Tổng giá trị đơn: ${escapeHtml(formatVnd(totalValue))}</small>
+                </div>
+                <div class="revenue-bar-stack${groupedChart ? " is-grouped" : ""}">${segments}${groupedChart ? "" : `<span class="revenue-bar-total ${labelPlacement}">${escapeHtml(formatChartValue(totalValue))}</span>`}</div>
             </div>
-            <span class="truncate text-center text-xs font-medium text-zinc-500" title="${escapeHtml(item.tooltipLabel)}">${escapeHtml(item.label)}</span>
+            <span class="revenue-chart-label" title="${escapeHtml(item.tooltipLabel)}">${escapeHtml(item.label)}</span>
         </div>`;
     }).join("");
 
-    byId("monthlyRevenueChart").innerHTML = `<div class="grid min-h-[340px] grid-cols-[86px_minmax(0,1fr)] gap-4 max-sm:grid-cols-[72px_minmax(0,1fr)] max-sm:gap-2">
-        <div class="grid h-[300px] grid-rows-6 text-right text-xs text-zinc-500">${ticks.map((tick) => `<div class="flex items-center justify-end">${escapeHtml(formatVnd(tick))}</div>`).join("")}</div>
-        <div class="relative h-[340px] overflow-x-auto overflow-y-hidden border-l border-zinc-200 pb-2">
-            <div class="relative h-[300px] min-w-full" style="width:${plotWidth}px">
-                ${ticks.map((_, index) => `<div class="absolute left-0 right-0 border-t border-zinc-200" style="top:${index * 20}%"></div>`).join("")}
-                <div class="relative z-10 grid h-full items-end justify-center px-5" style="grid-template-columns:repeat(${buckets.length},${columnWidth}px);column-gap:${columnGap}px">${bars}</div>
+    const highest = buckets.reduce((best, item) => bucketTotal(item) > bucketTotal(best) ? item : best, buckets[0] || emptyRevenueStatus());
+    byId("chartTextSummary").textContent = maximumValue > 0
+        ? `${meta[0]}. ${highest.tooltipLabel} có tổng giá trị đơn cao nhất là ${formatVnd(bucketTotal(highest))}.`
+        : `${meta[0]}. Chưa có dữ liệu trong khoảng thời gian này; các kỳ được giữ với giá trị 0.`;
+
+    byId("monthlyRevenueChart").innerHTML = `<div class="revenue-chart-shell">
+        <div class="revenue-chart-axis" aria-hidden="true">${ticks.map((tick) => `<span>${escapeHtml(formatChartValue(tick))}</span>`).join("")}</div>
+        <div class="revenue-chart-viewport">
+            <div class="revenue-chart-plot${distributionClass}"${plotWidth ? ` style="width:${plotWidth}px"` : ""}>
+                <div class="revenue-chart-gridlines" aria-hidden="true">
+                    ${ticks.map((_, index) => `<span class="revenue-chart-gridline" style="top:${index * 20}%"></span>`).join("")}
+                </div>
+                ${maximumValue <= 0 ? '<div class="revenue-zero-note">Chưa có đơn hàng trong khoảng thời gian này. Các kỳ vẫn được giữ để dễ đối chiếu.</div>' : ""}
+                <div class="revenue-chart-columns${distributionClass}" style="--bucket-count:${buckets.length};${distributedChart ? "" : `grid-template-columns:repeat(${buckets.length},${columnWidth}px);column-gap:${columnGap}px`}">${bars}</div>
             </div>
         </div>
     </div>`;
@@ -305,44 +448,64 @@ function paginationItems(current, total) {
 }
 
 function renderPagination(pagination) {
-    const nav = byId("orderPagination");
-    const totalItems = pagination.totalItems || 0;
-    const totalPages = Math.max(1, pagination.totalPages || 1);
-    const page = Math.min(Math.max(1, pagination.page || 1), totalPages);
-    const pageSize = pagination.pageSize || state.pageSize;
+    const totalItems = Number(pagination.totalItems || 0);
+    const totalPages = Math.max(1, Number(pagination.totalPages || 1));
+    const page = Math.min(Math.max(1, Number(pagination.page || 1)), totalPages);
+    const pageSize = Number(pagination.pageSize || state.pageSize);
     const start = totalItems ? (page - 1) * pageSize + 1 : 0;
     const end = Math.min(page * pageSize, totalItems);
-
-    nav.innerHTML = `<p class="m-0 text-sm text-zinc-500">Hiển thị <strong class="font-semibold text-zinc-800">${start}–${end}</strong> trong ${totalItems} đơn</p>
-        <div class="flex items-center gap-1.5">
-            <button class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40" type="button" data-order-page="${page - 1}" ${page <= 1 ? "disabled" : ""} aria-label="Trang trước">Trước</button>
+    byId("orderPagination").innerHTML = `<p>Hiển thị <strong>${start}–${end}</strong> trong ${totalItems.toLocaleString("vi-VN")} đơn</p>
+        <div class="revenue-page-buttons">
+            <button class="revenue-page-button" type="button" data-order-page="${page - 1}" ${page <= 1 ? "disabled" : ""} aria-label="Trang trước">Trước</button>
             ${paginationItems(page, totalPages).map((item) => item === "ellipsis"
-                ? '<span class="px-1 text-zinc-400">…</span>'
-                : `<button class="h-9 min-w-9 rounded-lg border px-2 text-sm font-semibold transition ${item === page ? "border-emerald-600 bg-emerald-600 text-white" : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"}" type="button" data-order-page="${item}" ${item === page ? 'aria-current="page"' : ""}>${item}</button>`
-            ).join("")}
-            <button class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-40" type="button" data-order-page="${page + 1}" ${page >= totalPages ? "disabled" : ""} aria-label="Trang sau">Sau</button>
+                ? '<span aria-hidden="true">…</span>'
+                : `<button class="revenue-page-button${item === page ? " is-current" : ""}" type="button" data-order-page="${item}" ${item === page ? 'aria-current="page"' : ""}>${item}</button>`).join("")}
+            <button class="revenue-page-button" type="button" data-order-page="${page + 1}" ${page >= totalPages ? "disabled" : ""} aria-label="Trang sau">Sau</button>
         </div>`;
 }
 
 function renderOrders(items, pagination) {
-    byId("orderDetailCount").textContent = `${pagination.totalItems || 0} đơn`;
+    byId("orderDetailCount").textContent = `${Number(pagination.totalItems || 0).toLocaleString("vi-VN")} đơn`;
     if (!items.length) {
-        byId("orderDetailTable").innerHTML = '<div class="empty-state"><h3>Chưa có đơn hàng trong khoảng thời gian này</h3><p>Chọn một mốc thời gian khác để xem danh sách chi tiết.</p></div>';
+        byId("orderDetailTable").innerHTML = '<div class="revenue-empty-state"><h3>Chưa có đơn hàng phù hợp</h3><p>Thử đổi khoảng thời gian, từ khóa hoặc bộ lọc trạng thái.</p></div>';
         renderPagination(pagination);
         return;
     }
 
-    const dateFormatter = new Intl.DateTimeFormat("vi-VN");
-    byId("orderDetailTable").innerHTML = `<div class="overflow-x-auto rounded-2xl border border-zinc-200 bg-white shadow-sm"><table class="min-w-full text-left text-sm">
-        <thead class="bg-zinc-50 text-xs font-semibold uppercase tracking-wide text-zinc-500"><tr><th class="px-5 py-3">Mã đơn</th><th class="px-5 py-3">Khách hàng</th><th class="px-5 py-3">Phương tiện</th><th class="px-5 py-3">Ngày thuê</th><th class="px-5 py-3 text-right">Tổng tiền</th><th class="px-5 py-3">Trạng thái</th><th class="px-5 py-3">Thanh toán</th></tr></thead>
-        <tbody class="divide-y divide-zinc-100">${items.map((item) => `<tr class="transition hover:bg-zinc-50"><td class="px-5 py-4 font-semibold">#${escapeHtml(item.bookingCode || item.id)}</td><td class="px-5 py-4">${escapeHtml(item.customerName)}</td><td class="px-5 py-4">${escapeHtml(item.carName)}</td><td class="px-5 py-4">${escapeHtml(dateFormatter.format(new Date(item.pickupDate)))}</td><td class="px-5 py-4 text-right font-semibold">${escapeHtml(formatVnd(item.totalAmount))}</td><td class="px-5 py-4">${badge(item.bookingStatus, "booking")}</td><td class="px-5 py-4">${badge(item.paymentStatus, "payment")}</td></tr>`).join("")}</tbody>
+    const dateFormatter = new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit", year: "numeric" });
+    byId("orderDetailTable").innerHTML = `<div class="revenue-table-wrap"><table class="revenue-table">
+        <thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Phương tiện</th><th>Ngày thuê</th><th style="text-align:right">Tổng tiền</th><th>Trạng thái đơn</th><th>Thanh toán</th></tr></thead>
+        <tbody>${items.map((item) => `<tr>
+            <td data-label="Mã đơn"><span class="revenue-order-code">${escapeHtml(item.bookingCode || `BK-${item.id}`)}</span></td>
+            <td data-label="Khách hàng">${escapeHtml(item.customerName || "—")}</td>
+            <td data-label="Phương tiện"><span class="revenue-vehicle-name">${escapeHtml(item.carName || "—")}</span></td>
+            <td data-label="Ngày thuê">${escapeHtml(dateFormatter.format(new Date(item.pickupDate)))}</td>
+            <td data-label="Tổng tiền" class="revenue-money">${escapeHtml(formatVnd(item.totalAmount))}</td>
+            <td data-label="Trạng thái đơn">${bookingBadge(item.bookingStatus)}</td>
+            <td data-label="Thanh toán">${paymentBadge(item.paymentStatus)}</td>
+        </tr>`).join("")}</tbody>
     </table></div>`;
     renderPagination(pagination);
 }
 
-async function load() {
-    byId("monthlyRevenueChart").innerHTML = '<div class="skeleton h-[340px] rounded-xl"></div>';
+function renderLoading() {
+    root.classList.add("is-loading");
+    byId("monthlyRevenueChart").innerHTML = '<div class="revenue-chart-skeleton" aria-label="Đang tải biểu đồ"></div>';
+    byId("orderDetailTable").innerHTML = `<div class="revenue-table-skeleton" aria-label="Đang tải danh sách đơn hàng">${Array.from({ length: 5 }, () => '<div class="revenue-skeleton-line"></div>').join("")}</div>`;
     byId("orderDetailTable").setAttribute("aria-busy", "true");
+}
+
+function updateExportLink() {
+    const query = new URLSearchParams({ type: "revenue", from: state.from, to: state.to });
+    if (state.bookingStatus) query.set("bookingStatus", state.bookingStatus);
+    if (state.paymentStatus) query.set("paymentStatus", state.paymentStatus);
+    byId("exportRevenueReport").href = `/admin/reports/export?${query}`;
+}
+
+async function load() {
+    const currentLoad = ++loadSequence;
+    renderLoading();
+    updateExportLink();
     try {
         const query = new URLSearchParams({
             from: state.from,
@@ -350,18 +513,26 @@ async function load() {
             page: String(state.page),
             pageSize: String(state.pageSize)
         });
+        if (state.search) query.set("search", state.search);
+        if (state.bookingStatus) query.set("bookingStatus", state.bookingStatus);
+        if (state.paymentStatus) query.set("paymentStatus", state.paymentStatus);
         const data = await fetchJson(`api/admin/reports/revenue?${query}`);
+        if (currentLoad !== loadSequence) return;
         state.page = data.pagination?.page || 1;
         renderSummary(data);
-        renderChart(data.daily || []);
+        renderChart(data.daily || [], data.hourly || []);
         renderOrders(data.recentBookings || [], data.pagination || { page: 1, pageSize: state.pageSize, totalItems: 0, totalPages: 1 });
     } catch (error) {
-        byId("monthlyRevenueChart").innerHTML = `<div class="empty-state"><h3>Không tải được báo cáo</h3><p>${escapeHtml(error.message)}</p><button class="btn btn-primary" id="retryDashboard" type="button">Thử lại</button></div>`;
-        byId("retryDashboard")?.addEventListener("click", load);
+        if (currentLoad !== loadSequence) return;
         renderSummary({ summary: {} });
-        renderOrders([], { page: 1, pageSize: state.pageSize, totalItems: 0, totalPages: 1 });
+        byId("monthlyRevenueChart").innerHTML = `<div class="revenue-error-state"><h3>Không thể tải dữ liệu biểu đồ</h3><p>${escapeHtml(error.message)}</p><button class="revenue-primary-button" data-retry-dashboard type="button">Thử lại</button></div>`;
+        byId("orderDetailTable").innerHTML = `<div class="revenue-error-state"><h3>Không thể tải danh sách đơn hàng</h3><p>Kiểm tra kết nối và thử tải lại báo cáo.</p><button class="revenue-primary-button" data-retry-dashboard type="button">Thử lại</button></div>`;
+        byId("orderPagination").innerHTML = "";
     } finally {
-        byId("orderDetailTable").removeAttribute("aria-busy");
+        if (currentLoad === loadSequence) {
+            root.classList.remove("is-loading");
+            byId("orderDetailTable").removeAttribute("aria-busy");
+        }
     }
 }
 
@@ -370,39 +541,74 @@ function selectPreset(key) {
     state.page = 1;
     if (key !== "CUSTOM") {
         Object.assign(state, rangeFor(key));
-    } else {
-        if (!state.from) Object.assign(state, rangeFor("THIS_MONTH"));
-        byId("customStartDate").value = state.from;
-        byId("customEndDate").value = state.to;
+        renderRangeControls();
+        load();
+        return;
     }
-    renderPresets();
-    if (key !== "CUSTOM") load();
+    byId("customStartDate").value = state.from;
+    byId("customEndDate").value = state.to;
+    renderRangeControls();
+    byId("customStartDate").focus();
 }
 
-if (root) {
+function applyCustomRange() {
+    const from = byId("customStartDate").value;
+    const to = byId("customEndDate").value;
+    const error = byId("customRangeError");
+    let message = "";
+    if (!from || !to) message = "Vui lòng chọn đủ ngày bắt đầu và ngày kết thúc.";
+    else if (from > to) message = "Ngày bắt đầu không được sau ngày kết thúc.";
+    else if (inclusiveDayCount(parseDate(from), parseDate(to)) > 366) message = "Khoảng báo cáo không được vượt quá 366 ngày.";
+    error.textContent = message;
+    error.hidden = !message;
+    if (message) return;
+    state.preset = "CUSTOM";
+    state.from = from;
+    state.to = to;
+    state.page = 1;
+    renderRangeControls();
+    load();
+}
+
+function bindEvents() {
     byId("revenueRangeButtons").addEventListener("click", (event) => {
         const button = event.target.closest("[data-range-preset]");
         if (button) selectPreset(button.dataset.rangePreset);
     });
-    byId("applyCustomRange").addEventListener("click", () => {
-        const from = byId("customStartDate").value;
-        const to = byId("customEndDate").value;
-        if (!from || !to || from > to) return;
-        state.preset = "CUSTOM";
-        state.from = from;
-        state.to = to;
-        state.page = 1;
-        renderPresets();
-        load();
+    byId("revenueRangeMore").addEventListener("change", (event) => {
+        if (event.target.value) selectPreset(event.target.value);
     });
+    byId("applyCustomRange").addEventListener("click", applyCustomRange);
     byId("orderPagination").addEventListener("click", (event) => {
         const button = event.target.closest("[data-order-page]");
         if (!button || button.disabled) return;
         state.page = Number(button.dataset.orderPage);
         load();
     });
+    byId("orderBookingStatus").addEventListener("change", (event) => {
+        state.bookingStatus = event.target.value;
+        state.page = 1;
+        load();
+    });
+    byId("orderPaymentStatus").addEventListener("change", (event) => {
+        state.paymentStatus = event.target.value;
+        state.page = 1;
+        load();
+    });
+    byId("orderSearch").addEventListener("input", debounce((event) => {
+        state.search = event.target.value.trim();
+        state.page = 1;
+        load();
+    }, 300));
+    root.addEventListener("click", (event) => {
+        if (event.target.closest("[data-retry-dashboard]")) load();
+    });
+}
 
+if (root) {
     Object.assign(state, rangeFor("THIS_MONTH"));
-    renderPresets();
-    load();
+    renderRangeControls();
+    bindEvents();
+    const adminUser = await (window.VivuCarAdminAuthReady ?? Promise.resolve(true));
+    if (adminUser) load();
 }

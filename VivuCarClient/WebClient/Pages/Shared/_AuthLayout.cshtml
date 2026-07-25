@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - VivuCar</title>
+    <link rel="icon" type="image/webp" href="~/logo.webp" />
+    <link rel="stylesheet" href="~/css/animations.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-tailwind.css" asp-append-version="true" />
+    @await RenderSectionAsync("HeadStyles", required: false)
+</head>
+<body style="margin:0;padding:0;" class="font-sans antialiased">
+    @RenderBody()
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
