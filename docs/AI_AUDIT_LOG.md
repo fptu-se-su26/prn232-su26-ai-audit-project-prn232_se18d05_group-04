@@ -568,6 +568,55 @@ Nhờ AI đã sửa dứt điểm được lỗi bất đồng bộ Authorizatio
 
 ---
 
+### Lần sử dụng AI số 9: Hoàn thiện tính năng AI Chatbot (Gemini)
+
+#### 9.1. Mô tả vấn đề hoặc yêu cầu
+
+```text
+Phát triển tính năng Chatbot AI tư vấn và hỗ trợ khách hàng, được huấn luyện hiểu các nghiệp vụ của hệ thống VivuCar. Yêu cầu AI có khả năng truy vấn CSDL (Function Calling) để cung cấp danh sách chuyến đi của người dùng hiện tại và danh sách xe đang có sẵn. Xử lý UI Chatbot dạng popup websocket ở góc phải màn hình, không bị lỗi CORS, hiển thị trên tất cả các trang, bắt đúng Token xác thực, lưu trữ lịch sử chat giữa các lần đăng nhập, và có nút "Gặp người hỗ trợ" để chuyển Escalation cho Admin hoặc Chủ xe (Owner).
+```
+
+#### 9.2. Các prompt đã sử dụng
+
+```text
+- Tôi muốn làm kiểu chatbot websocket đáp ứng các yêu cầu nãy giờ, gọi API về train data để câu trả lời phong phú, đảm bảo hiểu về hệ thống.
+- Dùng AI của Gemini, bạn tự biên soạn bộ luật cụ thể cho toàn hệ thống VivuCar, cả khi chưa đăng nhập và đã đăng nhập (hỏi "Toàn bộ booking của tôi"). Đảm bảo Function Calling đáp ứng toàn bộ.
+- Chatbox chỉ hiển thị ở trang login còn vào trang khác không hiển thị. Báo lỗi CORS khi gọi SignalR.
+- Lỗi kết nối máy chủ AI, nhập câu hỏi bị lặp 2 lần, mất lịch sử chat khi logout/login lại, không phân giải được tài khoản (user_id null).
+```
+
+#### 9.3. Kết quả do AI sinh ra
+
+```text
+- Backend: Tạo `ChatHub.cs`, cấu hình lại CORS, sinh `GeminiClient.cs` tích hợp Gemini REST API (`gemini-flash-latest`), triển khai Function Calling (lấy danh sách xe, danh sách chuyến đi). Sửa JWT token để đọc `sub` claim đồng bộ với Frontend. Cập nhật `ChatService.cs` fix lỗi không load messages khi GetOrCreateSession.
+- Frontend: Sinh `chat.css` hỗ trợ fallback, sinh `chatbot.js` quản lý state, kết nối SignalR, decode JWT lấy userId, xử lý Optimistic UI để chống tin nhắn lặp đôi.
+```
+
+#### 9.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Sinh viên nạp API Key vào file `.env`, khởi động lại project API (`dotnet run`), test UI bằng cách gửi thử các câu lệnh function calling để xem AI truy xuất Data thực tế từ Database, và xác minh luồng escalation.
+```
+
+#### 9.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | |
+| File liên quan | `GeminiClient.cs`, `SupportController.cs`, `ChatHub.cs`, `chatbot.js`, `chat.css` |
+| Screenshot | Đã chụp màn hình kết quả AI trả lời danh sách chuyến đi đúng user |
+| Kết quả chạy/test | Chatbot trả lời logic nghiệp vụ chính xác, WebSocket kết nối mượt mà, lưu lịch sử tốt |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Nguyễn Lê Tiểu Long - DE191106 |
+
+#### 9.6. Nhận xét cá nhân/nhóm
+
+```text
+AI xử lý xuất sắc các vấn đề phức tạp như CORS WebSocket, JWT mapping claim `sub`, và đặc biệt là chuẩn hóa luồng Function Calling của phiên bản Gemini API mới nhất (`thoughtSignature`). Kỹ năng debug của AI rất nhạy bén khi phân tích Token và sửa lỗi Optimistic UI JS.
+```
+
+---
+
 ## 5. Bảng tổng hợp mức độ sử dụng AI
 
 Đánh dấu mức độ AI hỗ trợ ở từng hạng mục.

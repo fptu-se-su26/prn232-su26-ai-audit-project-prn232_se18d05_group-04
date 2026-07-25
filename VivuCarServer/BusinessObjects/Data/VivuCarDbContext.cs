@@ -28,7 +28,8 @@ public class VivuCarDbContext(DbContextOptions<VivuCarDbContext> options) : DbCo
     public DbSet<AdminAuditLog> AdminAuditLogs => Set<AdminAuditLog>();
     public DbSet<DailyRevenueSnapshot> DailyRevenueSnapshots => Set<DailyRevenueSnapshot>();
     public DbSet<ExportJob> ExportJobs => Set<ExportJob>();
-
+    public DbSet<ChatSession> ChatSessions => Set<ChatSession>();
+    public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
     public async Task<SeedSummary> SeedAsync(
         UserSeedOptions userOptions,
         Func<AppUser, string> passwordHashFactory,

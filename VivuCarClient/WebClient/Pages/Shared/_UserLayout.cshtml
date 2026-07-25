@@ -11,6 +11,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="~/css/animations.css" asp-append-version="true" />
   <link rel="stylesheet" href="~/css/booking.css" asp-append-version="true" />
+  <link rel="stylesheet" href="~/css/chat.css" asp-append-version="true" />
   @await RenderSectionAsync("HeadScripts", required: false)
 </head>
 <body data-layout="@(ViewData["DataLayout"] ?? "user")" data-page="@ViewData["DataPage"]" class="@(ViewData["BodyClass"] ?? "min-h-[100dvh] bg-[#f7f7f5] text-[#1f1f1f] font-sans antialiased overflow-x-hidden")">
@@ -24,12 +25,16 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
+  @await Html.PartialAsync("_ChatbotWidget")
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
   <script src="~/js/html/tailwind-ui.js" asp-append-version="true"></script>
   <script src="~/js/html/constants.js" asp-append-version="true"></script>
   <script src="~/js/html/utils.js" asp-append-version="true"></script>
   <script src="~/js/html/db-mock.js" asp-append-version="true"></script>
   <script src="~/js/html/auth.js" asp-append-version="true"></script>
   <script src="~/js/html/layout.js" asp-append-version="true"></script>
+  <script src="~/js/chatbot.js" asp-append-version="true"></script>
   
   @await RenderSectionAsync("Scripts", required: false)
 </body>
