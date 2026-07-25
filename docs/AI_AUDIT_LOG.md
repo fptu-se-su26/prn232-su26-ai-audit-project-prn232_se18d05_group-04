@@ -490,12 +490,14 @@ Hoàn thiện luồng Booking từ bước tạo Request, kiểm tra điều ki�
 - Tạo endpoint API POST /contract/sign để lưu vết hợp đồng.
 - Tạo PowerShell script chạy Integration Test 10 bước qua các API thực tế của hệ thống.
 - Xử lý lỗi 400 Bad Request của PayOS bằng cách cắt độ dài chuỗi description tối đa 25 ký tự.
+- Cập nhật logic tính giá thuê xe theo block ngày và giờ trong BookingService.
 ```
 
 #### 7.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
 
 ```text
 Sinh viên đối chiếu lại cấu trúc Database hiện tại để ánh xạ đúng DocumentVerificationStatus (Approved = 2), tự chạy các HTTP Request để bắt nguyên nhân lỗi PayOS 400 và rà soát lại các UI component.
+Đồng thời bổ sung validation kiểm tra thời gian nhận/trả xe (07:00 - 22:00) và điều chỉnh giao diện (booking-detail, my-bookings) hiển thị chi tiết số ngày và giờ thuê xe.
 ```
 
 #### 7.5. Minh chứng
@@ -503,7 +505,7 @@ Sinh viên đối chiếu lại cấu trúc Database hiện tại để ánh x�
 | Loại minh chứng | Nội dung |
 |---|---|
 | Link commit | Chưa cập nhật |
-| File liên quan | `BookingService.cs`, `PaymentService.cs`, `Contract.cshtml`, `booking-contract.js`, `payment-deposit.js` |
+| File liên quan | `BookingService.cs`, `PaymentService.cs`, `AdminModerationService.cs`, `Contract.cshtml`, `booking-contract.js`, `payment-deposit.js`, `booking-checkout.js`, `booking-detail.js`, `my-bookings.js` |
 | Screenshot | Script test Runtime Pass 100% |
 | Kết quả chạy/test | Integration test (PowerShell script) chạy thành công toàn bộ flow tạo đơn -> PayOS -> ký hợp đồng |
 | Link video demo |  |

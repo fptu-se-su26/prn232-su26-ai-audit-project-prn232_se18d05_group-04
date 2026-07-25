@@ -116,6 +116,7 @@ import { authService } from '/js/shared/auth-service.js';
                 ${info("Địa điểm nhận", booking.pickupLocation)}
                 ${info("Nhận xe", new Date(booking.startDateTime).toLocaleString('vi-VN'))}
                 ${info("Trả xe", new Date(booking.endDateTime).toLocaleString('vi-VN'))}
+                ${info("Thời gian thuê", `${booking.rentalDays || 0} ngày ${booking.rentalHours ? `và ${booking.rentalHours} giờ` : ''}`)}
                 ${info("Tổng tiền", U.formatVnd(booking.totalAmount))}
                 ${info("Voucher", booking.voucherCode || "Không áp dụng")}
               </div>
