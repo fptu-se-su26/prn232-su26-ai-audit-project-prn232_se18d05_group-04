@@ -160,6 +160,58 @@ public class AuthController(
         return Ok(new { message = "Admin access granted." });
     }
 
+    [HttpPost("register")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Register(
+        RegisterRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await authService.RegisterAsync(request, cancellationToken);
+
+        return result.Success
+            ? Ok(result)
+            : BadRequest(result);
+    }
+
+    [HttpPost("verify-otp")]
+    [ProducesResponseType<LoginResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<LoginResponse>> VerifyOtp(
+        VerifyOtpRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await authService.VerifyOtpAsync(
+            request,
+            HttpContext.Connection.RemoteIpAddress?.ToString(),
+            cancellationToken
+        );
+
+        if (!result.Success || result.Session is null)
+        {
+            return BadRequest(result);
+        }
+
+        SetRefreshTokenCookie(
+            result.Session.RefreshToken,
+            result.Session.RefreshTokenExpiresAt
+        );
+
+        return Ok(result.Session.Response);
+    }
+
     private void SetRefreshTokenCookie(string token, DateTime expiresAt)
     {
         Response.Cookies.Append(

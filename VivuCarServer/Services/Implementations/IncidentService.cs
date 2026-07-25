@@ -116,17 +116,75 @@ public class IncidentService(VivuCarDbContext dbContext) : IIncidentService
         _                       => s.ToString().ToLowerInvariant()
     };
 
-    private static OwnerIncidentResponse MapToResponse(IncidentReport i, string bookingCode, string reporterName) => new()
+    private static OwnerIncidentResponse MapToResponse(IncidentReport i, string bookingCode, string reporterName)
     {
-        Id             = i.Id,
-        BookingId      = i.BookingId,
-        BookingCode    = bookingCode,
-        Title          = i.Title,
-        Description    = i.Description,
-        ReportedByName = reporterName,
-        PenaltyAmount  = i.PenaltyAmount,
-        Status         = MapStatus(i.Status),
-        CreatedAt      = i.CreatedAt,
-        ResolvedAt     = i.ResolvedAt
-    };
+        var description = i.Description;
+        var images = new List<OwnerIncidentImageResponse>();
+
+        if (description.Contains(" ||IMAGES|| "))
+        {
+            var parts = description.Split(new[] { " ||IMAGES|| " }, StringSplitOptions.None);
+            description = parts[0];
+            if (parts.Length > 1 && !string.IsNullOrWhiteSpace(parts[1]))
+            {
+                var urls = parts[1].Split(',');
+                foreach (var url in urls)
+                {
+                    images.Add(new OwnerIncidentImageResponse
+                    {
+                        ImageUrl = url,
+                        Caption = "Ảnh hư hỏng lúc nhận xe"
+                    });
+                }
+            }
+        }
+
+        return new OwnerIncidentResponse
+        {
+            Id             = i.Id,
+            BookingId      = i.BookingId,
+            BookingCode    = bookingCode,
+            Title          = i.Title,
+            Description    = description,
+            ReportedByName = reporterName,
+            PenaltyAmount  = i.PenaltyAmount,
+            Status         = MapStatus(i.Status),
+            CreatedAt      = i.CreatedAt,
+            ResolvedAt     = i.ResolvedAt,
+            Images         = images
+        };
+    }
+
+    public async Task<bool> UpdateIncidentStatusAsync(
+        int ownerId,
+        int incidentId,
+        string status,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var ownerCarIds = await dbContext.Cars
+            .Where(c => c.OwnerId == ownerId)
+            .Select(c => c.Id)
+            .ToListAsync(cancellationToken);
+
+        var incident = await dbContext.IncidentReports
+            .Include(i => i.Booking)
+            .FirstOrDefaultAsync(i => i.Id == incidentId && ownerCarIds.Contains(i.Booking.CarId), cancellationToken);
+
+        if (incident == null) return false;
+
+        if (!Enum.TryParse<IncidentStatus>(status, true, out var statusEnum))
+        {
+            throw new InvalidOperationException("Trạng thái sự cố không hợp lệ.");
+        }
+
+        incident.Status = statusEnum;
+        if (statusEnum == IncidentStatus.Resolved || statusEnum == IncidentStatus.Closed)
+        {
+            incident.ResolvedAt = DateTime.UtcNow;
+        }
+
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return true;
+    }
 }

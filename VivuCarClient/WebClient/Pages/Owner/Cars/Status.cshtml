@@ -1,0 +1,452 @@
+@page
+@model WebClient.Pages.Owner.Cars.StatusModel
+@{
+    ViewData["Title"] = "Cập nhật trạng thái xe";
+    ViewData["OwnerPage"] = "cars";
+}
+
+<div class="max-w-4xl mx-auto space-y-6 pb-12">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+        <a href="/Owner/Cars/Index" class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-white border border-zinc-200 text-zinc-600 hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-colors">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        </a>
+        <div>
+            <h2 class="text-xl font-bold text-zinc-900">Cập nhật trạng thái xe</h2>
+            <p class="text-sm text-zinc-500 mt-0.5" id="carSubtitle">Đang tải...</p>
+        </div>
+    </div>
+
+    <!-- Car Info Card -->
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm p-6">
+        <div id="carInfoSkeleton" class="flex items-center gap-4">
+            <div class="w-20 h-14 rounded-lg bg-zinc-100 animate-pulse"></div>
+            <div class="flex-1 space-y-2">
+                <div class="h-4 bg-zinc-100 rounded animate-pulse w-48"></div>
+                <div class="h-3 bg-zinc-100 rounded animate-pulse w-32"></div>
+            </div>
+        </div>
+        <div id="carInfoContent" class="hidden flex items-center gap-4">
+            <img id="carImage" src="" alt="Car" class="w-20 h-14 rounded-lg object-cover border border-zinc-200" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%22100%25%22 height%3D%22100%25%22%3E%3Crect fill%3D%22%23f4f4f5%22 width%3D%22100%25%22 height%3D%22100%25%22%2F%3E%3C%2Fsvg%3E'" />
+            <div class="flex-1">
+                <div class="flex items-center gap-3">
+                    <h3 id="carName" class="font-bold text-zinc-900 text-lg"></h3>
+                    <span id="currentStatusBadge"></span>
+                </div>
+                <div class="flex items-center gap-4 mt-1 text-sm text-zinc-500">
+                    <span id="carLicensePlate" class="font-mono bg-zinc-100 px-2 py-0.5 rounded text-xs border border-zinc-200"></span>
+                    <span id="carLocation"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warning: Active Booking -->
+        <div id="activeBookingWarning" class="hidden mt-4 rounded-lg bg-amber-50 border border-amber-200 p-3 flex gap-2 items-start">
+            <svg class="h-5 w-5 text-amber-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <p class="text-sm text-amber-800">Xe đang có đơn đặt trong tương lai. Thay đổi trạng thái có thể ảnh hưởng đến khách hàng.</p>
+        </div>
+    </div>
+
+    <!-- Status Control Panel -->
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50">
+            <h3 class="text-base font-semibold text-zinc-900">Chọn trạng thái mới</h3>
+            <p class="text-sm text-zinc-500 mt-0.5">Chỉ chủ xe mới có thể thay đổi trạng thái. Trạng thái <strong>Blocked</strong> chỉ do Admin quản lý.</p>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="statusRadioGroup">
+                <!-- Available -->
+                <label id="labelStatusAvailable" class="relative flex cursor-pointer rounded-xl border-2 border-zinc-200 bg-white p-4 transition-colors hover:border-green-400 has-[:checked]:border-green-500 has-[:checked]:bg-green-50">
+                    <input type="radio" name="carStatus" id="statusAvailable" value="available" class="sr-only" />
+                    <div class="flex flex-col gap-1 w-full">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-zinc-900">Available</span>
+                            <span class="w-4 h-4 rounded-full border-2 border-zinc-300 flex items-center justify-center status-radio-indicator">
+                                <span class="w-2 h-2 rounded-full bg-green-500 hidden status-dot"></span>
+                            </span>
+                        </div>
+                        <p class="text-xs text-zinc-500">Xe sẵn sàng cho thuê, hiển thị cho khách tìm kiếm</p>
+                        <span class="mt-2 self-start inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">● Khả dụng</span>
+                    </div>
+                </label>
+
+                <!-- Maintenance -->
+                <label id="labelStatusMaintenance" class="relative flex cursor-pointer rounded-xl border-2 border-zinc-200 bg-white p-4 transition-colors hover:border-amber-400 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50">
+                    <input type="radio" name="carStatus" id="statusMaintenance" value="maintenance" class="sr-only" />
+                    <div class="flex flex-col gap-1 w-full">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-zinc-900">Maintenance</span>
+                            <span class="w-4 h-4 rounded-full border-2 border-zinc-300 flex items-center justify-center status-radio-indicator">
+                                <span class="w-2 h-2 rounded-full bg-amber-500 hidden status-dot"></span>
+                            </span>
+                        </div>
+                        <p class="text-xs text-zinc-500">Xe đang bảo trì, không hiển thị khi tìm kiếm</p>
+                        <span class="mt-2 self-start inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">🔧 Bảo trì</span>
+                    </div>
+                </label>
+
+                <!-- Unavailable (mapped to 'blocked' as UI-only for owner-driven suspension) -->
+                <label id="labelStatusUnavailable" class="relative flex cursor-pointer rounded-xl border-2 border-zinc-200 bg-white p-4 transition-colors hover:border-zinc-400 has-[:checked]:border-zinc-500 has-[:checked]:bg-zinc-100">
+                    <input type="radio" name="carStatus" id="statusUnavailable" value="unavailable" class="sr-only" />
+                    <!-- UI-only field. Not present in current DB schema (maps to maintenance or blocked for now). Requires migration before backend integration. -->
+                    <div class="flex flex-col gap-1 w-full">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-zinc-900">Unavailable</span>
+                            <span class="w-4 h-4 rounded-full border-2 border-zinc-300 flex items-center justify-center status-radio-indicator">
+                                <span class="w-2 h-2 rounded-full bg-zinc-500 hidden status-dot"></span>
+                            </span>
+                        </div>
+                        <p class="text-xs text-zinc-500">Tạm ngưng cho thuê theo yêu cầu chủ xe</p>
+                        <span class="mt-2 self-start inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-700">⏸ Tạm ngưng</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Maintenance Fields (shown when Maintenance selected) -->
+            <div id="maintenanceFields" class="hidden mt-6 pt-6 border-t border-zinc-100 space-y-4">
+                <h4 class="text-sm font-semibold text-zinc-900">Thông tin bảo trì</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="maintenanceReason" class="block text-sm font-medium text-zinc-700 mb-1">Lý do bảo trì <span class="text-red-500">*</span></label>
+                        <select id="maintenanceReason" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm">
+                            <option value="">Chọn lý do...</option>
+                            <option value="Bảo dưỡng định kỳ">Bảo dưỡng định kỳ</option>
+                            <option value="Sửa chữa hư hỏng">Sửa chữa hư hỏng</option>
+                            <option value="Vệ sinh xe">Vệ sinh xe</option>
+                            <option value="Kiểm tra giấy tờ">Kiểm tra giấy tờ</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                    </div>
+                    <div><!-- spacer --></div>
+                    <div>
+                        <label for="maintenanceStartDate" class="block text-sm font-medium text-zinc-700 mb-1">Ngày bắt đầu <span class="text-red-500">*</span></label>
+                        <input type="date" id="maintenanceStartDate" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" />
+                    </div>
+                    <div>
+                        <label for="maintenanceEndDate" class="block text-sm font-medium text-zinc-700 mb-1">Ngày dự kiến mở lại</label>
+                        <input type="date" id="maintenanceEndDate" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" />
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="maintenanceNote" class="block text-sm font-medium text-zinc-700 mb-1">Ghi chú</label>
+                        <textarea id="maintenanceNote" rows="2" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="Mô tả thêm về lý do bảo trì..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unavailable Fields (shown when Unavailable selected) -->
+            <div id="unavailableFields" class="hidden mt-6 pt-6 border-t border-zinc-100 space-y-4">
+                <h4 class="text-sm font-semibold text-zinc-900">Lý do tạm ngưng</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="unavailableReason" class="block text-sm font-medium text-zinc-700 mb-1">Lý do <span class="text-red-500">*</span></label>
+                        <select id="unavailableReason" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm">
+                            <option value="">Chọn lý do...</option>
+                            <option value="Chủ xe tạm ngưng kinh doanh">Chủ xe tạm ngưng kinh doanh</option>
+                            <option value="Xe không sẵn sàng">Xe không sẵn sàng</option>
+                            <option value="Điều chỉnh thông tin xe">Điều chỉnh thông tin xe</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="unavailableNote" class="block text-sm font-medium text-zinc-700 mb-1">Ghi chú</label>
+                        <textarea id="unavailableNote" rows="2" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="Thêm thông tin nếu cần..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error message -->
+            <div id="formError" class="hidden mt-4 rounded-lg bg-red-50 border border-red-200 p-3">
+                <p class="text-sm text-red-700" id="formErrorMsg"></p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 flex items-center gap-3">
+                <button type="button" id="btnUpdateCarStatus" class="inline-flex items-center justify-center rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                    Cập nhật trạng thái
+                </button>
+                <a id="btnCancelStatusChange" href="/Owner/Cars/Index" class="inline-flex items-center justify-center rounded-lg bg-white border border-zinc-300 px-5 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors">
+                    Hủy
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status History -->
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50">
+            <h3 class="text-base font-semibold text-zinc-900">Lịch sử thay đổi trạng thái</h3>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left">
+                <thead class="text-xs text-zinc-500 uppercase bg-zinc-50 border-b border-zinc-200">
+                    <tr>
+                        <th class="px-6 py-3 font-semibold">Thời gian</th>
+                        <th class="px-6 py-3 font-semibold">Trạng thái cũ</th>
+                        <th class="px-6 py-3 font-semibold">Trạng thái mới</th>
+                        <th class="px-6 py-3 font-semibold">Lý do</th>
+                        <th class="px-6 py-3 font-semibold">Người cập nhật</th>
+                    </tr>
+                </thead>
+                <tbody id="statusHistoryTbody" class="divide-y divide-zinc-100">
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center text-zinc-400 text-sm">Đang tải lịch sử...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm Modal -->
+<div id="modalConfirm" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 p-6">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-zinc-900">Xác nhận thay đổi trạng thái</h3>
+                <p class="text-sm text-zinc-500" id="confirmDesc"></p>
+            </div>
+        </div>
+        <p class="text-sm text-zinc-600 mb-6">Bạn có chắc muốn cập nhật trạng thái xe không? Hành động này sẽ ảnh hưởng đến khả năng hiển thị xe trên nền tảng.</p>
+        <div class="flex justify-end gap-3">
+            <button onclick="document.getElementById('modalConfirm').classList.add('hidden')" class="px-4 py-2 rounded-lg border border-zinc-300 text-sm font-medium text-zinc-700 bg-white hover:bg-zinc-50">Hủy</button>
+            <button id="btnConfirmUpdate" class="px-4 py-2 rounded-lg bg-primary text-sm font-medium text-white hover:bg-primary/90 transition-colors">Xác nhận</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="fixed bottom-6 right-6 z-[100] hidden">
+    <div id="toastContent" class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white">
+        <span id="toastMsg"></span>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const carId = @Model.Id;
+        let currentStatus = '';
+
+        // ── Toast ──────────────────────────────────────────────────────────────
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const content = document.getElementById('toastContent');
+            content.className = `flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-medium text-white ${type === 'success' ? 'bg-green-600' : 'bg-red-600'}`;
+            document.getElementById('toastMsg').textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3500);
+        }
+
+        // ── Status Badge ───────────────────────────────────────────────────────
+        function renderStatusBadge(status) {
+            const map = {
+                available:   ['bg-green-100 text-green-800', 'Sẵn sàng'],
+                rented:      ['bg-blue-100 text-blue-800',   'Đang thuê'],
+                maintenance: ['bg-amber-100 text-amber-800', 'Bảo trì'],
+                blocked:     ['bg-red-100 text-red-800',     'Đã khóa'],
+                unavailable: ['bg-zinc-100 text-zinc-700',   'Tạm ngưng'],
+            };
+            const [cls, label] = map[status?.toLowerCase()] ?? ['bg-zinc-100 text-zinc-700', status];
+            return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${cls}">${label}</span>`;
+        }
+
+        // ── Load Car Info ──────────────────────────────────────────────────────
+        async function loadCarInfo() {
+            try {
+                const res = await fetch(`/api/proxy/owner/cars/${carId}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
+                });
+                if (!res.ok) throw new Error('Failed');
+                const car = await res.json();
+
+                document.getElementById('carInfoSkeleton').classList.add('hidden');
+                document.getElementById('carInfoContent').classList.remove('hidden');
+
+                if (car.primaryImageUrl) document.getElementById('carImage').src = car.primaryImageUrl;
+                document.getElementById('carName').textContent = car.name;
+                document.getElementById('currentStatusBadge').innerHTML = renderStatusBadge(car.status);
+                document.getElementById('carLicensePlate').textContent = car.licensePlate;
+                document.getElementById('carLocation').textContent = car.location;
+                document.getElementById('carSubtitle').textContent = `${car.name} · ${car.licensePlate}`;
+
+                currentStatus = car.status?.toLowerCase();
+
+                // Pre-select current status radio
+                const radios = document.querySelectorAll('input[name="carStatus"]');
+                radios.forEach(r => {
+                    if (r.value === currentStatus) r.checked = true;
+                });
+                updateStatusFields(currentStatus);
+
+                // If car is rented, disable available/unavailable
+                if (currentStatus === 'rented') {
+                    document.getElementById('statusAvailable').disabled = true;
+                    document.getElementById('labelStatusAvailable').classList.add('opacity-50', 'cursor-not-allowed');
+                    document.getElementById('statusUnavailable').disabled = true;
+                    document.getElementById('labelStatusUnavailable').classList.add('opacity-50', 'cursor-not-allowed');
+                }
+
+                // If car is blocked, disable all
+                if (currentStatus === 'blocked') {
+                    radios.forEach(r => r.disabled = true);
+                    document.getElementById('btnUpdateCarStatus').disabled = true;
+                    document.getElementById('btnUpdateCarStatus').textContent = 'Xe bị khóa bởi Admin - không thể thay đổi';
+                }
+
+                // Show active booking warning (simulated — in real API would check upcoming bookings)
+                // UI-only field. Not present in current DB schema. Requires migration before backend integration.
+                if (car.hasUpcomingBooking) {
+                    document.getElementById('activeBookingWarning').classList.remove('hidden');
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // ── Load Status History ────────────────────────────────────────────────
+        async function loadStatusHistory() {
+            const tbody = document.getElementById('statusHistoryTbody');
+            // UI-only: Status history not in current DB schema. Requires migration before backend integration.
+            // Showing placeholder data
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="px-6 py-8 text-center text-zinc-400 text-sm italic">
+                        Chưa có lịch sử thay đổi trạng thái nào được ghi nhận.
+                    </td>
+                </tr>`;
+        }
+
+        // ── Toggle extra fields ────────────────────────────────────────────────
+        function updateStatusFields(value) {
+            document.getElementById('maintenanceFields').classList.toggle('hidden', value !== 'maintenance');
+            document.getElementById('unavailableFields').classList.toggle('hidden', value !== 'unavailable');
+
+            // Update radio visual indicators
+            document.querySelectorAll('.status-radio-indicator').forEach(el => {
+                el.classList.remove('border-primary', 'border-green-500', 'border-amber-500', 'border-zinc-500');
+                el.classList.add('border-zinc-300');
+                el.querySelector('.status-dot').classList.add('hidden');
+            });
+
+            const checkedRadio = document.querySelector('input[name="carStatus"]:checked');
+            if (checkedRadio) {
+                const indicator = checkedRadio.closest('label').querySelector('.status-radio-indicator');
+                indicator.classList.remove('border-zinc-300');
+                indicator.querySelector('.status-dot').classList.remove('hidden');
+            }
+        }
+
+        document.querySelectorAll('input[name="carStatus"]').forEach(radio => {
+            radio.addEventListener('change', () => updateStatusFields(radio.value));
+        });
+
+        // ── Validate ───────────────────────────────────────────────────────────
+        function validate(newStatus) {
+            const errEl = document.getElementById('formError');
+            const errMsgEl = document.getElementById('formErrorMsg');
+            errEl.classList.add('hidden');
+
+            if (newStatus === currentStatus) {
+                errMsgEl.textContent = 'Trạng thái mới giống trạng thái hiện tại. Vui lòng chọn trạng thái khác.';
+                errEl.classList.remove('hidden');
+                return false;
+            }
+
+            if (newStatus === 'maintenance') {
+                const reason = document.getElementById('maintenanceReason').value;
+                const startDate = document.getElementById('maintenanceStartDate').value;
+                const endDate = document.getElementById('maintenanceEndDate').value;
+
+                if (!reason) {
+                    errMsgEl.textContent = 'Vui lòng chọn lý do bảo trì.';
+                    errEl.classList.remove('hidden');
+                    return false;
+                }
+                if (!startDate) {
+                    errMsgEl.textContent = 'Vui lòng nhập ngày bắt đầu bảo trì.';
+                    errEl.classList.remove('hidden');
+                    return false;
+                }
+                if (endDate && endDate <= startDate) {
+                    errMsgEl.textContent = 'Ngày kết thúc bảo trì phải sau ngày bắt đầu.';
+                    errEl.classList.remove('hidden');
+                    return false;
+                }
+            }
+
+            if (newStatus === 'unavailable') {
+                const reason = document.getElementById('unavailableReason').value;
+                if (!reason) {
+                    errMsgEl.textContent = 'Vui lòng chọn lý do tạm ngưng.';
+                    errEl.classList.remove('hidden');
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // ── Submit ─────────────────────────────────────────────────────────────
+        document.getElementById('btnUpdateCarStatus').addEventListener('click', () => {
+            const selected = document.querySelector('input[name="carStatus"]:checked');
+            if (!selected) {
+                document.getElementById('formErrorMsg').textContent = 'Vui lòng chọn trạng thái.';
+                document.getElementById('formError').classList.remove('hidden');
+                return;
+            }
+
+            if (!validate(selected.value)) return;
+
+            // Map unavailable to maintenance for API (UI-only concept)
+            const apiStatus = selected.value === 'unavailable' ? 'maintenance' : selected.value;
+
+            document.getElementById('confirmDesc').textContent =
+                `Đổi trạng thái sang: ${selected.value.toUpperCase()}`;
+            document.getElementById('modalConfirm').classList.remove('hidden');
+
+            document.getElementById('btnConfirmUpdate').onclick = async () => {
+                document.getElementById('modalConfirm').classList.add('hidden');
+                const btn = document.getElementById('btnUpdateCarStatus');
+                btn.disabled = true;
+                btn.textContent = 'Đang cập nhật...';
+
+                try {
+                    // PATCH /api/owner/cars/{id}/status
+                    const res = await fetch(`/api/proxy/owner/cars/${carId}/status`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ status: apiStatus })
+                    });
+
+                    if (!res.ok) {
+                        const err = await res.json().catch(() => ({}));
+                        throw new Error(err.message || 'Lỗi khi cập nhật trạng thái.');
+                    }
+
+                    showToast('Cập nhật trạng thái xe thành công!', 'success');
+                    currentStatus = selected.value;
+                    document.getElementById('currentStatusBadge').innerHTML = renderStatusBadge(currentStatus);
+                    loadStatusHistory();
+                } catch (e) {
+                    showToast(e.message, 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Cập nhật trạng thái';
+                }
+            };
+        });
+
+        // ── Init ───────────────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCarInfo();
+            loadStatusHistory();
+        });
+    </script>
+}

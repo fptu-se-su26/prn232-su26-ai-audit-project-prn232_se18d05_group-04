@@ -49,6 +49,7 @@ public class AppDbSeederHostedService(
         var admin     = await EnsureUser(db, "admin@vivucar.local",     "System Admin",       UserRole.Admin,     "0900000001", cancellationToken);
         var customer1 = await EnsureUser(db, "customer01@vivucar.local", "Nguyễn Văn An",     UserRole.Customer,  "0900000002", cancellationToken);
         var customer2 = await EnsureUser(db, "customer02@vivucar.local", "Trần Thị Bình",     UserRole.Customer,  "0900000003", cancellationToken);
+        var customer3 = await EnsureUser(db, "customer03@vivucar.local", "Khách hàng GPLX 03", UserRole.Customer,  "0900000004", cancellationToken);
         var owner1    = await EnsureUser(db, "owner01@vivucar.local",   "Lê Hoàng Nam",       UserRole.CarOwner,  "0900000006", cancellationToken);
         var owner2    = await EnsureUser(db, "owner02@vivucar.local",   "Đặng Hoàng Long",    UserRole.CarOwner,  "0900000007", cancellationToken);
 
@@ -140,6 +141,7 @@ public class AppDbSeederHostedService(
 
         // ── 4. Voucher ────────────────────────────────────────────────────────
         await EnsureVoucher(db, cancellationToken);
+        await EnsureModerationSamples(db, customer1, customer2, customer3, cancellationToken);
 
         // ── 5. Bookings & Payments & Incidents ────────────────────────────────
         logger.LogInformation("[Seeder] Seeding bookings...");
@@ -408,6 +410,59 @@ public class AppDbSeederHostedService(
                 UpdatedAt       = now.AddDays(-28)
             };
             db.Bookings.Add(b9);
+        }
+
+        // Booking 11: ReturnRequested (để test tính năng trả xe)
+        var code11 = "BK-RETRN-011";
+        var b11 = await db.Bookings.FirstOrDefaultAsync(b => b.BookingCode == code11, ct);
+        if (b11 == null)
+        {
+            var depositAmt11 = car2.DailyPrice * 3 * 0.3m;
+            b11 = new Booking
+            {
+                BookingCode   = code11,
+                CustomerId    = customer2.Id,
+                CarId         = car2.Id,
+                StartDateTime = now.AddDays(-3),
+                EndDateTime   = now.AddDays(1),
+                PickupLocation  = "Sân bay Đà Nẵng",
+                ReturnLocation  = "Sân bay Đà Nẵng",
+                BasePrice     = car2.DailyPrice * 4,
+                DepositAmount = depositAmt11,
+                TotalAmount   = car2.DailyPrice * 4,
+                RemainingAmount = car2.DailyPrice * 4 - depositAmt11,
+                Status        = BookingStatus.ReturnRequested,
+                CreatedAt     = now.AddDays(-4)
+            };
+            db.Bookings.Add(b11);
+        }
+
+        // Add 5 more ReturnRequested bookings for testing
+        for (int i = 12; i <= 16; i++)
+        {
+            var code = $"BK-RETRN-0{i}";
+            var b = await db.Bookings.FirstOrDefaultAsync(bk => bk.BookingCode == code, ct);
+            if (b == null)
+            {
+                var depositAmt = car2.DailyPrice * 3 * 0.3m;
+                b = new Booking
+                {
+                    BookingCode   = code,
+                    CustomerId    = customer2.Id,
+                    CarId         = car2.Id,
+                    StartDateTime = now.AddDays(-3),
+                    EndDateTime   = now.AddDays(1),
+                    PickupLocation  = "Sân bay Đà Nẵng",
+                    ReturnLocation  = "Sân bay Đà Nẵng",
+                    BasePrice     = car2.DailyPrice * 4,
+                    DepositAmount = depositAmt,
+                    TotalAmount   = car2.DailyPrice * 4,
+                    RemainingAmount = car2.DailyPrice * 4 - depositAmt,
+                    Status        = BookingStatus.ReturnRequested,
+                    CreatedAt     = now.AddDays(-4)
+                };
+                db.Bookings.Add(b);
+            }
         }
 
         await db.SaveChangesAsync(ct);
@@ -756,6 +811,64 @@ public class AppDbSeederHostedService(
             ExpiresAt      = DateTime.UtcNow.AddMonths(3),
             CreatedAt      = DateTime.UtcNow
         });
+        await db.SaveChangesAsync(ct);
+    }
+
+    private static async Task EnsureModerationSamples(
+        VivuCarDbContext db,
+        AppUser pendingCustomer,
+        AppUser approvedCustomer,
+        AppUser realImageCustomer,
+        CancellationToken ct)
+    {
+        if (!await db.DriverDocuments.AnyAsync(document => document.UserId == pendingCustomer.Id, ct))
+        {
+            db.DriverDocuments.Add(new DriverDocument
+            {
+                UserId = pendingCustomer.Id,
+                CitizenIdNumber = "048204009731",
+                CitizenIdFrontImageUrl = null,
+                CitizenIdBackImageUrl = null,
+                DriverLicenseNumber = "790204013579",
+                DriverLicenseFrontImageUrl = "/images/seed/gplx-front.svg",
+                DriverLicenseBackImageUrl = "/images/seed/gplx-back.svg",
+                VerificationStatus = DocumentVerificationStatus.Pending,
+                CreatedAt = DateTime.UtcNow.AddDays(-2)
+            });
+        }
+
+        if (!await db.DriverDocuments.AnyAsync(document => document.UserId == approvedCustomer.Id, ct))
+        {
+            db.DriverDocuments.Add(new DriverDocument
+            {
+                UserId = approvedCustomer.Id,
+                CitizenIdNumber = "048198006248",
+                CitizenIdFrontImageUrl = null,
+                CitizenIdBackImageUrl = null,
+                DriverLicenseNumber = "790198027461",
+                DriverLicenseFrontImageUrl = "/images/seed/gplx-front.svg",
+                DriverLicenseBackImageUrl = "/images/seed/gplx-back.svg",
+                VerificationStatus = DocumentVerificationStatus.Approved,
+                CreatedAt = DateTime.UtcNow.AddDays(-9),
+                UpdatedAt = DateTime.UtcNow.AddDays(-8)
+            });
+        }
+
+        if (!await db.DriverDocuments.AnyAsync(document => document.UserId == realImageCustomer.Id, ct))
+        {
+            db.DriverDocuments.Add(new DriverDocument
+            {
+                UserId = realImageCustomer.Id,
+                CitizenIdNumber = "SEED-CITIZEN-0003",
+                CitizenIdFrontImageUrl = null,
+                CitizenIdBackImageUrl = null,
+                DriverLicenseNumber = "SEED-GPLX-0003",
+                DriverLicenseFrontImageUrl = "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784713351/z8069770352586_6c9c3b59a42a3bc40256c0a4b3586883_gkacdr.jpg",
+                DriverLicenseBackImageUrl = null,
+                VerificationStatus = DocumentVerificationStatus.Pending,
+                CreatedAt = DateTime.UtcNow
+            });
+        }
         await db.SaveChangesAsync(ct);
     }
 }

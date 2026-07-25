@@ -175,6 +175,9 @@ public class ReturnInspectionRequest
     public string? Note { get; set; }
     public decimal ExtraFee { get; set; }
     public string NextCarStatus { get; set; } = "Available";
+    
+    // UI-only field. Not present in current DB schema. Requires migration before backend integration.
+    public List<string> ImageUrls { get; set; } = [];
 }
 
 // ─── Dashboard ────────────────────────────────────────────────────────────
@@ -205,6 +208,12 @@ public class OwnerIncidentFilter
     public int PageSize { get; set; } = 10;
 }
 
+public class OwnerIncidentImageResponse
+{
+    public string ImageUrl { get; set; } = string.Empty;
+    public string Caption { get; set; } = string.Empty;
+}
+
 public class OwnerIncidentResponse
 {
     public int Id { get; set; }
@@ -217,6 +226,9 @@ public class OwnerIncidentResponse
     public decimal? PenaltyAmount { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? ResolvedAt { get; set; }
+
+    // UI-only field. Not present in current DB schema. Requires migration before backend integration.
+    public List<OwnerIncidentImageResponse> Images { get; set; } = [];
 }
 
 // ─── Shared Types ─────────────────────────────────────────────────────────

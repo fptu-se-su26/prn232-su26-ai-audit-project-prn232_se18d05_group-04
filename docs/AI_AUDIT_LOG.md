@@ -1,4 +1,4 @@
-﻿# AI Audit Log
+# AI Audit Log
 
 ## 1. Thông tin chung
 
@@ -464,6 +464,59 @@ AI giải quyết dứt điểm các lỗi khó liên quan đến cơ chế cach
 
 ---
 
+### Lần sử dụng AI số 7: Hoàn thiện luồng Đặt xe (Booking), Tích hợp PayOS và Ký hợp đồng trực tuyến
+
+#### 7.1. Mô tả vấn đề hoặc yêu cầu
+
+```text
+Hoàn thiện luồng Booking từ bước tạo Request, kiểm tra điều kiện tài liệu GPLX, thanh toán cọc qua PayOS và cuối cùng là Ký hợp đồng chữ ký số (Canvas). Đồng thời yêu cầu tạo script Integration Test chạy qua API thật (không dùng trình duyệt tự động) để verify toàn bộ luồng.
+```
+
+#### 7.2. Các prompt đã sử dụng
+
+```text
+- giờ booking đang cấn ở chỗ lên lịch booking upload ảnh và điền các thông tin...
+- giờ có một chút thông tin luồng đi như sau: tạo request booking -> duyệt GPLX -> cọc PayOS -> ký hợp đồng.
+- test và debug cho tôi đi và ở chỗ booking...
+- test xem payos đã hoạt động cọc được chưa ở giao diện thanh toán cọc...
+- Task: Runtime Integration Test cho luồng Booking...
+```
+
+#### 7.3. Kết quả do AI sinh ra
+
+```text
+- Cập nhật logic Backend (BookingService): Tự động đặt trạng thái WaitingDeposit nếu tài liệu GPLX đã Approved.
+- Tích hợp tính năng ký hợp đồng bằng thẻ <canvas>, lưu URL chữ ký số.
+- Tạo endpoint API POST /contract/sign để lưu vết hợp đồng.
+- Tạo PowerShell script chạy Integration Test 10 bước qua các API thực tế của hệ thống.
+- Xử lý lỗi 400 Bad Request của PayOS bằng cách cắt độ dài chuỗi description tối đa 25 ký tự.
+```
+
+#### 7.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Sinh viên đối chiếu lại cấu trúc Database hiện tại để ánh xạ đúng DocumentVerificationStatus (Approved = 2), tự chạy các HTTP Request để bắt nguyên nhân lỗi PayOS 400 và rà soát lại các UI component.
+```
+
+#### 7.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | Chưa cập nhật |
+| File liên quan | `BookingService.cs`, `PaymentService.cs`, `Contract.cshtml`, `booking-contract.js`, `payment-deposit.js` |
+| Screenshot | Script test Runtime Pass 100% |
+| Kết quả chạy/test | Integration test (PowerShell script) chạy thành công toàn bộ flow tạo đơn -> PayOS -> ký hợp đồng |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
+
+#### 7.6. Nhận xét cá nhân/nhóm
+
+```text
+Việc sử dụng PowerShell script để mock API testing là phương pháp rất hiệu quả để kiểm tra các luồng nghiệp vụ dài mà không cần chờ tích hợp đầy đủ giao diện hoặc công cụ automation cồng kềnh. Tìm ra giới hạn 25 ký tự của PayOS nhờ phân tích response log chi tiết.
+```
+
+---
+
 ## 5. Bảng tổng hợp mức độ sử dụng AI
 
 Đánh dấu mức độ AI hỗ trợ ở từng hạng mục.
@@ -601,57 +654,3 @@ Sinh viên/nhóm cam kết rằng:
 | Đại diện sinh viên/nhóm | Ngày xác nhận |
 |---|---|
 |  |  |
- 
- - - -  
-  
- # # #   L � � � n   s � � �   d � � � n g   A I   s � �    7 :   H o � � n   t h i � � ! n   l u � �  n g   � � � � � t   x e   ( B o o k i n g ) ,   T � � c h   h � � � p   P a y O S   v � �   K � �   h � � � p   �  � �  n g   t r � � � c   t u y � � � n  
-  
- # # # #   7 . 1 .   M � �   t � � �   v � � � n   �  � � �   h o � � � c   y � � u   c � � � u  
-  
- ` ` ` t e x t  
- H o � � n   t h i � � ! n   l u � �  n g   B o o k i n g   t � � �   b � � � � : c   t � � � o   R e q u e s t ,   k i � � �m   t r a   �  i � � � u   k i � � ! n   t � � i   l i � � ! u   G P L X ,   t h a n h   t o � � n   c � � � c   q u a   P a y O S   v � �   c u � �  i   c � � n g   l � �   K � �   h � � � p   �  � �  n g   c h � � �   k � �   s � �    ( C a n v a s ) .   � � � �  n g   t h � � � i   y � � u   c � � � u   t � � � o   s c r i p t   I n t e g r a t i o n   T e s t   c h � � � y   q u a   A P I   t h � � � t   ( k h � � n g   d � � n g   t r � � n h   d u y � � ! t   t � � �   �  � � "!n g )   �  � � �  v e r i f y   t o � � n   b � � "!  l u � �  n g .  
- ` ` `  
-  
- # # # #   7 . 2 .   C � � c   p r o m p t   �  � �   s � � �   d � � � n g  
-  
- ` ` ` t e x t  
- -   g i � � �   b o o k i n g   �  a n g   c � � � n   � � x  c h � �    l � � n   l � � 9 c h   b o o k i n g   u p l o a d   � � � n h   v � �   �  i � � � n   c � � c   t h � � n g   t i n . . .  
- -   g i � � �   c � �   m � � "!t   c h � � t   t h � � n g   t i n   l u � �  n g   �  i   n h � �   s a u :   t � � � o   r e q u e s t   b o o k i n g   - >   d u y � � ! t   G P L X   - >   c � � � c   P a y O S   - >   k � �   h � � � p   �  � �  n g .  
- -   t e s t   v � �   d e b u g   c h o   t � � i   �  i   v � �   � � x  c h � �    b o o k i n g . . .  
- -   t e s t   x e m   p a y o s   �  � �   h o � � � t   �  � � "!n g   c � � � c   �  � � � � � c   c h � � a   � � x  g i a o   d i � � ! n   t h a n h   t o � � n   c � � � c . . .  
- -   T a s k :   R u n t i m e   I n t e g r a t i o n   T e s t   c h o   l u � �  n g   B o o k i n g . . .  
- ` ` `  
-  
- # # # #   7 . 3 .   K � � � t   q u � � �   d o   A I   s i n h   r a  
-  
- ` ` ` t e x t  
- -   C � � � p   n h � � � t   l o g i c   B a c k e n d   ( B o o k i n g S e r v i c e ) :   T � � �   �  � � "!n g   �  � � � t   t r � � � n g   t h � � i   W a i t i n g D e p o s i t   n � � � u   t � � i   l i � � ! u   G P L X   �  � �   A p p r o v e d .  
- -   T � � c h   h � � � p   t � � n h   n � �n g   k � �   h � � � p   �  � �  n g   b � � � n g   t h � � �   < c a n v a s > ,   l � � u   U R L   c h � � �   k � �   s � �  .  
- -   T � � � o   e n d p o i n t   A P I   P O S T   / c o n t r a c t / s i g n   �  � � �  l � � u   v � � � t   h � � � p   �  � �  n g .  
- -   T � � � o   P o w e r S h e l l   s c r i p t   c h � � � y   I n t e g r a t i o n   T e s t   1 0   b � � � � : c   q u a   c � � c   A P I   t h � � � c   t � � �   c � � � a   h � � !   t h � �  n g .  
- -   X � � �   l � �   l � �  i   4 0 0   B a d   R e q u e s t   c � � � a   P a y O S   b � � � n g   c � � c h   c � � � t   �  � � "!  d � � i   c h u � �  i   d e s c r i p t i o n   t � �  i   �  a   2 5   k � �   t � � � .  
- ` ` `  
-  
- # # # #   7 . 4 .   P h � � � n   s i n h   v i � � n / n h � � m   t � � �   c h � � 0 n h   s � � � a   h o � � � c   c � � � i   t i � � � n  
-  
- ` ` ` t e x t  
- S i n h   v i � � n   �  � �  i   c h i � � � u   l � � � i   c � � � u   t r � � c   D a t a b a s e   h i � � ! n   t � � � i   �  � � �  � � n h   x � � �   �  � � n g   D o c u m e n t V e r i f i c a t i o n S t a t u s   ( A p p r o v e d   =   2 ) ,   t � � �   c h � � � y   c � � c   H T T P   R e q u e s t   �  � � �  b � � � t   n g u y � � n   n h � � n   l � �  i   P a y O S   4 0 0   v � �   r � �   s o � � t   l � � � i   c � � c   U I   c o m p o n e n t .  
- ` ` `  
-  
- # # # #   7 . 5 .   M i n h   c h � � � n g  
-  
- |   L o � � � i   m i n h   c h � � � n g   |   N � � "!i   d u n g   |  
- | - - - | - - - |  
- |   L i n k   c o m m i t   |   C h � � a   c � � � p   n h � � � t   |  
- |   F i l e   l i � � n   q u a n   |   ` B o o k i n g S e r v i c e . c s ` ,   ` P a y m e n t S e r v i c e . c s ` ,   ` C o n t r a c t . c s h t m l ` ,   ` b o o k i n g - c o n t r a c t . j s ` ,   ` p a y m e n t - d e p o s i t . j s `   |  
- |   S c r e e n s h o t   |   S c r i p t   t e s t   R u n t i m e   P a s s   1 0 0 %   |  
- |   K � � � t   q u � � �   c h � � � y / t e s t   |   I n t e g r a t i o n   t e s t   ( P o w e r S h e l l   s c r i p t )   c h � � � y   t h � � n h   c � � n g   t o � � n   b � � "!  f l o w   t � � � o   �  � � n   - >   P a y O S   - >   k � �   h � � � p   �  � �  n g   |  
- |   L i n k   v i d e o   d e m o   |     |  
- |   G h i   c h � �   k h � � c   |   N g � � � � � i   t h � � � c   h i � � ! n :   N g � �   S � � �   G i � �   -   D E 1 8 0 1 1 7   |  
-  
- # # # #   7 . 6 .   N h � � � n   x � � t   c � �   n h � � n / n h � � m  
-  
- ` ` ` t e x t  
- V i � � ! c   s � � �   d � � � n g   P o w e r S h e l l   s c r i p t   �  � � �  m o c k   A P I   t e s t i n g   l � �   p h � � � � n g   p h � � p   r � � � t   h i � � ! u   q u � � �   �  � � �  k i � � �m   t r a   c � � c   l u � �  n g   n g h i � � ! p   v � � �   d � � i   m � �   k h � � n g   c � � � n   c h � � �   t � � c h   h � � � p   �  � � � y   �  � � �   g i a o   d i � � ! n   h o � � � c   c � � n g   c � � �   a u t o m a t i o n   c � �  n g   k � � � n h .   T � � m   r a   g i � � : i   h � � � n   2 5   k � �   t � � �   c � � � a   P a y O S   n h � � �   p h � � n   t � � c h   r e s p o n s e   l o g   c h i   t i � � � t .  
- ` ` `  
- 

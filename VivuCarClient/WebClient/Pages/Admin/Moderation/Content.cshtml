@@ -14,12 +14,36 @@
         </div>
 
         <section id="contentModerationSummary" class="summary-grid"></section>
-        <section id="contentModerationFilters" class="mb-5 flex gap-2 overflow-x-auto whitespace-nowrap"></section>
+        <section id="contentModerationFilters" class="toolbar toolbar-content-moderation" aria-label="Bộ lọc nội dung">
+          <label class="field" for="contentTypeFilter">
+            <span>Phân loại</span>
+            <select id="contentTypeFilter">
+              <option value="">Tất cả nội dung</option>
+              <option value="review">Đánh giá</option>
+              <option value="incident">Báo cáo sự cố</option>
+            </select>
+          </label>
+          <label class="field" for="contentDateFrom">
+            <span>Từ ngày</span>
+            <input id="contentDateFrom" type="date">
+          </label>
+          <label class="field" for="contentDateTo">
+            <span>Đến ngày</span>
+            <input id="contentDateTo" type="date">
+          </label>
+          <div class="field">
+            <span>Kết quả</span>
+            <strong id="contentFilterResult" class="filter-result-value" aria-live="polite">0 nội dung</strong>
+          </div>
+          <button class="btn btn-primary" id="btnFilterContent" type="button">Lọc</button>
+          <button class="btn btn-secondary" id="btnResetContentFilter" type="button">Đặt lại</button>
+        </section>
 
         <section class="panel">
           <div id="contentModerationEmpty" class="empty-state hidden">
-            <h3>Không có nội dung cần xử lý</h3>
-            <p>Các nội dung chờ duyệt hoặc bị báo cáo sẽ xuất hiện tại đây.</p>
+            <h3>Không có nội dung phù hợp</h3>
+            <p>Thử thay đổi phân loại hoặc khoảng thời gian.</p>
+            <button class="btn btn-secondary" id="btnResetEmptyContent" type="button">Đặt lại bộ lọc</button>
           </div>
           <div class="table-wrap">
             <table>

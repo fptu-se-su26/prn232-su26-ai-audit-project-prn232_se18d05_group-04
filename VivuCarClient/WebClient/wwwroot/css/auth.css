@@ -1,0 +1,350 @@
+/* ═══════════════════════════════════════════
+   VivuCar – Authentication page styles
+   Extracted from site.css + enhanced (ref Learnmate)
+   ═══════════════════════════════════════════ */
+
+:root {
+  /* Brand – green tones */
+  --vc-green-900: #174f35;
+  --vc-green-800: #1b5a3d;
+  --vc-green-700: #245b3e;
+  --vc-green-600: #2d6c4b;
+  --vc-green-500: #397254;
+  --vc-green-100: #d4e8dd;
+
+  /* Neutral */
+  --vc-gray-900: #1f2a24;
+  --vc-gray-700: #39483f;
+  --vc-gray-600: #526158;
+  --vc-gray-500: #647168;
+  --vc-gray-400: #748078;
+  --vc-gray-200: #bdc8c1;
+  --vc-gray-100: #d9dfda;
+  --vc-gray-50:  #e4e8e5;
+  --vc-bg:      #f4f6f3;
+
+  /* Surface */
+  --vc-surface:       #ffffff;
+  --vc-surface-border: var(--vc-gray-100);
+
+  /* Feedback */
+  --vc-error:        #a23939;
+  --vc-error-bg:     #fef2f2;
+  --vc-error-border: #f87171;
+  --vc-focus-ring:   rgba(57, 114, 84, 0.15);
+  --vc-focus-ring-error: rgba(162, 57, 57, 0.15);
+
+  /* Input */
+  --vc-input-bg:          #f8fafc;
+  --vc-input-border:      var(--vc-gray-200);
+  --vc-input-border-focus: var(--vc-green-500);
+
+  /* Radius */
+  --vc-radius-sm: 6px;
+  --vc-radius-md: 8px;
+}
+
+/* ── Layout ── */
+
+.auth-shell {
+  align-items: center;
+  display: grid;
+  gap: 72px;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 440px);
+  min-height: calc(100vh - 180px);
+  padding: 56px 0;
+}
+
+.auth-intro {
+  max-width: 640px;
+}
+
+/* ── Brand / intro ── */
+
+.brand-mark {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: var(--vc-radius-md);
+  color: var(--vc-green-900);
+  display: grid;
+  font-size: 1.75rem;
+  font-weight: 800;
+  height: 56px;
+  justify-content: center;
+  margin-bottom: 28px;
+  object-fit: contain;
+  width: 56px;
+}
+
+.eyebrow {
+  color: var(--vc-green-500);
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.auth-intro h1 {
+  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  margin-bottom: 24px;
+  max-width: 720px;
+}
+
+.auth-intro > p:last-child {
+  color: var(--vc-gray-600);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+/* ── Form panel ── */
+
+.auth-panel {
+  background: var(--vc-surface);
+  border: 1px solid var(--vc-surface-border);
+  border-radius: var(--vc-radius-md);
+  box-shadow: 0 18px 48px rgba(33, 55, 43, 0.08);
+  padding: 32px;
+}
+
+.auth-form,
+.session-view {
+  display: grid;
+  gap: 14px;
+}
+
+.auth-form h2,
+.session-view h2 {
+  font-size: 1.6rem;
+  margin: 0 0 10px;
+}
+
+/* ── Fields ── */
+
+.auth-form .auth-field {
+  display: grid;
+  gap: 4px;
+}
+
+.auth-form .label-row {
+  align-items: baseline;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.auth-form .label-row label {
+  margin-bottom: 0;
+}
+
+.auth-form .label-row a {
+  color: var(--vc-green-500);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.auth-form .label-row a:hover {
+  text-decoration: underline;
+}
+
+.auth-form label {
+  color: var(--vc-gray-700);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.auth-form .required {
+  color: var(--vc-error);
+  margin-left: 2px;
+}
+
+/* ── Inputs ── */
+
+.auth-form input {
+  background: var(--vc-input-bg);
+  border: 1px solid var(--vc-input-border);
+  border-radius: var(--vc-radius-sm);
+  min-height: 44px;
+  padding: 10px 12px;
+}
+
+.auth-form input:focus {
+  border-color: var(--vc-input-border-focus);
+  box-shadow: 0 0 0 3px var(--vc-focus-ring);
+  outline: 0;
+}
+
+.auth-form input.input-error {
+  background: var(--vc-error-bg);
+  border-color: var(--vc-error-border);
+}
+
+.auth-form input.input-error:focus {
+  border-color: var(--vc-error);
+  box-shadow: 0 0 0 3px var(--vc-focus-ring-error);
+}
+
+.auth-form .field-error {
+  color: var(--vc-error);
+  font-size: 0.8rem;
+  margin: 0;
+  min-height: 1.2em;
+}
+
+/* ── Password input wrapper + eye toggle ── */
+
+.auth-form .input-wrapper {
+  align-items: center;
+  display: flex;
+  position: relative;
+}
+
+.auth-form .input-wrapper input {
+  padding-right: 44px;
+  width: 100%;
+}
+
+.auth-form .eye-btn {
+  align-items: center;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: var(--vc-gray-500);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  min-height: 32px;
+  min-width: 32px;
+  padding: 6px;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.auth-form .eye-btn:hover {
+  color: var(--vc-gray-700);
+}
+
+.auth-form .eye-btn:focus-visible {
+  outline: 2px solid var(--vc-green-500);
+  outline-offset: 2px;
+}
+
+/* ── Buttons ── */
+
+.auth-form button,
+.session-view button {
+  border: 1px solid var(--vc-green-700);
+  border-radius: var(--vc-radius-sm);
+  min-height: 44px;
+  padding: 10px 16px;
+}
+
+.auth-form button {
+  background: var(--vc-green-700);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.auth-form button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.secondary-button {
+  background: #ffffff;
+  color: var(--vc-green-700);
+  font-weight: 700;
+}
+
+/* ── Loading spinner ── */
+
+.auth-form .btn-spinner {
+  animation: auth-spin 0.6s linear infinite;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  display: inline-block;
+  height: 16px;
+  margin-right: 8px;
+  vertical-align: middle;
+  width: 16px;
+}
+
+@keyframes auth-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Messages ── */
+
+.auth-message {
+  color: var(--vc-error);
+  margin: 0;
+  min-height: 21px;
+}
+
+/* ── Signup link ── */
+
+.auth-form .signup-text {
+  color: var(--vc-gray-600);
+  font-size: 0.875rem;
+  margin: 8px 0 0;
+  text-align: center;
+}
+
+.auth-form .signup-text a {
+  color: var(--vc-green-500);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-form .signup-text a:hover {
+  text-decoration: underline;
+}
+
+/* ── Session view (post-login) ── */
+
+.session-view dl {
+  margin: 8px 0 16px;
+}
+
+.session-view dl div {
+  border-bottom: 1px solid var(--vc-gray-50);
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 80px 1fr;
+  padding: 12px 0;
+}
+
+.session-view dt {
+  color: var(--vc-gray-500);
+  font-weight: 500;
+}
+
+.session-view dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 767px) {
+  .auth-shell {
+    gap: 36px;
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding: 36px 0 56px;
+  }
+
+  .auth-intro h1 {
+    font-size: 2.5rem;
+  }
+
+  .auth-panel {
+    padding: 24px;
+  }
+}

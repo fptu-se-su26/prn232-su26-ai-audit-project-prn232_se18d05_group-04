@@ -28,32 +28,32 @@ export async function getCars(params = {}) {
         if (value !== undefined && value !== null && value !== "") query.set(key, value);
     });
 
-    const payload = await fetchJson(`api/admin/cars${query.size ? `?${query}` : ""}`);
+    const payload = await fetchJson(`admin/cars${query.size ? `?${query}` : ""}`);
     return mapCarListResponse(payload);
 }
 
 export async function getCarById(id) {
-    const payload = await fetchJson(`api/admin/cars/${id}`);
+    const payload = await fetchJson(`admin/cars/${id}`);
     return mapCarResponse(payload);
 }
 
 export async function createCar(data) {
-    const payload = await sendJson("api/admin/cars", data);
+    const payload = await sendJson("admin/cars", data);
     return mapCarResponse(payload);
 }
 
 export async function updateCar(id, data) {
-    const payload = await sendJson(`api/admin/cars/${id}`, data, { method: "PUT" });
+    const payload = await sendJson(`admin/cars/${id}`, data, { method: "PUT" });
     return mapCarResponse(payload);
 }
 
 export async function blockCar(id, blocked_reason) {
-    const payload = await sendJson(`api/admin/cars/${id}/block`, { blocked_reason }, { method: "PATCH" });
+    const payload = await sendJson(`admin/cars/${id}/block`, { blocked_reason }, { method: "PATCH" });
     return mapCarResponse(payload);
 }
 
 export async function unblockCar(id, target_status = "available") {
-    const payload = await sendJson(`api/admin/cars/${id}/unblock`, { target_status }, { method: "PATCH" });
+    const payload = await sendJson(`admin/cars/${id}/unblock`, { target_status }, { method: "PATCH" });
     return mapCarResponse(payload);
 }
 
@@ -64,7 +64,7 @@ export async function uploadCarImages(id, files) {
     files.forEach(file => formData.append("files", file, file.name));
     formData.append("isPrimary", "false");
 
-    const response = await apiFetch(`api/admin/cars/${id}/images`, {
+    const response = await apiFetch(`admin/cars/${id}/images`, {
         method: "POST",
         body: formData
     });
@@ -73,15 +73,15 @@ export async function uploadCarImages(id, files) {
 }
 
 export async function getCarTypes() {
-    return fetchJson("api/car-types");
+    return fetchJson("car-types");
 }
 
 export async function getCarModels() {
-    return fetchJson("api/car-models");
+    return fetchJson("car-models");
 }
 
 export async function getCarOwners() {
-    const users = await fetchJson("api/admin/users?role=car_owner");
+    const users = await fetchJson("admin/users?role=car_owner");
     return users.map(user => ({
         id: user.id ?? user.Id,
         full_name: user.full_name ?? user.fullName ?? user.FullName ?? user.email ?? user.Email ?? "Owner",

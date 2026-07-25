@@ -1,0 +1,128 @@
+/* Register / Signup page styles
+   Depends on login.css being loaded first for shared auth layout & form styles.
+   Unified with admin design system: Be Vietnam Pro font, --auth-radius (8px), zinc palette. */
+
+/* ── Step animation ── */
+.lm-step-content { animation: lm-slide-fwd .25s ease both; }
+.lm-step-content--back { animation: lm-slide-back .25s ease both; }
+
+@keyframes lm-slide-fwd {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes lm-slide-back {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Stepper ── */
+.lm-stepper { position: relative; margin-bottom: 2rem; }
+
+.lm-stepper-track { position: relative; height: 2px; background: #d4d4d8; border-radius: 9999px; top: 10px; z-index: 0; }
+.lm-stepper-track-fill { height: 100%; background: #059669; border-radius: 9999px; transition: width .7s ease-in-out; }
+
+.lm-stepper-dots { display: flex; justify-content: space-between; position: relative; z-index: 1; }
+.lm-step-dot {
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 2px solid #a1a1aa; transition: all .3s ease; flex-shrink: 0;
+}
+.lm-step-dot--todo   { width: 14px; height: 14px; border-color: #a1a1aa; }
+.lm-step-dot--active { width: 20px; height: 20px; background: #0f172a; border-color: #0f172a; margin-top: -3px; }
+.lm-step-dot--done   { width: 16px; height: 16px; background: #059669; border-color: #059669; color: #fff; font-size: .6rem; font-weight: 700; margin-top: -1px; }
+
+.lm-step-labels { display: flex; justify-content: space-between; margin-top: .875rem; }
+.lm-step-label { font-size: .8125rem; max-width: 90px; line-height: 1.3; color: #a1a1aa; }
+.lm-step-label:first-child { text-align: left; }
+.lm-step-label:last-child  { text-align: right; }
+.lm-step-label--todo   { color: #a1a1aa; }
+.lm-step-label--active { color: #18181b; font-weight: 650; font-size: .875rem; }
+.lm-step-label--done   { color: #059669; font-weight: 600; }
+
+/* ── Buttons (rounded-full variants for register) ── */
+.lm-btn-next {
+  width: 100%; padding: .625rem 1.25rem; background: #0f172a; color: #fff;
+  border: none; border-radius: 9999px; font-size: 1rem; font-weight: 650;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: .5rem; transition: background .2s ease; min-height: 44px;
+  font-family: inherit;
+}
+.lm-btn-next:hover:not(:disabled) { background: #1e293b; }
+.lm-btn-next:disabled { background: #d4d4d8; cursor: not-allowed; }
+.lm-btn-next:focus-visible { outline: 3px solid rgba(37,99,235,.2); outline-offset: 2px; }
+
+.lm-btn-step-primary {
+  padding: .5rem 1.5rem; background: #0f172a; color: #fff; border: none;
+  border-radius: 9999px; font-size: .875rem; font-weight: 650;
+  cursor: pointer; display: flex; align-items: center; gap: .5rem;
+  transition: background .2s ease; min-height: 40px;
+  font-family: inherit;
+}
+.lm-btn-step-primary:hover:not(:disabled) { background: #1e293b; }
+.lm-btn-step-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+.lm-btn-step-back {
+  padding: .5rem 1.5rem; background: transparent; color: #3f3f46;
+  border: 1px solid #d4d4d8; border-radius: 9999px; font-size: .875rem; font-weight: 650;
+  cursor: pointer; display: flex; align-items: center; gap: .5rem;
+  transition: background .15s ease, border-color .15s ease; min-height: 40px;
+  font-family: inherit;
+}
+.lm-btn-step-back:hover { background: #f4f4f5; border-color: #a1a1aa; }
+
+.lm-step-nav { display: flex; gap: .75rem; margin-top: 1.5rem; }
+.lm-step-nav--end     { justify-content: flex-end; }
+.lm-step-nav--between { justify-content: space-between; }
+
+/* ── Date of birth field ── */
+.lm-dob-wrapper { position: relative; }
+.lm-dob-icon { position: absolute; left: 0; top: 50%; transform: translateY(-50%); color: #a1a1aa; pointer-events: none; z-index: 1; }
+.lm-dob-selects { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; padding-left: 2rem; }
+.lm-select {
+  width: 100%; padding: .5rem 2rem .5rem .625rem; background: #fff;
+  border: 1px solid #d4d4d8; border-radius: var(--auth-radius, 8px); font-size: .875rem; color: #18181b; font-weight: 400;
+  outline: none; transition: border-color .15s ease, box-shadow .15s ease; appearance: none; cursor: pointer;
+  font-family: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .625rem center;
+  background-size: 16px;
+}
+.lm-select:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,.12); outline: none; }
+.lm-select--placeholder { color: #a1a1aa; }
+.lm-hint { margin-top: .5rem; font-size: .75rem; color: #71717a; }
+
+/* ── Password strength ── */
+.lm-strength { margin-top: .75rem; }
+.lm-strength-header { display: flex; align-items: center; gap: .5rem; margin-bottom: .5rem; }
+.lm-strength-label { font-size: .8125rem; font-weight: 650; }
+.lm-strength--tooweak  { color: #f43f5e; }
+.lm-strength--weak     { color: #f97316; }
+.lm-strength--fair     { color: #eab308; }
+.lm-strength--strong   { color: #10b981; }
+.lm-strength--verystrong { color: #059669; }
+
+.lm-strength-bars { display: flex; gap: 4px; }
+.lm-strength-seg { flex: 1; height: 6px; border-radius: 9999px; background: #e4e4e7; transition: background .3s ease; }
+.lm-strength-seg--tooweak  { background: #f43f5e; }
+.lm-strength-seg--weak     { background: #f97316; }
+.lm-strength-seg--fair     { background: #eab308; }
+.lm-strength-seg--strong   { background: #10b981; }
+.lm-strength-seg--verystrong { background: #059669; }
+
+.lm-requirements { display: grid; grid-template-columns: 1fr 1fr; gap: .375rem .75rem; margin-top: .75rem; }
+.lm-req { display: flex; align-items: center; gap: .375rem; font-size: .8125rem; color: #a1a1aa; }
+.lm-req--pass { color: #059669; }
+
+/* ── OTP ── */
+.lm-otp-boxes { display: flex; gap: .625rem; justify-content: center; margin-top: .25rem; }
+.lm-otp-box {
+  width: 46px; height: 52px;
+  border: 1px solid #d4d4d8; border-radius: var(--auth-radius, 8px);
+  text-align: center; font-size: 1.375rem; font-weight: 650; color: #18181b;
+  background: #fff; outline: none; caret-color: transparent;
+  font-family: inherit;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.lm-otp-box:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,.12); outline: none; }
+.lm-otp-box--filled { border-color: #0f172a; background: #fff; }
+.lm-otp-hint { font-size: .875rem; color: #71717a; margin-top: .75rem; line-height: 1.5; }
