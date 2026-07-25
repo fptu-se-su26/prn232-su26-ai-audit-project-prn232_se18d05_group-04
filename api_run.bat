@@ -1,4 +1,6 @@
 @echo off
 cd /d "%~dp0VivuCarServer\API"
-start "" /b /wait dotnet run
-exit /b
+echo Starting VivuCar API...
+echo Press Ctrl+C to stop.
+powershell -NoLogo -Command "dotnet run"
+exit /b %ERRORLEVEL%

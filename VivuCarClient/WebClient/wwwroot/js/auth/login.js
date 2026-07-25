@@ -85,16 +85,15 @@
       });
       const result = await resp.json();
 
-      if (resp.ok && result.success) {
-        const d = result.data;
-        sessionStorage.setItem('vc_email', d.email || email);
-        sessionStorage.setItem('vc_role', d.role || 'user');
-        sessionStorage.setItem('vc_token', d.accessToken || d.token || '');
-        sessionStorage.setItem('vc_userid', d.userId || '');
-        if (d.fullName) sessionStorage.setItem('vc_fullname', d.fullName);
-        if (d.avatarUrl) sessionStorage.setItem('vc_avatar', d.avatarUrl);
+      if (resp.ok) {
+        const u = result.user || {};
+        sessionStorage.setItem('vc_email', u.email || email);
+        sessionStorage.setItem('vc_role', u.role || 'user');
+        sessionStorage.setItem('vc_token', result.accessToken || '');
+        sessionStorage.setItem('vc_userid', u.id || '');
+        if (u.fullName) sessionStorage.setItem('vc_fullname', u.fullName);
 
-        const role = (d.role || '').toLowerCase();
+        const role = (u.role || '').toLowerCase();
         const dest = role === 'admin' ? '/Admin/Dashboard'
           : role === 'car_owner' ? '/Owner/Dashboard'
           : '/';
@@ -198,16 +197,15 @@
       });
       const result = await resp.json();
 
-      if (resp.ok && result.success) {
-        const d = result.data;
-        sessionStorage.setItem('vc_email', d.email || selectedAccount.email);
-        sessionStorage.setItem('vc_role', d.role || 'user');
-        sessionStorage.setItem('vc_token', d.accessToken || d.token || '');
-        sessionStorage.setItem('vc_userid', d.userId || '');
-        if (d.fullName) sessionStorage.setItem('vc_fullname', d.fullName);
-        if (d.avatarUrl) sessionStorage.setItem('vc_avatar', d.avatarUrl);
+      if (resp.ok) {
+        const u = result.user || {};
+        sessionStorage.setItem('vc_email', u.email || selectedAccount.email);
+        sessionStorage.setItem('vc_role', u.role || 'user');
+        sessionStorage.setItem('vc_token', result.accessToken || '');
+        sessionStorage.setItem('vc_userid', u.id || '');
+        if (u.fullName) sessionStorage.setItem('vc_fullname', u.fullName);
 
-        const role = (d.role || '').toLowerCase();
+        const role = (u.role || '').toLowerCase();
         const dest = role === 'admin' ? '/Admin/Dashboard'
           : role === 'car_owner' ? '/Owner/Dashboard'
           : '/';
