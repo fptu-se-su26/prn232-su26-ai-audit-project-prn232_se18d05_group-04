@@ -9,7 +9,7 @@ builder.Services.AddControllers().AddVivuCarOData();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+        builder => builder.SetIsOriginAllowed(_ => true).AllowAnyMethod().AllowAnyHeader().AllowCredentials());
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -21,6 +21,8 @@ builder
     .AddVivuCarServices()
     .AddVivuCarRateLimiting()
     .AddVivuCarJwtAuthentication(builder.Configuration);
+
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -42,5 +44,6 @@ app.UseRateLimiter();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<API.Hubs.ChatHub>("/hubs/chat");
 
 app.Run();

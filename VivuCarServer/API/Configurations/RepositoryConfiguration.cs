@@ -15,7 +15,7 @@ public static class RepositoryConfiguration
         services.AddScoped<IAdminReportRepository, AdminReportRepository>();
         services.AddScoped<IAdminExportRepository, AdminExportRepository>();
         services.AddScoped<IReviewRepository, ReviewRepository>();
-
+        services.AddScoped<IChatRepository, ChatRepository>();
         return services;
     }
 }

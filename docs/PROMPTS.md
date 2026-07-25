@@ -650,3 +650,83 @@ Sinh viên/nhóm cam kết rằng:
 | Đại diện sinh viên/nhóm | Ngày xác nhận |
 |---|---|
 |  |  |
+
+---
+
+### Prompt số 5
+
+| Nội dung | Thông tin |
+|---|---|
+| Ngày sử dụng | 25/07/2026 |
+| Công cụ AI | Antigravity |
+| Mục đích | Tích hợp tính năng Chatbot AI WebSocket (Gemini) hỗ trợ khách hàng |
+| Phần việc liên quan | Coding / Debug / Design |
+| Mức độ sử dụng | Hỏi sinh code / Hỏi debug |
+
+#### 7.1. Prompt nguyên văn
+
+```text
+- Tôi muốn làm kiểu chatbot websocket đáp ứng các yêu cầu nãy giờ, gọi API về train data để câu trả lời phong phú, đảm bảo hiểu về hệ thống.
+- Dùng AI của Gemini, bạn tự biên soạn bộ luật cụ thể cho toàn hệ thống VivuCar, cả khi chưa đăng nhập và đã đăng nhập.
+- Chatbox chỉ hiển thị ở trang login còn vào trang khác không hiển thị. Báo lỗi CORS khi gọi SignalR.
+- Lỗi kết nối máy chủ AI, nhập câu hỏi bị lặp 2 lần, mất lịch sử chat khi logout/login lại, không phân giải được tài khoản (user_id null).
+```
+
+#### 7.2. Bối cảnh khi viết prompt
+
+```text
+Sau khi cấu hình API Key của Gemini, nhóm cần AI tích hợp chatbot vào toàn bộ hệ thống VivuCar bằng SignalR (WebSocket). Tuy nhiên, phát sinh các lỗi về CORS, JWT Token (claim mapping), và mất lịch sử chat do phân giải UserId sai cách. Cần AI hiểu sâu kiến trúc Auth để sửa.
+```
+
+#### 7.3. Kết quả AI trả về
+
+```text
+AI đã:
+- Cấu hình lại ChatHub.cs và Program.cs để bypass lỗi CORS và WebSocket.
+- Sinh GeminiClient.cs tích hợp Function Calling, tự định nghĩa schema cho get_cars và get_user_bookings.
+- Fix lỗi mapping ClaimTypes "sub" trong JWT để Controller nhận diện đúng người dùng đã đăng nhập.
+- Sửa lỗi State Management trong Javascript (chống lặp đôi tin nhắn, get đúng Token).
+- Cập nhật ChatService.cs load tin nhắn cũ để không mất lịch sử sau khi F5 hoặc Login.
+```
+
+#### 7.4. Kết quả đã áp dụng vào bài
+
+```text
+Áp dụng toàn bộ code Backend (Hub, Controller, Service, Gemini REST) và Frontend (chatbot.js, chat.css).
+```
+
+#### 7.5. Phần sinh viên/nhóm đã chỉnh sửa hoặc cải tiến
+
+```text
+Nhập API Key vào file .env, thử nghiệm kịch bản chat thực tế để kiểm tra Function Calling của AI.
+```
+
+#### 7.6. Đánh giá chất lượng prompt
+
+- [ x ] Prompt rõ ràng
+- [ x ] Prompt có đủ bối cảnh
+- [ ] Prompt còn thiếu thông tin
+- [ x ] Prompt tạo ra kết quả tốt
+- [ ] Prompt tạo ra kết quả chưa phù hợp
+- [ ] Cần hỏi lại AI nhiều lần
+- [ ] Cần tự kiểm tra và chỉnh sửa nhiều
+- [ ] Kết quả AI có lỗi hoặc chưa chính xác
+
+#### 7.7. Minh chứng liên quan
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | Chưa cập nhật |
+| File liên quan | `GeminiClient.cs`, `chatbot.js`, `ChatHub.cs`, `ChatService.cs` |
+| Screenshot | Đã chụp màn hình AI trả về đúng thông tin Booking |
+| Kết quả chạy/test | Chatbot trả lời thông minh, lưu lịch sử mượt mà |
+| Link tài liệu/báo cáo | `AI_AUDIT_LOG.md` |
+| Ghi chú khác | Người thực hiện: Nguyễn Lê Tiểu Long - DE191106 |
+
+#### 7.8. Ghi chú thêm
+
+```text
+Xử lý WebSocket kết hợp JWT Auth là một vấn đề phức tạp, AI đã làm rất tốt việc đồng bộ logic giữa C# và JS.
+```
+
+---

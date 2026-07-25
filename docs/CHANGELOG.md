@@ -40,8 +40,8 @@ Nguyên tắc ghi changelog:
 | Phase 01 | 01/06/2026 | Khởi tạo project | Completed |
 | Phase 02 | 05/06/2026 | Phân tích yêu cầu & Thiết kế DB | Completed |
 | Phase 03 | 06/06/2026 | Thiết kế hệ thống & API | Completed |
-| Phase 04 | 07/07/2026 | Implementation (Backend API + Frontend) | In Progress |
-| Phase 05 |  | Testing & Debug | Not Started |
+| Phase 04 | 07/07/2026 | Implementation (Backend API + Frontend) | Completed |
+| Phase 05 | 25/07/2026 | Testing & Debug Chatbot | Completed |
 | Phase 06 |  | Hoàn thiện báo cáo và demo | Not Started |
 
 ---
@@ -420,6 +420,7 @@ Viết tại đây...
 | 3 | Tích hợp Booking & Validation | Completed | Gọi thành công POST /api/bookings | Tự điền ảnh GPLX nếu có ở profile |
 | 4 | Thanh toán VNPay (Deposit) | Completed | Gọi POST /api/payments/deposit/create | Trả URL Redirect VNPay |
 | 5 | Quản lý Đơn của Khách | Completed | Xem được ds & chi tiết đơn | Fetch API thật |
+| 6 | AI Chatbot (Gemini) | Completed | Gọi thành công WebSocket và Function Calling | SignalR + REST API |
 
 ---
 

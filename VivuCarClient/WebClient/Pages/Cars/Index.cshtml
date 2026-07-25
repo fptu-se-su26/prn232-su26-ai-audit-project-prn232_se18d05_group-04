@@ -16,6 +16,7 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/chat.css" />
     <style>
         .car-card { transition: transform .2s, box-shadow .2s; }
         .car-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,.1); }
@@ -151,8 +152,8 @@
             if (u) {
                 document.getElementById('navUserName').textContent = u.fullName;
                 document.getElementById('navUserName').classList.remove('hidden');
-                document.getElementById('navLoginBtn').classList.add('hidden');
-                document.getElementById('navLogoutBtn').classList.remove('hidden');
+                document.getElementById('navGuestState')?.classList.add('hidden');
+                document.getElementById('navUserState')?.classList.remove('hidden');
             }
         });
         document.getElementById('navLogoutBtn').addEventListener('click', async () => {
@@ -278,5 +279,8 @@
         loadFeatured();
         loadAvailable();
     </script>
+    @await Html.PartialAsync("_ChatbotWidget")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script src="~/js/chatbot.js" asp-append-version="true"></script>
 </body>
 </html>

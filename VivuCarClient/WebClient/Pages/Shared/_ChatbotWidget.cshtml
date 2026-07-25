@@ -1,0 +1,40 @@
+<div id="chatbotFloatingButton" class="chatbot-floating-btn" onclick="VivuCarChatbot.toggleChat()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-circle"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+    <span>Hỗ trợ</span>
+    <span id="chatbotBadge" class="chatbot-badge" style="display: none;">0</span>
+</div>
+
+<div id="chatbotWindow" class="chatbot-window" style="display: none;">
+    <div class="chatbot-header">
+        <div>
+            <h5 class="m-0 text-white">VivuCar Assistant</h5>
+            <small class="text-white-50">Online</small>
+        </div>
+        <div>
+            <button id="btnMinimizeChatbot" class="chatbot-icon-btn" onclick="VivuCarChatbot.toggleChat()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minus"><path d="M5 12h14"/></svg>
+            </button>
+            <button id="btnCloseChatbot" class="chatbot-icon-btn" onclick="VivuCarChatbot.closeChat()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+        </div>
+    </div>
+    <div id="chatbotMessages" class="chatbot-messages">
+        <!-- Messages will be rendered here -->
+    </div>
+    
+    <div id="chatbotQuickReplies" class="chatbot-quick-replies">
+        <button class="quick-reply-btn" onclick="VivuCarChatbot.sendQuickReply('Tôi muốn tìm xe')">Tôi muốn tìm xe</button>
+        <button class="quick-reply-btn" onclick="VivuCarChatbot.sendQuickReply('Cách thanh toán tiền cọc')">Cách thanh toán tiền cọc</button>
+        <button class="quick-reply-btn" onclick="VivuCarChatbot.sendQuickReply('Tôi muốn hủy đơn')">Tôi muốn hủy đơn</button>
+        <button class="quick-reply-btn" onclick="VivuCarChatbot.sendQuickReply('Tôi cần trả xe')">Tôi cần trả xe</button>
+    </div>
+
+    <div class="chatbot-input-area">
+        <div class="input-group">
+            <input type="text" id="chatbotInput" class="form-control" placeholder="Nhập câu hỏi của bạn..." onkeypress="VivuCarChatbot.handleEnter(event)">
+            <button id="btnSendChatbotMessage" class="btn btn-primary" onclick="VivuCarChatbot.sendMessage()">Gửi</button>
+        </div>
+        <button id="btnEscalateToHuman" class="btn btn-outline-secondary w-100 mt-2" onclick="VivuCarChatbot.escalate()">Gặp người hỗ trợ</button>
+    </div>
+</div>
