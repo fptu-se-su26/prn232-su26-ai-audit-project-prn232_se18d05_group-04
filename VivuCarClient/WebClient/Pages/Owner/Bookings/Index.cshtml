@@ -273,12 +273,7 @@
         }
 
         function renderActions(b) {
-            const s = b.status?.toLowerCase();
             let html = `<a href="/Owner/Bookings/Detail?id=${b.id}" class="text-sm font-medium text-primary hover:underline">Chi tiết</a>`;
-            if (s === 'pendingapproval') {
-                html += ` <button onclick="openApproveModal(${b.id}, '${b.bookingCode}')" class="text-sm font-medium text-green-600 hover:underline">Duyệt</button>`;
-                html += ` <button onclick="openRejectModal(${b.id}, '${b.bookingCode}')" class="text-sm font-medium text-red-500 hover:underline">Từ chối</button>`;
-            }
             return html;
         }
 
