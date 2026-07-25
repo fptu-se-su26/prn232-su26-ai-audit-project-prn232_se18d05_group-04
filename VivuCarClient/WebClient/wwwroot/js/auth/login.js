@@ -93,10 +93,16 @@
         sessionStorage.setItem('vc_userid', u.id || '');
         if (u.fullName) sessionStorage.setItem('vc_fullname', u.fullName);
 
+        // Also persist to localStorage for auth-service.js (admin/owner layouts)
+        if (result.accessToken) {
+          localStorage.setItem('vivucar_token', result.accessToken);
+        }
+        localStorage.setItem('vivucar_token_exp', result.expiresAt || '');
+
         const role = (u.role || '').toLowerCase();
         const dest = role === 'admin' ? '/Admin/Dashboard'
           : role === 'car_owner' ? '/Owner/Dashboard'
-          : '/';
+          : '/home';
         window.location.href = dest;
       } else {
         globalError.textContent = result.message || 'Invalid email or password.';
@@ -205,10 +211,16 @@
         sessionStorage.setItem('vc_userid', u.id || '');
         if (u.fullName) sessionStorage.setItem('vc_fullname', u.fullName);
 
+        // Also persist to localStorage for auth-service.js (admin/owner layouts)
+        if (result.accessToken) {
+          localStorage.setItem('vivucar_token', result.accessToken);
+        }
+        localStorage.setItem('vivucar_token_exp', result.expiresAt || '');
+
         const role = (u.role || '').toLowerCase();
         const dest = role === 'admin' ? '/Admin/Dashboard'
           : role === 'car_owner' ? '/Owner/Dashboard'
-          : '/';
+          : '/home';
         window.location.href = dest;
       } else {
         modalPassError.textContent = result.message || 'Incorrect password.';

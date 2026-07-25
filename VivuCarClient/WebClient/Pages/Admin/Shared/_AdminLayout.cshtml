@@ -80,6 +80,10 @@
 <script>
     window.VivuCarTailwindUI?.applyTailwind(document);
     document.body.classList.remove("admin-is-booting");
+    // Suppress "Transition was skipped" — browser abort on navigation
+    window.addEventListener("unhandledrejection", e => {
+        if (e.reason?.name === "AbortError" || e.reason?.message?.includes("abort")) e.preventDefault();
+    });
 </script>
 <script type="module" src="~/js/admin/admin-layout.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required:false)

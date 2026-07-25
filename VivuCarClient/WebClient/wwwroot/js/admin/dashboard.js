@@ -516,7 +516,7 @@ async function load() {
         if (state.search) query.set("search", state.search);
         if (state.bookingStatus) query.set("bookingStatus", state.bookingStatus);
         if (state.paymentStatus) query.set("paymentStatus", state.paymentStatus);
-        const data = await fetchJson(`api/admin/reports/revenue?${query}`);
+        const data = await fetchJson(`admin/reports/revenue?${query}`);
         if (currentLoad !== loadSequence) return;
         state.page = data.pagination?.page || 1;
         renderSummary(data);

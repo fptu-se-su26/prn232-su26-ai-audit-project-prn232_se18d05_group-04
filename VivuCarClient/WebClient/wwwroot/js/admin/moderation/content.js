@@ -101,7 +101,7 @@ function viewContent(token) {
 async function load() {
     body.innerHTML = '<tr><td colspan="6" class="empty-cell">Đang tải dữ liệu kiểm duyệt...</td></tr>';
     try {
-        const data = await fetchJson("api/admin/moderation/content");
+        const data = await fetchJson("admin/moderation/content");
         items = Array.isArray(data) ? data : data.items ?? [];
         render();
     } catch (error) {

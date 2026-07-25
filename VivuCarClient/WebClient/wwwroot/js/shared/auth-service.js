@@ -141,6 +141,11 @@ async function getValidSession() {
     return refresh();
 }
 
+/** Dummy Response for navigation-aborted fetches — .ok = false, .status = 0. */
+function cancelledResponse() {
+    return { ok: false, status: 0, statusText: "Cancelled", headers: new Headers(), redirected: false, type: "basic", url: "", json: () => Promise.reject("aborted"), text: () => Promise.resolve(""), blob: () => Promise.reject("aborted"), arrayBuffer: () => Promise.reject("aborted"), clone() { return this; } };
+}
+
 async function apiFetch(path, options = {}, allowRefresh = true) {
     restoreSessionFromStorage();
 
@@ -156,11 +161,20 @@ async function apiFetch(path, options = {}, allowRefresh = true) {
         headers.delete("Content-Type");
     }
 
-    const response = await fetch(`/api/proxy/${path.replace(/^\/+/, "")}`, {
-        ...options,
-        headers,
-        credentials: "same-origin"
-    });
+    let response;
+    try {
+        response = await fetch(`/api/proxy/${path.replace(/^\/+/, "")}`, {
+            ...options,
+            headers,
+            credentials: "same-origin"
+        });
+    } catch (err) {
+        // Navigation aborts in-flight fetches (AbortError / TypeError).
+        // Return cancelled response so callers don't crash on .ok / .status.
+        if (err instanceof DOMException && err.name === "AbortError") return cancelledResponse();
+        if (err instanceof TypeError && err.message?.includes("abort")) return cancelledResponse();
+        throw err;
+    }
 
     // FormData streams cannot be replayed after a 401 refresh retry.
     if (response.status !== 401 || !allowRefresh || isFormData) {

@@ -192,7 +192,7 @@ function toggleProfileSummary() {
 
 async function verifyAdminSession() {
     try {
-        const response = await authService.apiFetch("api/auth/me");
+        const response = await authService.apiFetch("auth/me");
         if (!response.ok) return null;
         const user = await response.json();
         return String(user?.role || "").toLowerCase() === "admin" ? user : null;

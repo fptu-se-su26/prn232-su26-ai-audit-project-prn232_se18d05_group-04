@@ -155,7 +155,7 @@ async function scanLicenseOcr() {
     button.disabled = true;
     button.textContent = "Đang quét OCR...";
     try {
-        item.ocr = await fetchJson("api/admin/moderation/licenses/" + item.id + "/ocr", { method: "POST" });
+        item.ocr = await fetchJson("admin/moderation/licenses/" + item.id + "/ocr", { method: "POST" });
         if (activeLicenseId === item.id) renderLicenseOcr(item);
         showToast("Đã quét OCR. Hãy đối chiếu lại với ảnh gốc.", "success");
     } catch (error) {
@@ -176,7 +176,7 @@ async function updateStatus(id, action) {
     if (!window.confirm("Xác nhận " + label + " cho GPLX này?")) return;
     setReviewButtonsDisabled(true);
     try {
-        await fetchJson("api/admin/moderation/licenses/" + id + "/" + action, { method: "PATCH" });
+        await fetchJson("admin/moderation/licenses/" + id + "/" + action, { method: "PATCH" });
         showToast(action === "approve" ? "Đã duyệt GPLX." : "Đã từ chối GPLX.", "success");
         closeModal("licenseDetailModal");
         await load();
@@ -203,7 +203,7 @@ async function copyLicenseValue(button) {
 async function load() {
     body.innerHTML = '<tr><td colspan="6" class="empty-cell">Đang tải hồ sơ GPLX...</td></tr>';
     try {
-        const data = await fetchJson("api/admin/moderation/licenses");
+        const data = await fetchJson("admin/moderation/licenses");
         items = Array.isArray(data) ? data : data.items ?? [];
         render();
     } catch (error) {
