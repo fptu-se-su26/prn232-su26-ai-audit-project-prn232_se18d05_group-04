@@ -106,7 +106,7 @@ async function restoreCustomer(userId, button) {
 
   try {
     const response = await apiFetch(
-      `api/admin/trash/users/${userId}/restore`,
+      `admin/trash/users/${userId}/restore`,
       { method: "PATCH" }
     );
     await ensureSuccess(response);
