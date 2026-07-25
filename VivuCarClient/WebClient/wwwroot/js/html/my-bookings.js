@@ -128,7 +128,7 @@ import { authService } from '/js/shared/auth-service.js';
   function card({ booking, ui }) {
     const payment = paymentStatuses[booking.id];
     const paid = payment?.paymentStatus === "success";
-    const canCancel = booking.status === "pending" || booking.status === "approved";
+    const canCancel = booking.status === "pending" && !paid;
     
     return `
       <article class="booking-card-wide">

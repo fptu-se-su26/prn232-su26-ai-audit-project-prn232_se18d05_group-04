@@ -80,7 +80,7 @@ import { authService } from '/js/shared/auth-service.js';
     ]);
     
     const paid = paymentStatus?.paymentStatus === 'success';
-    const canCancel = booking.status === "pending" || booking.status === "approved";
+    const canCancel = booking.status === "pending" && !paid;
     
     root.innerHTML = `
       <div class="detail-document">
@@ -121,6 +121,7 @@ import { authService } from '/js/shared/auth-service.js';
           <div class="booking-actions mt-3.5">
             ${booking.status === "pending" && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán cọc</a>` : ""}
             ${canCancel ? `<button class="btn btn-danger btn-sm" type="button" id="cancelBookingBtn">Hủy đơn</button>` : ""}
+            ${booking.contractPdfUrl && !booking.contractPdfUrl.includes('sig=') ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
             ${booking.contractPdfUrl ? `<a class="btn btn-secondary btn-sm" href="${booking.contractPdfUrl}" target="_blank">Xem hợp đồng</a>` : ""}
             ${booking.status === "completed" ? `<a class="btn btn-ghost btn-sm" href="/Review/Create?bookingId=${booking.id}">Đánh giá sau chuyến</a>` : ""}
           </div>

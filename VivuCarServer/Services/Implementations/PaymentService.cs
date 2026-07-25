@@ -67,7 +67,7 @@ public class PaymentService(IBookingRepository bookingRepository, global::Net.pa
         var paymentData = new global::Net.payOS.Types.PaymentData(
             orderCode: orderCode,
             amount: (int)booking.DepositAmount,
-            description: $"Coc VivuCar {booking.BookingCode}",
+            description: $"Coc {booking.BookingCode}".Substring(0, Math.Min($"Coc {booking.BookingCode}".Length, 25)),
             items: new List<global::Net.payOS.Types.ItemData>(),
             cancelUrl: backendCallbackCancel,
             returnUrl: backendCallbackSuccess

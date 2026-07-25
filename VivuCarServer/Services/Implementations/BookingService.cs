@@ -66,8 +66,8 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         }
 
         var weekdayPrice = car.DailyPrice;
-        // Weekend price is weekday price + 20% surcharge
-        var weekendPrice = Math.Round(car.DailyPrice * 1.2m, 0);
+        // Weekend price is equal to weekday price
+        var weekendPrice = car.DailyPrice;
 
         var weekdayCost = weekdayCount * weekdayPrice;
         var weekendCost = weekendCount * weekendPrice;
@@ -109,7 +109,7 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         }
 
         var totalAmount = basePrice + insuranceFee + deliveryFee - discountAmount;
-        var depositAmount = totalAmount < 3000000m ? Math.Round(totalAmount * 0.1m, 0) : 500000m;
+        var depositAmount = Math.Round(totalAmount * 0.1m, 0);
         var remainingAmount = totalAmount - depositAmount;
 
         return new PricePreviewResponse
@@ -176,6 +176,9 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
                 await bookingRepository.AddDriverDocumentAsync(currentDoc, cancellationToken);
             }
 
+            var isVerified = currentDoc.VerificationStatus == DocumentVerificationStatus.Approved;
+            var initialStatus = isVerified ? BookingStatus.WaitingDeposit : BookingStatus.PendingApproval;
+
             // Create Booking object
             var booking = new Booking
             {
@@ -193,7 +196,7 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
                 DepositAmount = pricing.DepositAmount,
                 TotalAmount = pricing.TotalAmount,
                 RemainingAmount = pricing.RemainingAmount,
-                Status = BookingStatus.PendingApproval,
+                Status = initialStatus,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -223,13 +226,27 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
                 };
             }
 
+            // Create Calendar Block
+            var blockReason = isVerified ? $"Soft-lock 15m for Booking {booking.BookingCode}" : $"Pending Admin GPLX Approval for Booking {booking.BookingCode}";
+            var block = new CarAvailabilityBlock
+            {
+                CarId = booking.CarId,
+                StartDateTime = booking.StartDateTime,
+                EndDateTime = booking.EndDateTime,
+                Reason = blockReason,
+                // We don't have booking.Id yet, it will be mapped after AddAsync and SaveChanges,
+                // but EF Core can handle navigation property if we do booking.AvailabilityBlocks.Add
+            };
+            booking.AvailabilityBlocks.Add(block);
+
             // Track Status History
+            var note = isVerified ? "Auto-approved (GPLX verified). Soft-lock created for 15 minutes." : "Booking created by customer. Waiting for Admin to verify GPLX.";
             booking.StatusHistories.Add(new BookingStatusHistory
             {
-                OldStatus = BookingStatus.PendingApproval,
-                NewStatus = BookingStatus.PendingApproval,
+                OldStatus = BookingStatus.PendingApproval, // Virtual initial state
+                NewStatus = initialStatus,
                 ChangedByUserId = customerId,
-                Note = "Booking created by customer.",
+                Note = note,
                 CreatedAt = DateTime.UtcNow
             });
 
@@ -291,10 +308,10 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             throw new UnauthorizedAccessException("Unauthorized access to booking.");
         }
 
-        // Validation of status
-        if (booking.Status == BookingStatus.InProgress || booking.Status == BookingStatus.Completed || booking.Status == BookingStatus.Cancelled || booking.Status == BookingStatus.Expired)
+        // Validation of status: Only allow cancellation if deposit has not been paid
+        if (booking.Status != BookingStatus.PendingApproval && booking.Status != BookingStatus.WaitingDeposit)
         {
-            throw new InvalidOperationException($"Cannot cancel booking in status {booking.Status}.");
+            throw new InvalidOperationException($"Không thể hủy đơn thuê ở trạng thái {booking.Status}. Chỉ hỗ trợ hủy khi chưa thanh toán cọc.");
         }
 
         using var transaction = await bookingRepository.BeginTransactionAsync(cancellationToken);
@@ -332,13 +349,8 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
                 }
             }
 
-            // Calculate refund (in simulation, we'll refund the deposit if it was paid)
+            // Calculate refund (no refund since cancellation is only allowed before deposit)
             var refundAmount = 0m;
-            // If it was waiting pickup (deposit paid), simulate full or partial refund
-            if (oldStatus == BookingStatus.WaitingPickup)
-            {
-                refundAmount = booking.DepositAmount;
-            }
 
             // Restore voucher usage count
             if (booking.BookingVoucher != null)
@@ -496,6 +508,29 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
 
         return MapToDetailResponse(booking);
     }
+
+    public async Task<bool> UpdateContractSignatureAsync(int customerId, int bookingId, string signatureUrl, CancellationToken cancellationToken = default)
+    {
+        var booking = await bookingRepository.GetByIdAsync(bookingId, cancellationToken);
+        if (booking == null) return false;
+
+        if (booking.CustomerId != customerId && booking.Car.OwnerId != customerId)
+        {
+            return false;
+        }
+
+        if (booking.RentalContract == null)
+        {
+            return false;
+        }
+
+        var sep = booking.RentalContract.PdfUrl.Contains('?') ? "&" : "?";
+        booking.RentalContract.PdfUrl = $"{booking.RentalContract.PdfUrl}{sep}sig={Uri.EscapeDataString(signatureUrl)}";
+        
+        await bookingRepository.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
 
     private BookingDetailResponse MapToDetailResponse(Booking b)
     {

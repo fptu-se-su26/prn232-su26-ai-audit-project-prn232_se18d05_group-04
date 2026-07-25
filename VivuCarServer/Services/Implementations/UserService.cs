@@ -94,8 +94,8 @@ public class UserService(VivuCarDbContext dbContext) : IUserService
         }
 
         document.CitizenIdNumber = request.CitizenIdNumber;
-        document.CitizenIdFrontImageUrl = request.CitizenIdFrontImageUrl;
-        document.CitizenIdBackImageUrl = request.CitizenIdBackImageUrl;
+        if (request.CitizenIdFrontImageUrl != null) document.CitizenIdFrontImageUrl = request.CitizenIdFrontImageUrl;
+        if (request.CitizenIdBackImageUrl != null) document.CitizenIdBackImageUrl = request.CitizenIdBackImageUrl;
         document.DriverLicenseNumber = request.DriverLicenseNumber;
         document.DriverLicenseFrontImageUrl = request.DriverLicenseFrontImageUrl;
         document.DriverLicenseBackImageUrl = request.DriverLicenseBackImageUrl;

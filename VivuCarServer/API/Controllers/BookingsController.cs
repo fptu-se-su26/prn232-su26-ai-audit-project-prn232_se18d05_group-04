@@ -173,7 +173,7 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
     }
 
     [HttpGet("{id:int}/contract/pdf")]
-    public async Task<IActionResult> GetContractPdf(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetContractPdf(int id, [FromQuery] string? sig, CancellationToken cancellationToken)
     {
         var customerId = GetCurrentUserId();
         var contract = await bookingService.GetContractAsync(customerId, id, cancellationToken);
@@ -270,7 +270,7 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         <div class='signature-box'>
             <strong>ĐẠI DIỆN BÊN B</strong><br/>
             (Ký và ghi rõ họ tên)
-            <div class='signature-line'></div>
+            {(string.IsNullOrEmpty(sig) ? "<div class='signature-line'></div>" : $"<div style='margin-top:20px;'><img src='{sig}' style='max-width:200px; max-height:100px;'/></div>")}
         </div>
     </div>
     
@@ -282,6 +282,32 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
 </html>
 ";
         return Content(htmlContent, "text/html");
+    }
+
+    public class SignContractRequest
+    {
+        public string SignatureUrl { get; set; } = string.Empty;
+    }
+
+    [HttpPost("{id:int}/contract/sign")]
+    public async Task<IActionResult> SignContract(int id, [FromBody] SignContractRequest request, CancellationToken cancellationToken)
+    {
+        var customerId = GetCurrentUserId();
+        var contract = await bookingService.GetContractAsync(customerId, id, cancellationToken);
+        if (contract == null) return NotFound(new { message = "Booking contract not found or access denied." });
+
+        if (string.IsNullOrWhiteSpace(request.SignatureUrl))
+        {
+            return BadRequest(new { message = "SignatureUrl is required." });
+        }
+
+        var success = await bookingService.UpdateContractSignatureAsync(customerId, id, request.SignatureUrl, cancellationToken);
+        if (!success)
+        {
+            return BadRequest(new { message = "Failed to update contract signature. Make sure the contract exists and you have permission." });
+        }
+
+        return Ok(new { message = "Signature saved successfully.", signatureUrl = request.SignatureUrl });
     }
 }
 

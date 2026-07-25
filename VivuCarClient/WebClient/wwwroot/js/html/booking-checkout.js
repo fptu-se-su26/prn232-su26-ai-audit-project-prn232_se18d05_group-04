@@ -47,6 +47,19 @@ import { authService } from '/js/shared/auth-service.js';
     return;
   }
 
+  // Fetch real profile and docs
+  let userProfile = currentUser;
+  let driverDoc = null;
+  try {
+    const pRes = await authService.apiFetch('users/profile');
+    if (pRes.ok) userProfile = await pRes.json();
+
+    const dRes = await authService.apiFetch('driver-documents/my');
+    if (dRes.ok) driverDoc = await dRes.json();
+  } catch (e) {
+    console.warn("Could not load real profile or docs", e);
+  }
+
   // Update header to show logged-in user (since layout.js uses mock auth, we patch it here)
   function patchHeaderForRealAuth(user) {
     // Use the exposed layout function if available
@@ -66,9 +79,9 @@ import { authService } from '/js/shared/auth-service.js';
     }
   }
   // Wait for layout.js to finish rendering, then patch
-  requestAnimationFrame(() => patchHeaderForRealAuth(currentUser));
+  requestAnimationFrame(() => patchHeaderForRealAuth(userProfile));
   // Also patch after a short delay in case layout is async
-  setTimeout(() => patchHeaderForRealAuth(currentUser), 300);
+  setTimeout(() => patchHeaderForRealAuth(userProfile), 300);
 
   if (!carId) {
     root.innerHTML = `<div style="text-align:center;padding:48px;color:#6b7280"><h2>Không tìm thấy xe</h2><a href="/cars/search" style="color:#16a34a">← Tìm xe khác</a></div>`;
@@ -107,10 +120,6 @@ import { authService } from '/js/shared/auth-service.js';
   const urlPickup  = formatUrlDate(rawPickup, '08:00') || toDatetimeLocal(tomorrow);
   const urlReturn  = formatUrlDate(rawReturn, '18:00') || toDatetimeLocal(afterTwo);
 
-  const DB = window.VivuCarDB;
-  const docFront = DB?.user_documents?.find(d => d.user_id === currentUser.id && d.document_type === 'license_front');
-  const docBack = DB?.user_documents?.find(d => d.user_id === currentUser.id && d.document_type === 'license_back');
-
   // ── 4. Render form ────────────────────────────────────────────────────────
   const primaryImg = car.images?.find(i => i.isPrimary)?.imageUrl || car.images?.[0]?.imageUrl || '';
 
@@ -137,27 +146,27 @@ import { authService } from '/js/shared/auth-service.js';
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
               Họ tên
-              <input id="driverName" value="${currentUser.fullName || ''}" required
+              <input id="driverName" value="${userProfile?.fullName || ''}" required
                 style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
             </label>
             <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
               Email
-              <input value="${currentUser.email || ''}" disabled
+              <input value="${userProfile?.email || ''}" disabled
                 style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#6b7280;background:#f9fafb;outline:none">
             </label>
             <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
               Số điện thoại
-              <input id="driverPhone" type="tel" required placeholder="09xxxx"
+              <input id="driverPhone" type="tel" value="${userProfile?.phoneNumber || ''}" required placeholder="09xxxx"
                 style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
             </label>
             <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
               Số CCCD/CMND
-              <input id="driverNationalId" type="text" required placeholder="12 số"
+              <input id="driverNationalId" type="text" value="${driverDoc?.citizenIdNumber || ''}" required placeholder="12 số"
                 style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
             </label>
             <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151;grid-column:1/-1">
               Số giấy phép lái xe
-              <input id="driverLicense" type="text" required placeholder="Số GPLX"
+              <input id="driverLicense" type="text" value="${driverDoc?.driverLicenseNumber || ''}" required placeholder="Số GPLX"
                 style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
             </label>
             <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151;grid-column:1/-1">
@@ -170,18 +179,43 @@ import { authService } from '/js/shared/auth-service.js';
 
         <!-- GPLX Upload -->
         <div style="background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:20px">
-          <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0 0 16px">Giấy phép lái xe (GPLX)</h2>
-          <p style="font-size:.875rem;color:#6b7280;margin:0 0 16px">Để rút ngắn thời gian bàn giao xe, bạn có thể tải lên ảnh GPLX ngay bây giờ.</p>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-            <div>
-              <p style="font-size:.875rem;font-weight:600;color:#374151;margin:0 0 8px">Mặt trước</p>
-              ${docFront ? `<img src="${docFront.file_url}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid #e6e4df">` : `<input id="licenseFrontInput" type="file" accept="image/*" style="width:100%;font-size:.875rem">`}
-            </div>
-            <div>
-              <p style="font-size:.875rem;font-weight:600;color:#374151;margin:0 0 8px">Mặt sau</p>
-              ${docBack ? `<img src="${docBack.file_url}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid #e6e4df">` : `<input id="licenseBackInput" type="file" accept="image/*" style="width:100%;font-size:.875rem">`}
-            </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0">Giấy phép lái xe (GPLX)</h2>
+            ${driverDoc?.verificationStatus === 'Approved' || driverDoc?.verificationStatus === 2 ? `<span style="background:#dcfce7;color:#16a34a;padding:4px 8px;border-radius:4px;font-size:.75rem;font-weight:700">Đã xác thực</span>` : 
+              driverDoc?.verificationStatus === 'Pending' || driverDoc?.verificationStatus === 1 ? `<span style="background:#fef9c3;color:#ca8a04;padding:4px 8px;border-radius:4px;font-size:.75rem;font-weight:700">Đang chờ duyệt</span>` : 
+              `<span style="background:#f3f4f6;color:#6b7280;padding:4px 8px;border-radius:4px;font-size:.75rem;font-weight:700">Chưa xác thực</span>`}
           </div>
+          ${driverDoc?.verificationStatus === 'Approved' || driverDoc?.verificationStatus === 2 ? `
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;padding:12px;border-radius:8px;color:#15803d;font-size:.875rem;font-weight:500">
+              GPLX của bạn đã được xác thực thành công. Bạn có thể tiến hành đặt cọc ngay mà không cần chờ Chủ xe duyệt!
+            </div>
+          ` : driverDoc?.verificationStatus === 'Pending' || driverDoc?.verificationStatus === 1 ? `
+            <div style="background:#fefce8;border:1px solid #fef08a;padding:12px;border-radius:8px;color:#854d0e;font-size:.875rem;font-weight:500;margin-bottom:16px">
+              Hệ thống đang duyệt GPLX của bạn. Trong thời gian này, xe sẽ được khóa tạm thời khi bạn đặt.
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;opacity:0.6;pointer-events:none">
+              <div>
+                <p style="font-size:.875rem;font-weight:600;color:#374151;margin:0 0 8px">Mặt trước</p>
+                ${driverDoc?.driverLicenseFrontImageUrl ? `<img src="${driverDoc.driverLicenseFrontImageUrl}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid #e6e4df">` : `<div style="width:100%;height:120px;background:#f3f4f6;border-radius:8px;border:1px solid #e6e4df"></div>`}
+              </div>
+              <div>
+                <p style="font-size:.875rem;font-weight:600;color:#374151;margin:0 0 8px">Mặt sau</p>
+                ${driverDoc?.driverLicenseBackImageUrl ? `<img src="${driverDoc.driverLicenseBackImageUrl}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid #e6e4df">` : `<div style="width:100%;height:120px;background:#f3f4f6;border-radius:8px;border:1px solid #e6e4df"></div>`}
+              </div>
+            </div>
+          ` : `
+            <p style="font-size:.875rem;color:#6b7280;margin:0 0 16px">Để rút ngắn thời gian bàn giao xe, bạn có thể tải lên ảnh GPLX ngay bây giờ.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div>
+                <p style="font-size:.875rem;font-weight:600;color:#374151;margin:0 0 8px">Mặt trước</p>
+                ${driverDoc?.driverLicenseFrontImageUrl ? `<img src="${driverDoc.driverLicenseFrontImageUrl}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid #e6e4df">` : `<input id="licenseFrontInput" type="file" accept="image/*" style="width:100%;font-size:.875rem">`}
+              </div>
+              <div>
+                <p style="font-size:.875rem;font-weight:600;color:#374151;margin:0 0 8px">Mặt sau</p>
+                ${driverDoc?.driverLicenseBackImageUrl ? `<img src="${driverDoc.driverLicenseBackImageUrl}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid #e6e4df">` : `<input id="licenseBackInput" type="file" accept="image/*" style="width:100%;font-size:.875rem">`}
+              </div>
+            </div>
+          `}
         </div>
 
         <!-- Submit -->
@@ -201,12 +235,12 @@ import { authService } from '/js/shared/auth-service.js';
           <div style="display:flex;flex-direction:column;gap:12px">
             <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
               Thời gian nhận xe
-              <input id="pickupDatetime" name="pickup_datetime" type="datetime-local" value="${urlPickup}" required
+              <input id="pickupDatetime" name="pickup_datetime" type="text" value="${urlPickup}" required placeholder="Chọn thời gian"
                 style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
             </label>
             <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
               Thời gian trả xe
-              <input id="returnDatetime" name="return_datetime" type="datetime-local" value="${urlReturn}" required
+              <input id="returnDatetime" name="return_datetime" type="text" value="${urlReturn}" required placeholder="Chọn thời gian"
                 style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
             </label>
             <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
@@ -230,11 +264,49 @@ import { authService } from '/js/shared/auth-service.js';
     </form>`;
 
   // ── 5. Bind events ────────────────────────────────────────────────────────
-  const pickupEl  = document.getElementById('pickupDatetime');
-  const returnEl  = document.getElementById('returnDatetime');
   const noteEl    = document.getElementById('availabilityNote');
   const summaryEl = document.getElementById('summaryCard');
   const form      = document.getElementById('checkoutForm');
+
+  const fpConfig = {
+    enableTime: true,
+    dateFormat: "Y-m-d\\TH:i",
+    altInput: true,
+    altFormat: "d/m/Y H:i",
+    time_24hr: true,
+    minDate: "today",
+    minuteIncrement: 30,
+    minTime: "07:00",
+    maxTime: "22:00",
+    locale: "vn",
+    onChange: function(selectedDates, dateStr, instance) {
+      if (instance.element.id === "pickupDatetime" && selectedDates[0]) {
+        returnPicker.set('minDate', selectedDates[0]);
+      }
+      setTimeout(updatePricingAndAvailability, 50);
+    },
+    onDayCreate: function(dObj, dStr, fp, dayElem) {
+      if (dayElem.classList.contains("flatpickr-disabled")) {
+        dayElem.title = "Ngày này đã được thuê";
+      }
+    }
+  };
+
+  const pickupPicker = flatpickr("#pickupDatetime", fpConfig);
+  const returnPicker = flatpickr("#returnDatetime", fpConfig);
+
+  // Set disabled dates from the car data fetched earlier
+  if (car && car.availabilityBlocks) {
+    const blockedRanges = car.availabilityBlocks.map(b => ({
+      from: b.startDateTime.split('T')[0],
+      to: b.endDateTime.split('T')[0]
+    }));
+    pickupPicker.set('disable', blockedRanges);
+    returnPicker.set('disable', blockedRanges);
+  }
+
+  const pickupEl  = document.getElementById('pickupDatetime');
+  const returnEl  = document.getElementById('returnDatetime');
 
   let lastPreview = null;
 
@@ -294,12 +366,11 @@ import { authService } from '/js/shared/auth-service.js';
         <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Giao xe</span><strong>${fmt(p.deliveryFee ?? 0)}</strong></div>
         ${p.discountAmount > 0 ? `<div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Voucher</span><strong style="color:#16a34a">-${fmt(p.discountAmount)}</strong></div>` : ''}
         <div style="display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid #e6e4df;font-size:1rem"><span style="font-weight:700;color:#1f1f1f">Tổng tiền</span><strong style="color:#16a34a">${fmt(p.totalAmount)}</strong></div>
-        <div style="display:flex;justify-content:space-between;background:#fefce8;border-radius:8px;padding:8px 12px"><span style="color:#92400e;font-weight:600">Tiền cọc (30%)</span><strong style="color:#92400e">${fmt(p.depositAmount)}</strong></div>
+        <div style="display:flex;justify-content:space-between;background:#fefce8;border-radius:8px;padding:8px 12px"><span style="color:#92400e;font-weight:600">Tiền cọc (10%)</span><strong style="color:#92400e">${fmt(p.depositAmount)}</strong></div>
       </div>`;
   }
 
-  pickupEl.addEventListener('change', () => { returnEl.min = pickupEl.value; updatePricingAndAvailability(); });
-  returnEl.addEventListener('change', updatePricingAndAvailability);
+  // Flatpickr handles change events now, including minDate sync.
 
   // File preview logic
   function bindPreview(inputId) {
@@ -368,8 +439,8 @@ import { authService } from '/js/shared/auth-service.js';
       // 1. Upload GPLX images if selected
       const frontInput = document.getElementById('licenseFrontInput');
       const backInput = document.getElementById('licenseBackInput');
-      let frontUrl = docFront?.file_url;
-      let backUrl = docBack?.file_url;
+      let frontUrl = driverDoc?.driverLicenseFrontImageUrl;
+      let backUrl = driverDoc?.driverLicenseBackImageUrl;
 
       if (frontInput && frontInput.files[0]) {
         const fd = new FormData();
@@ -399,16 +470,30 @@ import { authService } from '/js/shared/auth-service.js';
         } catch (e) { console.error('Lỗi upload mặt sau', e); }
       }
 
-      // Save uploaded URLs to mock DB so they persist in the UI for this user
-      if (frontUrl && !docFront && window.VivuCarDB) {
-        window.VivuCarDB.user_documents = window.VivuCarDB.user_documents || [];
-        window.VivuCarDB.user_documents.push({ id: window.VivuCarDB.user_documents.length + 1, user_id: currentUser.id, document_type: 'license_front', file_name: 'front.jpg', file_url: frontUrl, verified: false, created_at: new Date().toISOString() });
+      // Submit the document to the real API so Admin can verify it
+      const driverNationalId = document.getElementById('driverNationalId').value.trim();
+      const driverLicenseNumber = document.getElementById('driverLicense').value.trim();
+      
+      if (frontUrl && backUrl) {
+        try {
+          const docRequest = {
+            citizenIdNumber: driverNationalId,
+            driverLicenseNumber: driverLicenseNumber,
+            driverLicenseFrontImageUrl: frontUrl,
+            driverLicenseBackImageUrl: backUrl
+          };
+          const docRes = await authService.apiFetch('driver-documents/my/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(docRequest)
+          });
+          if (!docRes.ok) {
+            console.warn('Failed to save documents to API:', await docRes.text());
+          }
+        } catch (e) {
+          console.error('Lỗi khi gửi API chứng từ', e);
+        }
       }
-      if (backUrl && !docBack && window.VivuCarDB) {
-        window.VivuCarDB.user_documents = window.VivuCarDB.user_documents || [];
-        window.VivuCarDB.user_documents.push({ id: window.VivuCarDB.user_documents.length + 1, user_id: currentUser.id, document_type: 'license_back', file_name: 'back.jpg', file_url: backUrl, verified: false, created_at: new Date().toISOString() });
-      }
-      window.VivuCarSaveDB?.();
 
       // Ensure valid session before booking
       const freshSession = await authService.getValidSession();
