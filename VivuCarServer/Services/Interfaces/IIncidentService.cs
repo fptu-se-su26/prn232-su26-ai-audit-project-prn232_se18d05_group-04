@@ -22,4 +22,11 @@ public interface IIncidentService
         int incidentId,
         CancellationToken cancellationToken = default
     );
+
+    Task<bool> UpdateIncidentStatusAsync(
+        int ownerId,
+        int incidentId,
+        string status,
+        CancellationToken cancellationToken = default
+    );
 }

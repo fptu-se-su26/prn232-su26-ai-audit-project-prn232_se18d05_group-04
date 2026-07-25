@@ -412,6 +412,59 @@ public class AppDbSeederHostedService(
             db.Bookings.Add(b9);
         }
 
+        // Booking 11: ReturnRequested (để test tính năng trả xe)
+        var code11 = "BK-RETRN-011";
+        var b11 = await db.Bookings.FirstOrDefaultAsync(b => b.BookingCode == code11, ct);
+        if (b11 == null)
+        {
+            var depositAmt11 = car2.DailyPrice * 3 * 0.3m;
+            b11 = new Booking
+            {
+                BookingCode   = code11,
+                CustomerId    = customer2.Id,
+                CarId         = car2.Id,
+                StartDateTime = now.AddDays(-3),
+                EndDateTime   = now.AddDays(1),
+                PickupLocation  = "Sân bay Đà Nẵng",
+                ReturnLocation  = "Sân bay Đà Nẵng",
+                BasePrice     = car2.DailyPrice * 4,
+                DepositAmount = depositAmt11,
+                TotalAmount   = car2.DailyPrice * 4,
+                RemainingAmount = car2.DailyPrice * 4 - depositAmt11,
+                Status        = BookingStatus.ReturnRequested,
+                CreatedAt     = now.AddDays(-4)
+            };
+            db.Bookings.Add(b11);
+        }
+
+        // Add 5 more ReturnRequested bookings for testing
+        for (int i = 12; i <= 16; i++)
+        {
+            var code = $"BK-RETRN-0{i}";
+            var b = await db.Bookings.FirstOrDefaultAsync(bk => bk.BookingCode == code, ct);
+            if (b == null)
+            {
+                var depositAmt = car2.DailyPrice * 3 * 0.3m;
+                b = new Booking
+                {
+                    BookingCode   = code,
+                    CustomerId    = customer2.Id,
+                    CarId         = car2.Id,
+                    StartDateTime = now.AddDays(-3),
+                    EndDateTime   = now.AddDays(1),
+                    PickupLocation  = "Sân bay Đà Nẵng",
+                    ReturnLocation  = "Sân bay Đà Nẵng",
+                    BasePrice     = car2.DailyPrice * 4,
+                    DepositAmount = depositAmt,
+                    TotalAmount   = car2.DailyPrice * 4,
+                    RemainingAmount = car2.DailyPrice * 4 - depositAmt,
+                    Status        = BookingStatus.ReturnRequested,
+                    CreatedAt     = now.AddDays(-4)
+                };
+                db.Bookings.Add(b);
+            }
+        }
+
         await db.SaveChangesAsync(ct);
 
         // ── Payments ──────────────────────────────────────────────────────────

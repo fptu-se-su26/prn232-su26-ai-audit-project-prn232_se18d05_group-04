@@ -18,12 +18,21 @@ public abstract class ProxyControllerBase(
             upstreamPath
         );
 
-        if (Request.ContentLength > 0 || Request.Headers.TransferEncoding.Count > 0)
+        // Always read and forward the request body.
+        // fetch() + FormData often omits Content-Length, so never gate on ContentLength.
+        Request.EnableBuffering();
+        if (Request.Body.CanSeek)
         {
-            var memoryStream = new MemoryStream();
-            await Request.Body.CopyToAsync(memoryStream, cancellationToken);
-            memoryStream.Position = 0;
-            request.Content = new StreamContent(memoryStream);
+            Request.Body.Position = 0;
+        }
+
+        await using var memoryStream = new MemoryStream();
+        await Request.Body.CopyToAsync(memoryStream, cancellationToken);
+        var bodyBytes = memoryStream.ToArray();
+
+        if (bodyBytes.Length > 0)
+        {
+            request.Content = new ByteArrayContent(bodyBytes);
 
             if (Request.ContentType is not null)
             {
@@ -31,6 +40,15 @@ public abstract class ProxyControllerBase(
                     "Content-Type",
                     Request.ContentType
                 );
+            }
+
+            if (Request.ContentLength is > 0)
+            {
+                request.Content.Headers.ContentLength = Request.ContentLength;
+            }
+            else
+            {
+                request.Content.Headers.ContentLength = bodyBytes.Length;
             }
         }
 

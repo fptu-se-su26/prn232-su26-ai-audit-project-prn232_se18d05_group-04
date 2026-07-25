@@ -27,7 +27,8 @@ public class PaymentsController(IPaymentService paymentService) : ControllerBase
         try
         {
             var customerId = GetCurrentUserId();
-            var response = await paymentService.CreateDepositPaymentAsync(customerId, request, cancellationToken);
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var response = await paymentService.CreateDepositPaymentAsync(customerId, baseUrl, request, cancellationToken);
             return Ok(response);
         }
         catch (ArgumentException ex)

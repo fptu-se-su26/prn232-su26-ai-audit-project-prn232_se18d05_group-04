@@ -1,4 +1,4 @@
-﻿using BusinessObjects.Enums;
+using BusinessObjects.Enums;
 using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
@@ -109,8 +109,7 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         }
 
         var totalAmount = basePrice + insuranceFee + deliveryFee - discountAmount;
-        // Deposit rate is 30% unless car has specific deposit amount configured
-        var depositAmount = car.DepositAmount > 0 ? car.DepositAmount : Math.Round(totalAmount * 0.3m, 0);
+        var depositAmount = totalAmount < 3000000m ? Math.Round(totalAmount * 0.1m, 0) : 500000m;
         var remainingAmount = totalAmount - depositAmount;
 
         return new PricePreviewResponse
@@ -523,7 +522,19 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             TotalAmount = b.TotalAmount,
             DepositAmount = b.DepositAmount,
             RemainingAmount = b.RemainingAmount,
-            Status = b.Status.ToString(),
+            Status = b.Status switch
+            {
+                BookingStatus.PendingApproval => "pending",
+                BookingStatus.WaitingDeposit => "pending",
+                BookingStatus.WaitingPickup => "approved",
+                BookingStatus.InProgress => "approved",
+                BookingStatus.ReturnRequested => "approved",
+                BookingStatus.Completed => "completed",
+                BookingStatus.Rejected => "rejected",
+                BookingStatus.Cancelled => "cancelled",
+                BookingStatus.Expired => "cancelled",
+                _ => "pending"
+            },
             CancellationReason = b.CancellationReason,
             CancelledAt = b.CancelledAt,
             CreatedAt = b.CreatedAt,

@@ -123,10 +123,17 @@ document.addEventListener("DOMContentLoaded", () => {
 function redirectByRole(user) {
     if (!user) return;
 
+    // Honor explicit redirect param first (e.g. from checkout when session expired)
+    const redirectParam = new URLSearchParams(window.location.search).get('redirect');
+    if (redirectParam && redirectParam.startsWith('/')) {
+        window.location.href = redirectParam;
+        return;
+    }
+
     const roleRoutes = {
         Admin: "/admin/dashboard",
         CarOwner: "/owner/dashboard",
-        Customer: "/cars"
+        Customer: "/home"
     };
 
     const destination = roleRoutes[user.role];

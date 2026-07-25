@@ -18,6 +18,7 @@ public static class ServiceConfiguration
         services.AddSingleton(new Net.payOS.PayOS(payOsClientId, payOsApiKey, payOsChecksumKey));
 
         services.AddScoped<IAdminUserService, AdminUserService>();
+        services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITokenService, JwtTokenService>();
         services.AddScoped<IUserSecurityStateService, UserSecurityStateService>();
@@ -36,6 +37,9 @@ public static class ServiceConfiguration
         services.AddScoped<IOwnerCarService, OwnerCarService>();
         services.AddScoped<IOwnerBookingService, OwnerBookingService>();
         services.AddScoped<IIncidentService, IncidentService>();
+        services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<IChatService, ChatService>();
+        services.AddHttpClient<IGeminiClient, GeminiClient>();
         services.AddScoped<IOtpService, OtpService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddHostedService<API.HostedServices.BookingExpirationHostedService>();

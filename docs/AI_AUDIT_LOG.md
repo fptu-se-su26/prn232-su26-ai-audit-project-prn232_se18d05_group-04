@@ -413,6 +413,210 @@ sang Cloud Storage trơn tru. Quản lý tác vụ rất tốt với Implementat
 
 ---
 
+### Lần sử dụng AI số 6: Xây dựng trang User Profile & Sửa lỗi Upload Cloudinary
+
+#### 6.1. Mô tả vấn đề hoặc yêu cầu
+
+```text
+Người dùng cần tạo giao diện Profile, hiển thị Avatar, Dropdown menu, Form cập nhật thông tin cá nhân và upload GPLX 2 mặt. Cần tích hợp nút Hủy chờ duyệt và sửa các lỗi liên quan đến proxy API khi upload ảnh lên Cloudinary.
+```
+
+#### 6.2. Các prompt đã sử dụng
+
+```text
+- ở trang profile thì còn đang lỗi font chữ khá nhiều, phần hồ sơ chưa load được data hiện tại...
+- thêm nút hủy chờ duyệt để có thể upload lại ảnh khác
+- cả hôm nay làm từ đầu phần user profile bạn tìm những file cần điền và điền cho đúng
+```
+
+#### 6.3. Kết quả do AI sinh ra
+
+```text
+- Sinh code UI cho Profile.cshtml và logic Javascript trong profile.js
+- Sửa cấu hình CORS trong Program.cs và loại bỏ proxy trong fetch để giải quyết lỗi 400 Bad Request
+- Thêm cache-buster v=3 vào html để khắc phục lỗi trình duyệt cache file cũ (gây ra lỗi lưu chữ "undefined" vào DB)
+- Bổ sung nút "Hủy chờ duyệt" ở Frontend và API endpoint my/cancel tương ứng ở Backend
+- Sửa lỗi Enum DocumentVerificationStatus thiếu trạng thái Unverified = 0 gây lỗi build
+```
+
+#### 6.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Sinh viên tự chạy lại lệnh dotnet run, khởi động lại Backend/Frontend và hard-reload trình duyệt (Ctrl + F5) theo hướng dẫn của AI để cập nhật giao diện và API mới nhất.
+```
+
+#### 6.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | Chưa tạo commit |
+| File liên quan | `Profile.cshtml`, `profile.js`, `UploadsController.cs`, `DriverDocumentsController.cs`, `Program.cs`, `UserService.cs`, `DocumentVerificationStatus.cs` |
+| Screenshot | Đã Hủy duyệt và Upload thành công không lỗi undefined |
+| Kết quả chạy/test | Trang Profile hoạt động tốt, Upload thành công không lỗi undefined. |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Nguyễn Lê Tiểu Long - DE191106|
+
+#### 6.6. Nhận xét cá nhân/nhóm
+
+```text
+AI giải quyết dứt điểm các lỗi khó liên quan đến cơ chế cache của trình duyệt và Model Binding của HttpClient proxy rất xuất sắc. Xử lý UI tốt và đồng bộ hoàn hảo với logic Backend C#.
+```
+
+---
+
+### Lần sử dụng AI số 7: Fix lỗi BookingRepository, debug 404 Proxy và hoàn thiện UI Chủ xe
+
+#### 7.1. Mô tả vấn đề hoặc yêu cầu
+
+```text
+Trang owner bị lỗi không load được dữ liệu seed từ database. Nguyên nhân do BookingRepository
+thiếu Include các bảng liên quan dẫn đến lỗi null reference, và lỗi phân trang bị âm. Đồng thời có
+hiện tượng trình duyệt gọi nhầm API /api/proxy/api/supplier/dashboard trả về 404.
+Ngoài ra, cần code thêm các trang quản lý của Owner (Status, Activity, Incidents) theo đúng spec.
+```
+
+#### 7.2. Các prompt đã sử dụng
+
+```text
+- bị lỗi car owner không load được database và seed data, do lỗi cái bookingrepository . sửa và test thật chuẩn để lên lại data cho tôi
+- lỗi vẫn chưa được , chưa load được seed data và các trang của owner đang bị trống
+- vẫn không được ,dù tôi mở tab ẩn danh hay ctrl f5 rồi,đọc thật kỹ và fix lỗi cho tôi
+- pull nhánh dev về cho tôi và xem conflict cho tôi
+```
+
+#### 7.3. Kết quả do AI sinh ra
+
+```text
+- Sửa lại file BookingRepository.cs (GetListAsync và GetOwnerListAsync), thêm .Include() cho DriverInfo, BookingVoucher, PaymentTransactions, RentalContract và fix pagination bounds.
+- Rà soát toàn bộ project tìm từ khóa "supplier" và chứng minh lỗi 404 là do project WebClient/RazorPages (port 7072) load file JS từ môi trường ngoài/cache chứ không nằm trong source code hiện tại.
+- Code bổ sung các trang quản lý Status, Activity cho Owner theo đúng spec và luồng dữ liệu Backend hiện tại.
+```
+
+#### 7.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Xác nhận và push code sửa BookingRepository lên nhánh feat/owner_fix. Đóng URL/project sai và chạy đúng UI.
+Xác nhận thiết kế và luồng code ở Backend và UI.
+```
+
+#### 7.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | 17aec68 — feat/owner_fix |
+| File liên quan | `BookingRepository.cs`, `Status.cshtml`, `Activity.cshtml` |
+| Screenshot | Đã load data thành công |
+| Kết quả chạy/test | dotnet build: 0 errors. Chạy UI trang Owner dashboard load dữ liệu. |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
+
+#### 7.6. Nhận xét cá nhân/nhóm
+
+```text
+AI sửa đúng lỗi thiếu Include trong EF Core và rà soát bug 404 cực kỳ chuyên sâu bằng các lệnh terminal để tìm ra nguyên nhân không nằm trong source code. Hoàn thiện các trang quản lý của Owner chuyên sâu và tích hợp Backend chặt chẽ.
+```
+
+---
+
+### Lần sử dụng AI số 8: Hoàn thiện tính năng Đánh giá & Phản hồi (Customer Feedback)
+
+#### 8.1. Mô tả vấn đề hoặc yêu cầu
+
+```text
+Yêu cầu làm phần full BE, FE feedback của customer sau khi trả xe. Điều kiện: quá trình thuê xe hoàn tất (Completed) mới cho phép đánh giá. Một booking chỉ có 1 đánh giá, có thể tạo mới, chỉnh sửa, xóa và hiển thị trên giao diện chi tiết đơn thuê (booking-detail.js). Đồng thời sửa lại UI lỗi như popup không làm mới, nút bị ẩn sau nền trắng do thiếu Tailwind config, và thay thế hàm alert() bằng U.showToast().
+```
+
+#### 8.2. Các prompt đã sử dụng
+
+```text
+- đọc task 4 của thành viên 2 sau đó làm phần full BE, FE feedback của customer sau khi trả xe
+- nút gửi đánh giá thì điều chỉnh lại cho đừng bị ẩn sau nền nữa khi đưa trỏ chuột vào mới thấy, navbar sửa lại thành navbar dùng chung, thông báo đừng kiểu alert
+- lúc tạo đánh giá lần đầu và sửa đánh giá phải reload lại trang mới chạy đúng...
+- vẫn còn alert (bạn có chắc chắn muốn xóa đánh giá này)
+```
+
+#### 8.3. Kết quả do AI sinh ra
+
+```text
+- Backend: Sửa lỗi phân quyền lấy `GetCurrentUserId` trong `ReviewsController`, dùng ClaimTypes.NameIdentifier thay cho "id", đổi [Authorize(Roles="Customer")] thành chuẩn.
+- Frontend: Sinh HTML Modal cho chức năng Create/Edit/Delete review bằng Tailwind CSS. Chuyển đổi mã JS cũ xóa đi tạo lại DOM để tránh kẹt trạng thái popup. 
+- Thay toàn bộ `alert()` và `confirm()` sang `U.showToast()` và Custom Modal Tailwind đẹp mắt. Sử dụng `<partial name="_Navbar" />` để dùng chung navbar.
+```
+
+#### 8.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Sinh viên chạy lệnh dotnet run để khởi động lại Backend, Ctrl + F5 trình duyệt để cập nhật mã JS sửa lỗi syntax và tailwind color.
+```
+
+#### 8.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | Chưa tạo commit |
+| File liên quan | `ReviewsController.cs`, `booking-detail.js`, `_UserLayout.cshtml` |
+| Screenshot | |
+| Kết quả chạy/test | Đánh giá, chỉnh sửa và xóa hoạt động thành công không bị treo trình duyệt |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Nguyễn Lê Tiểu Long - DE191106 |
+
+#### 8.6. Nhận xét cá nhân/nhóm
+
+```text
+Nhờ AI đã sửa dứt điểm được lỗi bất đồng bộ Authorization JWT ClaimTypes giữa Backend và Frontend (lỗi 401 Unauthorized), đồng thời hoàn thiện UX/UI cực kỳ chuyên nghiệp (Custom Modal, showToast). Việc debug qua lại giữa C# và JS trở nên rất trơn tru.
+```
+
+---
+
+### Lần sử dụng AI số 9: Hoàn thiện tính năng AI Chatbot (Gemini)
+
+#### 9.1. Mô tả vấn đề hoặc yêu cầu
+
+```text
+Phát triển tính năng Chatbot AI tư vấn và hỗ trợ khách hàng, được huấn luyện hiểu các nghiệp vụ của hệ thống VivuCar. Yêu cầu AI có khả năng truy vấn CSDL (Function Calling) để cung cấp danh sách chuyến đi của người dùng hiện tại và danh sách xe đang có sẵn. Xử lý UI Chatbot dạng popup websocket ở góc phải màn hình, không bị lỗi CORS, hiển thị trên tất cả các trang, bắt đúng Token xác thực, lưu trữ lịch sử chat giữa các lần đăng nhập, và có nút "Gặp người hỗ trợ" để chuyển Escalation cho Admin hoặc Chủ xe (Owner).
+```
+
+#### 9.2. Các prompt đã sử dụng
+
+```text
+- Tôi muốn làm kiểu chatbot websocket đáp ứng các yêu cầu nãy giờ, gọi API về train data để câu trả lời phong phú, đảm bảo hiểu về hệ thống.
+- Dùng AI của Gemini, bạn tự biên soạn bộ luật cụ thể cho toàn hệ thống VivuCar, cả khi chưa đăng nhập và đã đăng nhập (hỏi "Toàn bộ booking của tôi"). Đảm bảo Function Calling đáp ứng toàn bộ.
+- Chatbox chỉ hiển thị ở trang login còn vào trang khác không hiển thị. Báo lỗi CORS khi gọi SignalR.
+- Lỗi kết nối máy chủ AI, nhập câu hỏi bị lặp 2 lần, mất lịch sử chat khi logout/login lại, không phân giải được tài khoản (user_id null).
+```
+
+#### 9.3. Kết quả do AI sinh ra
+
+```text
+- Backend: Tạo `ChatHub.cs`, cấu hình lại CORS, sinh `GeminiClient.cs` tích hợp Gemini REST API (`gemini-flash-latest`), triển khai Function Calling (lấy danh sách xe, danh sách chuyến đi). Sửa JWT token để đọc `sub` claim đồng bộ với Frontend. Cập nhật `ChatService.cs` fix lỗi không load messages khi GetOrCreateSession.
+- Frontend: Sinh `chat.css` hỗ trợ fallback, sinh `chatbot.js` quản lý state, kết nối SignalR, decode JWT lấy userId, xử lý Optimistic UI để chống tin nhắn lặp đôi.
+```
+
+#### 9.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Sinh viên nạp API Key vào file `.env`, khởi động lại project API (`dotnet run`), test UI bằng cách gửi thử các câu lệnh function calling để xem AI truy xuất Data thực tế từ Database, và xác minh luồng escalation.
+```
+
+#### 9.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | |
+| File liên quan | `GeminiClient.cs`, `SupportController.cs`, `ChatHub.cs`, `chatbot.js`, `chat.css` |
+| Screenshot | Đã chụp màn hình kết quả AI trả lời danh sách chuyến đi đúng user |
+| Kết quả chạy/test | Chatbot trả lời logic nghiệp vụ chính xác, WebSocket kết nối mượt mà, lưu lịch sử tốt |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Nguyễn Lê Tiểu Long - DE191106 |
+
+#### 9.6. Nhận xét cá nhân/nhóm
+
+```text
+AI xử lý xuất sắc các vấn đề phức tạp như CORS WebSocket, JWT mapping claim `sub`, và đặc biệt là chuẩn hóa luồng Function Calling của phiên bản Gemini API mới nhất (`thoughtSignature`). Kỹ năng debug của AI rất nhạy bén khi phân tích Token và sửa lỗi Optimistic UI JS.
+```
+
+---
+
 ## 5. Bảng tổng hợp mức độ sử dụng AI
 
 Đánh dấu mức độ AI hỗ trợ ở từng hạng mục.

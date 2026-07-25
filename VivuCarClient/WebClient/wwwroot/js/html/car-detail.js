@@ -8,7 +8,13 @@
   document.getElementById("detailBreadcrumb").innerHTML = VivuCarLayout.renderBreadcrumb([{ label: "Trang chủ", href: "home.html" }, { label: "Xe", href: "search.html" }, { label: U.carTitle(car) }]);
   function calculateRentalDays(startDate, endDate) { const diff = new Date(endDate) - new Date(startDate); return Math.max(1, Math.ceil(diff / 86400000)); }
   function render() {
-    document.getElementById("carDetailRoot").innerHTML = `<div class="detail-layout"><section><img id="mainCarImage" class="gallery-main" src="${images[0]?.image_url || U.carImage(car.id)}" alt="${U.carTitle(car)}"><div id="carThumbnailList" class="thumb-row">${images.map((img) => `<img src="${img.image_url}" alt="Ảnh ${U.carTitle(car)}">`).join("")}</div><div class="tabs" id="detailTabs"><button class="active" data-tab="description">Mô tả</button><button data-tab="specs">Thông số</button><button data-tab="rules">Điều kiện thuê</button><button data-tab="reviews">Đánh giá</button></div><div id="tabContent" class="card p-[18px] mt-3.5"></div></section><aside class="booking-card card"><h1>${U.carTitle(car)}</h1><p class="muted">${car.address}</p><p>${U.statusBadge(car.status === "available" ? "success" : "neutral", car.status, C.CAR_STATUS_LABELS[car.status])}</p><div class="price-line"><strong>${U.formatVnd(car.price_per_day)}</strong><span>/ngày</span></div><div class="field"><label>Ngày nhận</label><input id="detailPickupDate" type="date"></div><div class="field"><label>Ngày trả</label><input id="detailReturnDate" type="date"></div><p>Tổng ngày: <strong id="totalRentalDays">1</strong></p><p>Tạm tính: <strong id="estimatedPrice">${U.formatVnd(car.price_per_day)}</strong></p><button class="btn btn-primary btn-full" id="btnBookCar" ${car.status !== "available" ? "disabled" : ""}>Đặt xe</button><button class="btn btn-secondary btn-full mt-2" id="btnContactOwner">Liên hệ chủ xe</button></aside></div>`;
+    const tomorrow = new Date(Date.now() + 864e5);
+    const afterTwo = new Date(Date.now() + 3 * 864e5);
+    const toDatetimeLocal = d => d.toISOString().slice(0, 16);
+    const defaultPickup = toDatetimeLocal(tomorrow);
+    const defaultReturn = toDatetimeLocal(afterTwo);
+
+    document.getElementById("carDetailRoot").innerHTML = `<div class="detail-layout"><section><img id="mainCarImage" class="gallery-main" src="${images[0]?.image_url || U.carImage(car.id)}" alt="${U.carTitle(car)}"><div id="carThumbnailList" class="thumb-row">${images.map((img) => `<img src="${img.image_url}" alt="Ảnh ${U.carTitle(car)}">`).join("")}</div><div class="tabs" id="detailTabs"><button class="active" data-tab="description">Mô tả</button><button data-tab="specs">Thông số</button><button data-tab="rules">Điều kiện thuê</button><button data-tab="reviews">Đánh giá</button></div><div id="tabContent" class="card p-[18px] mt-3.5"></div></section><aside class="booking-card card"><h1>${U.carTitle(car)}</h1><p class="muted">${car.address}</p><p>${U.statusBadge(car.status === "available" ? "success" : "neutral", car.status, C.CAR_STATUS_LABELS[car.status])}</p><div class="price-line"><strong>${U.formatVnd(car.price_per_day)}</strong><span>/ngày</span></div><div class="field"><label>Thời gian nhận</label><input id="detailPickupDate" type="datetime-local" value="${defaultPickup}"></div><div class="field"><label>Thời gian trả</label><input id="detailReturnDate" type="datetime-local" value="${defaultReturn}"></div><p>Tổng ngày: <strong id="totalRentalDays">1</strong></p><p>Tạm tính: <strong id="estimatedPrice">${U.formatVnd(car.price_per_day)}</strong></p><button class="btn btn-primary btn-full" id="btnBookCar" ${car.status !== "available" ? "disabled" : ""}>Đặt xe</button><button class="btn btn-secondary btn-full mt-2" id="btnContactOwner">Liên hệ chủ xe</button></aside></div>`;
     bind();
     renderTab("description");
   }
@@ -16,7 +22,16 @@
     document.getElementById("carThumbnailList").addEventListener("click", (e) => { if (e.target.tagName === "IMG") document.getElementById("mainCarImage").src = e.target.src; });
     document.getElementById("detailTabs").addEventListener("click", (e) => { const b = e.target.closest("[data-tab]"); if (!b) return; document.querySelectorAll("#detailTabs button").forEach((x) => x.classList.toggle("active", x === b)); renderTab(b.dataset.tab); });
     ["detailPickupDate", "detailReturnDate"].forEach((id) => document.getElementById(id).addEventListener("change", updatePrice));
-    document.getElementById("btnBookCar").addEventListener("click", () => { if (!Auth.getCurrentUser()) location.href = "/Login"; else location.href = `/Booking/Checkout?carId=${car.id}`; });
+    document.getElementById("btnBookCar").addEventListener("click", () => {
+      const p = document.getElementById("detailPickupDate").value;
+      const r = document.getElementById("detailReturnDate").value;
+      if (!p || !r) {
+        U.renderToast("Vui lòng chọn thời gian nhận và trả xe", "danger");
+        return;
+      }
+      if (!Auth.getCurrentUser()) location.href = "/Login"; 
+      else location.href = `/Booking/Checkout?carId=${car.id}&pickup=${p}&return=${r}`; 
+    });
   }
   function updatePrice() { const s = document.getElementById("detailPickupDate").value, e = document.getElementById("detailReturnDate").value; const days = s && e ? calculateRentalDays(s, e) : 1; document.getElementById("totalRentalDays").textContent = days; document.getElementById("estimatedPrice").textContent = U.formatVnd(days * car.price_per_day); }
   function renderTab(tab) {

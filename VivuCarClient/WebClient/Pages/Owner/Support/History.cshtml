@@ -1,0 +1,121 @@
+@page
+@model WebClient.Pages.Owner.Support.HistoryModel
+@{
+    ViewData["Title"] = "Lịch sử hội thoại";
+    Layout = "_OwnerLayout";
+}
+
+<div class="mb-4">
+    <h2>@ViewData["Title"]</h2>
+    <p class="text-muted">Tra cứu toàn bộ tin nhắn giữa khách, chatbot và người hỗ trợ.</p>
+</div>
+
+<div class="d-flex gap-2 mb-3 chat-history-actions">
+    <button class="btn btn-outline-secondary" onclick="window.history.back()">Quay lại hộp thư</button>
+    <button class="btn btn-outline-primary" onclick="window.print()">Xuất PDF</button>
+</div>
+
+<div class="card mb-4 chat-history-filters">
+    <div class="card-body">
+        <h6 class="card-title">Bộ lọc tin nhắn</h6>
+        <div class="d-flex gap-3 align-items-center">
+            <input type="text" id="chatHistorySearch" class="form-control" style="max-width: 300px;" placeholder="Tìm trong nội dung..." oninput="filterHistory()">
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="showCustomerMessages" checked onchange="filterHistory()">
+                <label class="form-check-label" for="showCustomerMessages">Khách hàng</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="showAiMessages" checked onchange="filterHistory()">
+                <label class="form-check-label" for="showAiMessages">AI</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="showOwnerMessages" checked onchange="filterHistory()">
+                <label class="form-check-label" for="showOwnerMessages">Người hỗ trợ</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="showSystemMessages" checked onchange="filterHistory()">
+                <label class="form-check-label" for="showSystemMessages">Hệ thống</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div id="chatHistoryTimeline" class="chatbot-messages" style="height: 600px;">
+            <div class="text-center p-4 text-muted">Đang tải lịch sử...</div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const apiBase = "http://localhost:5000/api";
+        const urlParams = new URLSearchParams(window.location.search);
+        const conversationId = urlParams.get('id');
+        let allMessages = [];
+        
+        function getToken() { return localStorage.getItem("vivucar_access_token") || ""; }
+
+        async function loadHistory() {
+            if (!conversationId) {
+                document.getElementById("chatHistoryTimeline").innerHTML = "Không tìm thấy hội thoại.";
+                return;
+            }
+
+            try {
+                const res = await fetch(`${apiBase}/owner/support/conversations/${conversationId}/history`, {
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+                
+                if (res.ok) {
+                    allMessages = await res.json();
+                    filterHistory();
+                }
+            } catch (e) {
+                console.error("Failed to load history", e);
+            }
+        }
+
+        function filterHistory() {
+            const keyword = document.getElementById("chatHistorySearch").value.toLowerCase();
+            const showCustomer = document.getElementById("showCustomerMessages").checked;
+            const showAi = document.getElementById("showAiMessages").checked;
+            const showOwner = document.getElementById("showOwnerMessages").checked;
+            const showSystem = document.getElementById("showSystemMessages").checked;
+
+            const container = document.getElementById("chatHistoryTimeline");
+            container.innerHTML = "";
+
+            const filtered = allMessages.filter(msg => {
+                if (keyword && !msg.content.toLowerCase().includes(keyword)) return false;
+                
+                if (msg.role === 'user' && !showCustomer) return false;
+                if (msg.role === 'assistant' && msg.senderName === 'VivuCar Assistant' && !showAi) return false;
+                if (msg.role === 'assistant' && msg.senderName !== 'VivuCar Assistant' && !showOwner) return false;
+                if (msg.role === 'system' && !showSystem) return false;
+                
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center p-4 text-muted">Không có tin nhắn nào phù hợp.</div>';
+                return;
+            }
+
+            filtered.forEach(msg => {
+                const div = document.createElement("div");
+                div.className = `chat-msg ${msg.role === 'user' ? 'bot' : msg.role === 'system' ? 'system' : 'user'}`;
+                
+                let senderInfo = `<div class="small fw-bold mb-1">${msg.senderName} <span class="text-muted fw-normal ms-2">${new Date(msg.createdAt).toLocaleString()}</span></div>`;
+                if (msg.role === 'system') senderInfo = '';
+
+                div.innerHTML = `${senderInfo}<div>${msg.content}</div>`;
+                container.appendChild(div);
+            });
+        }
+
+        loadHistory();
+    </script>
+}

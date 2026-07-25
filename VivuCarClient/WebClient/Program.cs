@@ -30,6 +30,16 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/api/proxy"))
+    {
+        context.Request.EnableBuffering();
+    }
+
+    await next();
+});
+
 app.UseRouting();
 
 app.UseAuthorization();

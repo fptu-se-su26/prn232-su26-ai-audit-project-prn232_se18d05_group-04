@@ -1,243 +1,467 @@
-(function () {
-  const DB = window.VivuCarDB;
-  const U = window.VivuCarUtils;
-  const Auth = window.VivuCarAuth;
-  const currentUser = Auth.getCurrentUser();
-  if (!currentUser) return;
-  const Pricing = window.VivuCarBookingPricing;
-  const Availability = window.VivuCarBookingAvailability;
-  const params = new URLSearchParams(location.search);
-  const carId = Number(params.get("carId"));
-  const car = DB.cars.find((item) => item.id === carId);
-  const root = U.byId("checkoutRoot");
-  let appliedVoucher = null;
-  const licenseUploads = {};
+/**
+ * booking-checkout.js
+ * Dùng API thật thay vì mock DB.
+ * Requires: /js/shared/auth-service.js (ES module, loaded via Checkout.cshtml)
+ */
+import { authService } from '/js/shared/auth-service.js';
 
-  function renderError(message) {
-    root.innerHTML = U.renderEmptyState({ title: "Không thể đặt xe", text: message, href: "search.html", action: "Tìm xe khác" });
+(async function () {
+  // ── 0. Helpers ────────────────────────────────────────────────────────────
+  const params     = new URLSearchParams(location.search);
+  const carId      = Number(params.get('carId'));
+  const root       = document.getElementById('checkoutRoot');
+
+  function fmt(n) {
+    return (n || 0).toLocaleString('vi-VN') + '₫';
   }
 
-  function render() {
-    if (!car) return renderError("Không tìm thấy xe theo đường dẫn hiện tại.");
-    if (car.status !== "available") return renderError("Xe này hiện không ở trạng thái available.");
-    document.getElementById("breadcrumbMount").innerHTML = window.VivuCarLayout.renderBreadcrumb([
-      { label: "Trang chủ", href: "home.html" },
-      { label: U.carTitle(car), href: `car-detail.html?carId=${car.id}` },
-      { label: "Đặt xe" }
-    ]);
-    const tomorrow = new Date(Date.now() + 864e5).toISOString().slice(0, 16);
-    const after = new Date(Date.now() + 3 * 864e5).toISOString().slice(0, 16);
+  function showToast(msg, type = 'success') {
+    const colors = { success: '#16a34a', danger: '#dc2626', neutral: '#6b7280' };
+    const toast = document.createElement('div');
+    toast.style.cssText = `position:fixed;bottom:24px;right:24px;z-index:9999;background:${colors[type] || colors.neutral};color:#fff;padding:12px 20px;border-radius:12px;font-size:.875rem;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.15);transition:opacity .3s`;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+  }
+
+  function setLoading(el, loading) {
+    if (loading) { el.disabled = true; el.dataset.orig = el.textContent; el.textContent = 'Đang xử lý...'; }
+    else { el.disabled = false; el.textContent = el.dataset.orig || el.textContent; }
+  }
+
+  // ── 1. Auth check ─────────────────────────────────────────────────────────
+  const session = await authService.getValidSession();
+  const currentUser = session?.user ?? authService.getUser();
+  if (!currentUser) {
+    // Show friendly message instead of silent redirect
     root.innerHTML = `
-      <form class="checkout-main" id="checkoutForm">
-        <section class="checkout-section">
-          <h2>Xe đã chọn</h2>
-          <div class="checkout-car">
-            <img src="${U.carImage(car.id)}" alt="${U.carTitle(car)}">
+      <div style="text-align:center;padding:60px 24px;max-width:400px;margin:0 auto">
+        <div style="font-size:3rem;margin-bottom:16px">🔐</div>
+        <h2 style="font-size:1.25rem;font-weight:700;color:#1f1f1f;margin:0 0 8px">Bạn chưa đăng nhập</h2>
+        <p style="color:#6b7280;font-size:.875rem;margin:0 0 24px">Vui lòng đăng nhập để tiếp tục đặt xe. Sau khi đăng nhập bạn sẽ được đưa trở lại trang này.</p>
+        <a href="/?redirect=${encodeURIComponent(location.pathname + location.search)}"
+           style="display:inline-block;background:#16a34a;color:#fff;font-weight:700;padding:12px 28px;border-radius:12px;text-decoration:none;font-size:.9375rem">
+          Đăng nhập ngay
+        </a>
+      </div>`;
+    return;
+  }
+
+  // Update header to show logged-in user (since layout.js uses mock auth, we patch it here)
+  function patchHeaderForRealAuth(user) {
+    // Use the exposed layout function if available
+    if (window.VivuCarLayout?.patchHeaderForRealUser) {
+      window.VivuCarLayout.patchHeaderForRealUser(user);
+      return;
+    }
+    // Fallback: directly patch the header
+    const headerMount = document.getElementById('headerMount');
+    if (!headerMount) return;
+    const loginLink = headerMount.querySelector('a[href="/"], a[href="/Login"], a[href*="login"]');
+    if (loginLink) {
+      loginLink.textContent = user.fullName || user.email || 'Tài khoản';
+      loginLink.href = '/Profile';
+      loginLink.classList.remove('btn-primary');
+      loginLink.classList.add('btn-secondary');
+    }
+  }
+  // Wait for layout.js to finish rendering, then patch
+  requestAnimationFrame(() => patchHeaderForRealAuth(currentUser));
+  // Also patch after a short delay in case layout is async
+  setTimeout(() => patchHeaderForRealAuth(currentUser), 300);
+
+  if (!carId) {
+    root.innerHTML = `<div style="text-align:center;padding:48px;color:#6b7280"><h2>Không tìm thấy xe</h2><a href="/cars/search" style="color:#16a34a">← Tìm xe khác</a></div>`;
+    return;
+  }
+
+  // ── 2. Load car from API ──────────────────────────────────────────────────
+  let car = null;
+  try {
+    const r = await authService.apiFetch(`cars/${carId}`);
+    if (!r.ok) throw new Error('Car not found');
+    car = await r.json();
+  } catch {
+    root.innerHTML = `<div style="text-align:center;padding:48px;color:#6b7280"><h2>Không thể tải thông tin xe</h2><a href="/cars/search" style="color:#16a34a">← Tìm xe khác</a></div>`;
+    return;
+  }
+
+  if (car.status !== 'Available') {
+    root.innerHTML = `<div style="text-align:center;padding:48px;color:#6b7280"><h2>Xe này hiện không khả dụng</h2><p>Trạng thái: ${car.status}</p><a href="/cars/search" style="color:#16a34a">← Tìm xe khác</a></div>`;
+    return;
+  }
+
+  // ── 3. Default dates (from URL params hoặc tomorrow/+2days) ───────────────
+  const tomorrow   = new Date(Date.now() + 864e5);
+  const afterTwo   = new Date(Date.now() + 3 * 864e5);
+  const toDatetimeLocal = d => d.toISOString().slice(0, 16);
+
+  function formatUrlDate(val, defaultTime) {
+    if (!val) return null;
+    if (val.length === 10) return `${val}T${defaultTime}`;
+    if (val.length > 16) return val.slice(0, 16);
+    return val;
+  }
+  const rawPickup = params.get('pickup') || params.get('pickupDate');
+  const rawReturn = params.get('return') || params.get('returnDate');
+  const urlPickup  = formatUrlDate(rawPickup, '08:00') || toDatetimeLocal(tomorrow);
+  const urlReturn  = formatUrlDate(rawReturn, '18:00') || toDatetimeLocal(afterTwo);
+
+  const DB = window.VivuCarDB;
+  const docFront = DB?.user_documents?.find(d => d.user_id === currentUser.id && d.document_type === 'license_front');
+  const docBack = DB?.user_documents?.find(d => d.user_id === currentUser.id && d.document_type === 'license_back');
+
+  // ── 4. Render form ────────────────────────────────────────────────────────
+  const primaryImg = car.images?.find(i => i.isPrimary)?.imageUrl || car.images?.[0]?.imageUrl || '';
+
+  root.innerHTML = `
+    <form class="checkout-main" id="checkoutForm" style="display:contents">
+
+      <!-- LEFT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:20px">
+
+        <!-- Car card -->
+        <div style="background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:20px;display:flex;gap:16px;align-items:center">
+          ${primaryImg ? `<img src="${primaryImg}" alt="${car.name}" style="width:120px;height:80px;object-fit:cover;border-radius:8px;flex-shrink:0">` : `<div style="width:120px;height:80px;background:#f3f4f6;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0">🚗</div>`}
+          <div>
+            <p style="font-size:.75rem;color:#6b7280;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px">${car.brandName || ''}</p>
+            <h1 style="font-size:1.125rem;font-weight:700;color:#1f1f1f;margin:0 0 4px">${car.name}</h1>
+            <p style="font-size:.875rem;color:#6b7280;margin:0">📍 ${car.location || 'Đà Nẵng'}</p>
+            <p style="font-size:.875rem;color:#16a34a;font-weight:700;margin:4px 0 0">${fmt(car.dailyPrice)}<span style="color:#9ca3af;font-weight:400">/ngày</span></p>
+          </div>
+        </div>
+
+        <!-- Thông tin người thuê -->
+        <div style="background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:20px">
+          <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0 0 16px">Thông tin người thuê</h2>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
+              Họ tên
+              <input id="driverName" value="${currentUser.fullName || ''}" required
+                style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
+              Email
+              <input value="${currentUser.email || ''}" disabled
+                style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#6b7280;background:#f9fafb;outline:none">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
+              Số điện thoại
+              <input id="driverPhone" type="tel" required placeholder="09xxxx"
+                style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
+              Số CCCD/CMND
+              <input id="driverNationalId" type="text" required placeholder="12 số"
+                style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151;grid-column:1/-1">
+              Số giấy phép lái xe
+              <input id="driverLicense" type="text" required placeholder="Số GPLX"
+                style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151;grid-column:1/-1">
+              Ghi chú bàn giao
+              <textarea id="driverNote" rows="3" placeholder="Thời điểm thuận tiện, yêu cầu giao xe..."
+                style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;resize:vertical;outline:none"></textarea>
+            </label>
+          </div>
+        </div>
+
+        <!-- GPLX Upload -->
+        <div style="background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:20px">
+          <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0 0 16px">Giấy phép lái xe (GPLX)</h2>
+          <p style="font-size:.875rem;color:#6b7280;margin:0 0 16px">Để rút ngắn thời gian bàn giao xe, bạn có thể tải lên ảnh GPLX ngay bây giờ.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
             <div>
-              <h1>${U.carTitle(car)}</h1>
-              <p class="muted">${car.address}</p>
-              <div class="car-meta">
-                <span>${car.seats} chỗ</span><span>${car.transmission}</span><span>${car.fuel_type}</span>
-              </div>
+              <p style="font-size:.875rem;font-weight:600;color:#374151;margin:0 0 8px">Mặt trước</p>
+              ${docFront ? `<img src="${docFront.file_url}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid #e6e4df">` : `<input id="licenseFrontInput" type="file" accept="image/*" style="width:100%;font-size:.875rem">`}
+            </div>
+            <div>
+              <p style="font-size:.875rem;font-weight:600;color:#374151;margin:0 0 8px">Mặt sau</p>
+              ${docBack ? `<img src="${docBack.file_url}" style="width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid #e6e4df">` : `<input id="licenseBackInput" type="file" accept="image/*" style="width:100%;font-size:.875rem">`}
             </div>
           </div>
-        </section>
-        <section class="checkout-section">
-          <h2>Thông tin người lái</h2>
-          <div class="form-grid">
-            <label>Họ tên<input id="driverName" value="${currentUser.full_name}" required></label>
-            <label>Email<input value="${currentUser.email}" disabled></label>
-            <label class="full">Ghi chú bàn giao<textarea id="driverNote" rows="3" placeholder="Thời điểm thuận tiện, yêu cầu giao xe..."></textarea></label>
-          </div>
-          <!-- UI-only field. Not present in current DB schema. Requires migration before backend integration. -->
-          <p class="muted">Nếu người lái khác người đặt, backend cần bổ sung driver profile riêng.</p>
-        </section>
-        <section class="checkout-section">
-          <h2>Hồ sơ lái xe</h2>
-          <div class="form-grid">
-            <label>GPLX mặt trước<input id="licenseFront" type="file" accept="image/png,image/jpeg,image/webp"></label>
-            <label>GPLX mặt sau<input id="licenseBack" type="file" accept="image/png,image/jpeg,image/webp"></label>
-          </div>
-          <div class="image-preview-grid" id="licensePreview"></div>
-        </section>
-        <button class="btn btn-primary btn-full" type="submit">Tạo đơn và tiếp tục thanh toán</button>
-      </form>
-      <aside class="flex flex-col gap-4 sticky top-24" id="checkoutSidebar">
-        <section class="checkout-section">
-          <h2>Lịch thuê</h2>
-          <div class="form-grid">
-            <label class="full">Nhận xe<input id="pickupDatetime" name="pickup_datetime" type="datetime-local" value="${tomorrow}" form="checkoutForm" required></label>
-            <label class="full">Trả xe<input id="returnDatetime" name="return_datetime" type="datetime-local" value="${after}" form="checkoutForm" required></label>
-            <label class="full">Địa điểm nhận xe<input id="pickupAddress" name="pickup_address" value="${car.address}" form="checkoutForm" required></label>
-          </div>
-          <div id="availabilityNote" class="availability-note">Đang kiểm tra lịch xe...</div>
-        </section>
-        <section class="checkout-section">
-          <h2>Voucher ưu đãi</h2>
-          <div class="voucher-inline flex gap-2">
-            <input id="voucherCode" placeholder="Nhập mã voucher" form="checkoutForm" class="flex-1">
-            <button class="btn btn-secondary shrink-0" id="applyVoucher" type="button">Áp dụng</button>
-          </div>
-          <div class="field mt-3">
-            <label for="voucherSelect" class="text-xs font-semibold text-neutral-500 mb-1 block">Hoặc chọn ưu đãi có sẵn:</label>
-            <select id="voucherSelect" class="w-full rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 text-sm">
-              <option value="">-- Chọn voucher --</option>
-              ${DB.vouchers.map(v => {
-                const desc = v.discount_type === "percentage" ? `${v.discount_value}%` : `${U.formatVnd(v.discount_value)}`;
-                return `<option value="${v.code}">${v.code} (${v.name} - Giảm ${desc})</option>`;
-              }).join("")}
-            </select>
-          </div>
-        </section>
-        <div class="summary-card" id="summaryCard"></div>
-      </aside>`;
-    bind();
-    updateAll();
-  }
+        </div>
 
-  function bind() {
-    ["pickupDatetime", "returnDatetime"].forEach((id) => U.byId(id).addEventListener("change", updateAll));
-    U.byId("applyVoucher").addEventListener("click", applyVoucher);
-    U.byId("voucherSelect").addEventListener("change", (e) => {
-      const code = e.target.value;
-      U.byId("voucherCode").value = code;
-      applyVoucher();
-    });
-    ["licenseFront", "licenseBack"].forEach((id) => U.byId(id).addEventListener("change", previewLicense));
-    U.byId("checkoutForm").addEventListener("submit", submitBooking);
-  }
+        <!-- Submit -->
+        <button type="submit" id="btnSubmit"
+          style="width:100%;background:#16a34a;color:#fff;font-weight:700;padding:14px;border:none;border-radius:12px;font-size:1rem;cursor:pointer;transition:background .2s"
+          onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">
+          Tạo đơn và tiếp tục thanh toán
+        </button>
+      </div>
 
-  function currentPricing() {
-    return Pricing.calculate(car, U.byId("pickupDatetime").value, U.byId("returnDatetime").value, appliedVoucher);
-  }
+      <!-- RIGHT COLUMN (sidebar) -->
+      <div style="display:flex;flex-direction:column;gap:16px;position:sticky;top:24px">
 
-  function updateAll() {
-    const pickup = U.byId("pickupDatetime").value;
-    const returned = U.byId("returnDatetime").value;
-    const availability = Availability.checkAvailability(car.id, pickup, returned);
-    U.byId("availabilityNote").className = `availability-note ${availability.available ? "success" : "danger"}`;
-    U.byId("availabilityNote").textContent = availability.reason;
-    const pricing = currentPricing();
-    U.byId("summaryCard").innerHTML = `
-      <h2>Tóm tắt chi phí</h2>
-      <p class="muted">${U.carTitle(car)} · ${Pricing.rentalDays(pickup, returned)} ngày</p>
-      <div class="summary-row"><span>Giá thuê</span><strong>${U.formatVnd(pricing.subtotal)}</strong></div>
-      <div class="summary-row"><span>Bảo hiểm thuê xe</span><strong>${U.formatVnd(pricing.insuranceFee)}</strong></div>
-      <div class="summary-row"><span>Giao xe</span><strong>${U.formatVnd(pricing.deliveryFee)}</strong></div>
-      <div class="summary-row"><span>Voucher</span><strong>-${U.formatVnd(pricing.discount)}</strong></div>
-      <div class="summary-total"><span>Tổng thanh toán</span><strong>${U.formatVnd(pricing.total)}</strong></div>
-      <p class="muted">Tiền cọc mock: ${U.formatVnd(Math.round(pricing.total * 0.3))}</p>`;
-  }
+        <!-- Lịch thuê -->
+        <div style="background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:20px">
+          <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0 0 16px">Lịch thuê xe</h2>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
+              Thời gian nhận xe
+              <input id="pickupDatetime" name="pickup_datetime" type="datetime-local" value="${urlPickup}" required
+                style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
+              Thời gian trả xe
+              <input id="returnDatetime" name="return_datetime" type="datetime-local" value="${urlReturn}" required
+                style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
+              Địa điểm nhận xe
+              <input id="pickupAddress" name="pickup_address" value="${car.location || ''}" required
+                style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none">
+            </label>
+          </div>
+          <div id="availabilityNote" style="margin-top:12px;padding:8px 12px;border-radius:8px;font-size:.8125rem;font-weight:600;background:#f0fdf4;color:#16a34a">
+            Đang kiểm tra lịch xe...
+          </div>
+        </div>
 
-  function applyVoucher() {
-    const code = U.byId("voucherCode").value.trim().toUpperCase();
-    if (!code) {
-      appliedVoucher = null;
-      U.renderToast("Đã hủy áp dụng voucher.", "neutral");
-      if (U.byId("voucherSelect")) U.byId("voucherSelect").value = "";
-      updateAll();
-      return;
-    }
-    const voucher = DB.vouchers.find((item) => item.code.toUpperCase() === code);
-    if (!voucher) {
-      appliedVoucher = null;
-      U.renderToast("Không tìm thấy voucher.", "danger");
-      if (U.byId("voucherSelect")) U.byId("voucherSelect").value = "";
-      updateAll();
-      return;
-    }
-    const result = Pricing.calculateVoucher(voucher, currentPricing().subtotal);
-    if (result.error) {
-      U.renderToast(result.error, "danger");
-      if (U.byId("voucherSelect")) U.byId("voucherSelect").value = "";
-      return;
-    }
-    appliedVoucher = voucher;
-    U.renderToast("Đã áp dụng voucher.", "success");
-    if (U.byId("voucherSelect")) U.byId("voucherSelect").value = code;
-    updateAll();
-  }
+        <!-- Tóm tắt chi phí -->
+        <div id="summaryCard" style="background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:20px">
+          <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0 0 12px">Tóm tắt chi phí</h2>
+          <p style="color:#9ca3af;font-size:.875rem">Đang tính toán...</p>
+        </div>
 
-  async function previewLicense(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type) || file.size > 5 * 1024 * 1024) {
-      event.target.value = "";
-      U.renderToast("Ảnh phải là JPG/PNG/WEBP và không quá 5MB.", "danger");
-      return;
-    }
-    
+      </div>
+    </form>`;
+
+  // ── 5. Bind events ────────────────────────────────────────────────────────
+  const pickupEl  = document.getElementById('pickupDatetime');
+  const returnEl  = document.getElementById('returnDatetime');
+  const noteEl    = document.getElementById('availabilityNote');
+  const summaryEl = document.getElementById('summaryCard');
+  const form      = document.getElementById('checkoutForm');
+
+  let lastPreview = null;
+
+  async function updatePricingAndAvailability() {
+    const pickup  = pickupEl.value;
+    const ret     = returnEl.value;
+    if (!pickup || !ret) return;
+
+    // Availability
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", "driver-licenses");
-      
-      const response = await Auth.fetchWithAuth("https://localhost:7198/api/uploads", {
-        method: "POST",
-        body: formData
+      const r = await authService.apiFetch('bookings/check-availability', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ carId, startDateTime: pickup, endDateTime: ret })
       });
-      
-      if (!response.ok) {
-        throw new Error("Lỗi upload ảnh");
+      const data = await r.json();
+      if (data.available) {
+        noteEl.style.cssText = 'margin-top:12px;padding:8px 12px;border-radius:8px;font-size:.8125rem;font-weight:600;background:#f0fdf4;color:#16a34a';
+        noteEl.textContent = '✓ Xe còn trống trong khung giờ đã chọn';
+      } else {
+        noteEl.style.cssText = 'margin-top:12px;padding:8px 12px;border-radius:8px;font-size:.8125rem;font-weight:600;background:#fef2f2;color:#dc2626';
+        noteEl.textContent = '✗ Xe đã có người đặt trong khung giờ này';
       }
-      
-      const data = await response.json();
-      
-      const type = event.target.id === "licenseFront" ? "license_front" : "license_back";
-      licenseUploads[type] = { file_name: file.name, file_url: data.publicUrl };
-      U.byId("licensePreview").insertAdjacentHTML("beforeend", `<img src="${data.publicUrl}" alt="Preview GPLX">`);
-      U.renderToast("Đã tải ảnh lên thành công", "success");
-    } catch (error) {
-      console.error(error);
-      U.renderToast("Upload thất bại. Vui lòng thử lại.", "danger");
+    } catch {
+      noteEl.style.cssText = 'margin-top:12px;padding:8px 12px;border-radius:8px;font-size:.8125rem;font-weight:600;background:#fffbeb;color:#b45309';
+      noteEl.textContent = '⚠ Không thể kiểm tra lịch xe';
+    }
+
+    // Price preview
+    try {
+      const r = await authService.apiFetch('bookings/price-preview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ carId, startDateTime: pickup, endDateTime: ret, voucherCode: null })
+      });
+      if (r.ok) {
+        lastPreview = await r.json();
+        renderSummary(lastPreview);
+      }
+    } catch {
+      // Keep previous summary if error
     }
   }
 
-  function submitBooking(event) {
-    event.preventDefault();
-    const pickup = U.byId("pickupDatetime").value;
-    const returned = U.byId("returnDatetime").value;
-    const availability = Availability.checkAvailability(car.id, pickup, returned);
-    if (!availability.available) return U.renderToast("Không thể tạo booking vì lịch bị trùng.", "danger");
-    const pricing = currentPricing();
-    const id = Math.max(0, ...DB.bookings.map((item) => item.id)) + 1;
-    const booking = {
-      id,
-      user_id: currentUser.id,
-      car_id: car.id,
-      pickup_datetime: new Date(pickup).toISOString(),
-      return_datetime: new Date(returned).toISOString(),
-      pickup_address: U.byId("pickupAddress").value.trim(),
-      total_amount: pricing.total,
-      voucher_id: appliedVoucher?.id || null,
-      status: "pending",
-      created_at: new Date().toISOString()
-    };
-    DB.bookings.push(booking);
-    ["license_front", "license_back"].forEach((documentType) => {
-      if (!licenseUploads[documentType]) return;
-      const existing = DB.user_documents.find((doc) => doc.user_id === booking.user_id && doc.document_type === documentType);
-      if (existing) {
-        existing.file_name = licenseUploads[documentType].file_name;
-        existing.file_url = licenseUploads[documentType].file_url;
-        existing.verified = false;
-        existing.created_at = new Date().toISOString();
+  function renderSummary(p) {
+    if (!p) return;
+    const rentalCost = (p.weekdayCost || 0) + (p.weekendCost || 0);
+    const hasWeekend = p.weekendCount > 0;
+    summaryEl.innerHTML = `
+      <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0 0 12px">Tóm tắt chi phí</h2>
+      <p style="color:#6b7280;font-size:.875rem;margin:0 0 12px">${car.name} · ${p.rentalDays ?? '?'} ngày</p>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:.875rem">
+        <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Ngày thường (${p.weekdayCount || 0} ngày × ${fmt(p.weekdayPrice || 0)})</span><strong>${fmt(p.weekdayCost || 0)}</strong></div>
+        ${hasWeekend ? `<div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Cuối tuần (${p.weekendCount} ngày × ${fmt(p.weekendPrice || 0)})</span><strong>${fmt(p.weekendCost || 0)}</strong></div>` : ''}
+        <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Giá thuê</span><strong>${fmt(rentalCost)}</strong></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Bảo hiểm</span><strong>${fmt(p.insuranceFee)}</strong></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Giao xe</span><strong>${fmt(p.deliveryFee ?? 0)}</strong></div>
+        ${p.discountAmount > 0 ? `<div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Voucher</span><strong style="color:#16a34a">-${fmt(p.discountAmount)}</strong></div>` : ''}
+        <div style="display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid #e6e4df;font-size:1rem"><span style="font-weight:700;color:#1f1f1f">Tổng tiền</span><strong style="color:#16a34a">${fmt(p.totalAmount)}</strong></div>
+        <div style="display:flex;justify-content:space-between;background:#fefce8;border-radius:8px;padding:8px 12px"><span style="color:#92400e;font-weight:600">Tiền cọc (30%)</span><strong style="color:#92400e">${fmt(p.depositAmount)}</strong></div>
+      </div>`;
+  }
+
+  pickupEl.addEventListener('change', () => { returnEl.min = pickupEl.value; updatePricingAndAvailability(); });
+  returnEl.addEventListener('change', updatePricingAndAvailability);
+
+  // File preview logic
+  function bindPreview(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    input.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        let img = input.previousElementSibling;
+        if (img && img.tagName === 'IMG') {
+          img.src = ev.target.result;
+        } else {
+          img = document.createElement('img');
+          img.src = ev.target.result;
+          img.style.cssText = 'width:100%;height:120px;object-fit:cover;border-radius:8px;border:1px solid #e6e4df;margin-bottom:8px';
+          input.parentNode.insertBefore(img, input);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+  bindPreview('licenseFrontInput');
+  bindPreview('licenseBackInput');
+
+  // Initial load
+  await updatePricingAndAvailability();
+
+  // ── 6. Submit booking ─────────────────────────────────────────────────────
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btnSubmit');
+    const pickup  = pickupEl.value;
+    const ret     = returnEl.value;
+    const address = document.getElementById('pickupAddress').value.trim();
+
+    if (!pickup || !ret || !address) {
+      showToast('Vui lòng điền đầy đủ thông tin.', 'danger');
+      return;
+    }
+
+    // Validate: return must be after pickup by at least 1 hour
+    const pickupDt = new Date(pickup);
+    const returnDt = new Date(ret);
+    if (returnDt <= pickupDt) {
+      showToast('Thời gian trả xe phải sau thời gian nhận xe.', 'danger');
+      returnEl.focus();
+      return;
+    }
+    if ((returnDt - pickupDt) < 3600000) {
+      showToast('Thời gian thuê tối thiểu là 1 giờ.', 'danger');
+      returnEl.focus();
+      return;
+    }
+    // Pickup must be at least 30 min from now
+    if (pickupDt < new Date(Date.now() - 30 * 60000)) {
+      showToast('Thời gian nhận xe không thể ở trong quá khứ.', 'danger');
+      pickupEl.focus();
+      return;
+    }
+
+    setLoading(btn, true);
+
+    try {
+      // 1. Upload GPLX images if selected
+      const frontInput = document.getElementById('licenseFrontInput');
+      const backInput = document.getElementById('licenseBackInput');
+      let frontUrl = docFront?.file_url;
+      let backUrl = docBack?.file_url;
+
+      if (frontInput && frontInput.files[0]) {
+        const fd = new FormData();
+        fd.append('file', frontInput.files[0]);
+        try {
+          const res = await authService.apiFetch('uploads?folder=user_documents', { method: 'POST', body: fd });
+          if (res.ok) {
+            const uploaded = await res.json();
+            frontUrl = uploaded.publicUrl ?? uploaded.url;
+          } else {
+            console.warn('Upload front failed:', res.status, await res.text().catch(() => ''));
+          }
+        } catch (e) { console.error('Lỗi upload mặt trước', e); }
+      }
+
+      if (backInput && backInput.files[0]) {
+        const fd = new FormData();
+        fd.append('file', backInput.files[0]);
+        try {
+          const res = await authService.apiFetch('uploads?folder=user_documents', { method: 'POST', body: fd });
+          if (res.ok) {
+            const uploaded = await res.json();
+            backUrl = uploaded.publicUrl ?? uploaded.url;
+          } else {
+            console.warn('Upload back failed:', res.status, await res.text().catch(() => ''));
+          }
+        } catch (e) { console.error('Lỗi upload mặt sau', e); }
+      }
+
+      // Save uploaded URLs to mock DB so they persist in the UI for this user
+      if (frontUrl && !docFront && window.VivuCarDB) {
+        window.VivuCarDB.user_documents = window.VivuCarDB.user_documents || [];
+        window.VivuCarDB.user_documents.push({ id: window.VivuCarDB.user_documents.length + 1, user_id: currentUser.id, document_type: 'license_front', file_name: 'front.jpg', file_url: frontUrl, verified: false, created_at: new Date().toISOString() });
+      }
+      if (backUrl && !docBack && window.VivuCarDB) {
+        window.VivuCarDB.user_documents = window.VivuCarDB.user_documents || [];
+        window.VivuCarDB.user_documents.push({ id: window.VivuCarDB.user_documents.length + 1, user_id: currentUser.id, document_type: 'license_back', file_name: 'back.jpg', file_url: backUrl, verified: false, created_at: new Date().toISOString() });
+      }
+      window.VivuCarSaveDB?.();
+
+      // Ensure valid session before booking
+      const freshSession = await authService.getValidSession();
+      if (!freshSession?.accessToken) {
+        showToast('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.', 'danger');
+        await authService.logout().catch(() => {});
+        setLoading(btn, false);
+        setTimeout(() => location.href = `/?redirect=${encodeURIComponent(location.pathname + location.search)}`, 1500);
         return;
       }
-      DB.user_documents.push({ id: Math.max(0, ...DB.user_documents.map((item) => item.id)) + 1, user_id: booking.user_id, document_type: documentType, file_name: licenseUploads[documentType].file_name, file_url: licenseUploads[documentType].file_url, verified: false, created_at: new Date().toISOString() });
-    });
-    if (appliedVoucher) {
-      DB.voucher_usages.push({ id: Math.max(0, ...DB.voucher_usages.map((item) => item.id)) + 1, voucher_id: appliedVoucher.id, user_id: booking.user_id, booking_id: id, used_at: new Date().toISOString() });
+
+      // 2. Submit booking
+      const r = await authService.apiFetch('bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          carId,
+          startDateTime: pickup,
+          endDateTime: ret,
+          pickupLocation: address,
+          returnLocation: address,
+          voucherCode: null,
+          driverInfo: {
+            fullName: document.getElementById('driverName').value.trim(),
+            phoneNumber: document.getElementById('driverPhone').value.trim(),
+            citizenIdNumber: document.getElementById('driverNationalId').value.trim(),
+            driverLicenseNumber: document.getElementById('driverLicense').value.trim()
+          }
+        })
+      });
+
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        if (r.status === 401) {
+          showToast('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.', 'danger');
+          // Clear stale tokens, then redirect back here after re-login
+          await authService.logout().catch(() => {});
+          setTimeout(() => location.href = `/?redirect=${encodeURIComponent(location.pathname + location.search)}`, 1500);
+        } else {
+          showToast(err.message || 'Không thể tạo đơn thuê. Vui lòng thử lại.', 'danger');
+          setLoading(btn, false);
+        }
+        return;
+      }
+
+      const booking = await r.json();
+      showToast('Đã tạo đơn thuê thành công!', 'success');
+      setTimeout(() => location.href = `/Payment/Deposit?bookingId=${booking.id}`, 800);
+    } catch (err) {
+      console.error(err);
+      showToast('Lỗi kết nối. Vui lòng thử lại.', 'danger');
+      setLoading(btn, false);
     }
-    const method = "vnpay"; // Default to VNPay as payment selector has been removed from UI
-    // UI-only interpretation. payments.amount is used as deposit amount in current frontend mock.
-    DB.payments.push({ id: Math.max(0, ...DB.payments.map((item) => item.id)) + 1, booking_id: id, method, amount: Math.round(pricing.total * 0.3), status: "pending", transaction_code: `PAY${Date.now()}`, paid_at: null });
-    window.VivuCarSaveDB();
-    U.renderToast("Đã tạo đơn thuê.", "success");
-    setTimeout(() => location.href = `/Payment/Deposit?bookingId=${id}`, 350);
-  }
+  });
 
-  render();
 })();
-
-

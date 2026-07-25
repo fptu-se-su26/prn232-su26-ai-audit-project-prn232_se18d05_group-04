@@ -1,0 +1,316 @@
+@page
+@model WebClient.Pages.Owner.Support.IndexModel
+@{
+    ViewData["Title"] = "Hỗ trợ khách hàng";
+    Layout = "_OwnerLayout";
+}
+
+<div class="mb-4">
+    <h2>@ViewData["Title"]</h2>
+    <p class="text-muted">Theo dõi hội thoại và tiếp quản khi khách cần hỗ trợ trực tiếp.</p>
+</div>
+
+<div class="d-flex gap-3 mb-3">
+    <input type="text" id="supportSearchInput" class="form-control" style="max-width: 300px;" placeholder="Tìm theo tên khách, mã đơn...">
+    
+    <select id="conversationStatusFilter" class="form-select" style="max-width: 200px;">
+        <option value="ALL">Tất cả trạng thái</option>
+        <option value="AI_ONLY">AI đang hỗ trợ</option>
+        <option value="WAITING_OWNER">Chờ tiếp quản</option>
+        <option value="OWNER_JOINED">Đang hỗ trợ trực tiếp</option>
+        <option value="RESOLVED">Đã xử lý</option>
+    </select>
+    
+    <select id="priorityFilter" class="form-select" style="max-width: 150px;">
+        <option value="ALL">Mọi ưu tiên</option>
+        <option value="HIGH">Cao</option>
+        <option value="MEDIUM">Trung bình</option>
+        <option value="LOW">Thấp</option>
+    </select>
+    
+    <button id="btnFilterConversations" class="btn btn-primary" onclick="loadConversations()">Lọc</button>
+</div>
+
+<div class="owner-chat-layout">
+    <!-- Left Sidebar: List of Conversations -->
+    <div class="chat-sidebar">
+        <div class="p-3 border-bottom font-weight-bold">
+            Danh sách hội thoại
+        </div>
+        <div id="conversationList" class="conv-list">
+            <div class="text-center p-4 text-muted">Đang tải...</div>
+        </div>
+    </div>
+
+    <!-- Center: Chat Box -->
+    <div class="chat-main">
+        <div id="chatHeader" class="p-3 border-bottom d-flex justify-content-between align-items-center bg-white" style="display: none !important;">
+            <div>
+                <h6 id="chatCustomerName" class="m-0 font-weight-bold">Khách hàng</h6>
+                <small id="chatStatusBadge" class="badge">Status</small>
+            </div>
+            <div class="d-flex gap-2">
+                <button id="btnTakeOverChat" class="btn btn-sm btn-outline-primary" onclick="takeOverChat()">Tiếp quản</button>
+                <button id="btnResolveConversation" class="btn btn-sm btn-outline-success" onclick="resolveChat()">Đánh dấu đã xử lý</button>
+                <button id="btnViewChatHistory" class="btn btn-sm btn-outline-secondary" onclick="viewHistory()">Xem lịch sử</button>
+            </div>
+        </div>
+        
+        <div id="ownerChatMessages" class="chatbot-messages" style="flex: 1;">
+            <div class="text-center p-4 text-muted">Chọn một hội thoại để xem.</div>
+        </div>
+        
+        <div id="chatComposer" class="chatbot-input-area" style="display: none;">
+            <div class="d-flex gap-2 mb-2">
+                <button class="badge bg-light text-dark border p-1" onclick="insertTemplate('Tôi đang kiểm tra thông tin đơn của bạn.')">Tôi đang kiểm tra...</button>
+                <button class="badge bg-light text-dark border p-1" onclick="insertTemplate('Bạn vui lòng gửi thêm hình ảnh minh chứng.')">Yêu cầu ảnh...</button>
+                <button class="badge bg-light text-dark border p-1" onclick="insertTemplate('Tôi sẽ phản hồi trong ít phút.')">Phản hồi sau...</button>
+            </div>
+            <div class="input-group">
+                <textarea id="ownerChatInput" class="form-control" rows="2" placeholder="Nhập tin nhắn trả lời khách..."></textarea>
+                <button id="btnSendOwnerMessage" class="btn btn-primary" onclick="sendOwnerMessage()">Gửi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Context Info -->
+    <div class="chat-context">
+        <h6 class="font-weight-bold border-bottom pb-2 mb-3">Thông tin khách hàng</h6>
+        <div id="customerInfo">
+            <p class="text-muted">Chưa có thông tin</p>
+        </div>
+        
+        <h6 class="font-weight-bold border-bottom pb-2 mb-3 mt-4">Thông tin chuyến đi</h6>
+        <div id="bookingInfo">
+            <p class="text-muted">Chưa có thông tin</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const apiBase = "http://localhost:5119/api";
+        const hubUrl = "http://localhost:5119/hubs/chat";
+        let state = {
+            selectedId: null,
+            conversations: [],
+            messages: [],
+            connection: null
+        };
+        
+        function getToken() { return localStorage.getItem("vivucar_access_token") || ""; }
+
+        async function initSignalR() {
+            state.connection = new signalR.HubConnectionBuilder()
+                .withUrl(hubUrl)
+                .withAutomaticReconnect()
+                .build();
+
+            state.connection.on("ReceiveMessage", (message) => {
+                // If it's for the currently selected chat, append it
+                if (message.sessionId === state.selectedId) {
+                    if (!state.messages.find(m => m.id === message.id)) {
+                        state.messages.push(message);
+                        renderMessages();
+                    }
+                }
+                // Reload the conversation list to update last message
+                loadConversations();
+            });
+
+            try {
+                await state.connection.start();
+                console.log("Owner SignalR Connected.");
+            } catch (err) {
+                console.error("SignalR Connection Error: ", err);
+            }
+        }
+
+        async function loadConversations() {
+            const keyword = document.getElementById("supportSearchInput").value;
+            const status = document.getElementById("conversationStatusFilter").value;
+            const priority = document.getElementById("priorityFilter").value;
+            
+            try {
+                const res = await fetch(`${apiBase}/owner/support/conversations?status=${status}&keyword=${keyword}&priority=${priority}`, {
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+                if (res.ok) {
+                    state.conversations = await res.json();
+                    renderConversationList();
+                }
+            } catch (e) {
+                console.error("Failed to load conversations", e);
+            }
+        }
+        
+        function renderConversationList() {
+            const listEl = document.getElementById("conversationList");
+            listEl.innerHTML = "";
+            
+            if (state.conversations.length === 0) {
+                listEl.innerHTML = '<div class="text-center p-4 text-muted">Không có hội thoại nào.</div>';
+                return;
+            }
+            
+            state.conversations.forEach(c => {
+                const div = document.createElement("div");
+                div.className = `conv-item ${c.id === state.selectedId ? 'active' : ''}`;
+                div.onclick = () => selectConversation(c.id);
+                
+                let badgeClass = "badge-ai";
+                let badgeText = "AI";
+                if (c.status === "WAITING_OWNER") { badgeClass = "badge-waiting"; badgeText = "Chờ tiếp quản"; }
+                if (c.status === "OWNER_JOINED") { badgeClass = "badge-joined"; badgeText = "Live Chat"; }
+                if (c.status === "RESOLVED") { badgeClass = "badge-resolved"; badgeText = "Đã xử lý"; }
+
+                div.innerHTML = `
+                    <div class="d-flex justify-content-between">
+                        <strong>${c.customerName || "Khách ẩn danh"}</strong>
+                        <span class="badge ${badgeClass}">${badgeText}</span>
+                    </div>
+                    <div class="small text-muted text-truncate mt-1">${c.lastMessage}</div>
+                `;
+                listEl.appendChild(div);
+            });
+        }
+        
+        async function selectConversation(id) {
+            // Leave old group if switching
+            if (state.selectedId && state.selectedId !== id && state.connection) {
+                await state.connection.invoke("LeaveSession", state.selectedId.toString());
+            }
+
+            state.selectedId = id;
+            renderConversationList();
+            
+            try {
+                // Join new group
+                if (state.connection && state.connection.state === signalR.HubConnectionState.Connected) {
+                    await state.connection.invoke("JoinSession", id.toString());
+                }
+
+                const res = await fetch(`${apiBase}/owner/support/conversations/${id}`, {
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    state.messages = data.messages || [];
+                    
+                    document.getElementById("chatHeader").style.display = "flex";
+                    document.getElementById("chatCustomerName").textContent = data.userFullName || "Khách ẩn danh";
+                    
+                    let badgeClass = "bg-primary";
+                    let badgeText = data.status;
+                    if (data.status === "escalated") { badgeClass = "bg-warning text-dark"; badgeText = "Chờ tiếp quản"; }
+                    if (data.status === "open" && data.sessionType === "live") { badgeClass = "bg-success"; badgeText = "Đang Live"; }
+                    if (data.status === "closed") { badgeClass = "bg-secondary"; badgeText = "Đã đóng"; }
+                    
+                    const badgeEl = document.getElementById("chatStatusBadge");
+                    badgeEl.className = `badge ${badgeClass}`;
+                    badgeEl.textContent = badgeText;
+                    
+                    document.getElementById("btnTakeOverChat").style.display = (data.status === "escalated" || (data.status === "open" && data.sessionType === "ai")) ? "block" : "none";
+                    document.getElementById("btnResolveConversation").style.display = data.status !== "closed" ? "block" : "none";
+                    document.getElementById("chatComposer").style.display = (data.status !== "closed" && data.sessionType === "live") ? "block" : "none";
+                    
+                    document.getElementById("customerInfo").innerHTML = `
+                        <p class="mb-1"><strong>Tên:</strong> ${data.userFullName || "N/A"}</p>
+                    `;
+                    document.getElementById("bookingInfo").innerHTML = `
+                        <p class="mb-1"><strong>Booking ID:</strong> ${data.bookingId || "Không có"}</p>
+                    `;
+
+                    renderMessages();
+                }
+            } catch (e) {
+                console.error("Failed to fetch session", e);
+            }
+        }
+        
+        function renderMessages() {
+            const container = document.getElementById("ownerChatMessages");
+            container.innerHTML = "";
+            
+            state.messages.forEach(msg => {
+                const div = document.createElement("div");
+                // In owner view: user messages are 'bot' (left), owner messages are 'user' (right)
+                div.className = `chat-msg ${msg.role === 'user' ? 'bot' : msg.role === 'system' ? 'system' : 'user'}`;
+                
+                let senderInfo = `<div class="small fw-bold mb-1">${msg.senderName}</div>`;
+                if (msg.role === 'system') senderInfo = '';
+
+                div.innerHTML = `${senderInfo}<div>${msg.content.replace(/\n/g, "<br>")}</div>`;
+                container.appendChild(div);
+            });
+            
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        async function takeOverChat() {
+            if (!state.selectedId) return;
+            try {
+                await fetch(`${apiBase}/owner/support/conversations/${state.selectedId}/take-over`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+                selectConversation(state.selectedId);
+                loadConversations();
+            } catch (e) {}
+        }
+        
+        async function resolveChat() {
+            if (!state.selectedId) return;
+            try {
+                await fetch(`${apiBase}/owner/support/conversations/${state.selectedId}/resolve`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${getToken()}` }
+                });
+                selectConversation(state.selectedId);
+                loadConversations();
+            } catch (e) {}
+        }
+        
+        async function sendOwnerMessage() {
+            if (!state.selectedId) return;
+            const input = document.getElementById("ownerChatInput");
+            const text = input.value.trim();
+            if (!text) return;
+            
+            input.value = "";
+            try {
+                const userIdStr = localStorage.getItem("vivucar_current_user_id");
+                const senderId = userIdStr ? parseInt(userIdStr) : null;
+                if (state.connection && state.connection.state === signalR.HubConnectionState.Connected) {
+                    await state.connection.invoke("SendMessage", state.selectedId.toString(), text, senderId, "assistant"); // assistant is technically the role in db for bot/owner, wait...
+                    // In chat system, owner replies are often stored as 'assistant' or we can add a new role. But 'assistant' makes it show up on user screen correctly.
+                } else {
+                    // fallback to http if signalr drops
+                    await fetch(`${apiBase}/owner/support/conversations/${state.selectedId}/messages`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${getToken()}`
+                        },
+                        body: JSON.stringify({ content: text })
+                    });
+                    selectConversation(state.selectedId);
+                }
+            } catch (e) {}
+        }
+        
+        function insertTemplate(text) {
+            document.getElementById("ownerChatInput").value = text;
+        }
+
+        function viewHistory() {
+            if (state.selectedId) {
+                window.location.href = `/Owner/Support/History?id=${state.selectedId}`;
+            }
+        }
+
+        // Init
+        initSignalR();
+        loadConversations();
+    </script>
+}
