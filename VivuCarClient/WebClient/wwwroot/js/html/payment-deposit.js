@@ -89,11 +89,11 @@ import { authService } from '/js/shared/auth-service.js';
           <div class="checkout-section">
             <h2>Chọn phương thức</h2>
             <div class="payment-method-grid">
-              ${["vnpay", "momo", "cash"].map((method) => `
+              ${["payos"].map((method) => `
                 <label class="method-card">
-                  <input type="radio" name="method" value="${method}" ${method === "vnpay" ? "checked" : ""}>
-                  <strong>${method === "cash" ? "Tiền mặt" : method === "momo" ? "MoMo" : "VNPay"}</strong>
-                  <span class="muted">${method === "cash" ? "Thanh toán tại quầy" : "Thanh toán online"}</span>
+                  <input type="radio" name="method" value="${method}" checked>
+                  <strong>Thanh toán qua PayOS</strong>
+                  <span class="muted">Thanh toán qua mã QR</span>
                 </label>
               `).join("")}
             </div>

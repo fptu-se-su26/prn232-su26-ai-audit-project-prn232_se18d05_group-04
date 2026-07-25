@@ -23,4 +23,6 @@ public interface IBookingService
     Task<BookingDetailResponse?> RejectBookingRequestAsync(int ownerId, int bookingId, string reason, CancellationToken cancellationToken = default);
 
     Task<BookingDetailResponse?> GetContractAsync(int customerId, int bookingId, CancellationToken cancellationToken = default);
+
+    Task<bool> UpdateContractSignatureAsync(int customerId, int bookingId, string signatureUrl, CancellationToken cancellationToken = default);
 }
