@@ -10,15 +10,21 @@ namespace Services.Implementations;
 
 public class EmailService(IConfiguration configuration, ILogger<EmailService> logger) : IEmailService
 {
+    private static string ResolveSetting(IConfiguration config, string configKey, string envKey)
+    {
+        var value = config[configKey];
+        if (!string.IsNullOrWhiteSpace(value) && !value.StartsWith("${"))
+        {
+            return value;
+        }
+        return Environment.GetEnvironmentVariable(envKey)
+               ?? throw new InvalidOperationException($"{envKey} is not configured.");
+    }
+
     public async Task SendOtpEmailAsync(string toEmail, string otpCode)
     {
-        var senderEmail = configuration["EmailSettings:SenderEmail"]
-                          ?? Environment.GetEnvironmentVariable("EMAIL_SENDER")
-                          ?? throw new InvalidOperationException("EMAIL_SENDER is not configured.");
-
-        var senderPassword = configuration["EmailSettings:Password"]
-                             ?? Environment.GetEnvironmentVariable("EMAIL_PASSWORD")
-                             ?? throw new InvalidOperationException("EMAIL_PASSWORD is not configured.");
+        var senderEmail = ResolveSetting(configuration, "EmailSettings:SenderEmail", "EMAIL_SENDER");
+        var senderPassword = ResolveSetting(configuration, "EmailSettings:Password", "EMAIL_PASSWORD");
 
         var senderName = configuration["EmailSettings:SenderName"] ?? "VivuCar";
         var host = configuration["EmailSettings:Host"] ?? "smtp.gmail.com";

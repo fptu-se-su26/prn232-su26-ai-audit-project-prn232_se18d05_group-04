@@ -38,4 +38,9 @@ public interface IAuthService
         string? ipAddress,
         CancellationToken cancellationToken = default
     );
+
+    Task<RegisterResult> ResendOtpAsync(
+        ResendOtpRequest request,
+        CancellationToken cancellationToken = default
+    );
 }

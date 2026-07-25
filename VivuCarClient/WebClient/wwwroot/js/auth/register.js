@@ -13,6 +13,7 @@
 
   // Step 2
   let fullName = '';
+  let phoneNumber = '';
   let dobDay = '';
   let dobMonth = '';
   let dobYear = '';
@@ -23,6 +24,7 @@
 
   // Step 4
   let otpDigits = ['', '', '', '', '', ''];
+  let otpWarning = '';
 
   // ── DOM refs ──
   const stepContainer = document.getElementById('stepContainer');
@@ -121,6 +123,13 @@
           </div>
         </div>
         <div class="lm-field">
+          <label class="lm-label" for="regPhone">Phone number</label>
+          <div class="lm-input-wrapper">
+            <input id="regPhone" type="tel" class="lm-input" placeholder="Enter your phone number"
+              value="${escapeHtml(phoneNumber)}" autocomplete="tel" />
+          </div>
+        </div>
+        <div class="lm-field">
           <label class="lm-label">Date of birth</label>
           <div class="lm-dob-wrapper">
             <svg class="lm-dob-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -190,13 +199,17 @@
           <label class="lm-label">Enter the verification code</label>
           <div class="lm-otp-boxes">${otpBoxes}</div>
           <p class="lm-otp-hint">A 6-digit code has been sent to <b>${escapeHtml(email)}</b>. Please check your inbox.</p>
+          <p class="lm-otp-warning" id="otpWarning" style="${otpWarning ? '' : 'display:none;'}color:#d97706;font-size:14px;margin-top:8px;">${escapeHtml(otpWarning)}</p>
         </div>
         <div class="lm-step-nav lm-step-nav--between">
           <button class="lm-btn-step-back" id="step4Back">Back</button>
-          <button class="lm-btn-step-primary" id="step4Confirm" disabled>
-            <span id="step4Text">Confirm</span>
-            <span class="lm-spinner" id="step4Spin" style="display:none" aria-label="Confirming..."></span>
-          </button>
+          <div style="display:flex;gap:8px;">
+            <button class="lm-btn-step-back" id="step4Resend" type="button" style="font-size:14px;">Resend code</button>
+            <button class="lm-btn-step-primary" id="step4Confirm" disabled>
+              <span id="step4Text">Confirm</span>
+              <span class="lm-spinner" id="step4Spin" style="display:none" aria-label="Confirming..."></span>
+            </button>
+          </div>
         </div>
       `;
     }
@@ -234,6 +247,7 @@
       }
     } else if (currentStep === 2) {
       const nameInput = document.getElementById('regName');
+      const phoneInput = document.getElementById('regPhone');
       const daySel = document.getElementById('dobDay');
       const monthSel = document.getElementById('dobMonth');
       const yearSel = document.getElementById('dobYear');
@@ -253,8 +267,9 @@
       function updateStep2Valid() {
         const name = (nameInput.value || '').trim();
         fullName = name;
+        phoneNumber = (phoneInput?.value || '').trim();
         const d = parseInt(dobDay), m = parseInt(dobMonth), y = parseInt(dobYear);
-        let valid = name.length > 0 && d && m && y;
+        let valid = name.length > 0 && phoneNumber.length > 0 && d && m && y;
         if (valid) {
           const today = new Date();
           const birth = new Date(y, m - 1, d);
@@ -269,6 +284,10 @@
       if (nameInput) {
         nameInput.value = fullName;
         nameInput.addEventListener('input', updateStep2Valid);
+      }
+      if (phoneInput) {
+        phoneInput.value = phoneNumber;
+        phoneInput.addEventListener('input', updateStep2Valid);
       }
       if (daySel) {
         monthSel.addEventListener('change', function () {
@@ -381,10 +400,61 @@
         });
       });
 
-      if (boxes[0]) boxes[0].focus();
+      if (boxes[0]) {
+        boxes[0].focus();
+        boxes[0].addEventListener('paste', function (e) {
+          e.preventDefault();
+          const paste = (e.clipboardData || window.clipboardData).getData('text');
+          const digits = paste.replace(/\D/g, '').slice(0, 6);
+          for (let i = 0; i < 6; i++) {
+            const d = digits[i] || '';
+            otpDigits[i] = d;
+            boxes[i].value = d;
+            boxes[i].classList.toggle('lm-otp-box--filled', !!d);
+          }
+          updateOtpState();
+          const lastFilled = digits.length > 0 ? Math.min(digits.length, 5) : 0;
+          boxes[lastFilled].focus();
+        });
+      }
 
       if (backBtn) backBtn.addEventListener('click', goBack);
       if (confirmBtn) confirmBtn.addEventListener('click', confirmOtp);
+
+      const resendBtn = document.getElementById('step4Resend');
+      if (resendBtn) {
+        resendBtn.addEventListener('click', async function () {
+          resendBtn.disabled = true;
+          resendBtn.textContent = 'Sending...';
+          hideError();
+          const warning = document.getElementById('otpWarning');
+          if (warning) warning.style.display = 'none';
+
+          try {
+            const resp = await fetch('/api/auth/resend-otp', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: email })
+            });
+            const result = await resp.json();
+
+            if (!resp.ok) {
+              const msg = result.message
+                || (result.errors && Object.values(result.errors).flat().join('; '))
+                || 'Failed to resend code.';
+              if (warning) { warning.textContent = msg; warning.style.display = 'block'; }
+            } else {
+              if (warning) { warning.textContent = 'Code sent! Check your inbox.'; warning.style.color = '#16a34a'; warning.style.display = 'block'; }
+            }
+          } catch (err) {
+            if (warning) { warning.textContent = 'Connection error. Please try again.'; warning.style.display = 'block'; }
+          } finally {
+            resendBtn.disabled = false;
+            resendBtn.textContent = 'Resend code';
+          }
+        });
+      }
+
       updateOtpState();
     }
   }
@@ -512,14 +582,25 @@
           email: email,
           password: password,
           fullName: fullName,
+          phoneNumber: phoneNumber,
           dateOfBirth: dob
         })
       });
       const result = await resp.json();
 
       if (!resp.ok) {
-        showError(result.message || 'Registration failed. Please try again.');
+        const msg = result.message
+          || (result.errors && Object.values(result.errors).flat().join('; '))
+          || 'Registration failed. Please try again.';
+        showError(msg);
         return;
+      }
+
+      // Check if OTP email failed
+      if (result.message && result.message.includes('OTP')) {
+        otpWarning = result.message;
+      } else {
+        otpWarning = '';
       }
     } catch (err) {
       showError('Connection error. Please try again.');

@@ -55,10 +55,12 @@ async function loadProfileData() {
         }
         document.getElementById("profileJoined").textContent = formatDateDisplay(profile.createdAt);
         
-        const status = DOC_STATUS[profile.driverDocumentStatus] || DOC_STATUS[0];
         const badgeEl = document.getElementById("driverDocBadge");
-        badgeEl.textContent = status.label;
-        badgeEl.className = `status-badge status-${status.badge}`;
+        if (badgeEl) {
+            const status = DOC_STATUS[profile.driverDocumentStatus] || DOC_STATUS[0];
+            badgeEl.textContent = status.label;
+            badgeEl.className = `status-badge status-${status.badge}`;
+        }
 
         // 2. Populate Personal Info Form
         document.getElementById("fullName").value = profile.fullName || "";
@@ -66,9 +68,10 @@ async function loadProfileData() {
         document.getElementById("dateOfBirth").value = formatDate(profile.dateOfBirth);
         document.getElementById("address").value = profile.address || "";
 
-        // 3. Populate Documents Form
-        if (docs) {
-            document.getElementById("citizenIdNumber").value = docs.citizenIdNumber || "";
+        // 3. Populate Documents Form (only on pages that have document fields)
+        const citizenIdField = document.getElementById("citizenIdNumber");
+        if (docs && citizenIdField) {
+            citizenIdField.value = docs.citizenIdNumber || "";
             if (docs.citizenIdFrontImageUrl) {
                 document.getElementById("citizenIdFrontUrl").value = docs.citizenIdFrontImageUrl;
                 document.getElementById("preview-citizenIdFront").classList.remove('hidden');
@@ -170,6 +173,7 @@ async function setupEvents() {
     // Helper for Document Upload
     async function handleDocumentUpload(fileInputId, hiddenInputId, previewId) {
         const fileInput = document.getElementById(fileInputId);
+        if (!fileInput) return;
         fileInput.addEventListener("change", async (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -216,7 +220,7 @@ async function setupEvents() {
     handleDocumentUpload("driverLicenseBack", "driverLicenseBackUrl");
 
     // Cancel pending document
-    document.getElementById("cancelDocBtn").addEventListener("click", async () => {
+    document.getElementById("cancelDocBtn")?.addEventListener("click", async () => {
         if (!confirm("Bạn có chắc chắn muốn hủy yêu cầu duyệt hồ sơ hiện tại?")) return;
 
         try {
@@ -244,7 +248,7 @@ async function setupEvents() {
     });
 
     // B. Driver Document Form Submit
-    document.getElementById("documentForm").addEventListener("submit", async (e) => {
+    document.getElementById("documentForm")?.addEventListener("submit", async (e) => {
         e.preventDefault();
         
         let hasError = false;

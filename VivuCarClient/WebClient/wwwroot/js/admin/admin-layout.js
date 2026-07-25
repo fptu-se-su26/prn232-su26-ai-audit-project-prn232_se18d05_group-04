@@ -8,8 +8,6 @@ const modal = document.getElementById("logoutModal");
 const accountShell = document.querySelector(".admin-account-shell");
 const accountTrigger = document.getElementById("adminAccountTrigger");
 const accountMenu = document.getElementById("adminAccountMenu");
-const profileToggle = document.querySelector("[data-admin-profile-toggle]");
-const profileSummary = document.getElementById("adminProfileSummary");
 const themeToggle = document.querySelector("[data-admin-theme-toggle]");
 const languageToggle = document.querySelector("[data-admin-language-toggle]");
 
@@ -182,14 +180,6 @@ function applyLanguage(language, persist = true) {
     applyTheme(currentTheme, false);
 }
 
-function toggleProfileSummary() {
-    if (!profileSummary || !profileToggle) return;
-    const willOpen = profileSummary.hidden;
-    profileSummary.hidden = !willOpen;
-    profileToggle.setAttribute("aria-expanded", String(willOpen));
-    profileToggle.querySelector(".admin-account-item-chevron")?.classList.toggle("is-open", willOpen);
-}
-
 async function verifyAdminSession() {
     try {
         const response = await authService.apiFetch("auth/me");
@@ -223,7 +213,6 @@ accountTrigger?.addEventListener("keydown", (event) => {
         accountMenu?.querySelector("button")?.focus();
     }
 });
-profileToggle?.addEventListener("click", toggleProfileSummary);
 themeToggle?.addEventListener("click", () => applyTheme(currentTheme === "dark" ? "light" : "dark"));
 languageToggle?.addEventListener("click", () => applyLanguage(currentLanguage === "vi" ? "en" : "vi"));
 document.querySelectorAll("[data-logout-trigger]").forEach((button) => button.addEventListener("click", openLogout));
@@ -257,7 +246,7 @@ document.getElementById("adminPageSearch")?.addEventListener("input", (event) =>
     document.dispatchEvent(new CustomEvent("vivucar:admin-search", { detail: event.target.value.trim() }));
 });
 
-window.VivuCarAdminAuthReady = verifyAdminSession().then((user) => {
+window.VivuCarAdminAuthReady = verifyAdminSession().then(async (user) => {
     if (!user) {
         localStorage.removeItem("vivucar_token");
         location.replace("/");
@@ -267,10 +256,24 @@ window.VivuCarAdminAuthReady = verifyAdminSession().then((user) => {
     const initials = name.split(" ").slice(-2).map((part) => part[0]).join("").toUpperCase();
     const panel = document.querySelector(".admin-account-shell");
     if (panel) {
-        panel.querySelector(".avatar").textContent = initials;
+        const avatarImg = panel.querySelector("#adminAvatarImg");
+        const avatarText = panel.querySelector("#adminAvatarText");
         panel.querySelector(".truncate").textContent = name;
-        panel.querySelector("[data-admin-profile-name]").textContent = name;
-        panel.querySelector("[data-admin-profile-email]").textContent = user.email || "—";
+
+        // Fetch profile for avatar
+        try {
+            const { fetchJson } = await import("../shared/api-client.js");
+            const profile = await fetchJson("users/profile").catch(() => null);
+            if (profile?.avatarUrl && avatarImg) {
+                avatarImg.src = profile.avatarUrl;
+                avatarImg.classList.remove("hidden");
+                if (avatarText) avatarText.classList.add("hidden");
+            } else if (avatarText) {
+                avatarText.textContent = initials;
+            }
+        } catch {
+            if (avatarText) avatarText.textContent = initials;
+        }
     }
     return user;
 });
