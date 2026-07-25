@@ -136,7 +136,7 @@ import { authService } from '/js/shared/auth-service.js';
         <div>
           <div class="car-meta"><span>#${booking.bookingCode || booking.id}</span>${U.renderStatusBadge(ui.tone, ui.label)}${U.renderStatusBadge("neutral", booking.status)}</div>
           <h2>${booking.carName}</h2>
-          <p class="muted">${new Date(booking.startDateTime).toLocaleString('vi-VN')} - ${new Date(booking.endDateTime).toLocaleString('vi-VN')} · ${booking.licensePlate}</p>
+          <p class="muted">${new Date(booking.startDateTime).toLocaleString('vi-VN')} - ${new Date(booking.endDateTime).toLocaleString('vi-VN')} · ${booking.rentalDays || 0} ngày ${booking.rentalHours ? `và ${booking.rentalHours} giờ` : ''}</p>
           <strong>${U.formatVnd(booking.totalAmount)}</strong>
         </div>
         <div class="booking-actions">

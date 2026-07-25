@@ -47,12 +47,15 @@ public class PricePreviewRequest
 public class PricePreviewResponse
 {
     public int RentalDays { get; set; }
+    public int RentalHours { get; set; }
     public int WeekdayCount { get; set; }
     public int WeekendCount { get; set; }
     public decimal WeekdayPrice { get; set; }
     public decimal WeekendPrice { get; set; }
+    public decimal HourlyPrice { get; set; }
     public decimal WeekdayCost { get; set; }
     public decimal WeekendCost { get; set; }
+    public decimal HourlyCost { get; set; }
     public decimal InsuranceFee { get; set; }
     public decimal DeliveryFee { get; set; }
     public decimal DiscountAmount { get; set; }
@@ -97,6 +100,8 @@ public class BookingDetailResponse
     public DateTime EndDateTime { get; set; }
     public string PickupLocation { get; set; } = string.Empty;
     public string ReturnLocation { get; set; } = string.Empty;
+    public int RentalDays { get; set; }
+    public int RentalHours { get; set; }
     public decimal BasePrice { get; set; }
     public decimal InsuranceFee { get; set; }
     public decimal DeliveryFee { get; set; }

@@ -288,6 +288,10 @@ import { authService } from '/js/shared/auth-service.js';
     onDayCreate: function(dObj, dStr, fp, dayElem) {
       if (dayElem.classList.contains("flatpickr-disabled")) {
         dayElem.title = "Ngày này đã được thuê";
+        dayElem.style.backgroundColor = "#fee2e2";
+        dayElem.style.color = "#ef4444";
+        dayElem.style.textDecoration = "line-through";
+        dayElem.style.border = "none";
       }
     }
   };
@@ -353,20 +357,38 @@ import { authService } from '/js/shared/auth-service.js';
 
   function renderSummary(p) {
     if (!p) return;
-    const rentalCost = (p.weekdayCost || 0) + (p.weekendCost || 0);
     const hasWeekend = p.weekendCount > 0;
+    const hasHours = p.rentalHours > 0;
+    const totalRentalCost = (p.weekdayCost || 0) + (p.weekendCost || 0) + (p.hourlyCost || 0);
+    
     summaryEl.innerHTML = `
-      <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0 0 12px">Tóm tắt chi phí</h2>
-      <p style="color:#6b7280;font-size:.875rem;margin:0 0 12px">${car.name} · ${p.rentalDays ?? '?'} ngày</p>
-      <div style="display:flex;flex-direction:column;gap:8px;font-size:.875rem">
-        <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Ngày thường (${p.weekdayCount || 0} ngày × ${fmt(p.weekdayPrice || 0)})</span><strong>${fmt(p.weekdayCost || 0)}</strong></div>
-        ${hasWeekend ? `<div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Cuối tuần (${p.weekendCount} ngày × ${fmt(p.weekendPrice || 0)})</span><strong>${fmt(p.weekendCost || 0)}</strong></div>` : ''}
-        <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Giá thuê</span><strong>${fmt(rentalCost)}</strong></div>
-        <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Bảo hiểm</span><strong>${fmt(p.insuranceFee)}</strong></div>
-        <div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Giao xe</span><strong>${fmt(p.deliveryFee ?? 0)}</strong></div>
-        ${p.discountAmount > 0 ? `<div style="display:flex;justify-content:space-between"><span style="color:#6b7280">Voucher</span><strong style="color:#16a34a">-${fmt(p.discountAmount)}</strong></div>` : ''}
-        <div style="display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid #e6e4df;font-size:1rem"><span style="font-weight:700;color:#1f1f1f">Tổng tiền</span><strong style="color:#16a34a">${fmt(p.totalAmount)}</strong></div>
-        <div style="display:flex;justify-content:space-between;background:#fefce8;border-radius:8px;padding:8px 12px"><span style="color:#92400e;font-weight:600">Tiền cọc (10%)</span><strong style="color:#92400e">${fmt(p.depositAmount)}</strong></div>
+      <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0 0 16px">Chi tiết thanh toán</h2>
+      <div style="background:#f9fafb;border-radius:8px;padding:12px;margin-bottom:16px;border:1px solid #f3f4f6">
+        <p style="color:#374151;font-size:.875rem;font-weight:600;margin:0 0 4px">${car.name}</p>
+        <p style="color:#6b7280;font-size:.8125rem;margin:0">Thời gian: ${p.rentalDays || 0} ngày ${hasHours ? `và ${p.rentalHours} giờ` : ''}</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:.875rem">
+        <div style="display:flex;justify-content:space-between"><span style="color:#4b5563">Ngày thường (${p.weekdayCount || 0} ngày × ${fmt(p.weekdayPrice || 0)})</span><strong style="color:#1f1f1f">${fmt(p.weekdayCost || 0)}</strong></div>
+        ${hasWeekend ? `<div style="display:flex;justify-content:space-between"><span style="color:#4b5563">Cuối tuần (${p.weekendCount} ngày × ${fmt(p.weekendPrice || 0)})</span><strong style="color:#1f1f1f">${fmt(p.weekendCost || 0)}</strong></div>` : ''}
+        ${hasHours ? `<div style="display:flex;justify-content:space-between"><span style="color:#4b5563">Phụ trội (${p.rentalHours} giờ × ${fmt(p.hourlyPrice || 0)})</span><strong style="color:#1f1f1f">${fmt(p.hourlyCost || 0)}</strong></div>` : ''}
+        
+        <div style="height:1px;background:#e5e7eb;margin:4px 0"></div>
+        
+        <div style="display:flex;justify-content:space-between"><span style="color:#4b5563">Tiền thuê xe</span><strong style="color:#1f1f1f">${fmt(totalRentalCost)}</strong></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#4b5563">Phí bảo hiểm</span><strong style="color:#1f1f1f">${fmt(p.insuranceFee)}</strong></div>
+        ${(p.deliveryFee || 0) > 0 ? `<div style="display:flex;justify-content:space-between"><span style="color:#4b5563">Phí giao nhận xe</span><strong style="color:#1f1f1f">${fmt(p.deliveryFee)}</strong></div>` : ''}
+        ${p.discountAmount > 0 ? `<div style="display:flex;justify-content:space-between"><span style="color:#4b5563">Mã giảm giá</span><strong style="color:#16a34a;background:#f0fdf4;padding:2px 8px;border-radius:12px;font-size:.75rem">-${fmt(p.discountAmount)}</strong></div>` : ''}
+        
+        <div style="display:flex;justify-content:space-between;padding-top:16px;border-top:1px dashed #d1d5db;margin-top:4px">
+            <span style="font-weight:700;color:#1f1f1f;font-size:1rem">Tổng thanh toán</span>
+            <strong style="color:#16a34a;font-size:1.125rem">${fmt(p.totalAmount)}</strong>
+        </div>
+        
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#fff7ed;border:1px solid #ffedd5;border-radius:8px;padding:12px;margin-top:8px">
+            <span style="color:#c2410c;font-weight:600">Thanh toán cọc (10%)</span>
+            <strong style="color:#c2410c;font-size:1.125rem">${fmt(p.depositAmount)}</strong>
+        </div>
+        <p style="font-size:.75rem;color:#9ca3af;text-align:center;margin:0">Số tiền còn lại ${fmt(p.remainingAmount)} thanh toán khi nhận xe</p>
       </div>`;
   }
 

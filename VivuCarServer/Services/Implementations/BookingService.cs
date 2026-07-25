@@ -43,12 +43,30 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         {
             throw new ArgumentException("End date must be after start date.");
         }
+        
+        if (start.Hour < 7 || start.Hour >= 22 || end.Hour < 7 || end.Hour >= 22)
+        {
+            throw new ArgumentException("Booking time must be between 07:00 and 22:00.");
+        }
 
-        // Calculate days (round up, minimum 1 day)
         var totalHours = (end - start).TotalHours;
-        var rentalDays = Math.Max(1, (int)Math.Ceiling(totalHours / 24.0));
+        var rentalDays = (int)Math.Floor(totalHours / 24.0);
+        var rentalHours = (int)Math.Ceiling(totalHours % 24.0);
 
-        // Count weekdays and weekends
+        if (rentalDays == 0 && rentalHours == 0)
+        {
+            rentalHours = 1; // Minimum 1 hour
+        }
+
+        var hourlyCost = rentalHours * car.PricePerHour;
+        if (hourlyCost > car.DailyPrice)
+        {
+            // If extra hours cost more than a day, cap it to a full day
+            rentalDays++;
+            rentalHours = 0;
+            hourlyCost = 0;
+        }
+
         var weekdayCount = 0;
         var weekendCount = 0;
         var tempDate = start;
@@ -66,14 +84,13 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         }
 
         var weekdayPrice = car.DailyPrice;
-        // Weekend price is equal to weekday price
         var weekendPrice = car.DailyPrice;
 
         var weekdayCost = weekdayCount * weekdayPrice;
         var weekendCost = weekendCount * weekendPrice;
-        var basePrice = weekdayCost + weekendCost;
+        var basePrice = weekdayCost + weekendCost + hourlyCost;
 
-        var insuranceFee = hasInsurance ? car.InsuranceFeePerDay * rentalDays : 0m;
+        var insuranceFee = hasInsurance ? car.InsuranceFeePerDay * (rentalDays + (rentalHours > 0 ? 1 : 0)) : 0m;
         var deliveryFee = hasDelivery ? car.DeliveryFee * (distanceKm > 0 ? distanceKm : 1m) : 0m;
 
         // Apply voucher discount
@@ -115,12 +132,15 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         return new PricePreviewResponse
         {
             RentalDays = rentalDays,
+            RentalHours = rentalHours,
             WeekdayCount = weekdayCount,
             WeekendCount = weekendCount,
             WeekdayPrice = weekdayPrice,
             WeekendPrice = weekendPrice,
+            HourlyPrice = car.PricePerHour,
             WeekdayCost = weekdayCost,
             WeekendCost = weekendCost,
+            HourlyCost = hourlyCost,
             InsuranceFee = insuranceFee,
             DeliveryFee = deliveryFee,
             DiscountAmount = discountAmount,
@@ -537,19 +557,31 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         var primaryImage = b.Car.Images?.OrderBy(i => i.DisplayOrder).FirstOrDefault(i => i.IsPrimary) 
                            ?? b.Car.Images?.OrderBy(i => i.DisplayOrder).FirstOrDefault();
 
+        var totalHours = (b.EndDateTime - b.StartDateTime).TotalHours;
+        var rentalDays = (int)Math.Floor(totalHours / 24.0);
+        var rentalHours = (int)Math.Ceiling(totalHours % 24.0);
+        if (rentalDays == 0 && rentalHours == 0) rentalHours = 1;
+        if (b.Car != null && rentalHours * b.Car.PricePerHour > b.Car.DailyPrice)
+        {
+            rentalDays++;
+            rentalHours = 0;
+        }
+
         return new BookingDetailResponse
         {
             Id = b.Id,
             BookingCode = b.BookingCode,
             CustomerId = b.CustomerId,
             CarId = b.CarId,
-            CarName = b.Car.Name,
-            LicensePlate = b.Car.LicensePlate,
+            CarName = b.Car?.Name ?? string.Empty,
+            LicensePlate = b.Car?.LicensePlate ?? string.Empty,
             CarImageUrl = primaryImage?.ImageUrl,
             StartDateTime = b.StartDateTime,
             EndDateTime = b.EndDateTime,
             PickupLocation = b.PickupLocation,
             ReturnLocation = b.ReturnLocation,
+            RentalDays = rentalDays,
+            RentalHours = rentalHours,
             BasePrice = b.BasePrice,
             InsuranceFee = b.InsuranceFee,
             DeliveryFee = b.DeliveryFee,

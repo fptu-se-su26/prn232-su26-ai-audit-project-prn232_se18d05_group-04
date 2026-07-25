@@ -240,7 +240,10 @@ public class AuthServiceTests
                 PasswordHasher,
                 TokenService.Object,
                 SecurityStateService.Object,
-                Mock.Of<ILogger<AuthService>>()
+                Mock.Of<ILogger<AuthService>>(),
+                Mock.Of<IOtpVerificationRepository>(),
+                Mock.Of<IOtpService>(),
+                Mock.Of<IEmailService>()
             );
         }
     }

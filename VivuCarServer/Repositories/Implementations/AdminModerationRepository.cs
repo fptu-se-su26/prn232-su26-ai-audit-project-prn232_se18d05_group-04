@@ -29,6 +29,11 @@ public class AdminModerationRepository(VivuCarDbContext dbContext) : IAdminModer
     public Task<DriverDocument?> GetDriverDocumentAsync(int id, CancellationToken cancellationToken = default)
         => dbContext.DriverDocuments.SingleOrDefaultAsync(document => document.Id == id, cancellationToken);
 
+    public Task<List<Booking>> GetPendingApprovalBookingsByUserIdAsync(int userId, CancellationToken cancellationToken = default)
+        => dbContext.Bookings
+            .Where(b => b.CustomerId == userId && b.Status == BusinessObjects.Enums.BookingStatus.PendingApproval)
+            .ToListAsync(cancellationToken);
+
     public Task SaveChangesAsync(CancellationToken cancellationToken = default)
         => dbContext.SaveChangesAsync(cancellationToken);
 }
