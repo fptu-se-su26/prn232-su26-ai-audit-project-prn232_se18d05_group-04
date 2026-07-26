@@ -99,7 +99,7 @@ import { authService } from '/js/shared/auth-service.js';
     return;
   }
 
-  if (car.status !== 'Available') {
+  if (String(car.status).toLowerCase() !== 'available') {
     root.innerHTML = `<div style="text-align:center;padding:48px;color:#6b7280"><h2>Xe này hiện không khả dụng</h2><p>Trạng thái: ${car.status}</p><a href="/cars/search" style="color:#16a34a">← Tìm xe khác</a></div>`;
     return;
   }
