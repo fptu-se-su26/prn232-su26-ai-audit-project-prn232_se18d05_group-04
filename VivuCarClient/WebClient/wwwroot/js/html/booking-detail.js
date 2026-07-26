@@ -77,6 +77,7 @@ import { authService } from '/js/shared/auth-service.js';
       if (paid) { key = "handover_pending"; label = "Đã cọc - chờ xác nhận"; tone = "primary"; }
       else { key = "payment_pending"; label = "Chờ thanh toán"; tone = "warning"; }
     }
+    else if (s === "returnrequested") { key = "return_requested"; label = "Đang chờ trả xe"; tone = "warning"; }
     else if (s === "approved" || s === "waitingdeposit" || s === "waitingpickup" || s === "inprogress") {
       const pickupDate = new Date(booking.startDateTime);
       if (Date.now() < pickupDate.getTime()) { key = "handover_pending"; label = "Chờ bàn giao"; tone = "primary"; }
@@ -107,7 +108,7 @@ import { authService } from '/js/shared/auth-service.js';
                 <h1>${booking.carName}</h1>
                 <p class="muted">${ui.label}</p>
               </div>
-              <div class="chip-row">${U.renderStatusBadge(ui.tone, ui.label)}${U.renderStatusBadge("neutral", booking.status)}</div>
+              <div class="chip-row">${U.renderStatusBadge(ui.tone, ui.label)}</div>
             </div>
             <div class="checkout-car">
               <img src="${booking.carImageUrl || '/img/placeholder-car.png'}" alt="${booking.carName}" style="object-fit:cover">
@@ -135,8 +136,10 @@ import { authService } from '/js/shared/auth-service.js';
           <h2>Thời gian biểu</h2>
           <div class="timeline">${timeline()}</div>
           <div class="booking-actions mt-3.5">
+            ${s === "returnrequested" ? `<div style="padding:12px;background:#fffbe6;border:1px solid #ffe58f;color:#873800;border-radius:8px;font-size:13px;line-height:1.5;font-weight:500;">⏳ <strong>Đã gửi yêu cầu trả xe:</strong> Vui lòng chờ chủ xe kiểm tra xe và xác nhận hoàn tất thủ tục bàn giao lại.</div>` : ""}
             ${s === "pending" && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán cọc</a>` : ""}
             ${canCancel ? `<button class="btn btn-danger btn-sm" type="button" id="cancelBookingBtn">Hủy đơn</button>` : ""}
+            ${ui.key === "renting" ? `<button class="btn btn-primary btn-sm" type="button" id="requestReturnBtn">Yêu cầu trả xe</button>` : ""}
             ${booking.contractPdfUrl && !booking.contractPdfUrl.includes('sig=') ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
             ${booking.contractPdfUrl ? `<a class="btn btn-secondary btn-sm" href="${booking.contractPdfUrl}" target="_blank">Xem hợp đồng</a>` : ""}
             ${s === "completed" ? (
@@ -155,6 +158,28 @@ import { authService } from '/js/shared/auth-service.js';
           window.VivuCarBookingCancellation.openCancelBookingModal(booking.id, loadData);
         } else {
           U.showToast("Chức năng hủy đang được cập nhật.", "info");
+        }
+      });
+    }
+
+    const requestReturnBtn = U.byId("requestReturnBtn");
+    if (requestReturnBtn) {
+      requestReturnBtn.addEventListener("click", async () => {
+        if (!confirm("Bạn có chắc chắn muốn trả xe lúc này?")) return;
+        requestReturnBtn.disabled = true;
+        requestReturnBtn.textContent = "Đang xử lý...";
+        try {
+          const res = await authService.apiFetch(`bookings/${booking.id}/request-return`, { method: "POST" });
+          if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message || "Lỗi khi yêu cầu trả xe.");
+          }
+          U.showToast("Đã gửi yêu cầu trả xe thành công.", "success");
+          loadData();
+        } catch (e) {
+          U.showToast(e.message, "error");
+          requestReturnBtn.disabled = false;
+          requestReturnBtn.textContent = "Yêu cầu trả xe";
         }
       });
     }

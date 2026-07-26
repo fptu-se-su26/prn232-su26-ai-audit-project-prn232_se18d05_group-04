@@ -153,7 +153,7 @@
         </div>
 
         <div class="flex items-center gap-4 pt-4 border-t border-zinc-200">
-            <button type="submit" id="btnSubmit" class="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-white hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-colors shadow-sm">
+            <button type="submit" id="btnSubmit" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors shadow-sm">
                 @(isEdit ? "Lưu thay đổi" : "Tạo mới & Đăng xe")
             </button>
             <a href="/Owner/Cars/Index" class="inline-flex items-center justify-center rounded-lg bg-white border border-zinc-300 px-6 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:outline-none transition-colors">
@@ -161,7 +161,7 @@
             </a>
             @if (isEdit)
             {
-                <a href="/Owner/Cars/Images?id=@Model.Id" class="inline-flex items-center justify-center rounded-lg bg-white border border-zinc-300 px-6 py-2.5 text-sm font-medium text-primary border-primary/30 hover:bg-primary/5 focus:outline-none transition-colors ml-auto">
+                <a href="/Owner/Cars/Images?id=@Model.Id" class="inline-flex items-center justify-center rounded-lg bg-white border border-blue-600/30 px-6 py-2.5 text-sm font-medium text-blue-600 hover:bg-blue-50 focus:outline-none transition-colors ml-auto">
                     Quản lý hình ảnh &rarr;
                 </a>
             }
@@ -276,14 +276,23 @@
                     if (validStatus.includes(car.status)) {
                         statusSelect.value = car.status;
                     } else {
-                        // If it's blocked, rented, etc. add it as disabled option just to show
+                        // If it's blocked, rented, etc. add it as option
                         const opt = document.createElement('option');
                         opt.value = car.status;
-                        opt.textContent = car.status === 'rented' ? 'Đang thuê' : car.status === 'blocked' ? 'Đã khóa' : car.status;
+                        
+                        let label = car.status;
+                        if (car.status === 'rented') label = 'Đang thuê';
+                        else if (car.status === 'blocked') label = 'Đã khóa';
+                        else if (car.status === 'pending') label = 'Chờ duyệt';
+                        
+                        opt.textContent = label;
                         statusSelect.appendChild(opt);
                         statusSelect.value = car.status;
-                        statusSelect.disabled = true;
-                        document.getElementById('btnUpdateStatus').disabled = true;
+                        
+                        if (car.status === 'rented' || car.status === 'blocked') {
+                            statusSelect.disabled = true;
+                            document.getElementById('btnUpdateStatus').disabled = true;
+                        }
                     }
                 }
             } catch (e) {

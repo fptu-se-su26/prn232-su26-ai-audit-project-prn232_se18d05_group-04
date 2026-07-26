@@ -52,16 +52,19 @@ import { authService } from '/js/shared/auth-service.js';
     const paid = payment?.paymentStatus === 'success';
     
     let key = "unknown", label = "Không xác định", tone = "neutral";
+    const s = (booking.status || "").toLowerCase();
     
-    if (booking.status === "cancelled") { key = "cancelled"; label = "Đã hủy"; tone = "danger"; }
-    else if (booking.status === "rejected") { key = "rejected"; label = "Đã từ chối"; tone = "danger"; }
-    else if (booking.status === "completed") { key = "completed"; label = "Hoàn tất"; tone = "success"; }
-    else if (booking.status === "pending") {
+    if (s === "cancelled") { key = "cancelled"; label = "Đã hủy"; tone = "danger"; }
+    else if (s === "rejected") { key = "rejected"; label = "Đã từ chối"; tone = "danger"; }
+    else if (s === "completed") { key = "completed"; label = "Hoàn tất"; tone = "success"; }
+    else if (s === "pending" || s === "pendingapproval") {
       if (paid) { key = "handover_pending"; label = "Đã cọc - chờ xác nhận"; tone = "primary"; }
       else { key = "payment_pending"; label = "Chờ thanh toán"; tone = "warning"; }
     }
-    else if (booking.status === "approved") {
-      // Missing inspection check for simplicity, default to renting/wait handover
+    else if (s === "returnrequested") {
+      key = "return_requested"; label = "Chờ trả xe"; tone = "warning";
+    }
+    else if (s === "approved" || s === "waitingdeposit" || s === "waitingpickup" || s === "inprogress") {
       const pickupDate = new Date(booking.startDateTime);
       if (Date.now() < pickupDate.getTime()) { key = "handover_pending"; label = "Chờ bàn giao"; tone = "primary"; }
       else { key = "renting"; label = "Đang thuê"; tone = "primary"; }
@@ -76,7 +79,16 @@ import { authService } from '/js/shared/auth-service.js';
       return { booking, ui };
     }).filter(({ booking, ui }) => {
       const haystack = `${booking.bookingCode || booking.id} ${booking.carName} ${booking.licensePlate}`.toLowerCase();
-      const filterOk = state.filter === "all" || ui.key === state.filter || booking.status === state.filter;
+      
+      let filterOk = false;
+      if (state.filter === "all") {
+        filterOk = true;
+      } else if (state.filter === "renting") {
+        filterOk = ui.key === "renting" || ui.key === "return_requested";
+      } else {
+        filterOk = ui.key === state.filter || booking.status === state.filter;
+      }
+
       return filterOk && (!keyword || haystack.includes(keyword));
     });
     
@@ -134,7 +146,7 @@ import { authService } from '/js/shared/auth-service.js';
       <article class="booking-card-wide">
         <img src="${booking.carImageUrl || '/img/placeholder-car.png'}" alt="${booking.carName}" style="object-fit:cover">
         <div>
-          <div class="car-meta"><span>#${booking.bookingCode || booking.id}</span>${U.renderStatusBadge(ui.tone, ui.label)}${U.renderStatusBadge("neutral", booking.status)}</div>
+          <div class="car-meta"><span>#${booking.bookingCode || booking.id}</span>${U.renderStatusBadge(ui.tone, ui.label)}</div>
           <h2>${booking.carName}</h2>
           <p class="muted">${new Date(booking.startDateTime).toLocaleString('vi-VN')} - ${new Date(booking.endDateTime).toLocaleString('vi-VN')} · ${booking.rentalDays || 0} ngày ${booking.rentalHours ? `và ${booking.rentalHours} giờ` : ''}</p>
           <strong>${U.formatVnd(booking.totalAmount)}</strong>

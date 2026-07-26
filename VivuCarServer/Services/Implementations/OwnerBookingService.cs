@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 using Services.Interfaces;
 using Services.Models.Owner;
+using Services.Models;
 
 namespace Services.Implementations;
 
 public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingService
 {
-    public async Task<IReadOnlyList<OwnerBookingResponse>> GetOwnerBookingsAsync(
+    public async Task<PagedResult<OwnerBookingResponse>> GetOwnerBookingsAsync(
         int ownerId,
         OwnerBookingListFilter filter,
         CancellationToken cancellationToken = default
@@ -43,6 +44,8 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
             }
         }
 
+        var totalCount = await query.CountAsync(cancellationToken);
+        
         var page = Math.Max(filter.Page, 1);
         var pageSize = Math.Clamp(filter.PageSize, 1, 50);
 
@@ -52,7 +55,13 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return list.Select(MapToResponse).ToList();
+        return new PagedResult<OwnerBookingResponse>
+        {
+            Items = list.Select(MapToResponse).ToList(),
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        };
     }
 
     public async Task<OwnerBookingDetailResponse?> GetOwnerBookingDetailAsync(
@@ -312,7 +321,7 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
             AvailableCars = cars.Count(c => c.Status == CarStatus.Available),
             RentedCars = cars.Count(c => c.Status == CarStatus.Rented),
             PendingBookings = bookings.Count(b => b.Status == BookingStatus.PendingApproval),
-            ActiveBookings = bookings.Count(b => b.Status == BookingStatus.InProgress),
+            ActiveBookings = bookings.Count(b => b.Status == BookingStatus.InProgress || b.Status == BookingStatus.ReturnRequested),
             MonthlyRevenue = monthlyRevenue,
             RecentBookings = recentBookings
         };
@@ -338,19 +347,7 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
             EndDateTime = b.EndDateTime,
             TotalAmount = b.TotalAmount,
             DepositAmount = b.DepositAmount,
-            Status = b.Status switch
-            {
-                BookingStatus.PendingApproval => "pending",
-                BookingStatus.WaitingDeposit => "pending",
-                BookingStatus.WaitingPickup => "approved",
-                BookingStatus.InProgress => "approved",
-                BookingStatus.ReturnRequested => "approved",
-                BookingStatus.Completed => "completed",
-                BookingStatus.Rejected => "rejected",
-                BookingStatus.Cancelled => "cancelled",
-                BookingStatus.Expired => "cancelled",
-                _ => "pending"
-            },
+            Status = b.Status.ToString().ToLowerInvariant(),
             CreatedAt = b.CreatedAt
         };
     }

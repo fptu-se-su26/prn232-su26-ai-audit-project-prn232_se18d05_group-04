@@ -103,6 +103,29 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         return Ok(list);
     }
 
+    [HttpPost("{id:int}/request-return")]
+    public async Task<ActionResult<BookingDetailResponse>> RequestReturn(int id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var customerId = GetCurrentUserId();
+            var booking = await bookingService.RequestReturnAsync(customerId, id, cancellationToken);
+            if (booking == null)
+            {
+                return NotFound(new { message = "Booking not found or access denied." });
+            }
+            return Ok(booking);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid(ex.Message);
+        }
+    }
+
     [HttpPost("{id:int}/cancel")]
     public async Task<ActionResult<CancelBookingResponse>> CancelBooking(int id, [FromBody] CancelBookingRequest request, CancellationToken cancellationToken)
     {
