@@ -404,4 +404,4 @@ Sinh viên/nhóm hiểu rằng:
 
 | Đại diện sinh viên/nhóm | Ngày xác nhận |
 |---|---|
-|  |  |
+| Ngô Sỹ Giá - DE180117 | 26/07/2026 |
