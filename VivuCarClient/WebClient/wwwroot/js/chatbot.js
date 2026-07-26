@@ -26,7 +26,6 @@ const VivuCarChatbot = (function() {
         }
     }
 
-    // Attempt to read anonymous session ID from local storage
     function getAnonymousSessionId() {
         return localStorage.getItem("vivucar_anonymous_session_id");
     }
@@ -37,13 +36,9 @@ const VivuCarChatbot = (function() {
 
     async function initSession() {
         if (state.sessionId) return;
-        
+
         try {
-            // First hit API to get or create session (even if not logged in)
             let token = getToken();
-            
-            // Note: SupportController allows anonymous access now. 
-            // The API doesn't know who we are if no token. We can send bookingId if we have one.
             const res = await fetch(`${apiBase}/support/conversations`, {
                 method: 'POST',
                 headers: {
@@ -52,21 +47,20 @@ const VivuCarChatbot = (function() {
                 },
                 body: JSON.stringify({})
             });
-            
+
             if (res.ok) {
                 const data = await res.json();
                 state.sessionId = data.id;
                 state.messages = data.messages || [];
-                
+
                 if (!token) setAnonymousSessionId(state.sessionId);
 
                 renderMessages();
-                
+
                 if (state.messages.length === 0) {
                     appendSystemMessage("Xin chào, tôi có thể hỗ trợ bạn tìm xe, đặt xe, thanh toán cọc hoặc xử lý vấn đề sau chuyến đi.");
                 }
 
-                // Connect SignalR
                 await connectSignalR();
             } else {
                 appendSystemMessage("Không thể khởi tạo phiên trò chuyện.");
@@ -88,8 +82,6 @@ const VivuCarChatbot = (function() {
             .build();
 
         state.connection.on("ReceiveMessage", (message) => {
-            // If message is from me, it might already be in UI optimistically, but we should handle it better
-            // For now, let's just re-render if it's not already there by checking id (or just append)
             if (!state.messages.find(m => m.id === message.id)) {
                 state.messages.push(message);
                 renderMessages();
@@ -98,8 +90,6 @@ const VivuCarChatbot = (function() {
 
         try {
             await state.connection.start();
-            console.log("SignalR Connected.");
-            // Join the group for this session
             await state.connection.invoke("JoinSession", state.sessionId.toString());
         } catch (err) {
             console.error("SignalR Connection Error: ", err);
@@ -108,44 +98,45 @@ const VivuCarChatbot = (function() {
 
     function toggleChat() {
         state.isOpen = !state.isOpen;
-        const windowEl = document.getElementById("chatbotWindow");
-        const badgeEl = document.getElementById("chatbotBadge");
-        
+        const panel = document.getElementById("chatbotPanel");
+        const overlay = document.getElementById("chatbotOverlay");
+        const badge = document.getElementById("chatbotBadge");
+
         if (state.isOpen) {
-            windowEl.style.display = "flex";
-            badgeEl.style.display = "none";
+            panel.classList.add("active");
+            overlay.classList.add("active");
+            badge.style.display = "none";
             initSession();
         } else {
-            windowEl.style.display = "none";
+            panel.classList.remove("active");
+            overlay.classList.remove("active");
         }
     }
 
     function closeChat() {
         state.isOpen = false;
-        document.getElementById("chatbotWindow").style.display = "none";
+        document.getElementById("chatbotPanel").classList.remove("active");
+        document.getElementById("chatbotOverlay").classList.remove("active");
     }
 
     function renderMessages() {
         const container = document.getElementById("chatbotMessages");
         if (!container) return;
-        
+
         container.innerHTML = "";
-        
+
         state.messages.forEach(msg => {
             const div = document.createElement("div");
-            // Determine role: senderId null => system/assistant. Wait, if AI, role='assistant'.
             let cssClass = 'bot';
             if (msg.role === 'user') cssClass = 'user';
             else if (msg.role === 'system') cssClass = 'system';
             else if (msg.role === 'assistant') cssClass = 'bot';
 
             div.className = `chat-msg ${cssClass}`;
-            // Use innerHTML instead of textContent to render markdown or line breaks from AI if needed, but be careful of XSS
-            // For now just basic format:
             div.innerHTML = msg.content.replace(/\n/g, "<br>");
             container.appendChild(div);
         });
-        
+
         scrollToBottom();
     }
 
@@ -163,17 +154,14 @@ const VivuCarChatbot = (function() {
 
         const inputEl = document.getElementById("chatbotInput");
         const text = content || inputEl.value.trim();
-        
+
         if (!text) return;
-        
+
         inputEl.value = "";
-        
+
         try {
-            // Send via SignalR
             if (state.connection && state.connection.state === signalR.HubConnectionState.Connected) {
-                // Determine user ID from token, but we are using SignalR which expects senderId
                 const senderId = getUserIdFromToken();
-                
                 await state.connection.invoke("SendMessage", state.sessionId.toString(), text, senderId, "user");
             } else {
                 appendSystemMessage("Kết nối bị gián đoạn, không thể gửi tin nhắn.");
@@ -194,26 +182,6 @@ const VivuCarChatbot = (function() {
         sendMessage(text);
     }
 
-    async function escalate() {
-        if (!state.sessionId) return;
-        
-        try {
-            let token = getToken();
-            const res = await fetch(`${apiBase}/support/conversations/${state.sessionId}/escalate`, {
-                method: 'POST',
-                headers: { 
-                    'Authorization': `Bearer ${token}` 
-                }
-            });
-            
-            if (res.ok) {
-                appendSystemMessage("Tôi đã chuyển cuộc trò chuyện cho người hỗ trợ.");
-            }
-        } catch (e) {
-            console.error("Failed to escalate", e);
-        }
-    }
-
     function scrollToBottom() {
         const container = document.getElementById("chatbotMessages");
         if (container) {
@@ -226,7 +194,6 @@ const VivuCarChatbot = (function() {
         closeChat,
         sendMessage,
         handleEnter,
-        sendQuickReply,
-        escalate
+        sendQuickReply
     };
 })();

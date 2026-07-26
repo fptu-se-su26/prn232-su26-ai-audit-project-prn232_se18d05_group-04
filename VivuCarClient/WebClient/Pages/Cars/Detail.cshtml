@@ -1,210 +1,281 @@
 @page "/cars/detail"
 @model WebClient.Pages.Cars.DetailModel
 @{
-    ViewData["Title"] = "Car Detail - VivuCar";
+    ViewData["Title"] = "Chi tiết xe - VivuCar";
     Layout = null;
 }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title id="pageTitle">@ViewData["Title"]</title>
-    <meta name="description" content="Car rental details: specs, photos, pricing, policies, owner info, and reviews." />
+    <meta name="description" content="Chi tiết xe cho thuê tự lái: thông số, hình ảnh, giá cả, chính sách và đánh giá." />
     <script>
         tailwind = { config: { theme: { extend: { colors: { primary: { DEFAULT:'#16a34a',50:'#f0fdf4',100:'#dcfce7',700:'#15803d' } }, fontFamily: { sans:['Be Vietnam Pro','Segoe UI','Arial','sans-serif'] } } } } };
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/chat.css" />
     <style>
-        .tab-btn { cursor:pointer; padding:10px 18px; font-size:.875rem; font-weight:600; border-bottom:2px solid transparent; color:#71717a; transition:all .15s; }
-        .tab-btn.active { border-bottom-color:#16a34a; color:#16a34a; }
-        .gallery-thumb { cursor:pointer; border:2px solid transparent; border-radius:8px; overflow:hidden; transition:border-color .15s; }
-        .gallery-thumb.active, .gallery-thumb:hover { border-color:#16a34a; }
+        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+        body { font-family:'Be Vietnam Pro',sans-serif; background:#f7f7f5; color:#1f1f1f; -webkit-font-smoothing:antialiased; }
+
+        /* Skeleton */
         .skeleton { background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:12px; }
         @@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+        /* Gallery */
+        .gallery-main-wrap { position:relative; background:#e4e4e7; overflow:hidden; }
+        .gallery-main-wrap img { width:100%; height:420px; object-fit:cover; display:block; transition:opacity .3s; }
+        .gallery-nav { position:absolute; top:50%; transform:translateY(-50%); width:36px; height:36px; border-radius:50%; border:none; background:rgba(0,0,0,.5); color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .2s,transform .2s; z-index:5; }
+        .gallery-nav:hover { background:rgba(0,0,0,.75); transform:translateY(-50%) scale(1.08); }
+        .gallery-nav.prev { left:12px; }
+        .gallery-nav.next { right:12px; }
+        .img-counter { position:absolute; bottom:12px; right:12px; background:rgba(0,0,0,.55); color:#fff; font-size:.75rem; font-weight:600; padding:3px 10px; border-radius:999px; z-index:5; backdrop-filter:blur(4px); }
+        .thumb-scroll { display:flex; gap:8px; padding:10px 12px; overflow-x:auto; scrollbar-width:thin; scrollbar-color:#d4d4d8 transparent; }
+        .thumb-scroll::-webkit-scrollbar { height:4px; }
+        .thumb-scroll::-webkit-scrollbar-thumb { background:#d4d4d8; border-radius:4px; }
+        .gallery-thumb { flex-shrink:0; width:88px; height:60px; border-radius:8px; overflow:hidden; cursor:pointer; border:2px solid transparent; transition:border-color .2s,transform .2s; }
+        .gallery-thumb:hover { transform:scale(1.03); }
+        .gallery-thumb.active { border-color:#16a34a; }
+        .gallery-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+
+        /* Tabs */
+        .tab-bar { display:flex; border-bottom:1px solid #e6e4df; overflow-x:auto; scrollbar-width:none; }
+        .tab-bar::-webkit-scrollbar { display:none; }
+        .tab-btn { cursor:pointer; padding:12px 20px; font-size:.8125rem; font-weight:600; color:#71717a; border:none; background:none; border-bottom:2px solid transparent; transition:all .15s; white-space:nowrap; font-family:inherit; }
+        .tab-btn:hover { color:#1f1f1f; }
+        .tab-btn.active { color:#16a34a; border-bottom-color:#16a34a; }
+
+        /* Booking card */
+        .booking-sidebar { position:sticky; top:84px; align-self:start; }
+
+        /* Price estimate */
+        .price-estimate { overflow:hidden; transition:max-height .35s ease,opacity .35s ease; max-height:0; opacity:0; }
+        .price-estimate.open { max-height:300px; opacity:1; }
+
+        /* Mobile booking bar */
+        .mobile-booking-bar { position:fixed; bottom:0; left:0; right:0; background:#fff; border-top:1px solid #e6e4df; padding:12px 16px; display:none; z-index:40; box-shadow:0 -4px 20px rgba(0,0,0,.06); }
+        @@media (max-width:1023px) { .mobile-booking-bar { display:flex; align-items:center; justify-content:space-between; } .gallery-main-wrap img { height:320px; } }
+
+        /* Review */
+        .review-card { border-bottom:1px solid #f0f0f0; padding:16px 0; }
+        .review-card:last-of-type { border-bottom:none; }
+
+        @@media (max-width:640px) {
+            .gallery-main-wrap img { height:240px; }
+        }
     </style>
 </head>
-<body class="bg-zinc-50 text-zinc-900 font-sans antialiased">
+<body>
 
     <!-- Navbar -->
     <partial name="_Navbar" />
 
     <!-- Breadcrumb -->
-    <div class="bg-white border-b border-zinc-100 px-4 py-3 text-sm text-zinc-500">
-        <div class="max-w-7xl mx-auto flex items-center gap-2">
-            <a href="/cars" class="hover:text-primary transition-colors">Home</a>
-            <span>›</span>
-            <a href="/cars/search" class="hover:text-primary transition-colors">Browse Cars</a>
-            <span>›</span>
-            <span id="breadcrumbName" class="text-zinc-900 font-medium">Car Detail</span>
+    <div style="background:#fff;border-bottom:1px solid #e6e4df;padding:10px 20px">
+        <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:6px;font-size:.8125rem;color:#a1a1aa">
+            <a href="/" style="color:#a1a1aa;text-decoration:none;transition:color .15s">Trang chủ</a>
+            <span style="color:#d4d4d8">›</span>
+            <a href="/cars/search" style="color:#a1a1aa;text-decoration:none;transition:color .15s">Thuê xe</a>
+            <span style="color:#d4d4d8">›</span>
+            <span id="breadcrumbName" style="color:#1f1f1f;font-weight:600">Chi tiết xe</span>
         </div>
     </div>
 
     <!-- Loading -->
-    <div id="loadingState" class="max-w-7xl mx-auto px-4 py-10">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 space-y-4">
-                <div class="skeleton h-80 w-full"></div>
-                <div class="flex gap-2"><div class="skeleton h-20 w-28"></div><div class="skeleton h-20 w-28"></div><div class="skeleton h-20 w-28"></div></div>
-                <div class="skeleton h-48 w-full"></div>
-            </div>
-            <div><div class="skeleton h-96 w-full"></div></div>
+    <div id="loadingState" style="max-width:1280px;margin:0 auto;padding:24px 20px">
+        <div style="display:grid;grid-template-columns:1fr;gap:24px">
+            <div class="skeleton" style="height:400px;width:100%"></div>
+            <div style="display:flex;gap:8px"><div class="skeleton" style="height:72px;width:96px"></div><div class="skeleton" style="height:72px;width:96px"></div><div class="skeleton" style="height:72px;width:96px"></div></div>
         </div>
     </div>
 
     <!-- Error -->
-    <div id="errorState" class="hidden max-w-7xl mx-auto px-4 py-24 text-center">
-        <svg class="h-16 w-16 mx-auto mb-4 text-zinc-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-        <h2 class="font-bold text-xl text-zinc-700 mb-2">Car Not Found</h2>
-        <p class="text-zinc-400 mb-6">This car no longer exists or has been removed.</p>
-        <a href="/cars/search" class="px-6 py-2.5 bg-primary text-white rounded-xl font-semibold text-sm hover:bg-green-700 transition-colors">← Back to Browse</a>
+    <div id="errorState" style="display:none;max-width:1280px;margin:0 auto;padding:80px 20px;text-align:center">
+        <div style="font-size:4rem;margin-bottom:16px;opacity:.3">🚗</div>
+        <h2 style="font-size:1.25rem;font-weight:700;color:#1f1f1f;margin-bottom:8px">Không tìm thấy xe</h2>
+        <p style="font-size:.875rem;color:#a1a1aa;margin-bottom:24px">Xe không tồn tại hoặc đã bị xoá.</p>
+        <a href="/cars/search" style="display:inline-flex;align-items:center;gap:6px;padding:10px 24px;background:#16a34a;color:#fff;border-radius:12px;font-size:.875rem;font-weight:600;text-decoration:none;transition:background .2s">← Quay lại tìm xe</a>
     </div>
 
     <!-- Main Content -->
-    <main id="detailContent" class="hidden max-w-7xl mx-auto px-4 py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <main id="detailContent" style="display:none;max-width:1280px;margin:0 auto;padding:24px 20px 100px">
+        <div style="display:grid;grid-template-columns:1fr 380px;gap:28px;align-items:start">
+            @* Mobile back button *@
+            <div style="display:none;margin-bottom:8px" class="mobile-back">
+                <a href="/cars/search" style="display:inline-flex;align-items:center;gap:4px;font-size:.8125rem;color:#71717a;text-decoration:none">← Quay lại</a>
+            </div>
 
             <!-- Left: Gallery + Tabs -->
-            <div class="lg:col-span-2 space-y-5">
+            <div style="display:flex;flex-direction:column;gap:20px">
+
                 <!-- Gallery -->
-                <div class="bg-white rounded-2xl border border-zinc-200 overflow-hidden">
-                    <div class="relative bg-zinc-100">
-                        <img id="mainImage" src="" alt="" class="w-full h-80 object-cover" />
-                        <button id="prevImg" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                <div style="background:#fff;border-radius:16px;border:1px solid #e6e4df;overflow:hidden">
+                    <div class="gallery-main-wrap">
+                        <img id="mainImage" src="" alt="" style="width:100%;height:420px;object-fit:cover;display:block" />
+                        <button id="prevImg" class="gallery-nav prev">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
                         </button>
-                        <button id="nextImg" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors">
-                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <button id="nextImg" class="gallery-nav next">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                         </button>
-                        <span id="imgCounter" class="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full"></span>
+                        <span id="imgCounter" class="img-counter">1 / 1</span>
                     </div>
-                    <div id="thumbRow" class="flex gap-2 p-3 overflow-x-auto"></div>
+                    <div id="thumbRow" class="thumb-scroll"></div>
                 </div>
 
                 <!-- Tabs -->
-                <div class="bg-white rounded-2xl border border-zinc-200 overflow-hidden">
-                    <div class="flex border-b border-zinc-200">
-                        <button class="tab-btn active" data-tab="description">Description</button>
-                        <button class="tab-btn" data-tab="specs">Specifications</button>
-                        <button class="tab-btn" data-tab="rules">Rental Policy</button>
-                        <button class="tab-btn" data-tab="reviews">Reviews</button>
+                <div style="background:#fff;border-radius:16px;border:1px solid #e6e4df;overflow:hidden">
+                    <div class="tab-bar">
+                        <button class="tab-btn active" data-tab="description" type="button">Mô tả</button>
+                        <button class="tab-btn" data-tab="specs" type="button">Thông số</button>
+                        <button class="tab-btn" data-tab="rules" type="button">Chính sách</button>
+                        <button class="tab-btn" data-tab="reviews" type="button">Đánh giá</button>
                     </div>
-                    <div id="tabContent" class="p-6 min-h-[200px]"></div>
+                    <div id="tabContent" style="padding:24px;min-height:180px;font-size:.875rem;color:#52525b;line-height:1.6"></div>
                 </div>
             </div>
 
-            <!-- Right: Booking + Owner -->
-            <div class="space-y-5 sticky top-20 self-start">
+            <!-- Right: Booking Sidebar -->
+            <div class="booking-sidebar" style="display:flex;flex-direction:column;gap:16px">
                 <!-- Booking Card -->
-                <div class="bg-white rounded-2xl border border-zinc-200 p-5 space-y-4">
-                    <div>
-                        <p id="cardBrand" class="text-xs text-zinc-400 font-semibold uppercase tracking-wide mb-1"></p>
-                        <h1 id="cardName" class="text-xl font-bold text-zinc-900 leading-tight"></h1>
-                        <p id="cardLocation" class="text-sm text-zinc-500 mt-1 flex items-center gap-1">
-                            <svg class="h-4 w-4 text-zinc-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                            <span></span>
-                        </p>
+                <div style="background:#fff;border-radius:16px;border:1px solid #e6e4df;padding:24px">
+                    <!-- Header -->
+                    <div style="margin-bottom:4px">
+                        <span id="cardBrand" style="font-size:.75rem;font-weight:600;color:#a1a1aa;text-transform:uppercase;letter-spacing:.04em"></span>
+                        <h1 id="cardName" style="font-size:1.25rem;font-weight:800;color:#1f1f1f;margin:2px 0 4px;line-height:1.3"></h1>
                     </div>
 
-                    <div class="flex flex-wrap gap-2">
-                        <span id="statusBadge" class="text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700">Available</span>
-                        <span id="ratingBadge" class="text-xs font-semibold px-3 py-1 rounded-full bg-amber-50 text-amber-700"></span>
+                    <!-- Location -->
+                    <div style="display:flex;align-items:center;gap:4px;font-size:.8125rem;color:#71717a;margin-bottom:12px">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <span id="cardLocation"></span>
                     </div>
 
-                    <div class="py-3 border-y border-zinc-100">
-                        <div class="flex items-baseline gap-1">
-                            <span id="dailyPrice" class="text-2xl font-extrabold text-zinc-900"></span>
-                            <span class="text-zinc-400 text-sm">/day</span>
+                    <!-- Status + Rating -->
+                    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+                        <span id="statusBadge" style="font-size:.75rem;font-weight:600;padding:3px 12px;border-radius:999px">Sẵn sàng</span>
+                        <span id="ratingBadge" style="display:none;font-size:.75rem;font-weight:600;padding:3px 12px;border-radius:999px;background:#fffbeb;color:#b45309"></span>
+                    </div>
+
+                    <!-- Price -->
+                    <div style="padding:16px 0;border-top:1px solid #e6e4df;border-bottom:1px solid #e6e4df;margin-bottom:16px">
+                        <div style="display:flex;align-items:baseline;gap:4px">
+                            <span id="dailyPrice" style="font-size:1.625rem;font-weight:800;color:#1f1f1f"></span>
+                            <span style="font-size:.8125rem;color:#a1a1aa">/ ngày</span>
                         </div>
-                        <p id="depositInfo" class="text-xs text-zinc-400 mt-1"></p>
+                        <p id="depositInfo" style="font-size:.75rem;color:#a1a1aa;margin-top:4px"></p>
                     </div>
 
-                    <!-- Date Pickers -->
-                    <div class="space-y-3">
+                    <!-- Date pickers -->
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
                         <div>
-                            <label class="block text-xs font-semibold text-zinc-500 mb-1">Pickup Date</label>
-                            <input id="pickupDate" type="date" class="w-full border border-zinc-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                            <label style="display:block;font-size:.75rem;font-weight:600;color:#52525b;margin-bottom:4px">Ngày nhận</label>
+                            <input id="pickupDate" type="date" style="width:100%;border:1px solid #e6e4df;border-radius:10px;padding:9px 12px;font-size:.8125rem;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;color:#1f1f1f;-webkit-appearance:none" onfocus="this.style.borderColor='#16a34a';this.style.boxShadow='0 0 0 3px rgba(22,163,74,.12)'" onblur="this.style.borderColor=this.getAttribute('data-err')==='1'?'#ef4444':'#e6e4df';this.style.boxShadow='none'" />
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-zinc-500 mb-1">Return Date</label>
-                            <input id="returnDate" type="date" class="w-full border border-zinc-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" />
+                            <label style="display:block;font-size:.75rem;font-weight:600;color:#52525b;margin-bottom:4px">Ngày trả</label>
+                            <input id="returnDate" type="date" style="width:100%;border:1px solid #e6e4df;border-radius:10px;padding:9px 12px;font-size:.8125rem;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;color:#1f1f1f;-webkit-appearance:none" onfocus="this.style.borderColor='#16a34a';this.style.boxShadow='0 0 0 3px rgba(22,163,74,.12)'" onblur="this.style.borderColor=this.getAttribute('data-err')==='1'?'#ef4444':'#e6e4df';this.style.boxShadow='none'" />
                         </div>
                     </div>
 
-                    <!-- Price Estimate -->
-                    <div id="priceEstimate" class="hidden bg-zinc-50 rounded-xl p-3 space-y-1 text-sm">
-                        <div class="flex justify-between text-zinc-600"><span>Rental days</span><span id="totalDays" class="font-semibold">1 day</span></div>
-                        <div class="flex justify-between text-zinc-600"><span>Rental fee</span><span id="rentalSubtotal" class="font-semibold"></span></div>
-                        <div class="flex justify-between text-zinc-600"><span>Insurance</span><span id="insuranceSubtotal" class="font-semibold"></span></div>
-                        <div class="flex justify-between font-bold text-zinc-900 pt-1 border-t border-zinc-200">
-                            <span>Estimated Total</span><span id="totalEstimate" class="text-primary"></span>
+                    <!-- Price estimate -->
+                    <div id="priceEstimate" class="price-estimate" style="border-radius:10px;background:#f7f7f5;margin-bottom:12px">
+                        <div style="padding:12px 14px">
+                            <div style="display:flex;justify-content:space-between;align-items:center;font-size:.8125rem;color:#52525b;padding:4px 0"><span>Số ngày thuê</span><span id="totalDays" style="font-weight:600;color:#1f1f1f">1 ngày</span></div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;font-size:.8125rem;color:#52525b;padding:4px 0"><span>Phí thuê</span><span id="rentalSubtotal" style="font-weight:600;color:#1f1f1f"></span></div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;font-size:.8125rem;color:#52525b;padding:4px 0"><span>Bảo hiểm</span><span id="insuranceSubtotal" style="font-weight:600;color:#1f1f1f"></span></div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;font-size:.8125rem;padding:8px 0 0;margin-top:4px;border-top:1px solid #e6e4df;font-weight:700;color:#1f1f1f">
+                                <span>Tạm tính</span><span id="totalEstimate" style="color:#16a34a;font-size:1rem"></span>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Date validation error msg -->
-                    <p id="dateError" class="hidden text-xs font-semibold text-red-600 bg-red-50 px-3 py-2 rounded-lg"></p>
+                    <!-- Date error -->
+                    <p id="dateError" style="display:none;font-size:.75rem;font-weight:600;color:#dc2626;background:#fef2f2;padding:8px 12px;border-radius:8px;margin-bottom:12px"></p>
 
-                    <!-- CTAs -->
-                    <div class="space-y-2">
+                    <!-- CTA -->
+                    <div style="display:flex;flex-direction:column;gap:8px">
                         <button id="btnBook" type="button"
-                           style="display:block;width:100%;text-align:center;background:#16a34a;color:#ffffff;font-weight:700;padding:12px 0;border-radius:12px;font-size:0.875rem;border:none;cursor:pointer;transition:background 0.2s;"
+                           style="display:block;width:100%;text-align:center;background:#16a34a;color:#fff;font-weight:700;padding:12px 0;border-radius:12px;font-size:.875rem;border:none;cursor:pointer;transition:background .2s,transform .15s"
                            onmouseover="if(this.dataset.available!=='false') this.style.background='#15803d'"
-                           onmouseout="if(this.dataset.available!=='false') this.style.background='#16a34a'">
-                            Book Car
+                           onmouseout="if(this.dataset.available!=='false') this.style.background='#16a34a'"
+                           onmousedown="if(this.dataset.available!=='false') this.style.transform='scale(.97)'"
+                           onmouseup="if(this.dataset.available!=='false') this.style.transform='scale(1)'">
+                            Đặt xe ngay
                         </button>
-                        <button id="btnContact"
-                                class="w-full border border-zinc-200 text-zinc-700 font-semibold py-3 rounded-xl text-sm hover:bg-zinc-50 transition-colors">
-                            Message Owner
+                        <button id="btnContact" type="button"
+                                style="width:100%;border:1px solid #e6e4df;background:#fff;color:#52525b;font-weight:600;padding:12px 0;border-radius:12px;font-size:.875rem;cursor:pointer;transition:background .2s;font-family:inherit"
+                                onmouseover="this.style.background='#f7f7f5'" onmouseout="this.style.background='#fff'">
+                            Liên hệ chủ xe
                         </button>
                     </div>
                 </div>
 
-                <!-- Owner Info Card -->
-                <div id="ownerCard" class="bg-white rounded-2xl border border-zinc-200 p-5">
-                    <h3 class="text-sm font-bold text-zinc-700 mb-3">Car Owner</h3>
-                    <div class="flex items-center gap-3">
-                        <div id="ownerAvatar" class="w-12 h-12 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-400 shrink-0 overflow-hidden">
-                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <!-- Owner Info -->
+                <div id="ownerCard" style="background:#fff;border-radius:16px;border:1px solid #e6e4df;padding:20px">
+                    <h3 style="font-size:.8125rem;font-weight:700;color:#52525b;margin-bottom:12px">Chủ xe</h3>
+                    <div style="display:flex;align-items:center;gap:12px">
+                        <div id="ownerAvatar" style="width:44px;height:44px;border-radius:50%;background:#e4e4e7;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;border:1px solid #e6e4df">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                         </div>
                         <div>
-                            <p id="ownerName" class="font-semibold text-zinc-900 text-sm"></p>
-                            <p class="text-xs text-zinc-400">Verified VivuCar Owner</p>
+                            <p id="ownerName" style="font-weight:600;color:#1f1f1f;font-size:.875rem"></p>
+                            <p style="font-size:.75rem;color:#a1a1aa">Chủ xe đã xác thực</p>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Policy summary mini -->
+                <div style="background:#fff;border-radius:16px;border:1px solid #e6e4df;padding:16px 20px">
+                    <div style="display:flex;gap:16px;font-size:.75rem;color:#71717a;flex-wrap:wrap">
+                        <span>🚭 Không hút thuốc</span>
+                        <span>🔑 Giao xe tận nơi</span>
+                        <span>📄 Hợp đồng điện tử</span>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="border-t border-zinc-200 bg-white py-8 mt-10 text-center text-sm text-zinc-500">
-        &copy; 2026 VivuCar &mdash; Self-Drive Car Rental
+    <!-- Mobile bottom booking bar -->
+    <div class="mobile-booking-bar">
+        <div>
+            <span id="mobilePrice" style="font-size:1.125rem;font-weight:800;color:#1f1f1f"></span>
+            <span style="font-size:.75rem;color:#a1a1aa">/ ngày</span>
+        </div>
+        <button id="btnBookMobile" type="button"
+                style="padding:10px 24px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-size:.8125rem;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit"
+                onmouseover="if(this.dataset.available!=='false') this.style.background='#15803d'"
+                onmouseout="if(this.dataset.available!=='false') this.style.background='#16a34a'">
+            Đặt ngay
+        </button>
+    </div>
+
+    <!-- Chatbot -->
+    <partial name="_ChatbotWidget" />
+
+    <!-- Footer -->
+    <footer style="border-top:1px solid #e6e4df;background:#fff;padding:24px 20px;text-align:center;font-size:.8125rem;color:#a1a1aa">
+        &copy; 2026 VivuCar — Dịch vụ cho thuê xe tự lái
     </footer>
 
     <script type="module">
         import { authService } from '/js/shared/auth-service.js';
-        window.VivuCarAuthService = authService;
-        authService.refresh().then(s => {
-            const u = s?.user ?? null;
-            if (u) {
-                document.getElementById('navUserName').textContent = u.fullName;
-                document.getElementById('navUserName').classList.remove('hidden');
-                document.getElementById('navLoginBtn').classList.add('hidden');
-                document.getElementById('navLogoutBtn').classList.remove('hidden');
-            }
-        });
-        document.getElementById('navLogoutBtn').addEventListener('click', async () => { await authService.logout(); window.location.href = '/'; });
+        authService.refresh();
     </script>
     <script>
         const carId = new URLSearchParams(location.search).get('id');
         let CAR = null, images = [], currentImg = 0;
 
         const fmt = n => (n||0).toLocaleString('vi-VN') + '₫';
-        const fuelMap = { Gasoline:'Gasoline', Electric:'Electric', Diesel:'Diesel', Hybrid:'Hybrid' };
-        const transMap = { Automatic:'Automatic', Manual:'Manual', Cvt:'CVT' };
+        const fuelMap = { Gasoline:'Xăng', Electric:'Điện', Diesel:'Dầu', Hybrid:'Hybrid' };
+        const transMap = { Automatic:'Tự động', Manual:'Số sàn', Cvt:'CVT' };
 
-        function showError() { document.getElementById('loadingState').classList.add('hidden'); document.getElementById('errorState').classList.remove('hidden'); }
-        function showContent() { document.getElementById('loadingState').classList.add('hidden'); document.getElementById('detailContent').classList.remove('hidden'); }
+        function showError() { document.getElementById('loadingState').style.display='none'; document.getElementById('errorState').style.display='block'; }
+        function showContent() { document.getElementById('loadingState').style.display='none'; document.getElementById('detailContent').style.display='block'; }
 
         async function loadCar() {
             if (!carId) { showError(); return; }
@@ -213,7 +284,7 @@
                 if (!r.ok) { showError(); return; }
                 CAR = await r.json();
                 renderCar();
-            } catch(e) { console.error('Failed to load car detail:', e); showError(); }
+            } catch(e) { console.error('Load car detail failed:', e); showError(); }
         }
 
         function renderCar() {
@@ -226,59 +297,84 @@
             document.getElementById('breadcrumbName').textContent = CAR.name;
             document.getElementById('cardBrand').textContent = CAR.brandName || '';
             document.getElementById('cardName').textContent = CAR.name;
-            document.getElementById('cardLocation').querySelector('span').textContent = CAR.location || 'Da Nang';
+            document.getElementById('cardLocation').textContent = CAR.location || 'Đà Nẵng';
             document.getElementById('dailyPrice').textContent = fmt(CAR.dailyPrice);
-            document.getElementById('depositInfo').textContent = `Deposit: ${fmt(CAR.depositAmount)}  ·  Insurance: ${fmt(CAR.insuranceFeePerDay)}/day`;
-            document.getElementById('ratingBadge').textContent = `★ ${(CAR.averageRating||0).toFixed(1)}  (${(CAR.reviews||[]).length} reviews)`;
+            document.getElementById('mobilePrice').textContent = fmt(CAR.dailyPrice);
+            document.getElementById('depositInfo').textContent = `Cọc ${fmt(CAR.depositAmount)} · Bảo hiểm ${fmt(CAR.insuranceFeePerDay)}/ngày`;
 
-            const st = (CAR.status||'Available').toLowerCase();
+            // Rating
+            const avg = CAR.averageRating || 0;
+            const reviewCount = (CAR.reviews || []).length;
+            const ratingEl = document.getElementById('ratingBadge');
+            if (reviewCount > 0) {
+                ratingEl.textContent = `★ ${avg.toFixed(1)} (${reviewCount})`;
+                ratingEl.style.display = 'inline';
+            } else {
+                ratingEl.style.display = 'none';
+            }
+
+            // Status
+            const st = (CAR.status || 'Available').toLowerCase();
             const ok = st === 'available';
             const sb = document.getElementById('statusBadge');
             if (st === 'available') {
-                sb.textContent = '✓ Available';
-                sb.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700';
+                sb.textContent = '✓ Sẵn sàng';
+                sb.style.cssText = 'display:inline;font-size:.75rem;font-weight:600;padding:3px 12px;border-radius:999px;background:#f0fdf4;color:#065f46';
             } else if (st === 'rented') {
-                sb.textContent = 'Rented';
-                sb.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-amber-100 text-amber-700';
+                sb.textContent = 'Đang cho thuê';
+                sb.style.cssText = 'display:inline;font-size:.75rem;font-weight:600;padding:3px 12px;border-radius:999px;background:#fffbeb;color:#92400e';
             } else if (st === 'maintenance') {
-                sb.textContent = 'Maintenance';
-                sb.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-orange-100 text-orange-700';
+                sb.textContent = 'Bảo trì';
+                sb.style.cssText = 'display:inline;font-size:.75rem;font-weight:600;padding:3px 12px;border-radius:999px;background:#fff7ed;color:#c2410c';
             } else {
-                sb.textContent = CAR.status || 'Unavailable';
-                sb.className = 'text-xs font-semibold px-3 py-1 rounded-full bg-zinc-100 text-zinc-500';
+                sb.textContent = 'Không khả dụng';
+                sb.style.cssText = 'display:inline;font-size:.75rem;font-weight:600;padding:3px 12px;border-radius:999px;background:#f4f4f5;color:#71717a';
             }
 
-            const btnBook = document.getElementById('btnBook');
-            if (ok) {
-                btnBook.textContent = 'Book Car';
-                btnBook.dataset.available = 'true';
-                btnBook.style.cssText = 'display:block;width:100%;text-align:center;background:#16a34a;color:#ffffff;font-weight:700;padding:12px 0;border-radius:12px;font-size:0.875rem;border:none;cursor:pointer;transition:background 0.2s;';
-            } else {
-                btnBook.textContent = st === 'rented' ? 'Currently Rented' : (st === 'maintenance' ? 'Under Maintenance' : 'Unavailable');
-                btnBook.dataset.available = 'false';
-                btnBook.style.cssText = 'display:block;width:100%;text-align:center;background:#e4e4e7;color:#a1a1aa;font-weight:700;padding:12px 0;border-radius:12px;font-size:0.875rem;border:none;cursor:not-allowed;';
-            }
+            // Book button
+            const setBtnState = (btn, available) => {
+                if (available) {
+                    btn.textContent = btn.id === 'btnBook' ? 'Đặt xe ngay' : 'Đặt ngay';
+                    btn.dataset.available = 'true';
+                    btn.style.cssText = (btn.id==='btnBook'
+                        ? 'display:block;width:100%;text-align:center;background:#16a34a;color:#fff;font-weight:700;padding:12px 0;border-radius:12px;font-size:.875rem;border:none;cursor:pointer;transition:background .2s,transform .15s'
+                        : 'padding:10px 24px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-size:.8125rem;font-weight:700;cursor:pointer;transition:background .2s;font-family:inherit');
+                } else {
+                    const label = st === 'rented' ? 'Đang cho thuê' : (st === 'maintenance' ? 'Đang bảo trì' : 'Không khả dụng');
+                    btn.textContent = label;
+                    btn.dataset.available = 'false';
+                    btn.style.cssText = btn.id==='btnBook'
+                        ? 'display:block;width:100%;text-align:center;background:#e4e4e7;color:#a1a1aa;font-weight:700;padding:12px 0;border-radius:12px;font-size:.875rem;border:none;cursor:not-allowed'
+                        : 'padding:10px 24px;background:#e4e4e7;color:#a1a1aa;border:none;border-radius:10px;font-size:.8125rem;font-weight:700;cursor:not-allowed;font-family:inherit';
+                }
+            };
+            setBtnState(document.getElementById('btnBook'), ok);
+            setBtnState(document.getElementById('btnBookMobile'), ok);
 
-            document.getElementById('ownerName').textContent = CAR.ownerFullName || 'Car Owner';
-            if (CAR.ownerAvatarUrl) document.getElementById('ownerAvatar').innerHTML = `<img src="${CAR.ownerAvatarUrl}" class="w-full h-full object-cover" />`;
+            // Owner
+            document.getElementById('ownerName').textContent = CAR.ownerFullName || 'Chủ xe';
+            if (CAR.ownerAvatarUrl) {
+                document.getElementById('ownerAvatar').innerHTML = `<img src="${CAR.ownerAvatarUrl}" style="width:100%;height:100%;object-fit:cover" />`;
+            }
 
             renderGallery();
             renderTab('description');
             showContent();
         }
 
+        // ── Gallery ──
         function renderGallery() {
             const main = document.getElementById('mainImage');
             if (!images.length) {
-                main.closest('.relative').innerHTML = '<div class="w-full h-80 bg-zinc-100 flex items-center justify-center text-zinc-300 text-6xl">🚗</div>';
+                main.closest('.gallery-main-wrap').innerHTML = '<div style="height:420px;display:flex;align-items:center;justify-content:center;font-size:5rem;color:#d4d4d8">🚗</div>';
                 return;
             }
             main.src = images[currentImg].imageUrl;
             main.alt = CAR.name;
             updateCounter();
             document.getElementById('thumbRow').innerHTML = images.map((img, i) =>
-                `<div class="gallery-thumb shrink-0 ${i===currentImg?'active':''}" data-idx="${i}">
-                    <img src="${img.imageUrl}" alt="${i+1}" class="h-20 w-28 object-cover" />
+                `<div class="gallery-thumb ${i===currentImg?'active':''}" data-idx="${i}">
+                    <img src="${img.imageUrl}" alt="" loading="lazy" />
                  </div>`
             ).join('');
         }
@@ -289,20 +385,26 @@
         }
 
         function setImage(idx) {
+            if (!images.length) return;
             currentImg = ((idx % images.length) + images.length) % images.length;
             document.getElementById('mainImage').src = images[currentImg].imageUrl;
             document.querySelectorAll('.gallery-thumb').forEach((el,i) => el.classList.toggle('active', i===currentImg));
             updateCounter();
         }
 
+        // Gallery controls
         document.getElementById('prevImg').addEventListener('click', () => setImage(currentImg-1));
         document.getElementById('nextImg').addEventListener('click', () => setImage(currentImg+1));
         document.getElementById('thumbRow').addEventListener('click', e => {
             const t = e.target.closest('[data-idx]');
             if (t) setImage(+t.dataset.idx);
         });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowLeft') setImage(currentImg-1);
+            if (e.key === 'ArrowRight') setImage(currentImg+1);
+        });
 
-        // Tabs
+        // ── Tabs ──
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -315,65 +417,71 @@
             const el = document.getElementById('tabContent');
             if (tab === 'description') {
                 el.innerHTML = `
-                    <h2 class="font-bold text-zinc-900 text-lg mb-3">About This Car</h2>
-                    <p class="text-zinc-600 text-sm leading-relaxed">${CAR.description || 'No description available.'}</p>`;
+                    <h3 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin-bottom:12px">Giới thiệu</h3>
+                    <p style="color:#52525b;line-height:1.7">${CAR.description || 'Chưa có mô tả cho xe này.'}</p>`;
             } else if (tab === 'specs') {
                 const rows = [
-                    ['Brand', CAR.brandName], ['Model', CAR.modelName],
-                    ['License Plate', CAR.licensePlate], ['Seats', `${CAR.seatCount} seats`],
-                    ['Transmission', transMap[CAR.transmissionType]||CAR.transmissionType],
-                    ['Fuel', fuelMap[CAR.fuelType]||CAR.fuelType],
-                    ['Delivery Fee', fmt(CAR.deliveryFee)],
+                    ['Hãng', CAR.brandName],
+                    ['Dòng xe', CAR.modelName],
+                    ['Biển số', CAR.licensePlate],
+                    ['Số chỗ', `${CAR.seatCount} chỗ`],
+                    ['Hộp số', transMap[CAR.transmissionType] || CAR.transmissionType || '—'],
+                    ['Nhiên liệu', fuelMap[CAR.fuelType] || CAR.fuelType || '—'],
+                    ['Phí giao xe', fmt(CAR.deliveryFee)],
                 ];
                 el.innerHTML = `
-                    <h2 class="font-bold text-zinc-900 text-lg mb-4">Specifications</h2>
-                    <table class="w-full text-sm">
-                        <tbody class="divide-y divide-zinc-100">
-                            ${rows.map(([k,v]) => `<tr><td class="py-2.5 pr-4 text-zinc-500 font-medium w-40">${k}</td><td class="py-2.5 font-semibold text-zinc-900">${v||'—'}</td></tr>`).join('')}
-                        </tbody>
-                    </table>`;
+                    <h3 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin-bottom:16px">Thông số kỹ thuật</h3>
+                    <div style="display:grid;gap:0">${rows.map(([k,v],i) => `
+                        <div style="display:flex;justify-content:space-between;padding:10px 0;${i<rows.length-1?'border-bottom:1px solid #f0f0f0':''}">
+                            <span style="color:#71717a">${k}</span>
+                            <span style="font-weight:600;color:#1f1f1f">${v}</span>
+                        </div>`).join('')}
+                    </div>`;
             } else if (tab === 'rules') {
                 el.innerHTML = `
-                    <h2 class="font-bold text-zinc-900 text-lg mb-4">Rental Policy</h2>
-                    <ul class="space-y-3 text-sm text-zinc-600">
-                        <li class="flex items-start gap-3"><span class="text-green-500">✓</span>Valid B2 driving license required.</li>
-                        <li class="flex items-start gap-3"><span class="text-green-500">✓</span>Security deposit: ${fmt(CAR.depositAmount)} before pickup.</li>
-                        <li class="flex items-start gap-3"><span class="text-green-500">✓</span>Insurance fee: ${fmt(CAR.insuranceFeePerDay)}/day.</li>
-                        <li class="flex items-start gap-3"><span class="text-amber-400">⚠</span>No smoking inside the car. Fine: 500,000₫.</li>
-                        <li class="flex items-start gap-3"><span class="text-amber-400">⚠</span>Return on time. Late returns incur hourly surcharges.</li>
-                        <li class="flex items-start gap-3"><span class="text-amber-400">⚠</span>Full liability for damage not covered by insurance.</li>
-                    </ul>`;
+                    <h3 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin-bottom:16px">Chính sách thuê xe</h3>
+                    <div style="display:flex;flex-direction:column;gap:12px">
+                        <div style="display:flex;align-items:flex-start;gap:10px"><span style="color:#16a34a;font-weight:700;font-size:1rem;flex-shrink:0">✓</span><span>Giấy phép lái xe hạng B2 còn hiệu lực.</span></div>
+                        <div style="display:flex;align-items:flex-start;gap:10px"><span style="color:#16a34a;font-weight:700;font-size:1rem;flex-shrink:0">✓</span><span>Đặt cọc ${fmt(CAR.depositAmount)} trước khi nhận xe.</span></div>
+                        <div style="display:flex;align-items:flex-start;gap:10px"><span style="color:#16a34a;font-weight:700;font-size:1rem;flex-shrink:0">✓</span><span>Phí bảo hiểm ${fmt(CAR.insuranceFeePerDay)}/ngày.</span></div>
+                        <div style="display:flex;align-items:flex-start;gap:10px"><span style="color:#f59e0b;font-weight:700;font-size:1rem;flex-shrink:0">⚠</span><span>Không hút thuốc trong xe. Phạt 500,000₫.</span></div>
+                        <div style="display:flex;align-items:flex-start;gap:10px"><span style="color:#f59e0b;font-weight:700;font-size:1rem;flex-shrink:0">⚠</span><span>Trả xe đúng giờ. Trễ giờ tính phí theo giờ.</span></div>
+                        <div style="display:flex;align-items:flex-start;gap:10px"><span style="color:#f59e0b;font-weight:700;font-size:1rem;flex-shrink:0">⚠</span><span>Chịu trách nhiệm hư hỏng ngoài phạm vi bảo hiểm.</span></div>
+                    </div>`;
             } else if (tab === 'reviews') {
                 const reviews = CAR.reviews || [];
                 const avg = CAR.averageRating || 0;
                 const stars = r => '★'.repeat(Math.round(r)) + '☆'.repeat(5-Math.round(r));
                 el.innerHTML = `
-                    <h2 class="font-bold text-zinc-900 text-lg mb-4">Customer Reviews</h2>
-                    <div class="flex items-center gap-4 mb-5 p-4 bg-zinc-50 rounded-xl">
-                        <div class="text-4xl font-extrabold text-zinc-900">${avg.toFixed(1)}</div>
-                        <div><div class="text-lg text-amber-400">${stars(avg)}</div><div class="text-sm text-zinc-500">${reviews.length} review${reviews.length!==1?'s':''}</div></div>
+                    <h3 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin-bottom:16px">Đánh giá từ khách hàng</h3>
+                    <div style="display:flex;align-items:center;gap:16px;padding:16px;background:#f7f7f5;border-radius:12px;margin-bottom:16px">
+                        <div style="font-size:2rem;font-weight:800;color:#1f1f1f;line-height:1">${reviews.length ? avg.toFixed(1) : '—'}</div>
+                        <div>
+                            <div style="color:#f59e0b;font-size:1.125rem">${reviews.length ? stars(avg) : '☆☆☆☆☆'}</div>
+                            <div style="font-size:.8125rem;color:#a1a1aa;margin-top:2px">${reviews.length} đánh giá</div>
+                        </div>
                     </div>
                     ${reviews.length
                         ? reviews.map(r => `
-                            <div class="border-b border-zinc-100 py-4 last:border-0">
-                                <div class="flex items-center gap-3 mb-2">
+                            <div class="review-card">
+                                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
                                     ${r.customerAvatarUrl
-                                        ? `<img src="${r.customerAvatarUrl}" class="w-9 h-9 rounded-full object-cover" />`
-                                        : `<div class="w-9 h-9 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-400 font-semibold text-sm">${(r.customerName||'U').charAt(0).toUpperCase()}</div>`}
+                                        ? `<img src="${r.customerAvatarUrl}" style="width:32px;height:32px;border-radius:50%;object-fit:cover" />`
+                                        : `<div style="width:32px;height:32px;border-radius:50%;background:#e4e4e7;display:flex;align-items:center;justify-content:center;color:#a1a1aa;font-weight:700;font-size:.75rem">${(r.customerName||'U').charAt(0).toUpperCase()}</div>`}
                                     <div>
-                                        <p class="font-semibold text-sm text-zinc-900">${r.customerName||'Customer'}</p>
-                                        <p class="text-xs text-zinc-400">${new Date(r.createdAt).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})}</p>
+                                        <p style="font-weight:600;font-size:.8125rem;color:#1f1f1f">${r.customerName||'Khách hàng'}</p>
+                                        <p style="font-size:.6875rem;color:#a1a1aa">${new Date(r.createdAt).toLocaleDateString('vi-VN',{year:'numeric',month:'long',day:'numeric'})}</p>
                                     </div>
-                                    <div class="ml-auto text-amber-400 text-sm">${stars(r.rating)}</div>
+                                    <div style="margin-left:auto;color:#f59e0b;font-size:.8125rem">${stars(r.rating)}</div>
                                 </div>
-                                <p class="text-sm text-zinc-600 leading-relaxed">${r.comment||''}</p>
+                                <p style="font-size:.8125rem;color:#52525b;line-height:1.6">${r.comment||''}</p>
                             </div>`).join('')
-                        : '<p class="text-zinc-400 text-sm">No reviews yet — be the first!</p>'
+                        : '<p style="color:#a1a1aa;font-size:.8125rem;text-align:center;padding:24px 0">Chưa có đánh giá nào.</p>'
                     }`;
             }
         }
 
-        // Price calculator
+        // ── Price calculator ──
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('pickupDate').min = today;
         document.getElementById('returnDate').min = today;
@@ -381,89 +489,76 @@
         function updatePrice() {
             const p = document.getElementById('pickupDate').value;
             const r = document.getElementById('returnDate').value;
-            if (!p || !r || !CAR) { document.getElementById('priceEstimate').classList.add('hidden'); return; }
+            const el = document.getElementById('priceEstimate');
+            if (!p || !r || !CAR) { el.classList.remove('open'); return; }
             const days = Math.max(1, Math.ceil((new Date(r)-new Date(p))/86400000));
-            const rental    = days * CAR.dailyPrice;
-            const insurance = days * (CAR.insuranceFeePerDay||0);
-            document.getElementById('totalDays').textContent = `${days} day${days>1?'s':''}`;
+            const rental = days * CAR.dailyPrice;
+            const insurance = days * (CAR.insuranceFeePerDay || 0);
+            document.getElementById('totalDays').textContent = `${days} ngày`;
             document.getElementById('rentalSubtotal').textContent = fmt(rental);
             document.getElementById('insuranceSubtotal').textContent = fmt(insurance);
-            document.getElementById('totalEstimate').textContent = fmt(rental+insurance);
-            document.getElementById('priceEstimate').classList.remove('hidden');
+            document.getElementById('totalEstimate').textContent = fmt(rental + insurance);
+            el.classList.add('open');
         }
 
-        function updateBookLink() {
-            // No longer sets href - handled via click handler below
-        }
-
-        ['pickupDate','returnDate'].forEach(id => document.getElementById(id).addEventListener('change', () => {
-            updatePrice();
-            // Clear error on date change
+        function clearDateError() {
             const errEl = document.getElementById('dateError');
-            if (errEl) { errEl.textContent = ''; errEl.classList.add('hidden'); }
-            ['pickupDate','returnDate'].forEach(f => document.getElementById(f).style.borderColor = '');
-        }));
-        document.getElementById('pickupDate').addEventListener('change', () => {
-            document.getElementById('returnDate').min = document.getElementById('pickupDate').value;
+            errEl.style.display = 'none';
+            ['pickupDate','returnDate'].forEach(f => { const e=document.getElementById(f); e.style.borderColor='#e6e4df'; e.removeAttribute('data-err'); });
+        }
+
+        ['pickupDate','returnDate'].forEach(id => {
+            document.getElementById(id).addEventListener('change', () => {
+                // Sync min
+                const p = document.getElementById('pickupDate').value;
+                document.getElementById('returnDate').min = p || today;
+                if (!p) document.getElementById('returnDate').min = today;
+
+                updatePrice();
+                clearDateError();
+            });
         });
 
-        // Book Car click - validate dates first
-        document.getElementById('btnBook').addEventListener('click', async () => {
-            const btn = document.getElementById('btnBook');
+        // ── Book handler ──
+        async function handleBook(btn) {
             if (!CAR || btn.dataset.available === 'false') return;
 
             if (window.VivuCarAuthService) {
                 const s = await window.VivuCarAuthService.refresh();
                 if (!s || !s.user) {
-                    alert('Phiên đăng nhập đã hết hạn hoặc chưa đăng nhập. Vui lòng đăng nhập để đặt xe.');
+                    alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập để đặt xe.');
                     window.location.href = '/';
                     return;
                 }
             }
 
             const pickup = document.getElementById('pickupDate').value;
-            const ret    = document.getElementById('returnDate').value;
-            const errEl  = document.getElementById('dateError');
+            const ret = document.getElementById('returnDate').value;
+            const errEl = document.getElementById('dateError');
+            clearDateError();
 
-            // Reset
-            ['pickupDate','returnDate'].forEach(f => document.getElementById(f).style.borderColor = '');
-            errEl.classList.add('hidden');
+            // Validate
+            const setErr = (msg, f1, f2) => {
+                errEl.textContent = msg;
+                errEl.style.display = 'block';
+                if (f1) { const e=document.getElementById(f1); e.style.borderColor='#ef4444'; e.setAttribute('data-err','1'); }
+                if (f2) { const e=document.getElementById(f2); e.style.borderColor='#ef4444'; e.setAttribute('data-err','1'); }
+                if (f1) document.getElementById(f1).focus();
+            };
 
-            if (!pickup && !ret) {
-                errEl.textContent = 'Vui lòng chọn ngày nhận xe và trả xe.';
-                errEl.classList.remove('hidden');
-                ['pickupDate','returnDate'].forEach(f => { document.getElementById(f).style.borderColor = '#ef4444'; });
-                document.getElementById('pickupDate').focus();
-                return;
-            }
-            if (!pickup) {
-                errEl.textContent = 'Vui lòng chọn ngày nhận xe.';
-                errEl.classList.remove('hidden');
-                document.getElementById('pickupDate').style.borderColor = '#ef4444';
-                document.getElementById('pickupDate').focus();
-                return;
-            }
-            if (!ret) {
-                errEl.textContent = 'Vui lòng chọn ngày trả xe.';
-                errEl.classList.remove('hidden');
-                document.getElementById('returnDate').style.borderColor = '#ef4444';
-                document.getElementById('returnDate').focus();
-                return;
-            }
-            if (new Date(ret) <= new Date(pickup)) {
-                errEl.textContent = 'Ngày trả xe phải sau ngày nhận xe.';
-                errEl.classList.remove('hidden');
-                document.getElementById('returnDate').style.borderColor = '#ef4444';
-                document.getElementById('returnDate').focus();
-                return;
-            }
+            if (!pickup && !ret) { setErr('Vui lòng chọn ngày nhận và trả xe.', 'pickupDate', 'returnDate'); return; }
+            if (!pickup) { setErr('Vui lòng chọn ngày nhận xe.', 'pickupDate', null); return; }
+            if (!ret) { setErr('Vui lòng chọn ngày trả xe.', 'returnDate', null); return; }
+            if (new Date(ret) <= new Date(pickup)) { setErr('Ngày trả phải sau ngày nhận.', 'returnDate', null); return; }
 
-            // All good - navigate
             window.location.href = `/Booking/Checkout?carId=${CAR.id}&pickupDate=${pickup}&returnDate=${ret}`;
-        });
+        }
+
+        document.getElementById('btnBook').addEventListener('click', () => handleBook(document.getElementById('btnBook')));
+        document.getElementById('btnBookMobile').addEventListener('click', () => handleBook(document.getElementById('btnBookMobile')));
 
         document.getElementById('btnContact').addEventListener('click', () => {
-            alert(`Contact owner: ${CAR?.ownerFullName||'Car Owner'}\nPlease submit a booking request to contact the owner.`);
+            alert(`Liên hệ chủ xe: ${CAR?.ownerFullName||'Chủ xe'}\nVui lòng tạo booking để gửi yêu cầu.`);
         });
 
         loadCar();
