@@ -1,31 +1,36 @@
-<nav class="bg-white border-b border-zinc-200 sticky top-0 z-40 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <a href="/home" class="flex items-center gap-2 font-bold text-xl text-emerald-600">
-            <svg viewBox="0 0 512 512" class="h-7 w-7 fill-emerald-600"><path d="M135.2 117.4 109.1 192h293.8l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8 74.8 96.3C88.3 57.8 124.6 32 165.4 32h181.2c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5C495.6 207.6 512 231.1 512 258.5V400c0 26.5-21.5 48-48 48h-16v32c0 17.7-14.3 32-32 32h-32c-17.7 0-32-14.3-32-32v-32H160v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32v-32H48c-26.5 0-48-21.5-48-48V258.5c0-27.4 16.4-50.9 39.6-61.7z"/></svg>
-            VivuCar
+<nav style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.06)">
+    <div style="max-width:1280px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between">
+        <!-- Logo -->
+        <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+            <img src="/logo.webp" alt="VivuCar" style="height:32px;width:auto;display:block" />
+            <span style="font-size:1.1rem;font-weight:800;color:#18181b;letter-spacing:-.02em">VivuCar</span>
         </a>
-        <div class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-600">
-            <a href="/home" class="hover:text-zinc-900 transition-colors">Home</a>
-            <a href="/cars" class="hover:text-zinc-900 transition-colors">Cars</a>
-            <a href="/Booking/MyBookings" class="text-emerald-600 font-semibold">Lịch sử đơn hàng</a>
+
+        <!-- Nav links -->
+        <div class="md-flex" style="align-items:center;gap:32px">
+            <a href="/" style="font-size:.9375rem;font-weight:600;color:#52525b;text-decoration:none;transition:color .15s">Home</a>
+            <a href="/cars" style="font-size:.9375rem;font-weight:600;color:#52525b;text-decoration:none;transition:color .15s">Cars</a>
+            <a href="/Booking/MyBookings" style="font-size:.9375rem;font-weight:600;color:#52525b;text-decoration:none;transition:color .15s">Đơn hàng</a>
         </div>
-        <div class="flex items-center gap-3">
+
+        <!-- Auth state -->
+        <div style="display:flex;align-items:center;gap:12px">
             <div id="navGuestState" class="hidden">
-                <a id="navLoginBtn" href="/Login" class="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors">Sign In</a>
+                <a id="navLoginBtn" href="/Login" style="display:inline-block;padding:8px 20px;background:#16a34a;color:#fff;font-size:.8125rem;font-weight:600;border-radius:10px;text-decoration:none;transition:background .2s">Đăng nhập</a>
             </div>
-            <div id="navUserState" class="hidden relative group">
-                <button class="flex items-center gap-2 focus:outline-none" id="navUserMenuBtn">
-                    <span id="navUserName" class="text-sm font-medium text-zinc-700"></span>
-                    <div class="w-8 h-8 rounded-full bg-zinc-200 border border-zinc-300 flex items-center justify-center overflow-hidden">
-                        <img id="navUserAvatar" src="" class="w-full h-full object-cover hidden" />
-                        <span id="navUserInitials" class="text-sm font-bold text-zinc-500"></span>
+            <div id="navUserState" style="position:relative" class="nav-user-group hidden">
+                <button style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:10px;transition:background .15s" id="navUserMenuBtn">
+                    <span id="navUserName" style="font-size:.8125rem;font-weight:600;color:#18181b"></span>
+                    <div style="width:32px;height:32px;border-radius:50%;background:#f0f0f0;border:1px solid #e6e4df;display:flex;align-items:center;justify-content:center;overflow:hidden">
+                        <img id="navUserAvatar" src="" style="width:100%;height:100%;object-fit:cover" class="hidden" />
+                        <span id="navUserInitials" style="font-size:.8125rem;font-weight:700;color:#a1a1aa"></span>
                     </div>
                 </button>
                 <!-- Dropdown -->
-                <div class="absolute right-0 top-full mt-2 w-48 bg-white border border-zinc-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                    <div class="py-1">
-                        <a href="/profile" class="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-50 hover:text-primary">View Profile</a>
-                        <button id="navLogoutBtn" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-zinc-50">Sign Out</button>
+                <div style="position:absolute;right:0;top:calc(100% + 8px);width:180px;background:#fff;border:1px solid #e6e4df;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.1);opacity:0;visibility:hidden;transition:all .2s;z-index:100" class="nav-dropdown">
+                    <div style="padding:6px">
+                        <a href="/profile" style="display:block;padding:8px 12px;font-size:.8125rem;color:#52525b;text-decoration:none;border-radius:8px;transition:background .15s">Hồ sơ</a>
+                        <button id="navLogoutBtn" style="display:block;width:100%;text-align:left;padding:8px 12px;font-size:.8125rem;color:#ef4444;background:none;border:none;border-radius:8px;cursor:pointer;transition:background .15s">Đăng xuất</button>
                     </div>
                 </div>
             </div>
@@ -33,4 +38,9 @@
     </div>
 </nav>
 
+<style>
+    .md-flex { display: none; }
+    @@media (min-width: 768px) { .md-flex { display: flex; } }
+    .nav-user-group:hover .nav-dropdown { opacity: 1; visibility: visible; }
+</style>
 <script type="module" src="~/js/shared/navbar.js"></script>

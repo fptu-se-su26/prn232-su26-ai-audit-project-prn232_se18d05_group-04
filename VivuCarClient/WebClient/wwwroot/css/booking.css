@@ -521,6 +521,51 @@
 }
 
 /* ── Responsive helpers ──────────────────────────────────── */
+/* ── Booking card enhancements ────────────────────────────── */
+.booking-card-wide:active {
+  transform: scale(0.99);
+}
+.booking-card-wide [style*="overflow:hidden"] img {
+  transition: transform .4s ease;
+}
+.booking-card-wide:hover [style*="overflow:hidden"] img {
+  transform: scale(1.05);
+}
+.booking-card-item { cursor:default; }
+.booking-card-item:active { transform:scale(0.99) !important; }
+.booking-card-item img { transition:transform .4s ease; }
+.chip.active {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+  color: #fff !important;
+}
+.chip.active:hover {
+  background: #15803d !important;
+}
+.booking-skeleton {
+  background: linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 16px;
+  min-height: 120px;
+}
+.booking-error {
+  text-align: center;
+  padding: 48px 24px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 16px;
+  color: #dc2626;
+  font-size: .875rem;
+  font-weight: 600;
+}
+.booking-loading {
+  text-align: center;
+  padding: 48px 24px;
+  color: #6b7280;
+  font-size: .875rem;
+}
+
 @media (max-width: 600px) {
   .booking-shell {
     padding: 16px 14px 56px;
