@@ -72,22 +72,29 @@ window.VivuCarUtils = {
     const map = {
       PendingApproval:  { label: "Chờ xác nhận",    cls: "bg-amber-100 text-amber-800" },
       pendingApproval:  { label: "Chờ xác nhận",    cls: "bg-amber-100 text-amber-800" },
+      pendingapproval:  { label: "Chờ xác nhận",    cls: "bg-amber-100 text-amber-800" },
       Rejected:         { label: "Đã từ chối",       cls: "bg-red-100 text-red-800" },
       rejected:         { label: "Đã từ chối",       cls: "bg-red-100 text-red-800" },
       WaitingDeposit:   { label: "Chờ đặt cọc",     cls: "bg-amber-100 text-amber-800" },
       waitingDeposit:   { label: "Chờ đặt cọc",     cls: "bg-amber-100 text-amber-800" },
+      waitingdeposit:   { label: "Chờ đặt cọc",     cls: "bg-amber-100 text-amber-800" },
       WaitingPickup:    { label: "Chờ giao xe",     cls: "bg-blue-100 text-blue-800" },
       waitingPickup:    { label: "Chờ giao xe",     cls: "bg-blue-100 text-blue-800" },
+      waitingpickup:    { label: "Chờ giao xe",     cls: "bg-blue-100 text-blue-800" },
       InProgress:       { label: "Đang thuê",        cls: "bg-indigo-100 text-indigo-800" },
       inProgress:       { label: "Đang thuê",        cls: "bg-indigo-100 text-indigo-800" },
+      inprogress:       { label: "Đang thuê",        cls: "bg-indigo-100 text-indigo-800" },
       ReturnRequested:  { label: "Yêu cầu trả xe",  cls: "bg-orange-100 text-orange-800" },
       returnRequested:  { label: "Yêu cầu trả xe",  cls: "bg-orange-100 text-orange-800" },
+      returnrequested:  { label: "Yêu cầu trả xe",  cls: "bg-orange-100 text-orange-800" },
       Completed:        { label: "Hoàn thành",       cls: "bg-green-100 text-green-800" },
       completed:        { label: "Hoàn thành",       cls: "bg-green-100 text-green-800" },
       Cancelled:        { label: "Đã hủy",           cls: "bg-red-100 text-red-800" },
       cancelled:        { label: "Đã hủy",           cls: "bg-red-100 text-red-800" },
       Expired:          { label: "Hết hạn",          cls: "bg-zinc-100 text-zinc-600" },
-      expired:          { label: "Hết hạn",          cls: "bg-zinc-100 text-zinc-600" }
+      expired:          { label: "Hết hạn",          cls: "bg-zinc-100 text-zinc-600" },
+      WaitingFinalPayment: { label: "Chờ thanh toán cuối", cls: "bg-amber-100 text-amber-800" },
+      waitingfinalpayment: { label: "Chờ thanh toán cuối", cls: "bg-amber-100 text-amber-800" }
     };
     const entry = map[status] || { label: status, cls: "bg-zinc-100 text-zinc-600" };
     return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${entry.cls}">${entry.label}</span>`;
@@ -159,23 +166,40 @@ window.VivuCarUtils = {
     modal?.classList.add("hidden");
     modal?.classList.remove("flex", "show");
   },
+  getBookingApiUiState(booking, isPaid) {
+    if (!booking) return { key: "unknown", label: "Không xác định", tone: "neutral" };
+    const s = String(booking.status || "").toLowerCase();
+    if (s === "cancelled") return { key: "cancelled", label: "Đã hủy", tone: "danger" };
+    if (s === "rejected") return { key: "rejected", label: "Đã từ chối", tone: "danger" };
+    if (s === "completed") return { key: "completed", label: "Hoàn tất", tone: "success" };
+    if (s === "returnrequested") return { key: "return_requested", label: "Đang chờ trả xe", tone: "warning" };
+    if (s === "waitingfinalpayment") return { key: "final_payment", label: "Chờ thanh toán cuối", tone: "warning" };
+    
+    if (s === "pending" || s === "pendingapproval" || s === "waitingdeposit") {
+      if (isPaid) return { key: "handover_pending", label: "Đã cọc - chờ xác nhận", tone: "primary" };
+      if (booking.canPayDeposit) return { key: "payment_pending", label: "Chờ thanh toán", tone: "warning" };
+      return { key: "approval_pending", label: "Chờ duyệt GPLX", tone: "warning" };
+    }
+    
+    if (s === "approved" || s === "waitingpickup" || s === "inprogress") {
+      const pickupDate = new Date(booking.startDateTime || booking.pickup_datetime);
+      if (Date.now() < pickupDate.getTime()) return { key: "handover_pending", label: "Chờ bàn giao", tone: "primary" };
+      return { key: "renting", label: "Đang thuê", tone: "primary" };
+    }
+    return { key: s, label: s, tone: "neutral" };
+  },
   resolveBookingUiState(booking, payment, inspections = []) {
     if (!booking) return { key: "unknown", label: "Không xác định", tone: "neutral" };
-    if (booking.status === "cancelled") return { key: "cancelled", label: "Đã hủy", tone: "danger" };
-    if (booking.status === "rejected") return { key: "rejected", label: "Bị từ chối", tone: "danger" };
-    if (booking.status === "completed") return { key: "completed", label: "Hoàn tất", tone: "success" };
-    if (booking.status === "pending") {
-      return payment?.status === "success"
-        ? { key: "paid_pending", label: "Đã cọc - chờ chủ xe xác nhận", tone: "warning" }
-        : { key: "payment_pending", label: "Chờ thanh toán hoặc xác nhận", tone: "warning" };
-    }
-    if (booking.status === "approved") {
-      const hasPre = inspections.some((item) => item.inspection_type === "pre_rental");
-      const hasPost = inspections.some((item) => item.inspection_type === "post_rental");
-      if (!hasPre) return { key: "handover_pending", label: "Chờ bàn giao", tone: "info" };
-      if (!hasPost) return { key: "renting", label: "Đang thuê hoặc chờ trả xe", tone: "info" };
-      return { key: "completion_pending", label: "Chờ hoàn tất", tone: "warning" };
-    }
+    if (String(booking.status).toLowerCase() === "cancelled") return { key: "cancelled", label: "Đã hủy", tone: "danger" };
+    if (String(booking.status).toLowerCase() === "rejected") return { key: "rejected", label: "Bị từ chối", tone: "danger" };
+    if (String(booking.status).toLowerCase() === "completed") return { key: "completed", label: "Hoàn tất", tone: "success" };
+    const s = String(booking.status).toLowerCase();
+    if (s === "pendingapproval") return { key: "pending_approval", label: "Chờ chủ xe duyệt", tone: "warning" };
+    if (s === "waitingdeposit") return { key: "payment_pending", label: "Chờ thanh toán cọc", tone: "warning" };
+    if (s === "waitingpickup") return { key: "handover_pending", label: "Chờ bàn giao", tone: "info" };
+    if (s === "inprogress") return { key: "renting", label: "Đang thuê", tone: "info" };
+    if (s === "returnrequested") return { key: "return_requested", label: "Yêu cầu trả xe", tone: "warning" };
+    if (s === "waitingfinalpayment") return { key: "waiting_final_payment", label: "Chờ thanh toán cuối", tone: "warning" };
     return { key: booking.status, label: booking.status, tone: "neutral" };
   },
   canCancelBooking(booking) {
@@ -193,10 +217,10 @@ window.VivuCarUtils = {
   },
   resolveChatUiState(session) {
     if (!session) return { key: "unknown", label: "Không xác định", tone: "neutral" };
-    if (session.status === "closed") return { key: "closed", label: "Đã xử lý", tone: "success" };
-    if (session.status === "escalated") return { key: "escalated", label: "Chờ người hỗ trợ", tone: "warning" };
-    if (session.status === "open" && session.session_type === "live") return { key: "live", label: "Live chat", tone: "info" };
-    if (session.status === "open" && session.session_type === "ai") return { key: "ai", label: "AI đang hỗ trợ", tone: "neutral" };
+    if (String(session.status).toLowerCase() === "closed") return { key: "closed", label: "Đã xử lý", tone: "success" };
+    if (String(session.status).toLowerCase() === "escalated") return { key: "escalated", label: "Chờ người hỗ trợ", tone: "warning" };
+    if (String(session.status).toLowerCase() === "open" && session.session_type === "live") return { key: "live", label: "Live chat", tone: "info" };
+    if (String(session.status).toLowerCase() === "open" && session.session_type === "ai") return { key: "ai", label: "AI đang hỗ trợ", tone: "neutral" };
     return { key: session.status, label: session.status, tone: "neutral" };
   }
 };

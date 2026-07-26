@@ -139,9 +139,19 @@ async function setupEvents() {
         e.preventDefault();
         
         let hasError = false;
-        const phone = document.getElementById("phoneNumber").value;
-        if (phone && !/^(0|\+84)[0-9]{9}$/.test(phone)) {
-            showError("phoneNumber", "Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0 hoặc +84)");
+        
+        const fullName = document.getElementById("fullName").value.trim();
+        if (!fullName) {
+            showError("fullName", "Vui lòng nhập họ và tên");
+            hasError = true;
+        } else if (fullName.length < 2) {
+            showError("fullName", "Họ và tên phải có ít nhất 2 ký tự");
+            hasError = true;
+        } else clearError("fullName");
+        
+        const phone = document.getElementById("phoneNumber").value.trim();
+        if (phone && !/^(0|\+84)[3|5|7|8|9][0-9]{8}$/.test(phone)) {
+            showError("phoneNumber", "Số điện thoại không hợp lệ (10 chữ số, bắt đầu bằng 0 hoặc +84)");
             hasError = true;
         } else clearError("phoneNumber");
 
@@ -259,9 +269,9 @@ async function setupEvents() {
             hasError = true;
         } else clearError("citizenIdNumber");
 
-        const gplx = document.getElementById("driverLicenseNumber").value;
-        if (!gplx) {
-            showError("driverLicenseNumber", "Vui lòng nhập Số GPLX");
+        const gplx = document.getElementById("driverLicenseNumber").value.trim();
+        if (!/^[0-9]{12}$/.test(gplx)) {
+            showError("driverLicenseNumber", "Số GPLX phải bao gồm đúng 12 chữ số.");
             hasError = true;
         } else clearError("driverLicenseNumber");
 

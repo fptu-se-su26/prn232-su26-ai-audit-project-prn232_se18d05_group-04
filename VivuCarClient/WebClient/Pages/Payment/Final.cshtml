@@ -1,0 +1,16 @@
+@page
+@model VivuCarClient.WebClient.Pages.Payment.FinalModel
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Thanh toán cuối chuyến";
+    ViewData["DataPage"] = "bookings";
+}
+
+<main class="page-shell booking-shell">
+  <div id="breadcrumbMount"></div>
+  <section id="paymentFinalRoot"></section>
+</main>
+
+@section Scripts {
+  <script type="module" src="~/js/html/payment-final.js" asp-append-version="true"></script>
+}

@@ -93,17 +93,21 @@ public class UserService(VivuCarDbContext dbContext) : IUserService
             dbContext.DriverDocuments.Add(document);
         }
 
-        document.CitizenIdNumber = request.CitizenIdNumber;
-        document.CitizenIdFrontImageUrl = request.CitizenIdFrontImageUrl;
-        document.CitizenIdBackImageUrl = request.CitizenIdBackImageUrl;
-        document.DriverLicenseNumber = request.DriverLicenseNumber;
-        document.DriverLicenseFrontImageUrl = request.DriverLicenseFrontImageUrl;
-        document.DriverLicenseBackImageUrl = request.DriverLicenseBackImageUrl;
+        bool isChanged = false;
+        if (document.CitizenIdNumber != request.CitizenIdNumber) { document.CitizenIdNumber = request.CitizenIdNumber; isChanged = true; }
+        if (request.CitizenIdFrontImageUrl != null && document.CitizenIdFrontImageUrl != request.CitizenIdFrontImageUrl) { document.CitizenIdFrontImageUrl = request.CitizenIdFrontImageUrl; isChanged = true; }
+        if (request.CitizenIdBackImageUrl != null && document.CitizenIdBackImageUrl != request.CitizenIdBackImageUrl) { document.CitizenIdBackImageUrl = request.CitizenIdBackImageUrl; isChanged = true; }
         
-        document.VerificationStatus = DocumentVerificationStatus.Pending;
-        document.UpdatedAt = DateTime.UtcNow;
-
-        await dbContext.SaveChangesAsync(cancellationToken);
+        if (document.DriverLicenseNumber != request.DriverLicenseNumber) { document.DriverLicenseNumber = request.DriverLicenseNumber; isChanged = true; }
+        if (request.DriverLicenseFrontImageUrl != null && document.DriverLicenseFrontImageUrl != request.DriverLicenseFrontImageUrl) { document.DriverLicenseFrontImageUrl = request.DriverLicenseFrontImageUrl; isChanged = true; }
+        if (request.DriverLicenseBackImageUrl != null && document.DriverLicenseBackImageUrl != request.DriverLicenseBackImageUrl) { document.DriverLicenseBackImageUrl = request.DriverLicenseBackImageUrl; isChanged = true; }
+        
+        if (isChanged)
+        {
+            document.VerificationStatus = DocumentVerificationStatus.Pending;
+            document.UpdatedAt = DateTime.UtcNow;
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
 
         return MapToDocumentDto(document);
     }

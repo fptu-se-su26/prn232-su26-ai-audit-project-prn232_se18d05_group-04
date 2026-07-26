@@ -86,7 +86,7 @@ import { authService } from '/js/shared/auth-service.js';
 
   // ── 4. Render ────────────────────────────────────────────────────────────
   // Sử dụng gatewayStatus hoặc paymentStatus từ API (ưu tiên API nếu có)
-  const finalStatus = payStatus?.paymentStatus || gatewayStatus;
+  const finalStatus = String(payStatus?.paymentStatus || gatewayStatus).toLowerCase();
 
   const statusMap = {
     success: {
@@ -96,8 +96,8 @@ import { authService } from '/js/shared/auth-service.js';
       bg   : '#f0fdf4',
       title: 'Thanh toán thành công!',
       text : 'Đã ghi nhận cọc. Đơn đang chờ chủ xe xác nhận.',
-      btnLabel: 'Xem chi tiết đơn',
-      btnHref : booking ? `/Booking/Detail?id=${booking.id}` : '/Booking/MyBookings'
+      btnLabel: 'Tiến hành ký hợp đồng',
+      btnHref : booking ? `/Booking/Contract?id=${booking.id}` : '/Booking/MyBookings'
     },
     failed: {
       tone : 'danger',

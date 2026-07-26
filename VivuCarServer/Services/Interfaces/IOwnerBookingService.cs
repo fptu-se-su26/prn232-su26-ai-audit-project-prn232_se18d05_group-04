@@ -5,7 +5,7 @@ namespace Services.Interfaces;
 
 public interface IOwnerBookingService
 {
-    Task<IReadOnlyList<OwnerBookingResponse>> GetOwnerBookingsAsync(
+    Task<PagedResult<OwnerBookingResponse>> GetOwnerBookingsAsync(
         int ownerId,
         OwnerBookingListFilter filter,
         CancellationToken cancellationToken = default

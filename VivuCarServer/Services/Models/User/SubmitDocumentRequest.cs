@@ -8,11 +8,9 @@ public class SubmitDocumentRequest
     [MaxLength(50)]
     public string CitizenIdNumber { get; set; } = string.Empty;
     
-    [Required]
-    public string CitizenIdFrontImageUrl { get; set; } = string.Empty;
+    public string? CitizenIdFrontImageUrl { get; set; }
     
-    [Required]
-    public string CitizenIdBackImageUrl { get; set; } = string.Empty;
+    public string? CitizenIdBackImageUrl { get; set; }
     
     [Required]
     [MaxLength(50)]

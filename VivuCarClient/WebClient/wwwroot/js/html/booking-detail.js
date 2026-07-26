@@ -65,37 +65,23 @@ import { authService } from '/js/shared/auth-service.js';
     root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy đơn", text: "Đơn không tồn tại hoặc lỗi kết nối.", href: "/Booking/MyBookings", action: "Về danh sách đơn" });
   }
 
-  function resolveUiState() {
+  function getStatusUi() {
     const paid = paymentStatus?.paymentStatus === 'success';
-    let key = "unknown", label = "Không xác định", tone = "neutral";
-    
-    const s = (booking.status || "").toLowerCase();
-    if (s === "cancelled") { key = "cancelled"; label = "Đã hủy"; tone = "danger"; }
-    else if (s === "rejected") { key = "rejected"; label = "Đã từ chối"; tone = "danger"; }
-    else if (s === "completed") { key = "completed"; label = "Hoàn tất"; tone = "success"; }
-    else if (s === "pending" || s === "pendingapproval") {
-      if (paid) { key = "handover_pending"; label = "Đã cọc - chờ xác nhận"; tone = "primary"; }
-      else { key = "payment_pending"; label = "Chờ thanh toán"; tone = "warning"; }
-    }
-    else if (s === "approved" || s === "waitingdeposit" || s === "waitingpickup" || s === "inprogress") {
-      const pickupDate = new Date(booking.startDateTime);
-      if (Date.now() < pickupDate.getTime()) { key = "handover_pending"; label = "Chờ bàn giao"; tone = "primary"; }
-      else { key = "renting"; label = "Đang thuê"; tone = "primary"; }
-    }
-    return { key, label, tone };
+    const ui = U.getBookingApiUiState(booking, paid);
+    const s = String(booking.status || "").toLowerCase();
+    return { ...ui, s, paid };
   }
 
   function render() {
-    const ui = resolveUiState();
+    const ui = getStatusUi();
+    const { paid, s } = ui;
     
     document.getElementById("breadcrumbMount").innerHTML = window.VivuCarLayout.renderBreadcrumb([
       { label: "Đơn thuê", href: "/Booking/MyBookings" },
       { label: `#${booking.bookingCode || booking.id}` }
     ]);
     
-    const paid = paymentStatus?.paymentStatus === 'success';
-    const s = (booking.status || "").toLowerCase();
-    const canCancel = s === "pending" || s === "approved" || s === "pendingapproval" || s === "waitingdeposit";
+    const canCancel = (s === "pending" || s === "pendingapproval" || s === "waitingdeposit") && !paid;
     
     root.innerHTML = `
       <div class="detail-document">
@@ -107,7 +93,7 @@ import { authService } from '/js/shared/auth-service.js';
                 <h1>${booking.carName}</h1>
                 <p class="muted">${ui.label}</p>
               </div>
-              <div class="chip-row">${U.renderStatusBadge(ui.tone, ui.label)}${U.renderStatusBadge("neutral", booking.status)}</div>
+              <div class="chip-row">${U.renderStatusBadge(ui.tone, ui.label)}</div>
             </div>
             <div class="checkout-car">
               <img src="${booking.carImageUrl || '/img/placeholder-car.png'}" alt="${booking.carName}" style="object-fit:cover">
@@ -116,6 +102,7 @@ import { authService } from '/js/shared/auth-service.js';
                 ${info("Địa điểm nhận", booking.pickupLocation)}
                 ${info("Nhận xe", new Date(booking.startDateTime).toLocaleString('vi-VN'))}
                 ${info("Trả xe", new Date(booking.endDateTime).toLocaleString('vi-VN'))}
+                ${info("Thời gian thuê", `${booking.rentalDays || 0} ngày ${booking.rentalHours ? `và ${booking.rentalHours} giờ` : ''}`)}
                 ${info("Tổng tiền", U.formatVnd(booking.totalAmount))}
                 ${info("Voucher", booking.voucherCode || "Không áp dụng")}
               </div>
@@ -134,9 +121,25 @@ import { authService } from '/js/shared/auth-service.js';
           <h2>Thời gian biểu</h2>
           <div class="timeline">${timeline()}</div>
           <div class="booking-actions mt-3.5">
-            ${s === "pending" && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán cọc</a>` : ""}
+            ${s === "returnrequested" ? `<div style="padding:12px;background:#fffbe6;border:1px solid #ffe58f;color:#873800;border-radius:8px;font-size:13px;line-height:1.5;font-weight:500;">⏳ <strong>Đã gửi yêu cầu trả xe:</strong> Vui lòng chờ chủ xe kiểm tra xe và xác nhận hoàn tất thủ tục bàn giao lại.</div>` : ""}
+            ${s === "waitingfinalpayment" ? `
+              <div style="padding:16px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;border-radius:8px;font-size:13px;line-height:1.8;">
+                <strong>💰 Chủ xe đã kiểm tra và xác nhận trả xe.</strong><br>
+                Vui lòng thanh toán số tiền còn lại để hoàn tất chuyến đi.
+                <div style="margin-top:8px;padding:8px 12px;background:#fff;border-radius:6px;border:1px solid #e5e7eb;">
+                  <div style="display:flex;justify-content:space-between;"><span>Tiền còn lại:</span><strong>${U.formatVnd(booking.remainingAmount)}</strong></div>
+                  ${booking.extraFee > 0 ? `<div style="display:flex;justify-content:space-between;"><span>Phụ phí phát sinh:</span><strong>${U.formatVnd(booking.extraFee)}</strong></div>` : ""}
+                  ${(booking.overdueFee || 0) > 0 ? `<div style="display:flex;justify-content:space-between;"><span>Phí trả trễ:</span><strong>${U.formatVnd(booking.overdueFee)}</strong></div>` : ""}
+                  <div style="display:flex;justify-content:space-between;border-top:1px solid #e5e7eb;margin-top:6px;padding-top:6px;font-size:14px;"><span><strong>Tổng cần trả:</strong></span><strong style="color:#dc2626;">${U.formatVnd(booking.finalPaymentAmount)}</strong></div>
+                </div>
+              </div>
+              <a class="btn btn-primary btn-sm" href="/Payment/Final?bookingId=${booking.id}" style="margin-top:8px;">Thanh toán cuối chuyến</a>
+            ` : ""}
+            ${s === "waitingdeposit" && booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán cọc</a>` : ""}
             ${canCancel ? `<button class="btn btn-danger btn-sm" type="button" id="cancelBookingBtn">Hủy đơn</button>` : ""}
-            ${booking.contractPdfUrl ? `<a class="btn btn-secondary btn-sm" href="${booking.contractPdfUrl}" target="_blank">Xem hợp đồng</a>` : ""}
+            ${ui.key === "handover_pending" && booking.contractPdfUrl && !booking.contractPdfUrl.includes('sig=') ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
+            ${booking.contractPdfUrl ? `<a class="btn btn-secondary btn-sm" href="${booking.contractPdfUrl.startsWith('/api') ? '/api/proxy' + booking.contractPdfUrl.substring(4) : booking.contractPdfUrl}" target="_blank">Xem hợp đồng</a>` : ""}
+            ${ui.key === "renting" ? `<button class="btn btn-primary btn-sm" type="button" id="requestReturnBtn">Yêu cầu trả xe</button>` : ""}
             ${s === "completed" ? (
               currentReview 
                 ? `<button class="btn btn-outline btn-sm" type="button" id="reviewBtn">Sửa Đánh Giá</button>`
@@ -153,6 +156,28 @@ import { authService } from '/js/shared/auth-service.js';
           window.VivuCarBookingCancellation.openCancelBookingModal(booking.id, loadData);
         } else {
           U.showToast("Chức năng hủy đang được cập nhật.", "info");
+        }
+      });
+    }
+
+    const requestReturnBtn = U.byId("requestReturnBtn");
+    if (requestReturnBtn) {
+      requestReturnBtn.addEventListener("click", async () => {
+        if (!confirm("Bạn có chắc chắn muốn trả xe lúc này?")) return;
+        requestReturnBtn.disabled = true;
+        requestReturnBtn.textContent = "Đang xử lý...";
+        try {
+          const res = await authService.apiFetch(`bookings/${booking.id}/request-return`, { method: "POST" });
+          if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message || "Lỗi khi yêu cầu trả xe.");
+          }
+          U.showToast("Đã gửi yêu cầu trả xe thành công.", "success");
+          loadData();
+        } catch (e) {
+          U.showToast(e.message, "error");
+          requestReturnBtn.disabled = false;
+          requestReturnBtn.textContent = "Yêu cầu trả xe";
         }
       });
     }

@@ -74,6 +74,11 @@ public abstract class ProxyControllerBase(
             }
         }
 
+        if (response.Headers.TryGetValues("Location", out var locations))
+        {
+            Response.Headers.Append("Location", locations.FirstOrDefault());
+        }
+
         Response.StatusCode = (int)response.StatusCode;
         var content = await response.Content.ReadAsByteArrayAsync(cancellationToken);
 

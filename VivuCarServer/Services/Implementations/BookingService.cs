@@ -43,16 +43,38 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         {
             throw new ArgumentException("End date must be after start date.");
         }
+        
+        if (start.Hour < 7 || start.Hour >= 22 || end.Hour < 7 || end.Hour >= 22)
+        {
+            throw new ArgumentException("Booking time must be between 07:00 and 22:00.");
+        }
 
-        // Calculate days (round up, minimum 1 day)
         var totalHours = (end - start).TotalHours;
-        var rentalDays = Math.Max(1, (int)Math.Ceiling(totalHours / 24.0));
+        var rawRentalDays = (int)Math.Floor(totalHours / 24.0);
+        var rawRentalHours = (int)Math.Ceiling(totalHours % 24.0);
 
-        // Count weekdays and weekends
+        var chargedDays = rawRentalDays;
+        var chargedHours = rawRentalHours;
+
+        if (chargedDays == 0 && chargedHours == 0)
+        {
+            chargedHours = 1; // Minimum 1 hour
+            rawRentalHours = 1;
+        }
+
+        var hourlyCost = chargedHours * car.PricePerHour;
+        if (hourlyCost > car.DailyPrice)
+        {
+            // If extra hours cost more than a day, cap it to a full day
+            chargedDays++;
+            chargedHours = 0;
+            hourlyCost = 0;
+        }
+
         var weekdayCount = 0;
         var weekendCount = 0;
         var tempDate = start;
-        for (int i = 0; i < rentalDays; i++)
+        for (int i = 0; i < chargedDays; i++)
         {
             if (tempDate.DayOfWeek == DayOfWeek.Saturday || tempDate.DayOfWeek == DayOfWeek.Sunday)
             {
@@ -66,14 +88,13 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         }
 
         var weekdayPrice = car.DailyPrice;
-        // Weekend price is weekday price + 20% surcharge
-        var weekendPrice = Math.Round(car.DailyPrice * 1.2m, 0);
+        var weekendPrice = car.DailyPrice;
 
         var weekdayCost = weekdayCount * weekdayPrice;
         var weekendCost = weekendCount * weekendPrice;
-        var basePrice = weekdayCost + weekendCost;
+        var basePrice = weekdayCost + weekendCost + hourlyCost;
 
-        var insuranceFee = hasInsurance ? car.InsuranceFeePerDay * rentalDays : 0m;
+        var insuranceFee = hasInsurance ? car.InsuranceFeePerDay * (rawRentalDays + (rawRentalHours > 0 ? 1 : 0)) : 0m;
         var deliveryFee = hasDelivery ? car.DeliveryFee * (distanceKm > 0 ? distanceKm : 1m) : 0m;
 
         // Apply voucher discount
@@ -109,18 +130,21 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         }
 
         var totalAmount = basePrice + insuranceFee + deliveryFee - discountAmount;
-        var depositAmount = totalAmount < 3000000m ? Math.Round(totalAmount * 0.1m, 0) : 500000m;
+        var depositAmount = Math.Round(totalAmount * 0.1m, 0);
         var remainingAmount = totalAmount - depositAmount;
 
         return new PricePreviewResponse
         {
-            RentalDays = rentalDays,
+            RentalDays = rawRentalDays,
+            RentalHours = rawRentalHours,
             WeekdayCount = weekdayCount,
             WeekendCount = weekendCount,
             WeekdayPrice = weekdayPrice,
             WeekendPrice = weekendPrice,
+            HourlyPrice = car.PricePerHour,
             WeekdayCost = weekdayCost,
             WeekendCost = weekendCost,
+            HourlyCost = hourlyCost,
             InsuranceFee = insuranceFee,
             DeliveryFee = deliveryFee,
             DiscountAmount = discountAmount,
@@ -176,6 +200,9 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
                 await bookingRepository.AddDriverDocumentAsync(currentDoc, cancellationToken);
             }
 
+            var isVerified = currentDoc.VerificationStatus == DocumentVerificationStatus.Approved;
+            var initialStatus = isVerified ? BookingStatus.WaitingDeposit : BookingStatus.PendingApproval;
+
             // Create Booking object
             var booking = new Booking
             {
@@ -193,7 +220,7 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
                 DepositAmount = pricing.DepositAmount,
                 TotalAmount = pricing.TotalAmount,
                 RemainingAmount = pricing.RemainingAmount,
-                Status = BookingStatus.PendingApproval,
+                Status = initialStatus,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -223,13 +250,27 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
                 };
             }
 
+            // Create Calendar Block
+            var blockReason = isVerified ? $"Soft-lock 15m for Booking {booking.BookingCode}" : $"Pending Admin GPLX Approval for Booking {booking.BookingCode}";
+            var block = new CarAvailabilityBlock
+            {
+                CarId = booking.CarId,
+                StartDateTime = booking.StartDateTime,
+                EndDateTime = booking.EndDateTime,
+                Reason = blockReason,
+                // We don't have booking.Id yet, it will be mapped after AddAsync and SaveChanges,
+                // but EF Core can handle navigation property if we do booking.AvailabilityBlocks.Add
+            };
+            booking.AvailabilityBlocks.Add(block);
+
             // Track Status History
+            var note = isVerified ? "Auto-approved (GPLX verified). Soft-lock created for 15 minutes." : "Booking created by customer. Waiting for Admin to verify GPLX.";
             booking.StatusHistories.Add(new BookingStatusHistory
             {
-                OldStatus = BookingStatus.PendingApproval,
-                NewStatus = BookingStatus.PendingApproval,
+                OldStatus = BookingStatus.PendingApproval, // Virtual initial state
+                NewStatus = initialStatus,
                 ChangedByUserId = customerId,
-                Note = "Booking created by customer.",
+                Note = note,
                 CreatedAt = DateTime.UtcNow
             });
 
@@ -291,10 +332,10 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             throw new UnauthorizedAccessException("Unauthorized access to booking.");
         }
 
-        // Validation of status
-        if (booking.Status == BookingStatus.InProgress || booking.Status == BookingStatus.Completed || booking.Status == BookingStatus.Cancelled || booking.Status == BookingStatus.Expired)
+        // Validation of status: Only allow cancellation if deposit has not been paid
+        if (booking.Status != BookingStatus.PendingApproval && booking.Status != BookingStatus.WaitingDeposit)
         {
-            throw new InvalidOperationException($"Cannot cancel booking in status {booking.Status}.");
+            throw new InvalidOperationException($"Không thể hủy đơn thuê ở trạng thái {booking.Status}. Chỉ hỗ trợ hủy khi chưa thanh toán cọc.");
         }
 
         using var transaction = await bookingRepository.BeginTransactionAsync(cancellationToken);
@@ -332,13 +373,8 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
                 }
             }
 
-            // Calculate refund (in simulation, we'll refund the deposit if it was paid)
+            // Calculate refund (no refund since cancellation is only allowed before deposit)
             var refundAmount = 0m;
-            // If it was waiting pickup (deposit paid), simulate full or partial refund
-            if (oldStatus == BookingStatus.WaitingPickup)
-            {
-                refundAmount = booking.DepositAmount;
-            }
 
             // Restore voucher usage count
             if (booking.BookingVoucher != null)
@@ -497,10 +533,84 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         return MapToDetailResponse(booking);
     }
 
+    public async Task<bool> UpdateContractSignatureAsync(int customerId, int bookingId, string signatureUrl, CancellationToken cancellationToken = default)
+    {
+        var booking = await bookingRepository.GetByIdAsync(bookingId, cancellationToken);
+        if (booking == null) return false;
+
+        if (booking.CustomerId != customerId && booking.Car.OwnerId != customerId)
+        {
+            return false;
+        }
+
+        if (booking.RentalContract == null)
+        {
+            booking.RentalContract = new RentalContract
+            {
+                ContractNumber = "HD-" + booking.BookingCode,
+                PdfUrl = $"/api/bookings/{booking.Id}/contract/pdf",
+                GeneratedAt = DateTime.UtcNow
+            };
+        }
+
+        var sep = booking.RentalContract.PdfUrl.Contains('?') ? "&" : "?";
+        booking.RentalContract.PdfUrl = $"{booking.RentalContract.PdfUrl}{sep}sig={Uri.EscapeDataString(signatureUrl)}";
+        
+        // As requested by user, signing the contract immediately hands over the car
+        if (booking.Status == BookingStatus.WaitingPickup || booking.Status == BookingStatus.PendingApproval)
+        {
+            var oldStatus = booking.Status;
+            booking.Status = BookingStatus.InProgress;
+            booking.UpdatedAt = DateTime.UtcNow;
+            
+            booking.Car.Status = CarStatus.Rented;
+            booking.Car.UpdatedAt = DateTime.UtcNow;
+
+            booking.StatusHistories.Add(new BookingStatusHistory
+            {
+                OldStatus = oldStatus,
+                NewStatus = BookingStatus.InProgress,
+                ChangedByUserId = customerId,
+                Note = "KhÃ¡ch hÃ ng Ä‘Ã£ kÃ½ há»£p Ä‘á»“ng vÃ  nháº­n xe.",
+                CreatedAt = DateTime.UtcNow
+            });
+        }
+
+        await bookingRepository.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+    public async Task<BookingDetailResponse?> RequestReturnAsync(int customerId, int bookingId, CancellationToken cancellationToken = default)
+    {
+        var booking = await bookingRepository.GetByIdAsync(bookingId, cancellationToken);
+        if (booking == null) return null;
+
+        if (booking.CustomerId != customerId)
+        {
+            throw new UnauthorizedAccessException("You do not have permission to request return for this booking.");
+        }
+
+        if (booking.Status != BookingStatus.InProgress)
+        {
+            throw new InvalidOperationException("You can only request return for a booking that is currently in progress.");
+        }
+
+        booking.Status = BookingStatus.ReturnRequested;
+        booking.UpdatedAt = DateTime.UtcNow;
+
+        await bookingRepository.SaveChangesAsync(cancellationToken);
+
+        return MapToDetailResponse(booking);
+    }
+
     private BookingDetailResponse MapToDetailResponse(Booking b)
     {
         var primaryImage = b.Car.Images?.OrderBy(i => i.DisplayOrder).FirstOrDefault(i => i.IsPrimary) 
                            ?? b.Car.Images?.OrderBy(i => i.DisplayOrder).FirstOrDefault();
+
+        var totalHours = (b.EndDateTime - b.StartDateTime).TotalHours;
+        var rentalDays = (int)Math.Floor(totalHours / 24.0);
+        var rentalHours = (int)Math.Ceiling(totalHours % 24.0);
+        if (rentalDays == 0 && rentalHours == 0) rentalHours = 1;
 
         return new BookingDetailResponse
         {
@@ -508,13 +618,15 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             BookingCode = b.BookingCode,
             CustomerId = b.CustomerId,
             CarId = b.CarId,
-            CarName = b.Car.Name,
-            LicensePlate = b.Car.LicensePlate,
+            CarName = b.Car?.Name ?? string.Empty,
+            LicensePlate = b.Car?.LicensePlate ?? string.Empty,
             CarImageUrl = primaryImage?.ImageUrl,
             StartDateTime = b.StartDateTime,
             EndDateTime = b.EndDateTime,
             PickupLocation = b.PickupLocation,
             ReturnLocation = b.ReturnLocation,
+            RentalDays = rentalDays,
+            RentalHours = rentalHours,
             BasePrice = b.BasePrice,
             InsuranceFee = b.InsuranceFee,
             DeliveryFee = b.DeliveryFee,
@@ -522,19 +634,12 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             TotalAmount = b.TotalAmount,
             DepositAmount = b.DepositAmount,
             RemainingAmount = b.RemainingAmount,
-            Status = b.Status switch
-            {
-                BookingStatus.PendingApproval => "pending",
-                BookingStatus.WaitingDeposit => "pending",
-                BookingStatus.WaitingPickup => "approved",
-                BookingStatus.InProgress => "approved",
-                BookingStatus.ReturnRequested => "approved",
-                BookingStatus.Completed => "completed",
-                BookingStatus.Rejected => "rejected",
-                BookingStatus.Cancelled => "cancelled",
-                BookingStatus.Expired => "cancelled",
-                _ => "pending"
-            },
+            ExtraFee = b.ExtraFee,
+            OverdueFee = b.OverdueFee,
+            FinalPaymentAmount = b.RemainingAmount + b.ExtraFee + (b.OverdueFee ?? 0),
+            Status = b.Status.ToString().ToLowerInvariant(),
+            CanPayDeposit = b.Status == BookingStatus.WaitingDeposit,
+            CanPayFinal = b.Status == BookingStatus.WaitingFinalPayment,
             CancellationReason = b.CancellationReason,
             CancelledAt = b.CancelledAt,
             CreatedAt = b.CreatedAt,

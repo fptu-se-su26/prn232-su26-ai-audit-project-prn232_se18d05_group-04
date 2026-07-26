@@ -68,6 +68,10 @@ public class VivuCarDbContext(DbContextOptions<VivuCarDbContext> options) : DbCo
             .Property(b => b.OverdueFee)
             .HasPrecision(18, 2);
 
+        modelBuilder.Entity<Booking>()
+            .Property(b => b.ExtraFee)
+            .HasPrecision(18, 2);
+
         modelBuilder.Entity<IncidentReport>()
             .Property(i => i.PenaltyAmount)
             .HasPrecision(18, 2);

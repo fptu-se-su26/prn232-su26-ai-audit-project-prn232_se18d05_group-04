@@ -44,9 +44,9 @@
     const groups = userLicenseGroups();
     const rows = [
       ["Tổng hồ sơ", groups.length],
-      ["Chờ duyệt", groups.filter((item) => item.status === "pending").length],
-      ["Đã duyệt", groups.filter((item) => item.status === "approved").length],
-      ["Từ chối", groups.filter((item) => item.status === "rejected").length]
+      ["Chờ duyệt", groups.filter((item) => String(item.status).toLowerCase() === "pending").length],
+      ["Đã duyệt", groups.filter((item) => String(item.status).toLowerCase() === "approved").length],
+      ["Từ chối", groups.filter((item) => String(item.status).toLowerCase() === "rejected").length]
     ];
     document.getElementById("licenseModerationSummary").innerHTML = rows.map(([label, value]) => `<article class="summary-card"><span>${label}</span><strong>${value}</strong></article>`).join("");
   }

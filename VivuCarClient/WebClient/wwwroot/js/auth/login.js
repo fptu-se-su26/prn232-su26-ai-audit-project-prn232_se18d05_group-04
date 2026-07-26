@@ -101,7 +101,7 @@
 
         const role = (u.role || '').toLowerCase();
         const dest = role === 'admin' ? '/Admin/Dashboard'
-          : role === 'car_owner' ? '/Owner/Dashboard'
+          : (role === 'car_owner' || role === 'carowner') ? '/Owner/Dashboard'
           : '/home';
         window.location.href = dest;
       } else {
@@ -219,7 +219,7 @@
 
         const role = (u.role || '').toLowerCase();
         const dest = role === 'admin' ? '/Admin/Dashboard'
-          : role === 'car_owner' ? '/Owner/Dashboard'
+          : (role === 'car_owner' || role === 'carowner') ? '/Owner/Dashboard'
           : '/home';
         window.location.href = dest;
       } else {

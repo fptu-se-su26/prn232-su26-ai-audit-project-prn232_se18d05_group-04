@@ -67,13 +67,28 @@ public class AdminModerationService(
         var document = await repository.GetDriverDocumentAsync(id, cancellationToken);
         if (document is null) return false;
 
-        document.VerificationStatus = status.Trim().ToLowerInvariant() switch
-        {
-            "approved" => DocumentVerificationStatus.Approved,
-            "rejected" => DocumentVerificationStatus.Rejected,
-            _ => throw new ArgumentException("Status must be approved or rejected.", nameof(status))
-        };
+        var isApproved = status.Trim().ToLowerInvariant() == "approved";
+        document.VerificationStatus = isApproved ? DocumentVerificationStatus.Approved : DocumentVerificationStatus.Rejected;
         document.UpdatedAt = DateTime.UtcNow;
+
+        if (isApproved)
+        {
+            var pendingBookings = await repository.GetPendingApprovalBookingsByUserIdAsync(document.UserId, cancellationToken);
+            foreach (var booking in pendingBookings)
+            {
+                booking.Status = BookingStatus.WaitingDeposit;
+                booking.UpdatedAt = DateTime.UtcNow;
+                booking.StatusHistories.Add(new BusinessObjects.Models.BookingStatusHistory
+                {
+                    OldStatus = BookingStatus.PendingApproval,
+                    NewStatus = BookingStatus.WaitingDeposit,
+                    ChangedByUserId = null,
+                    Note = "Hệ thống tự động duyệt do GPLX đã được xác thực.",
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+        }
+
         await repository.SaveChangesAsync(cancellationToken);
         return true;
     }

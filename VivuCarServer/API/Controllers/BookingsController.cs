@@ -103,6 +103,29 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
         return Ok(list);
     }
 
+    [HttpPost("{id:int}/request-return")]
+    public async Task<ActionResult<BookingDetailResponse>> RequestReturn(int id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var customerId = GetCurrentUserId();
+            var booking = await bookingService.RequestReturnAsync(customerId, id, cancellationToken);
+            if (booking == null)
+            {
+                return NotFound(new { message = "Booking not found or access denied." });
+            }
+            return Ok(booking);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Forbid(ex.Message);
+        }
+    }
+
     [HttpPost("{id:int}/cancel")]
     public async Task<ActionResult<CancelBookingResponse>> CancelBooking(int id, [FromBody] CancelBookingRequest request, CancellationToken cancellationToken)
     {
@@ -173,7 +196,7 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
     }
 
     [HttpGet("{id:int}/contract/pdf")]
-    public async Task<IActionResult> GetContractPdf(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetContractPdf(int id, [FromQuery] string? sig, CancellationToken cancellationToken)
     {
         var customerId = GetCurrentUserId();
         var contract = await bookingService.GetContractAsync(customerId, id, cancellationToken);
@@ -194,94 +217,143 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
 <html>
 <head>
     <meta charset='utf-8' />
-    <title>Há»£p Ä‘á»“ng thuÃª xe tá»± lÃ¡i VivuCar</title>
+    <title>Hợp đồng thuê xe tự lái VivuCar</title>
     <style>
-        body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; color: #333; line-height: 1.6; }}
-        .header {{ text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }}
-        .title {{ font-size: 24px; font-weight: bold; text-transform: uppercase; margin: 0; }}
-        .sub-title {{ font-size: 14px; color: #666; margin-top: 5px; }}
-        .section {{ margin-bottom: 25px; }}
-        .section-title {{ font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px; }}
-        table {{ width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 20px; }}
-        th, td {{ border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }}
-        th {{ background-color: #f7f7f7; font-weight: bold; }}
-        .signatures {{ margin-top: 50px; display: flex; justify-content: space-between; }}
+        body {{ font-family: 'Times New Roman', Times, serif; margin: 40px; color: #111; line-height: 1.5; font-size: 15px; }}
+        .header {{ text-align: center; margin-bottom: 30px; }}
+        .title {{ font-size: 22px; font-weight: bold; text-transform: uppercase; margin: 0; }}
+        .sub-title {{ font-size: 16px; font-weight: bold; text-decoration: underline; margin-top: 5px; }}
+        .contract-title {{ font-size: 24px; font-weight: bold; text-transform: uppercase; margin-top: 30px; text-align: center; }}
+        .contract-no {{ text-align: center; font-style: italic; margin-bottom: 30px; }}
+        .section {{ margin-bottom: 20px; }}
+        .section-title {{ font-weight: bold; text-transform: uppercase; margin-bottom: 10px; font-size: 16px; }}
+        .info-row {{ margin-bottom: 5px; display: flex; }}
+        .info-label {{ font-weight: bold; width: 200px; flex-shrink: 0; }}
+        .info-value {{ flex-grow: 1; }}
+        table {{ width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; }}
+        th, td {{ border: 1px solid #333; padding: 10px; text-align: left; }}
+        th {{ background-color: #f0f0f0; font-weight: bold; text-align: center; }}
+        .signatures {{ margin-top: 50px; display: flex; justify-content: space-between; page-break-inside: avoid; }}
         .signature-box {{ text-align: center; width: 45%; }}
         .signature-line {{ margin-top: 80px; border-top: 1px dashed #333; width: 200px; margin-left: auto; margin-right: auto; }}
-        .footer {{ text-align: center; margin-top: 60px; font-size: 12px; color: #888; border-top: 1px solid #eee; padding-top: 10px; }}
+        .footer {{ text-align: center; margin-top: 60px; font-size: 13px; font-style: italic; }}
     </style>
 </head>
 <body>
     <div class='header'>
         <div class='title'>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</div>
         <div class='sub-title'>Độc lập - Tự do - Hạnh phúc</div>
-        <div class='title' style='margin-top: 20px; font-size: 20px;'>HỢP ĐỒNG THUÊ XE TỰ LÁI</div>
-        <div class='sub-title'>Số hợp đồng: HD-BK{id}</div>
+    </div>
+    
+    <div class='contract-title'>HỢP ĐỒNG THUÊ XE TỰ LÁI</div>
+    <div class='contract-no'>Số: HD-{contract.BookingCode}</div>
+
+    <div style='margin-bottom: 20px; font-style: italic;'>
+        Hôm nay, ngày {DateTime.UtcNow.Day:00} tháng {DateTime.UtcNow.Month:00} năm {DateTime.UtcNow.Year}, tại hệ thống VivuCar, chúng tôi gồm có:
     </div>
 
     <div class='section'>
-        <div class='section-title'>1. Bên Cho Thuê (Bên A - Chủ xe)</div>
-        <p>Họ tên: Hệ thống VivuCar Partner</p>
-        <p>Địa chỉ: Hải Châu, Đà Nẵng</p>
+        <div class='section-title'>ĐIỀU 1: ĐẠI DIỆN BÊN CHO THUÊ (BÊN A)</div>
+        <div class='info-row'><span class='info-label'>Hệ thống:</span> <span class='info-value'>VivuCar Partner</span></div>
+        <div class='info-row'><span class='info-label'>Địa chỉ:</span> <span class='info-value'>Khu vực Đà Nẵng</span></div>
+        <div class='info-row'><span class='info-label'>Điện thoại hỗ trợ:</span> <span class='info-value'>1900 9999</span></div>
     </div>
 
     <div class='section'>
-        <div class='section-title'>2. Bên Thuê (Bên B - Khách hàng)</div>
-        <p>Thông tin được đăng ký trên hồ sơ trực tuyến điện tử của VivuCar.</p>
+        <div class='section-title'>ĐIỀU 2: ĐẠI DIỆN BÊN THUÊ (BÊN B)</div>
+        <div class='info-row'><span class='info-label'>Ông/Bà:</span> <span class='info-value'>{contract.DriverInfo?.FullName ?? "Khách hàng"}</span></div>
+        <div class='info-row'><span class='info-label'>Số điện thoại:</span> <span class='info-value'>{contract.DriverInfo?.PhoneNumber ?? "Không có"}</span></div>
     </div>
 
     <div class='section'>
-        <div class='section-title'>3. Chi tiết Phương tiện & Giá thuê</div>
+        <div class='section-title'>ĐIỀU 3: THÔNG TIN PHƯƠNG TIỆN THUÊ</div>
+        <div class='info-row'><span class='info-label'>Loại xe:</span> <span class='info-value'>{contract.CarName}</span></div>
+        <div class='info-row'><span class='info-label'>Biển số xe:</span> <span class='info-value'>{contract.LicensePlate}</span></div>
+        <div class='info-row'><span class='info-label'>Màu sắc:</span> <span class='info-value'>Được cập nhật trên hệ thống</span></div>
+        <div class='info-row'><span class='info-label'>Số chỗ ngồi:</span> <span class='info-value'>Được cập nhật trên hệ thống</span></div>
+    </div>
+
+    <div class='section'>
+        <div class='section-title'>ĐIỀU 4: THỜI GIAN VÀ CHI PHÍ THUÊ XE</div>
         <table>
             <tr>
-                <th>Mã Đơn Đặt</th>
-                <td>BK-{id}</td>
-                <th>Phương tiện</th>
-                <td>Xe tự lái VivuCar</td>
+                <th>Thời gian Nhận xe</th>
+                <th>Thời gian Trả xe</th>
+                <th>Tổng số ngày thuê</th>
             </tr>
             <tr>
-                <th>Thời gian Nhận</th>
-                <td>Vui lòng xem chi tiết đơn hàng</td>
-                <th>Thời gian Trả</th>
-                <td>Vui lòng xem chi tiết đơn hàng</td>
-            </tr>
-            <tr>
-                <th>Tổng số tiền thuê</th>
-                <td>Theo bảng tính chi tiết</td>
-                <th>Phương thức thanh toán</th>
-                <td>Chuyển khoản / Tiền mặt</td>
+                <td style='text-align: center;'>{contract.StartDateTime:dd/MM/yyyy HH:mm}</td>
+                <td style='text-align: center;'>{contract.EndDateTime:dd/MM/yyyy HH:mm}</td>
+                <td style='text-align: center;'>{Math.Ceiling((contract.EndDateTime - contract.StartDateTime).TotalDays)} ngày</td>
             </tr>
         </table>
+        
+        <div class='info-row'><span class='info-label'>Tổng tiền thuê:</span> <span class='info-value' style='font-weight: bold;'>{contract.TotalAmount:N0} VNĐ</span></div>
+        <div class='info-row'><span class='info-label'>Số tiền đã cọc:</span> <span class='info-value'>{contract.DepositAmount:N0} VNĐ</span></div>
+        <div class='info-row'><span class='info-label'>Số tiền còn lại:</span> <span class='info-value'>{contract.RemainingAmount:N0} VNĐ (Thanh toán khi trả xe)</span></div>
+        <div class='info-row'><span class='info-label'>Phương thức:</span> <span class='info-value'>Chuyển khoản / Tiền mặt</span></div>
     </div>
 
     <div class='section'>
-        <div class='section-title'>4. Trách nhiệm các bên</div>
-        <ul>
-            <li><strong>Bên A:</strong> Giao xe đúng hẹn, đúng tình trạng mô tả, giấy tờ đầy đủ.</li>
-            <li><strong>Bên B:</strong> Trả xe đúng hẹn, thanh toán đủ tiền, chịu trách nhiệm vi phạm giao thông và hư hỏng trong thời gian thuê.</li>
+        <div class='section-title'>ĐIỀU 5: TRÁCH NHIỆM VÀ CAM KẾT</div>
+        <ul style='padding-left: 20px; text-align: justify;'>
+            <li style='margin-bottom: 8px;'><strong>Trách nhiệm Bên A:</strong> Giao xe đúng hạn, đúng loại xe, biển số, đảm bảo xe hoạt động tốt, đầy đủ giấy tờ xe hợp lệ (bản photo công chứng hoặc bản gốc tùy thỏa thuận).</li>
+            <li style='margin-bottom: 8px;'><strong>Trách nhiệm Bên B:</strong> Sử dụng xe đúng mục đích, không sử dụng xe vào mục đích cầm cố, thế chấp hay vận chuyển hàng cấm. Chịu hoàn toàn trách nhiệm dân sự và hình sự trước pháp luật về mọi hành vi vi phạm pháp luật trong thời gian thuê xe.</li>
+            <li style='margin-bottom: 8px;'><strong>Bảo quản tài sản:</strong> Bên B phải bồi thường 100% chi phí sửa chữa nếu xảy ra va quệt, hư hỏng do lỗi của Bên B. Nếu xe bị giam giữ do vi phạm luật giao thông, Bên B phải chịu mọi chi phí phạt và bồi thường tiền thuê xe trong những ngày xe bị giam.</li>
         </ul>
     </div>
+    
+    <div style='margin-top: 30px;'>Hai bên đã đọc, hiểu rõ và đồng ý với các điều khoản trên. Hợp đồng có hiệu lực kể từ thời điểm ký xác nhận điện tử.</div>
+
     <div class='signatures'>
         <div class='signature-box'>
             <strong>ĐẠI DIỆN BÊN A</strong><br/>
-            (Ký và ghi rõ họ tên)
-            <div class='signature-line'></div>
+            (Ký xác nhận hệ thống)
+            <div style='margin-top:20px; font-style: italic; color: #0056b3; font-weight: bold; border: 2px solid #0056b3; display: inline-block; padding: 10px 20px; transform: rotate(-5deg);'>
+                ĐÃ DUYỆT<br/>VivuCar System
+            </div>
         </div>
         <div class='signature-box'>
             <strong>ĐẠI DIỆN BÊN B</strong><br/>
-            (Ký và ghi rõ họ tên)
-            <div class='signature-line'></div>
+            (Khách hàng ký và ghi rõ họ tên)
+            {(string.IsNullOrEmpty(sig) ? "<div class='signature-line'></div>" : $"<div style='margin-top:20px;'><img src='{sig}' style='max-width:250px; max-height:120px; mix-blend-mode: multiply;'/></div>")}
         </div>
     </div>
     
     <div class='footer'>
-        Hợp đồng được tạo tự động bởi hệ thống VivuCar.<br/>
-        Có giá trị pháp lý khi hai bên đồng thuận và ký xác nhận.
+        Hợp đồng được tạo tự động và lưu trữ trên hệ thống VivuCar.<br/>
+        VivuCar.vn © {DateTime.UtcNow.Year}
     </div>
 </body>
 </html>
 ";
         return Content(htmlContent, "text/html");
+    }
+
+    public class SignContractRequest
+    {
+        public string SignatureUrl { get; set; } = string.Empty;
+    }
+
+    [HttpPost("{id:int}/contract/sign")]
+    public async Task<IActionResult> SignContract(int id, [FromBody] SignContractRequest request, CancellationToken cancellationToken)
+    {
+        var customerId = GetCurrentUserId();
+        var contract = await bookingService.GetContractAsync(customerId, id, cancellationToken);
+        if (contract == null) return NotFound(new { message = "Booking contract not found or access denied." });
+
+        if (string.IsNullOrWhiteSpace(request.SignatureUrl))
+        {
+            return BadRequest(new { message = "SignatureUrl is required." });
+        }
+
+        var success = await bookingService.UpdateContractSignatureAsync(customerId, id, request.SignatureUrl, cancellationToken);
+        if (!success)
+        {
+            return BadRequest(new { message = "Failed to update contract signature. Make sure the contract exists and you have permission." });
+        }
+
+        return Ok(new { message = "Signature saved successfully.", signatureUrl = request.SignatureUrl });
     }
 }
 

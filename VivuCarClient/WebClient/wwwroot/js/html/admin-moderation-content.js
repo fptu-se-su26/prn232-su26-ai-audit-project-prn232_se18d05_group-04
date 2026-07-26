@@ -60,10 +60,10 @@
     const items = contentItems();
     const rows = [
       ["Tổng nội dung", items.length],
-      ["Chờ duyệt", items.filter((item) => item.status === "pending").length],
-      ["Bị báo cáo", items.filter((item) => item.status === "reported").length],
-      ["Đã duyệt", items.filter((item) => item.status === "approved").length],
-      ["Từ chối", items.filter((item) => item.status === "rejected").length]
+      ["Chờ duyệt", items.filter((item) => String(item.status).toLowerCase() === "pending").length],
+      ["Bị báo cáo", items.filter((item) => String(item.status).toLowerCase() === "reported").length],
+      ["Đã duyệt", items.filter((item) => String(item.status).toLowerCase() === "approved").length],
+      ["Từ chối", items.filter((item) => String(item.status).toLowerCase() === "rejected").length]
     ];
     document.getElementById("contentModerationSummary").innerHTML = rows.map(([label, value]) => `<article class="summary-card"><span>${label}</span><strong>${value}</strong></article>`).join("");
   }

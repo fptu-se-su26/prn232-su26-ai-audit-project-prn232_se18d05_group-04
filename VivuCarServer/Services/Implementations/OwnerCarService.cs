@@ -99,7 +99,7 @@ public class OwnerCarService(ICarRepository carRepository) : IOwnerCarService
             InsuranceFeePerDay = request.InsuranceFeePerDay,
             DeliveryFee = request.DeliveryFee,
             DepositAmount = request.DepositAmount,
-            Status = CarStatus.Pending,
+            Status = CarStatus.Available,
             SeatCount = request.SeatCount,
             TransmissionType = ParseTransmission(request.TransmissionType),
             FuelType = ParseFuelType(request.FuelType),
