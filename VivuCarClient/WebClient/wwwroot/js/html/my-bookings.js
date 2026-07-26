@@ -28,7 +28,7 @@ import { authService } from '/js/shared/auth-service.js';
         allBookings = await r.json();
         
         // Fetch payment statuses for pending/approved bookings to determine UI state accurately
-        const activeBookings = allBookings.filter(b => b.status === 'pending' || b.status === 'approved');
+        const activeBookings = allBookings.filter(b => String(b.status).toLowerCase() === 'pending' || String(b.status).toLowerCase() === 'approved');
         await Promise.all(activeBookings.map(async (b) => {
           try {
             const pr = await authService.apiFetch(`payments/status/${b.id}`);
@@ -51,24 +51,9 @@ import { authService } from '/js/shared/auth-service.js';
     const payment = paymentStatuses[booking.id];
     const paid = payment?.paymentStatus === 'success';
     
-    let key = "unknown", label = "Không xác định", tone = "neutral";
-    const s = (booking.status || "").toLowerCase();
-    
-    if (s === "cancelled") { key = "cancelled"; label = "Đã hủy"; tone = "danger"; }
-    else if (s === "rejected") { key = "rejected"; label = "Đã từ chối"; tone = "danger"; }
-    else if (s === "completed") { key = "completed"; label = "Hoàn tất"; tone = "success"; }
-    else if (s === "pending" || s === "pendingapproval") {
-      if (paid) { key = "handover_pending"; label = "Đã cọc - chờ xác nhận"; tone = "primary"; }
-      else { key = "payment_pending"; label = "Chờ thanh toán"; tone = "warning"; }
-    }
-    else if (s === "returnrequested") {
-      key = "return_requested"; label = "Chờ trả xe"; tone = "warning";
-    }
-    else if (s === "approved" || s === "waitingdeposit" || s === "waitingpickup" || s === "inprogress") {
-      const pickupDate = new Date(booking.startDateTime);
-      if (Date.now() < pickupDate.getTime()) { key = "handover_pending"; label = "Chờ bàn giao"; tone = "primary"; }
-      else { key = "renting"; label = "Đang thuê"; tone = "primary"; }
-    }
+    const ui = window.VivuCarUtils.getBookingApiUiState(booking, paid);
+    let { key, label, tone } = ui;
+    const s = String(booking.status || "").toLowerCase();
     return { key, label, tone };
   }
 
@@ -140,7 +125,7 @@ import { authService } from '/js/shared/auth-service.js';
   function card({ booking, ui }) {
     const payment = paymentStatuses[booking.id];
     const paid = payment?.paymentStatus === "success";
-    const canCancel = booking.status === "pending" && !paid;
+    const canCancel = String(booking.status).toLowerCase() === "pending" && !paid;
     
     return `
       <article class="booking-card-wide">
@@ -153,9 +138,11 @@ import { authService } from '/js/shared/auth-service.js';
         </div>
         <div class="booking-actions">
           <a class="btn btn-secondary btn-sm" href="/Booking/Detail?id=${booking.id}">Chi tiết</a>
-          ${booking.status === "pending" && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán</a>` : ""}
+          ${String(booking.status).toLowerCase() === "pending" && booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán</a>` : ""}
+          ${ui.key === "handover_pending" ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
+          ${ui.key === "renting" ? `<a class="btn btn-primary btn-sm" href="/Booking/ReturnRequest?id=${booking.id}">Trả xe</a>` : ""}
           ${canCancel ? `<button class="btn btn-danger btn-sm" type="button" data-cancel="${booking.id}">Hủy đơn</button>` : ""}
-          ${booking.status === "completed" ? `<a class="btn btn-ghost btn-sm" href="/Review/Create?bookingId=${booking.id}">Đánh giá</a>` : ""}
+          ${String(booking.status).toLowerCase() === "completed" ? `<a class="btn btn-ghost btn-sm" href="/Review/Create?bookingId=${booking.id}">Đánh giá</a>` : ""}
         </div>
       </article>`;
   }

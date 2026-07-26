@@ -50,27 +50,31 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         }
 
         var totalHours = (end - start).TotalHours;
-        var rentalDays = (int)Math.Floor(totalHours / 24.0);
-        var rentalHours = (int)Math.Ceiling(totalHours % 24.0);
+        var rawRentalDays = (int)Math.Floor(totalHours / 24.0);
+        var rawRentalHours = (int)Math.Ceiling(totalHours % 24.0);
 
-        if (rentalDays == 0 && rentalHours == 0)
+        var chargedDays = rawRentalDays;
+        var chargedHours = rawRentalHours;
+
+        if (chargedDays == 0 && chargedHours == 0)
         {
-            rentalHours = 1; // Minimum 1 hour
+            chargedHours = 1; // Minimum 1 hour
+            rawRentalHours = 1;
         }
 
-        var hourlyCost = rentalHours * car.PricePerHour;
+        var hourlyCost = chargedHours * car.PricePerHour;
         if (hourlyCost > car.DailyPrice)
         {
             // If extra hours cost more than a day, cap it to a full day
-            rentalDays++;
-            rentalHours = 0;
+            chargedDays++;
+            chargedHours = 0;
             hourlyCost = 0;
         }
 
         var weekdayCount = 0;
         var weekendCount = 0;
         var tempDate = start;
-        for (int i = 0; i < rentalDays; i++)
+        for (int i = 0; i < chargedDays; i++)
         {
             if (tempDate.DayOfWeek == DayOfWeek.Saturday || tempDate.DayOfWeek == DayOfWeek.Sunday)
             {
@@ -90,7 +94,7 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         var weekendCost = weekendCount * weekendPrice;
         var basePrice = weekdayCost + weekendCost + hourlyCost;
 
-        var insuranceFee = hasInsurance ? car.InsuranceFeePerDay * (rentalDays + (rentalHours > 0 ? 1 : 0)) : 0m;
+        var insuranceFee = hasInsurance ? car.InsuranceFeePerDay * (rawRentalDays + (rawRentalHours > 0 ? 1 : 0)) : 0m;
         var deliveryFee = hasDelivery ? car.DeliveryFee * (distanceKm > 0 ? distanceKm : 1m) : 0m;
 
         // Apply voucher discount
@@ -131,8 +135,8 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
 
         return new PricePreviewResponse
         {
-            RentalDays = rentalDays,
-            RentalHours = rentalHours,
+            RentalDays = rawRentalDays,
+            RentalHours = rawRentalHours,
             WeekdayCount = weekdayCount,
             WeekendCount = weekendCount,
             WeekdayPrice = weekdayPrice,
@@ -541,12 +545,37 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
 
         if (booking.RentalContract == null)
         {
-            return false;
+            booking.RentalContract = new RentalContract
+            {
+                ContractNumber = "HD-" + booking.BookingCode,
+                PdfUrl = $"/api/bookings/{booking.Id}/contract/pdf",
+                GeneratedAt = DateTime.UtcNow
+            };
         }
 
         var sep = booking.RentalContract.PdfUrl.Contains('?') ? "&" : "?";
         booking.RentalContract.PdfUrl = $"{booking.RentalContract.PdfUrl}{sep}sig={Uri.EscapeDataString(signatureUrl)}";
         
+        // As requested by user, signing the contract immediately hands over the car
+        if (booking.Status == BookingStatus.WaitingPickup || booking.Status == BookingStatus.PendingApproval)
+        {
+            var oldStatus = booking.Status;
+            booking.Status = BookingStatus.InProgress;
+            booking.UpdatedAt = DateTime.UtcNow;
+            
+            booking.Car.Status = CarStatus.Rented;
+            booking.Car.UpdatedAt = DateTime.UtcNow;
+
+            booking.StatusHistories.Add(new BookingStatusHistory
+            {
+                OldStatus = oldStatus,
+                NewStatus = BookingStatus.InProgress,
+                ChangedByUserId = customerId,
+                Note = "KhÃ¡ch hÃ ng Ä‘Ã£ kÃ½ há»£p Ä‘á»“ng vÃ  nháº­n xe.",
+                CreatedAt = DateTime.UtcNow
+            });
+        }
+
         await bookingRepository.SaveChangesAsync(cancellationToken);
         return true;
     }
@@ -582,11 +611,6 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         var rentalDays = (int)Math.Floor(totalHours / 24.0);
         var rentalHours = (int)Math.Ceiling(totalHours % 24.0);
         if (rentalDays == 0 && rentalHours == 0) rentalHours = 1;
-        if (b.Car != null && rentalHours * b.Car.PricePerHour > b.Car.DailyPrice)
-        {
-            rentalDays++;
-            rentalHours = 0;
-        }
 
         return new BookingDetailResponse
         {
@@ -611,6 +635,7 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             DepositAmount = b.DepositAmount,
             RemainingAmount = b.RemainingAmount,
             Status = b.Status.ToString().ToLowerInvariant(),
+            CanPayDeposit = b.Status == BookingStatus.WaitingDeposit,
             CancellationReason = b.CancellationReason,
             CancelledAt = b.CancelledAt,
             CreatedAt = b.CreatedAt,

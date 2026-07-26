@@ -9,7 +9,7 @@
 
   function canReturn() {
     const inspections = U.inspectionsForBooking(bookingId);
-    return booking?.status === "approved" && inspections.some((item) => item.inspection_type === "pre_rental") && !inspections.some((item) => item.inspection_type === "post_rental");
+    return String(booking?.status).toLowerCase() === "approved" && inspections.some((item) => item.inspection_type === "pre_rental") && !inspections.some((item) => item.inspection_type === "post_rental");
   }
 
   function render() {

@@ -178,16 +178,48 @@ async function apiFetch(path, options = {}, allowRefresh = true) {
 
     // FormData streams cannot be replayed after a 401 refresh retry.
     if (response.status !== 401 || !allowRefresh || isFormData) {
-        return response;
+        return patchResponse(response);
     }
 
     const session = await refresh();
 
     if (!session) {
-        return response;
+        return patchResponse(response);
     }
 
     return apiFetch(path, options, false);
+}
+
+function patchResponse(response) {
+    if (!response || !response.json) return response;
+    const originalJson = response.json.bind(response);
+    response.json = async function () {
+        const obj = await originalJson();
+        normalizeStatus(obj);
+        return obj;
+    };
+    return response;
+}
+
+function normalizeStatus(o) {
+    if (Array.isArray(o)) {
+        for (let i = 0; i < o.length; i++) normalizeStatus(o[i]);
+    } else if (o && typeof o === 'object') {
+        if (typeof o.status === 'string') {
+            const ls = o.status.toLowerCase();
+            if (ls === "pendingapproval" || ls === "waitingdeposit") o.status = "pending";
+            else if (ls === "waitingpickup" || ls === "inprogress" || ls === "returnrequested") o.status = "approved";
+            else if (ls === "completed") o.status = "completed";
+            else if (ls === "cancelled" || ls === "expired") o.status = "cancelled";
+            else if (ls === "rejected") o.status = "rejected";
+            else o.status = ls;
+        }
+        for (const key in o) {
+            if (Object.prototype.hasOwnProperty.call(o, key)) {
+                normalizeStatus(o[key]);
+            }
+        }
+    }
 }
 
 async function logout() {

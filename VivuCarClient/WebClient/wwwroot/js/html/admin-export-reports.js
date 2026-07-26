@@ -26,7 +26,7 @@
   }
 
   function renderJobs() {
-    document.getElementById("exportJobsBody").innerHTML = DB.export_jobs.map((job) => `<tr><td class="mono">${job.id}</td><td>${job.export_type}</td><td>${U.statusBadge(job.status === "done" ? "success" : job.status === "failed" ? "danger" : "warning", job.status, C.EXPORT_STATUS_LABELS[job.status])}</td><td>${job.file_url || ""}</td><td>${U.formatDateTime(job.created_at)}</td></tr>`).join("");
+    document.getElementById("exportJobsBody").innerHTML = DB.export_jobs.map((job) => `<tr><td class="mono">${job.id}</td><td>${job.export_type}</td><td>${U.statusBadge(String(job.status).toLowerCase() === "done" ? "success" : String(job.status).toLowerCase() === "failed" ? "danger" : "warning", job.status, C.EXPORT_STATUS_LABELS[job.status])}</td><td>${job.file_url || ""}</td><td>${U.formatDateTime(job.created_at)}</td></tr>`).join("");
   }
 
   function createJob(format) {

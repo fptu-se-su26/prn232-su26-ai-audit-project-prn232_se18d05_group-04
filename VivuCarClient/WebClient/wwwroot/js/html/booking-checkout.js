@@ -254,6 +254,24 @@ import { authService } from '/js/shared/auth-service.js';
           </div>
         </div>
 
+        <!-- Dịch vụ & Mã giảm giá -->
+        <div style="background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:20px">
+          <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0 0 16px">Dịch vụ & Khuyến mãi</h2>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <label style="display:flex;align-items:center;gap:8px;font-size:.875rem;font-weight:600;color:#374151;cursor:pointer">
+              <input type="checkbox" id="hasInsurance" onchange="window.updatePricePreview()" style="width:16px;height:16px;accent-color:#16a34a">
+              Mua bảo hiểm chuyến đi (${fmt(car.insuranceFeePerDay || 0)}/ngày)
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151;margin-top:8px">
+              Mã giảm giá
+              <div style="display:flex;gap:8px">
+                <input id="voucherCode" type="text" placeholder="Nhập mã nếu có" style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none;flex:1;text-transform:uppercase">
+                <button type="button" onclick="window.updatePricePreview()" style="background:#1f1f1f;color:#fff;border:none;border-radius:8px;padding:0 16px;font-weight:600;cursor:pointer">Áp dụng</button>
+              </div>
+            </label>
+          </div>
+        </div>
+
         <!-- Tóm tắt chi phí -->
         <div id="summaryCard" style="background:#fff;border:1px solid #e6e4df;border-radius:12px;padding:20px">
           <h2 style="font-size:1rem;font-weight:700;color:#1f1f1f;margin:0 0 12px">Tóm tắt chi phí</h2>
@@ -313,10 +331,14 @@ import { authService } from '/js/shared/auth-service.js';
   const returnEl  = document.getElementById('returnDatetime');
 
   let lastPreview = null;
+  window.updatePricePreview = updatePricingAndAvailability;
 
   async function updatePricingAndAvailability() {
     const pickup  = pickupEl.value;
     const ret     = returnEl.value;
+    const voucherCode = document.getElementById('voucherCode')?.value || null;
+    const hasInsurance = document.getElementById('hasInsurance')?.checked || false;
+    
     if (!pickup || !ret) return;
 
     // Availability
@@ -344,7 +366,7 @@ import { authService } from '/js/shared/auth-service.js';
       const r = await authService.apiFetch('bookings/price-preview', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ carId, startDateTime: pickup, endDateTime: ret, voucherCode: null })
+        body: JSON.stringify({ carId, startDateTime: pickup, endDateTime: ret, voucherCode, hasInsurance })
       });
       if (r.ok) {
         lastPreview = await r.json();
@@ -463,6 +485,7 @@ import { authService } from '/js/shared/auth-service.js';
       const backInput = document.getElementById('licenseBackInput');
       let frontUrl = driverDoc?.driverLicenseFrontImageUrl;
       let backUrl = driverDoc?.driverLicenseBackImageUrl;
+      let isFileUploaded = false;
 
       if (frontInput && frontInput.files[0]) {
         const fd = new FormData();
@@ -472,6 +495,7 @@ import { authService } from '/js/shared/auth-service.js';
           if (res.ok) {
             const uploaded = await res.json();
             frontUrl = uploaded.publicUrl ?? uploaded.url;
+            isFileUploaded = true;
           } else {
             console.warn('Upload front failed:', res.status, await res.text().catch(() => ''));
           }
@@ -537,7 +561,8 @@ import { authService } from '/js/shared/auth-service.js';
           endDateTime: ret,
           pickupLocation: address,
           returnLocation: address,
-          voucherCode: null,
+          hasInsurance: document.getElementById('hasInsurance')?.checked || false,
+          voucherCode: document.getElementById('voucherCode')?.value || null,
           driverInfo: {
             fullName: document.getElementById('driverName').value.trim(),
             phoneNumber: document.getElementById('driverPhone').value.trim(),
@@ -563,7 +588,12 @@ import { authService } from '/js/shared/auth-service.js';
 
       const booking = await r.json();
       showToast('Đã tạo đơn thuê thành công!', 'success');
-      setTimeout(() => location.href = `/Payment/Deposit?bookingId=${booking.id}`, 800);
+      
+      if (booking.canPayDeposit) {
+          setTimeout(() => location.href = `/Payment/Deposit?bookingId=${booking.id}`, 800);
+      } else {
+          setTimeout(() => location.href = `/Booking/Detail?id=${booking.id}`, 800);
+      }
     } catch (err) {
       console.error(err);
       showToast('Lỗi kết nối. Vui lòng thử lại.', 'danger');

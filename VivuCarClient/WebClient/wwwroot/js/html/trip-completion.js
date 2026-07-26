@@ -3,7 +3,7 @@
   function canCompleteTrip(booking, car) {
     const inspections = U.inspectionsForBooking(booking?.id);
     const incidents = (window.VivuCarDB.incident_reports || []).filter((item) => item.booking_id === booking?.id && ["open", "in_review"].includes(item.status));
-    return Boolean(booking && car && booking.status === "approved" && inspections.some((item) => item.inspection_type === "pre_rental") && inspections.some((item) => item.inspection_type === "post_rental") && !incidents.length);
+    return Boolean(booking && car && String(booking.status).toLowerCase() === "approved" && inspections.some((item) => item.inspection_type === "pre_rental") && inspections.some((item) => item.inspection_type === "post_rental") && !incidents.length);
   }
   function openCompleteTripModal(bookingId, onDone) {
     const DB = window.VivuCarDB;

@@ -65,37 +65,22 @@ import { authService } from '/js/shared/auth-service.js';
     root.innerHTML = U.renderEmptyState({ title: "Không tìm thấy đơn", text: "Đơn không tồn tại hoặc lỗi kết nối.", href: "/Booking/MyBookings", action: "Về danh sách đơn" });
   }
 
-  function resolveUiState() {
+  function getStatusUi() {
     const paid = paymentStatus?.paymentStatus === 'success';
-    let key = "unknown", label = "Không xác định", tone = "neutral";
-    
-    const s = (booking.status || "").toLowerCase();
-    if (s === "cancelled") { key = "cancelled"; label = "Đã hủy"; tone = "danger"; }
-    else if (s === "rejected") { key = "rejected"; label = "Đã từ chối"; tone = "danger"; }
-    else if (s === "completed") { key = "completed"; label = "Hoàn tất"; tone = "success"; }
-    else if (s === "pending" || s === "pendingapproval") {
-      if (paid) { key = "handover_pending"; label = "Đã cọc - chờ xác nhận"; tone = "primary"; }
-      else { key = "payment_pending"; label = "Chờ thanh toán"; tone = "warning"; }
-    }
-    else if (s === "returnrequested") { key = "return_requested"; label = "Đang chờ trả xe"; tone = "warning"; }
-    else if (s === "approved" || s === "waitingdeposit" || s === "waitingpickup" || s === "inprogress") {
-      const pickupDate = new Date(booking.startDateTime);
-      if (Date.now() < pickupDate.getTime()) { key = "handover_pending"; label = "Chờ bàn giao"; tone = "primary"; }
-      else { key = "renting"; label = "Đang thuê"; tone = "primary"; }
-    }
-    return { key, label, tone };
+    const ui = U.getBookingApiUiState(booking, paid);
+    const s = String(booking.status || "").toLowerCase();
+    return { ...ui, s, paid };
   }
 
   function render() {
-    const ui = resolveUiState();
+    const ui = getStatusUi();
+    const { paid, s } = ui;
     
     document.getElementById("breadcrumbMount").innerHTML = window.VivuCarLayout.renderBreadcrumb([
       { label: "Đơn thuê", href: "/Booking/MyBookings" },
       { label: `#${booking.bookingCode || booking.id}` }
     ]);
     
-    const paid = paymentStatus?.paymentStatus === 'success';
-    const s = (booking.status || "").toLowerCase();
     const canCancel = (s === "pending" || s === "pendingapproval" || s === "waitingdeposit") && !paid;
     
     root.innerHTML = `
@@ -137,11 +122,11 @@ import { authService } from '/js/shared/auth-service.js';
           <div class="timeline">${timeline()}</div>
           <div class="booking-actions mt-3.5">
             ${s === "returnrequested" ? `<div style="padding:12px;background:#fffbe6;border:1px solid #ffe58f;color:#873800;border-radius:8px;font-size:13px;line-height:1.5;font-weight:500;">⏳ <strong>Đã gửi yêu cầu trả xe:</strong> Vui lòng chờ chủ xe kiểm tra xe và xác nhận hoàn tất thủ tục bàn giao lại.</div>` : ""}
-            ${s === "pending" && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán cọc</a>` : ""}
+            ${s === "pending" && booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán cọc</a>` : ""}
             ${canCancel ? `<button class="btn btn-danger btn-sm" type="button" id="cancelBookingBtn">Hủy đơn</button>` : ""}
+            ${ui.key === "handover_pending" && booking.contractPdfUrl && !booking.contractPdfUrl.includes('sig=') ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
+            ${booking.contractPdfUrl ? `<a class="btn btn-secondary btn-sm" href="${booking.contractPdfUrl.startsWith('/api') ? '/api/proxy' + booking.contractPdfUrl.substring(4) : booking.contractPdfUrl}" target="_blank">Xem hợp đồng</a>` : ""}
             ${ui.key === "renting" ? `<button class="btn btn-primary btn-sm" type="button" id="requestReturnBtn">Yêu cầu trả xe</button>` : ""}
-            ${booking.contractPdfUrl && !booking.contractPdfUrl.includes('sig=') ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
-            ${booking.contractPdfUrl ? `<a class="btn btn-secondary btn-sm" href="${booking.contractPdfUrl}" target="_blank">Xem hợp đồng</a>` : ""}
             ${s === "completed" ? (
               currentReview 
                 ? `<button class="btn btn-outline btn-sm" type="button" id="reviewBtn">Sửa Đánh Giá</button>`
