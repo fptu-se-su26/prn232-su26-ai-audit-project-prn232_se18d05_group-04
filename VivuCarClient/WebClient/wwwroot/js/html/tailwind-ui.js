@@ -121,6 +121,7 @@
     "home-stat-row": "grid max-w-[680px] grid-cols-3 gap-2.5 max-sm:grid-cols-1",
     "home-stat": "rounded-[18px] border border-[#e6e4df]/80 bg-white/80 p-3.5 backdrop-blur [&_strong]:block [&_strong]:font-mono [&_strong]:text-2xl [&_span]:text-sm [&_span]:text-neutral-500",
     "home-section": "mt-8",
+    "home-featured-grid": "grid grid-cols-4 gap-4 max-lg:grid-cols-2 max-sm:grid-cols-1",
     "home-browse-band": "grid grid-cols-[minmax(260px,.7fr)_minmax(0,1.3fr)] gap-4 rounded-[28px] bg-neutral-900 p-7 text-white max-lg:grid-cols-1",
     "home-type-grid": "grid grid-cols-4 gap-2.5 max-lg:grid-cols-2 max-sm:grid-cols-1",
     "type-card": "flex min-h-[150px] flex-col justify-between rounded-[18px] border border-white/15 bg-white/10 p-4 text-white",

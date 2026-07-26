@@ -26,7 +26,7 @@ public class Booking
     /// <summary>Phụ phí phát sinh khi trả xe (rửa xe, vi phạm, etc). Do chủ xe nhập.</summary>
     public decimal ExtraFee { get; set; }
 
-    public BookingStatus Status { get; set; } = BookingStatus.PendingApproval;
+    public BookingStatus Status { get; set; } = BookingStatus.PendingGPLX;
     public string? CancellationReason { get; set; }
     public DateTime? CancelledAt { get; set; }
     public DateTime CreatedAt { get; set; }

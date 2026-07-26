@@ -2,6 +2,7 @@ namespace BusinessObjects.Enums;
 
 public enum BookingStatus
 {
+    PendingGPLX = 0,
     PendingApproval = 1,
     Rejected = 2,
     WaitingDeposit = 3,

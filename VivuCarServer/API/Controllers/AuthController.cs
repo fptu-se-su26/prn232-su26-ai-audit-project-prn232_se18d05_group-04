@@ -212,6 +212,26 @@ public class AuthController(
         return Ok(result.Session.Response);
     }
 
+    [HttpPost("resend-otp")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResendOtp(
+        ResendOtpRequest request,
+        CancellationToken cancellationToken
+    )
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await authService.ResendOtpAsync(request, cancellationToken);
+
+        return result.Success
+            ? Ok(result)
+            : BadRequest(result);
+    }
+
     private void SetRefreshTokenCookie(string token, DateTime expiresAt)
     {
         Response.Cookies.Append(

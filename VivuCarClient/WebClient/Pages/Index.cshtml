@@ -1,13 +1,105 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "VivuCar";
+    ViewData["Title"] = "VivuCar - Thuê xe tự lái Đà Nẵng";
+    ViewData["DataPage"] = "home";
 }
 
-@section HeadStyles {
-    <meta http-equiv="refresh" content="0; url=/login" />
-}
+<main class="page-shell home-page">
+  <section class="home-hero-pro">
+    <div class="home-hero-copy" style="background-image: url('https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&q=80')">
+      <div>
+        <p class="eyebrow" style="color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.4)">VivuCar tại Đà Nẵng</p>
+        <h1 style="color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.35);font-size:clamp(1.75rem,4vw,2.75rem);line-height:1.2">Thuê xe tự lái gọn hơn cho mỗi lịch trình.</h1>
+        <p style="color:rgba(255,255,255,.85);text-shadow:0 1px 6px rgba(0,0,0,.3);max-width:500px">Chọn xe đang khả dụng theo khu vực, xem ảnh rõ ràng, giá theo ngày minh bạch và chuyển nhanh sang chi tiết xe.</p>
+      </div>
+      <div id="homeStats" class="home-stat-row"></div>
+    </div>
 
-<p style="text-align:center;margin-top:3rem;color:#64748b;">
-    Redirecting to <a href="/login">login page</a>...
-</p>
+    <div class="home-search-card">
+      <h2>Tìm xe phù hợp</h2>
+      <div class="home-search-grid">
+        <div class="field full">
+          <label for="homeSearchInput">Bạn muốn thuê xe nào?</label>
+          <input id="homeSearchInput" placeholder="Toyota Vios, Mazda CX-5, VinFast...">
+        </div>
+        <div class="field">
+          <label for="homeLocationSelect">Khu vực nhận xe</label>
+          <select id="homeLocationSelect">
+            <option value="">Tất cả khu vực</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="seatQuickSelect">Số chỗ</label>
+          <select id="seatQuickSelect">
+            <option value="">Tất cả</option>
+            <option value="4">4 chỗ</option>
+            <option value="5">5 chỗ</option>
+            <option value="7">7 chỗ</option>
+            <option value="9">9 chỗ</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="pickupDate">Ngày nhận</label>
+          <input id="pickupDate" type="date">
+        </div>
+        <div class="field">
+          <label for="returnDate">Ngày trả</label>
+          <input id="returnDate" type="date">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" id="btnQuickSearch">Tìm xe ngay</button>
+      <p class="muted" style="margin-top:8px;font-size:.8125rem">Chọn xe theo địa điểm, ngày và giá. VivuCar giúp bạn tìm nhanh.</p>
+    </div>
+  </section>
+
+  <section class="home-strip">
+    <div>
+      <span class="eyebrow">Khu vực phổ biến</span>
+      <h2 style="font-size:1.5rem;font-weight:700;margin:0">Nhận xe gần nơi bạn ở</h2>
+    </div>
+    <div id="areaChips" class="chip-row"></div>
+  </section>
+
+  <section class="home-section">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Được chọn nhiều</span>
+        <h2>Xe nổi bật tại Đà Nẵng</h2>
+        <p class="muted">Xếp hạng từ reviews và số booking.</p>
+      </div>
+      <a class="btn btn-secondary btn-sm" href="/cars">Xem tất cả xe nổi bật</a>
+    </div>
+    <div id="featuredCarsGrid" class="home-featured-grid"><div class="skeleton"></div></div>
+  </section>
+
+  <section class="home-section home-browse-band">
+    <div class="home-band-copy">
+      <span class="eyebrow">Lọc nhanh</span>
+      <h2 style="font-size:1.5rem;font-weight:700;margin:8px 0 4px">Chọn theo kiểu xe và hành trình</h2>
+      <p style="opacity:.85;margin:0">Đi công việc trong thành phố, đi Hội An trong ngày, hay đi nhóm gia đình, VivuCar giữ bộ lọc đơn giản để bạn tìm xe nhanh hơn.</p>
+    </div>
+    <div id="typeChips" class="home-type-grid"></div>
+  </section>
+
+  <section class="home-section">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Sẵn sàng đặt</span>
+        <h2>Xe đang khả dụng</h2>
+      </div>
+      <a class="btn btn-secondary btn-sm" href="/cars">Tìm nâng cao</a>
+    </div>
+    <div id="availableCarsGrid" class="car-grid"><div class="skeleton"></div></div>
+  </section>
+
+  <section class="home-section steps-grid">
+    <article class="step-card"><span style="font-size:2rem;font-weight:800;color:#e6e4df">01</span><h3 style="margin:8px 0 4px;font-weight:700">Tìm xe</h3><p style="margin:0;color:#6b7280;font-size:.875rem">Chọn khu vực, ngày nhận xe và số chỗ phù hợp.</p></article>
+    <article class="step-card"><span style="font-size:2rem;font-weight:800;color:#e6e4df">02</span><h3 style="margin:8px 0 4px;font-weight:700">Xem chi tiết</h3><p style="margin:0;color:#6b7280;font-size:.875rem">Kiểm tra ảnh xe, giá thuê, trạng thái và đánh giá.</p></article>
+    <article class="step-card"><span style="font-size:2rem;font-weight:800;color:#e6e4df">03</span><h3 style="margin:8px 0 4px;font-weight:700">Đặt xe</h3><p style="margin:0;color:#6b7280;font-size:.875rem">Chuyển sang luồng booking với carId đã chọn.</p></article>
+  </section>
+</main>
+
+@section Scripts {
+  <script src="~/js/html/home.js" asp-append-version="true"></script>
+}

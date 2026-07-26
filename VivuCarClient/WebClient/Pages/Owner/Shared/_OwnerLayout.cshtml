@@ -112,5 +112,11 @@
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        window.addEventListener("unhandledrejection", e => {
+            if (e.reason?.name === "AbortError" || e.reason?.message?.includes("abort")) e.preventDefault();
+        });
+    </script>
 </body>
 </html>

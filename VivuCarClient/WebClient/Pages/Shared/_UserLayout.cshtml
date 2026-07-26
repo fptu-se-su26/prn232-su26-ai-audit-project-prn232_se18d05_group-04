@@ -40,5 +40,11 @@
   <script src="~/js/chatbot.js" asp-append-version="true"></script>
   
   @await RenderSectionAsync("Scripts", required: false)
+
+  <script>
+    window.addEventListener("unhandledrejection", e => {
+        if (e.reason?.name === "AbortError" || e.reason?.message?.includes("abort")) e.preventDefault();
+    });
+  </script>
 </body>
 </html>

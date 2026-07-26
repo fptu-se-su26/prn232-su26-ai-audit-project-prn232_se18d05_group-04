@@ -218,7 +218,8 @@ public class AuthService(
         await userRepository.AddAsync(user, cancellationToken);
         await userRepository.SaveChangesAsync(cancellationToken);
 
-        // Generate OTP and send email (fire-and-forget, don't fail registration)
+        // Generate OTP and send email
+        string? otpError = null;
         try
         {
             await SendOtpForUserAsync(user, cancellationToken);
@@ -230,9 +231,12 @@ public class AuthService(
                 user.Id,
                 user.Email
             );
+            otpError = $"Không gửi được email OTP: {ex.Message}";
         }
 
-        return new RegisterResult(true, "Đăng ký thành công. Vui lòng kiểm tra email để xác thực.", user.Id);
+        var message = otpError
+            ?? "Đăng ký thành công. Vui lòng kiểm tra email để xác thực.";
+        return new RegisterResult(true, message, user.Id);
     }
 
     public async Task<VerifyOtpResult> VerifyOtpAsync(
@@ -284,6 +288,36 @@ public class AuthService(
 
         var session = await CreateSessionAsync(user, ipAddress, cancellationToken);
         return new VerifyOtpResult(true, "Xác thực thành công.", session);
+    }
+
+    public async Task<RegisterResult> ResendOtpAsync(
+        ResendOtpRequest request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var normalizedEmail = request.Email.Trim().ToLowerInvariant();
+        var user = await userRepository.FindByEmailAsync(normalizedEmail, cancellationToken);
+
+        if (user is null)
+        {
+            return new RegisterResult(false, "Email không tồn tại.");
+        }
+
+        try
+        {
+            await SendOtpForUserAsync(user, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex,
+                "Failed to resend OTP email for user {UserId} ({Email})",
+                user.Id,
+                user.Email
+            );
+            return new RegisterResult(false, $"Không gửi được email OTP: {ex.Message}");
+        }
+
+        return new RegisterResult(true, "Đã gửi lại mã OTP. Vui lòng kiểm tra email.");
     }
 
     private async Task SendOtpForUserAsync(AppUser user, CancellationToken cancellationToken)

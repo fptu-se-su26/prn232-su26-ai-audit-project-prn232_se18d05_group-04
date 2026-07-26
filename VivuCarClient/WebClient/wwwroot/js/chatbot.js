@@ -6,8 +6,8 @@ const VivuCarChatbot = (function() {
         connection: null
     };
 
-    const apiBase = "http://localhost:5119/api";
-    const hubUrl = "http://localhost:5119/hubs/chat";
+    const apiBase = "http://localhost:7005/api";
+    const hubUrl = "http://localhost:7005/hubs/chat";
 
     function getToken() {
         return localStorage.getItem("vivucar_token") || "";

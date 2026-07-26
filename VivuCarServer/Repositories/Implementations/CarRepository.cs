@@ -288,6 +288,7 @@ public class CarRepository(VivuCarDbContext dbContext) : ICarRepository
         var activeStatuses = new[]
         {
             BookingStatus.PendingApproval,
+            BookingStatus.PendingGPLX,
             BookingStatus.WaitingDeposit,
             BookingStatus.WaitingPickup,
             BookingStatus.InProgress,

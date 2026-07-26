@@ -26,7 +26,7 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
         {
             var mappedStatuses = filter.Status.ToLowerInvariant() switch
             {
-                "pending" => new[] { BookingStatus.PendingApproval, BookingStatus.WaitingDeposit },
+                "pending" => new[] { BookingStatus.PendingApproval, BookingStatus.PendingGPLX, BookingStatus.WaitingDeposit },
                 "approved" => new[] { BookingStatus.WaitingPickup, BookingStatus.InProgress, BookingStatus.ReturnRequested },
                 "completed" => new[] { BookingStatus.Completed },
                 "rejected" => new[] { BookingStatus.Rejected },
@@ -211,7 +211,7 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
 
         if (booking == null) return null;
 
-        if (booking.Status != BookingStatus.PendingApproval)
+        if (booking.Status != BookingStatus.PendingApproval && booking.Status != BookingStatus.PendingGPLX)
             throw new InvalidOperationException("Chỉ có thể duyệt đơn ở trạng thái Chờ duyệt.");
 
         var oldStatus = booking.Status;
@@ -246,7 +246,7 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
 
         if (booking == null) return null;
 
-        if (booking.Status != BookingStatus.PendingApproval)
+        if (booking.Status != BookingStatus.PendingApproval && booking.Status != BookingStatus.PendingGPLX)
             throw new InvalidOperationException("Chỉ có thể từ chối đơn ở trạng thái Chờ duyệt.");
 
         var oldStatus = booking.Status;
@@ -336,7 +336,7 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
             TotalCars = cars.Count,
             AvailableCars = cars.Count(c => c.Status == CarStatus.Available),
             RentedCars = cars.Count(c => c.Status == CarStatus.Rented),
-            PendingBookings = bookings.Count(b => b.Status == BookingStatus.PendingApproval),
+            PendingBookings = bookings.Count(b => b.Status == BookingStatus.PendingApproval || b.Status == BookingStatus.PendingGPLX),
             ActiveBookings = bookings.Count(b => b.Status == BookingStatus.InProgress || b.Status == BookingStatus.ReturnRequested),
             MonthlyRevenue = monthlyRevenue,
             RecentBookings = recentBookings

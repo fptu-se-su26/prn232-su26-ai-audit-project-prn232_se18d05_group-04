@@ -201,7 +201,7 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             }
 
             var isVerified = currentDoc.VerificationStatus == DocumentVerificationStatus.Approved;
-            var initialStatus = isVerified ? BookingStatus.WaitingDeposit : BookingStatus.PendingApproval;
+            var initialStatus = isVerified ? BookingStatus.WaitingDeposit : BookingStatus.PendingGPLX;
 
             // Create Booking object
             var booking = new Booking
@@ -251,7 +251,7 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             }
 
             // Create Calendar Block
-            var blockReason = isVerified ? $"Soft-lock 15m for Booking {booking.BookingCode}" : $"Pending Admin GPLX Approval for Booking {booking.BookingCode}";
+            var blockReason = isVerified ? $"Soft-lock 15m for Booking {booking.BookingCode}" : $"Pending GPLX for Booking {booking.BookingCode}";
             var block = new CarAvailabilityBlock
             {
                 CarId = booking.CarId,
@@ -264,10 +264,10 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             booking.AvailabilityBlocks.Add(block);
 
             // Track Status History
-            var note = isVerified ? "Auto-approved (GPLX verified). Soft-lock created for 15 minutes." : "Booking created by customer. Waiting for Admin to verify GPLX.";
+            var note = isVerified ? "Auto-approved (GPLX verified). Soft-lock created for 15 minutes." : "Booking created by customer. Waiting for GPLX verification.";
             booking.StatusHistories.Add(new BookingStatusHistory
             {
-                OldStatus = BookingStatus.PendingApproval, // Virtual initial state
+                OldStatus = BookingStatus.PendingGPLX, // Virtual initial state
                 NewStatus = initialStatus,
                 ChangedByUserId = customerId,
                 Note = note,
@@ -333,7 +333,7 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         }
 
         // Validation of status: Only allow cancellation if deposit has not been paid
-        if (booking.Status != BookingStatus.PendingApproval && booking.Status != BookingStatus.WaitingDeposit)
+        if (booking.Status != BookingStatus.PendingApproval && booking.Status != BookingStatus.PendingGPLX && booking.Status != BookingStatus.WaitingDeposit)
         {
             throw new InvalidOperationException($"Không thể hủy đơn thuê ở trạng thái {booking.Status}. Chỉ hỗ trợ hủy khi chưa thanh toán cọc.");
         }
@@ -411,9 +411,9 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             throw new UnauthorizedAccessException("Only the car owner can approve booking requests.");
         }
 
-        if (booking.Status != BookingStatus.PendingApproval)
+        if (booking.Status != BookingStatus.PendingApproval && booking.Status != BookingStatus.PendingGPLX)
         {
-            throw new InvalidOperationException("Only bookings in PendingApproval state can be approved.");
+            throw new InvalidOperationException("Only bookings in PendingApproval or PendingGPLX state can be approved.");
         }
 
         using var transaction = await bookingRepository.BeginTransactionAsync(cancellationToken);
@@ -473,7 +473,7 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             throw new UnauthorizedAccessException("Only the car owner can reject booking requests.");
         }
 
-        if (booking.Status != BookingStatus.PendingApproval)
+        if (booking.Status != BookingStatus.PendingApproval && booking.Status != BookingStatus.PendingGPLX)
         {
             throw new InvalidOperationException("Only bookings in PendingApproval state can be rejected.");
         }
@@ -557,7 +557,7 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         booking.RentalContract.PdfUrl = $"{booking.RentalContract.PdfUrl}{sep}sig={Uri.EscapeDataString(signatureUrl)}";
         
         // As requested by user, signing the contract immediately hands over the car
-        if (booking.Status == BookingStatus.WaitingPickup || booking.Status == BookingStatus.PendingApproval)
+        if (booking.Status == BookingStatus.WaitingPickup || booking.Status == BookingStatus.PendingApproval || booking.Status == BookingStatus.PendingGPLX)
         {
             var oldStatus = booking.Status;
             booking.Status = BookingStatus.InProgress;
