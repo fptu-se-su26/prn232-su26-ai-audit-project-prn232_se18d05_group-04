@@ -73,14 +73,14 @@ public class AdminModerationService(
 
         if (isApproved)
         {
-            var pendingBookings = await repository.GetPendingApprovalBookingsByUserIdAsync(document.UserId, cancellationToken);
+            var pendingBookings = await repository.GetPendingGPLXBookingsByUserIdAsync(document.UserId, cancellationToken);
             foreach (var booking in pendingBookings)
             {
                 booking.Status = BookingStatus.WaitingDeposit;
                 booking.UpdatedAt = DateTime.UtcNow;
                 booking.StatusHistories.Add(new BusinessObjects.Models.BookingStatusHistory
                 {
-                    OldStatus = BookingStatus.PendingApproval,
+                    OldStatus = BookingStatus.PendingGPLX,
                     NewStatus = BookingStatus.WaitingDeposit,
                     ChangedByUserId = null,
                     Note = "Hệ thống tự động duyệt do GPLX đã được xác thực.",

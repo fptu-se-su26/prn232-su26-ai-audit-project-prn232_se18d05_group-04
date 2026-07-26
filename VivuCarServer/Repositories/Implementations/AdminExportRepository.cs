@@ -57,7 +57,7 @@ public class AdminExportRepository(VivuCarDbContext db) : IAdminExportRepository
 
     private static AdminReportPreviewResponse Result(IReadOnlyList<string> h,IReadOnlyList<IReadOnlyList<string>> r,int total)=>new(){Headers=h,Rows=r,TotalRows=total};
     private static PaymentStatus? MapPayment(string? v)=>v?.ToLowerInvariant() switch{"success"=>PaymentStatus.Success,"pending"=>PaymentStatus.Pending,"failed"=>PaymentStatus.Failed,_=>null};
-    private static BookingStatus[]? MapBookings(string? v)=>v?.ToLowerInvariant() switch{"completed"=>[BookingStatus.Completed],"cancelled"=>[BookingStatus.Cancelled,BookingStatus.Expired],"approved"=>[BookingStatus.WaitingPickup,BookingStatus.InProgress,BookingStatus.ReturnRequested],"pending"=>[BookingStatus.PendingApproval,BookingStatus.WaitingDeposit],"rejected"=>[BookingStatus.Rejected],_=>null};
+    private static BookingStatus[]? MapBookings(string? v)=>v?.ToLowerInvariant() switch{"completed"=>[BookingStatus.Completed],"cancelled"=>[BookingStatus.Cancelled,BookingStatus.Expired],"approved"=>[BookingStatus.WaitingPickup,BookingStatus.InProgress,BookingStatus.ReturnRequested],"pending"=>[BookingStatus.PendingApproval,BookingStatus.PendingGPLX,BookingStatus.WaitingDeposit],"rejected"=>[BookingStatus.Rejected],_=>null};
     private static string PaymentLabel(PaymentStatus value)=>value switch{PaymentStatus.Success=>"success",PaymentStatus.Failed=>"failed",PaymentStatus.Cancelled=>"failed",_=>"pending"};
 }
 

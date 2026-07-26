@@ -288,7 +288,7 @@ public class PaymentService(IBookingRepository bookingRepository, global::Net.pa
                     var overlappingBookings = await bookingRepository.GetOverlappingBookingsAsync(booking.CarId, booking.StartDateTime, booking.EndDateTime, cancellationToken);
                     foreach (var overlap in overlappingBookings)
                     {
-                        if (overlap.Id != booking.Id && (overlap.Status == BookingStatus.PendingApproval || overlap.Status == BookingStatus.WaitingDeposit))
+                        if (overlap.Id != booking.Id && (overlap.Status == BookingStatus.PendingApproval || overlap.Status == BookingStatus.PendingGPLX || overlap.Status == BookingStatus.WaitingDeposit))
                         {
                             var overlapOldStatus = overlap.Status;
                             overlap.Status = BookingStatus.Rejected;

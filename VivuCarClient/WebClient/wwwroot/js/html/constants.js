@@ -4,8 +4,9 @@ window.VivuCarConstants = {
   TRANSMISSION_LABELS: { manual: "Số sàn", automatic: "Tự động", cvt: "CVT" },
   FUEL_TYPE_LABELS: { gasoline: "Xăng", diesel: "Dầu", electric: "Điện", hybrid: "Hybrid" },
   CAR_STATUS_LABELS: { available: "Đang rảnh", rented: "Đang thuê", maintenance: "Bảo trì", blocked: "Đã khóa" },
-  BOOKING_STATUS_LABELS: { 
-    pending: "Chờ xử lý", 
+  BOOKING_STATUS_LABELS: {
+    pending: "Chờ xử lý",
+    pendinggplx: "Chờ duyệt GPLX",
     pendingapproval: "Chờ duyệt",
     waitingdeposit: "Chờ cọc",
     waitingpickup: "Chờ nhận xe",

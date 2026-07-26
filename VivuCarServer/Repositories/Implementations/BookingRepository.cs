@@ -64,7 +64,7 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
         {
             var mappedStatuses = status.ToLowerInvariant() switch
             {
-                "pending" => new[] { BookingStatus.PendingApproval, BookingStatus.WaitingDeposit },
+                "pending" => new[] { BookingStatus.PendingApproval, BookingStatus.PendingGPLX, BookingStatus.WaitingDeposit },
                 "approved" => new[] { BookingStatus.WaitingPickup, BookingStatus.InProgress, BookingStatus.ReturnRequested },
                 "completed" => new[] { BookingStatus.Completed },
                 "rejected" => new[] { BookingStatus.Rejected },
@@ -115,7 +115,7 @@ public class BookingRepository(VivuCarDbContext dbContext) : IBookingRepository
         {
             var mappedStatuses = status.ToLowerInvariant() switch
             {
-                "pending" => new[] { BookingStatus.PendingApproval, BookingStatus.WaitingDeposit },
+                "pending" => new[] { BookingStatus.PendingApproval, BookingStatus.PendingGPLX, BookingStatus.WaitingDeposit },
                 "approved" => new[] { BookingStatus.WaitingPickup, BookingStatus.InProgress, BookingStatus.ReturnRequested },
                 "completed" => new[] { BookingStatus.Completed },
                 "rejected" => new[] { BookingStatus.Rejected },

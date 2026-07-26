@@ -99,7 +99,7 @@ import { authService } from '/js/shared/auth-service.js';
     return;
   }
 
-  if (car.status !== 'Available') {
+  if (car.status?.toLowerCase() !== 'available') {
     root.innerHTML = `<div style="text-align:center;padding:48px;color:#6b7280"><h2>Xe này hiện không khả dụng</h2><p>Trạng thái: ${car.status}</p><a href="/cars/search" style="color:#16a34a">← Tìm xe khác</a></div>`;
     return;
   }
@@ -262,13 +262,16 @@ import { authService } from '/js/shared/auth-service.js';
               <input type="checkbox" id="hasInsurance" onchange="window.updatePricePreview()" style="width:16px;height:16px;accent-color:#16a34a">
               Mua bảo hiểm chuyến đi (${fmt(car.insuranceFeePerDay || 0)}/ngày)
             </label>
-            <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151;margin-top:8px">
-              Mã giảm giá
-              <div style="display:flex;gap:8px">
-                <input id="voucherCode" type="text" placeholder="Nhập mã nếu có" style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none;flex:1;text-transform:uppercase">
-                <button type="button" onclick="window.updatePricePreview()" style="background:#1f1f1f;color:#fff;border:none;border-radius:8px;padding:0 16px;font-weight:600;cursor:pointer">Áp dụng</button>
-              </div>
-            </label>
+            <div style="margin-top:8px" id="voucherSection">
+              <label style="display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:600;color:#374151">
+                Mã giảm giá
+                <div style="display:flex;gap:8px">
+                  <input id="voucherCode" type="text" placeholder="Nhập mã" style="border:1px solid #e6e4df;border-radius:8px;padding:8px 12px;font-size:.875rem;color:#1f1f1f;outline:none;flex:1;text-transform:uppercase">
+                  <button type="button" id="btnApplyVoucher" style="background:#1f1f1f;color:#fff;border:none;border-radius:8px;padding:0 16px;font-weight:600;cursor:pointer">Áp dụng</button>
+                </div>
+              </label>
+              <div id="voucherFeedback" style="margin-top:8px;font-size:.8125rem;font-weight:500;display:none"></div>
+            </div>
           </div>
         </div>
 
@@ -331,6 +334,7 @@ import { authService } from '/js/shared/auth-service.js';
   const returnEl  = document.getElementById('returnDatetime');
 
   let lastPreview = null;
+  let appliedVoucher = null; // { name, code, discountLabel, ... }
   window.updatePricePreview = updatePricingAndAvailability;
 
   async function updatePricingAndAvailability() {
@@ -399,7 +403,7 @@ import { authService } from '/js/shared/auth-service.js';
         <div style="display:flex;justify-content:space-between"><span style="color:#4b5563">Tiền thuê xe</span><strong style="color:#1f1f1f">${fmt(totalRentalCost)}</strong></div>
         <div style="display:flex;justify-content:space-between"><span style="color:#4b5563">Phí bảo hiểm</span><strong style="color:#1f1f1f">${fmt(p.insuranceFee)}</strong></div>
         ${(p.deliveryFee || 0) > 0 ? `<div style="display:flex;justify-content:space-between"><span style="color:#4b5563">Phí giao nhận xe</span><strong style="color:#1f1f1f">${fmt(p.deliveryFee)}</strong></div>` : ''}
-        ${p.discountAmount > 0 ? `<div style="display:flex;justify-content:space-between"><span style="color:#4b5563">Mã giảm giá</span><strong style="color:#16a34a;background:#f0fdf4;padding:2px 8px;border-radius:12px;font-size:.75rem">-${fmt(p.discountAmount)}</strong></div>` : ''}
+        ${p.discountAmount > 0 ? `<div style="display:flex;justify-content:space-between"><span style="color:#4b5563">${appliedVoucher?.name || 'Mã giảm giá'}</span><strong style="color:#16a34a;background:#f0fdf4;padding:2px 8px;border-radius:12px;font-size:.75rem">-${fmt(p.discountAmount)}</strong></div>` : ''}
         
         <div style="display:flex;justify-content:space-between;padding-top:16px;border-top:1px dashed #d1d5db;margin-top:4px">
             <span style="font-weight:700;color:#1f1f1f;font-size:1rem">Tổng thanh toán</span>
@@ -440,6 +444,81 @@ import { authService } from '/js/shared/auth-service.js';
   }
   bindPreview('licenseFrontInput');
   bindPreview('licenseBackInput');
+
+  // ── Voucher bind ────────────────────────────────────────────────────────────
+  const voucherBtn = document.getElementById('btnApplyVoucher');
+  const voucherCodeInput = document.getElementById('voucherCode');
+  const voucherFeedback = document.getElementById('voucherFeedback');
+
+  function showVoucherFeedback(msg, type) {
+    voucherFeedback.style.display = 'block';
+    voucherFeedback.textContent = msg;
+    if (type === 'success') {
+      voucherFeedback.style.cssText = 'margin-top:8px;font-size:.8125rem;font-weight:500;display:block;padding:8px 12px;background:#f0fdf4;color:#16a34a;border-radius:6px';
+    } else if (type === 'danger') {
+      voucherFeedback.style.cssText = 'margin-top:8px;font-size:.8125rem;font-weight:500;display:block;padding:8px 12px;background:#fef2f2;color:#dc2626;border-radius:6px';
+    } else {
+      voucherFeedback.style.cssText = 'margin-top:8px;font-size:.8125rem;font-weight:500;display:none';
+    }
+  }
+
+  function setVoucherButton(loading, applied) {
+    voucherBtn.disabled = !!loading;
+    if (loading) {
+      voucherBtn.textContent = 'Đang kiểm tra...';
+      voucherBtn.style.background = '#6b7280';
+    } else if (applied) {
+      voucherBtn.textContent = 'Hủy';
+      voucherBtn.style.background = '#dc2626';
+      voucherCodeInput.disabled = true;
+    } else {
+      voucherBtn.textContent = 'Áp dụng';
+      voucherBtn.style.background = '#1f1f1f';
+      voucherCodeInput.disabled = false;
+    }
+  }
+
+  async function applyVoucher() {
+    const code = voucherCodeInput.value.trim();
+    if (!code) { showVoucherFeedback('Vui lòng nhập mã giảm giá.', 'danger'); return; }
+
+    setVoucherButton(true, false);
+    try {
+      const totalAmount = lastPreview?.totalAmount || 0;
+      const r = await authService.apiFetch(`vouchers/check?code=${encodeURIComponent(code)}&orderAmount=${totalAmount}`);
+      if (!r.ok) throw new Error('API error');
+      const data = await r.json();
+
+      if (data.valid) {
+        appliedVoucher = data;
+        showVoucherFeedback(`✅ ${data.discountLabel}`, 'success');
+        setVoucherButton(false, true);
+        updatePricingAndAvailability();
+      } else {
+        appliedVoucher = null;
+        showVoucherFeedback(data.message, 'danger');
+        setVoucherButton(false, false);
+      }
+    } catch {
+      showVoucherFeedback('Không thể kiểm tra mã giảm giá. Vui lòng thử lại.', 'danger');
+      setVoucherButton(false, false);
+    }
+  }
+
+  function clearVoucher() {
+    appliedVoucher = null;
+    voucherCodeInput.value = '';
+    setVoucherButton(false, false);
+    showVoucherFeedback('', 'hidden');
+    updatePricingAndAvailability();
+  }
+
+  if (voucherBtn) {
+    voucherBtn.addEventListener('click', () => {
+      if (appliedVoucher) { clearVoucher(); return; }
+      applyVoucher();
+    });
+  }
 
   // Initial load
   await updatePricingAndAvailability();

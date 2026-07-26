@@ -166,7 +166,7 @@ public class AdminReportRepository(VivuCarDbContext dbContext) : IAdminReportRep
         query = bookingStatus?.Trim().ToLowerInvariant() switch
         {
             "pending" => query.Where(booking =>
-                booking.Status == BookingStatus.PendingApproval || booking.Status == BookingStatus.WaitingDeposit),
+                booking.Status == BookingStatus.PendingApproval || booking.Status == BookingStatus.PendingGPLX || booking.Status == BookingStatus.WaitingDeposit),
             "approved" => query.Where(booking =>
                 booking.Status == BookingStatus.WaitingPickup
                 || booking.Status == BookingStatus.InProgress

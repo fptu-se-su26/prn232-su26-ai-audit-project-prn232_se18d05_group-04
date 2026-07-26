@@ -207,7 +207,7 @@ function normalizeStatus(o) {
     } else if (o && typeof o === 'object') {
         if (typeof o.status === 'string') {
             const ls = o.status.toLowerCase();
-            if (ls === "pendingapproval" || ls === "waitingdeposit") o.status = "pending";
+            if (ls === "pendingapproval" || ls === "pendinggplx" || ls === "waitingdeposit") o.status = "pending";
             else if (ls === "waitingpickup" || ls === "inprogress" || ls === "returnrequested") o.status = "approved";
             else if (ls === "completed") o.status = "completed";
             else if (ls === "cancelled" || ls === "expired") o.status = "cancelled";

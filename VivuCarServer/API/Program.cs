@@ -1,4 +1,5 @@
 using API.Configurations;
+using Microsoft.EntityFrameworkCore;
 
 EnvironmentConfiguration.LoadEnvFile();
 

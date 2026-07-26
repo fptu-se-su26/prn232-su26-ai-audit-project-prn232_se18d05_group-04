@@ -70,6 +70,9 @@ window.VivuCarUtils = {
   // Convenience: render badge specifically for booking status
   renderBookingStatusBadge(status) {
     const map = {
+      PendingGPLX:      { label: "Chờ duyệt GPLX",  cls: "bg-amber-100 text-amber-800" },
+      pendingGplx:      { label: "Chờ duyệt GPLX",  cls: "bg-amber-100 text-amber-800" },
+      pendinggplx:      { label: "Chờ duyệt GPLX",  cls: "bg-amber-100 text-amber-800" },
       PendingApproval:  { label: "Chờ xác nhận",    cls: "bg-amber-100 text-amber-800" },
       pendingApproval:  { label: "Chờ xác nhận",    cls: "bg-amber-100 text-amber-800" },
       pendingapproval:  { label: "Chờ xác nhận",    cls: "bg-amber-100 text-amber-800" },
@@ -175,13 +178,15 @@ window.VivuCarUtils = {
     if (s === "returnrequested") return { key: "return_requested", label: "Đang chờ trả xe", tone: "warning" };
     if (s === "waitingfinalpayment") return { key: "final_payment", label: "Chờ thanh toán cuối", tone: "warning" };
     
-    if (s === "pending" || s === "pendingapproval" || s === "waitingdeposit") {
+    if (s === "pending" || s === "pendingapproval" || s === "pendinggplx" || s === "waitingdeposit") {
       if (isPaid) return { key: "handover_pending", label: "Đã cọc - chờ xác nhận", tone: "primary" };
       if (booking.canPayDeposit) return { key: "payment_pending", label: "Chờ thanh toán", tone: "warning" };
       return { key: "approval_pending", label: "Chờ duyệt GPLX", tone: "warning" };
     }
     
     if (s === "approved" || s === "waitingpickup" || s === "inprogress") {
+      // Contract signed → renting regardless of pickup date
+      if (booking.contractPdfUrl?.includes('sig=')) return { key: "renting", label: "Đang thuê", tone: "primary" };
       const pickupDate = new Date(booking.startDateTime || booking.pickup_datetime);
       if (Date.now() < pickupDate.getTime()) return { key: "handover_pending", label: "Chờ bàn giao", tone: "primary" };
       return { key: "renting", label: "Đang thuê", tone: "primary" };
@@ -194,6 +199,7 @@ window.VivuCarUtils = {
     if (String(booking.status).toLowerCase() === "rejected") return { key: "rejected", label: "Bị từ chối", tone: "danger" };
     if (String(booking.status).toLowerCase() === "completed") return { key: "completed", label: "Hoàn tất", tone: "success" };
     const s = String(booking.status).toLowerCase();
+    if (s === "pendinggplx") return { key: "approval_pending", label: "Chờ duyệt GPLX", tone: "warning" };
     if (s === "pendingapproval") return { key: "pending_approval", label: "Chờ chủ xe duyệt", tone: "warning" };
     if (s === "waitingdeposit") return { key: "payment_pending", label: "Chờ thanh toán cọc", tone: "warning" };
     if (s === "waitingpickup") return { key: "handover_pending", label: "Chờ bàn giao", tone: "info" };

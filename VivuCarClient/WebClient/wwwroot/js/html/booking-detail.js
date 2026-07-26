@@ -81,7 +81,7 @@ import { authService } from '/js/shared/auth-service.js';
       { label: `#${booking.bookingCode || booking.id}` }
     ]);
     
-    const canCancel = (s === "pending" || s === "pendingapproval" || s === "waitingdeposit") && !paid;
+    const canCancel = (s === "pending" || s === "pendingapproval" || s === "pendinggplx" || s === "waitingdeposit") && !paid;
     
     root.innerHTML = `
       <div class="detail-document">
@@ -135,11 +135,11 @@ import { authService } from '/js/shared/auth-service.js';
               </div>
               <a class="btn btn-primary btn-sm" href="/Payment/Final?bookingId=${booking.id}" style="margin-top:8px;">Thanh toán cuối chuyến</a>
             ` : ""}
-            ${s === "waitingdeposit" && booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán cọc</a>` : ""}
+            ${booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Tiếp tục thanh toán</a>` : ""}
             ${canCancel ? `<button class="btn btn-danger btn-sm" type="button" id="cancelBookingBtn">Hủy đơn</button>` : ""}
-            ${ui.key === "handover_pending" && booking.contractPdfUrl && !booking.contractPdfUrl.includes('sig=') ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
-            ${booking.contractPdfUrl ? `<a class="btn btn-secondary btn-sm" href="${booking.contractPdfUrl.startsWith('/api') ? '/api/proxy' + booking.contractPdfUrl.substring(4) : booking.contractPdfUrl}" target="_blank">Xem hợp đồng</a>` : ""}
-            ${ui.key === "renting" ? `<button class="btn btn-primary btn-sm" type="button" id="requestReturnBtn">Yêu cầu trả xe</button>` : ""}
+            ${(ui.key === "handover_pending" || s === "waitingpickup") && booking.contractPdfUrl && !booking.contractPdfUrl.includes('sig=') ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
+            ${booking.contractPdfUrl ? `<button class="btn btn-secondary btn-sm" type="button" id="viewContractBtn">Xem hợp đồng</button>` : ""}
+            ${ui.key === "renting" || s === "inprogress" ? `<button class="btn btn-primary btn-sm" type="button" id="requestReturnBtn">Yêu cầu trả xe</button>` : ""}
             ${s === "completed" ? (
               currentReview 
                 ? `<button class="btn btn-outline btn-sm" type="button" id="reviewBtn">Sửa Đánh Giá</button>`
@@ -156,6 +156,28 @@ import { authService } from '/js/shared/auth-service.js';
           window.VivuCarBookingCancellation.openCancelBookingModal(booking.id, loadData);
         } else {
           U.showToast("Chức năng hủy đang được cập nhật.", "info");
+        }
+      });
+    }
+
+    const viewContractBtn = U.byId("viewContractBtn");
+    if (viewContractBtn) {
+      viewContractBtn.addEventListener("click", async () => {
+        viewContractBtn.disabled = true;
+        viewContractBtn.textContent = "Đang tải...";
+        try {
+          const sig = booking.contractPdfUrl?.includes('sig=') ? booking.contractPdfUrl.split('sig=')[1]?.split('&')[0] : '';
+          const r = await authService.apiFetch(`bookings/${booking.id}/contract/pdf${sig ? '?sig=' + encodeURIComponent(sig) : ''}`);
+          if (!r.ok) throw new Error('Failed to load contract');
+          const blob = await r.blob();
+          const url = URL.createObjectURL(blob);
+          window.open(url, '_blank');
+        } catch (e) {
+          U.showToast('Không thể tải hợp đồng.', 'error');
+          console.error(e);
+        } finally {
+          viewContractBtn.disabled = false;
+          viewContractBtn.textContent = "Xem hợp đồng";
         }
       });
     }
