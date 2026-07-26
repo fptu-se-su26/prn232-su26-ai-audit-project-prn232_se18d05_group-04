@@ -92,7 +92,9 @@ window.VivuCarUtils = {
       Cancelled:        { label: "Đã hủy",           cls: "bg-red-100 text-red-800" },
       cancelled:        { label: "Đã hủy",           cls: "bg-red-100 text-red-800" },
       Expired:          { label: "Hết hạn",          cls: "bg-zinc-100 text-zinc-600" },
-      expired:          { label: "Hết hạn",          cls: "bg-zinc-100 text-zinc-600" }
+      expired:          { label: "Hết hạn",          cls: "bg-zinc-100 text-zinc-600" },
+      WaitingFinalPayment: { label: "Chờ thanh toán cuối", cls: "bg-amber-100 text-amber-800" },
+      waitingfinalpayment: { label: "Chờ thanh toán cuối", cls: "bg-amber-100 text-amber-800" }
     };
     const entry = map[status] || { label: status, cls: "bg-zinc-100 text-zinc-600" };
     return `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${entry.cls}">${entry.label}</span>`;
@@ -171,6 +173,7 @@ window.VivuCarUtils = {
     if (s === "rejected") return { key: "rejected", label: "Đã từ chối", tone: "danger" };
     if (s === "completed") return { key: "completed", label: "Hoàn tất", tone: "success" };
     if (s === "returnrequested") return { key: "return_requested", label: "Đang chờ trả xe", tone: "warning" };
+    if (s === "waitingfinalpayment") return { key: "final_payment", label: "Chờ thanh toán cuối", tone: "warning" };
     
     if (s === "pending" || s === "pendingapproval" || s === "waitingdeposit") {
       if (isPaid) return { key: "handover_pending", label: "Đã cọc - chờ xác nhận", tone: "primary" };

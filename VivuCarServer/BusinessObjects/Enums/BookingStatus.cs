@@ -10,5 +10,6 @@ public enum BookingStatus
     ReturnRequested = 6,
     Completed = 7,
     Cancelled = 8,
-    Expired = 9
+    Expired = 9,
+    WaitingFinalPayment = 10
 }

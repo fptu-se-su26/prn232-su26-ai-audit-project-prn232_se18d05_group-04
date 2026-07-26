@@ -109,8 +109,12 @@ public class BookingDetailResponse
     public decimal TotalAmount { get; set; }
     public decimal DepositAmount { get; set; }
     public decimal RemainingAmount { get; set; }
+    public decimal ExtraFee { get; set; }
+    public decimal? OverdueFee { get; set; }
+    public decimal FinalPaymentAmount { get; set; }
     public string Status { get; set; } = string.Empty;
     public bool CanPayDeposit { get; set; }
+    public bool CanPayFinal { get; set; }
     public string? CancellationReason { get; set; }
     public DateTime? CancelledAt { get; set; }
     public DateTime CreatedAt { get; set; }

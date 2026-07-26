@@ -23,6 +23,9 @@ public class Booking
     /// <summary>Phí phạt trả xe trễ (nếu có). Tính theo số giờ/ngày trễ × giá thuê.</summary>
     public decimal? OverdueFee { get; set; }
 
+    /// <summary>Phụ phí phát sinh khi trả xe (rửa xe, vi phạm, etc). Do chủ xe nhập.</summary>
+    public decimal ExtraFee { get; set; }
+
     public BookingStatus Status { get; set; } = BookingStatus.PendingApproval;
     public string? CancellationReason { get; set; }
     public DateTime? CancelledAt { get; set; }

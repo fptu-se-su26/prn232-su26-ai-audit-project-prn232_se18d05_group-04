@@ -122,6 +122,19 @@ import { authService } from '/js/shared/auth-service.js';
           <div class="timeline">${timeline()}</div>
           <div class="booking-actions mt-3.5">
             ${s === "returnrequested" ? `<div style="padding:12px;background:#fffbe6;border:1px solid #ffe58f;color:#873800;border-radius:8px;font-size:13px;line-height:1.5;font-weight:500;">⏳ <strong>Đã gửi yêu cầu trả xe:</strong> Vui lòng chờ chủ xe kiểm tra xe và xác nhận hoàn tất thủ tục bàn giao lại.</div>` : ""}
+            ${s === "waitingfinalpayment" ? `
+              <div style="padding:16px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;border-radius:8px;font-size:13px;line-height:1.8;">
+                <strong>💰 Chủ xe đã kiểm tra và xác nhận trả xe.</strong><br>
+                Vui lòng thanh toán số tiền còn lại để hoàn tất chuyến đi.
+                <div style="margin-top:8px;padding:8px 12px;background:#fff;border-radius:6px;border:1px solid #e5e7eb;">
+                  <div style="display:flex;justify-content:space-between;"><span>Tiền còn lại:</span><strong>${U.formatVnd(booking.remainingAmount)}</strong></div>
+                  ${booking.extraFee > 0 ? `<div style="display:flex;justify-content:space-between;"><span>Phụ phí phát sinh:</span><strong>${U.formatVnd(booking.extraFee)}</strong></div>` : ""}
+                  ${(booking.overdueFee || 0) > 0 ? `<div style="display:flex;justify-content:space-between;"><span>Phí trả trễ:</span><strong>${U.formatVnd(booking.overdueFee)}</strong></div>` : ""}
+                  <div style="display:flex;justify-content:space-between;border-top:1px solid #e5e7eb;margin-top:6px;padding-top:6px;font-size:14px;"><span><strong>Tổng cần trả:</strong></span><strong style="color:#dc2626;">${U.formatVnd(booking.finalPaymentAmount)}</strong></div>
+                </div>
+              </div>
+              <a class="btn btn-primary btn-sm" href="/Payment/Final?bookingId=${booking.id}" style="margin-top:8px;">Thanh toán cuối chuyến</a>
+            ` : ""}
             ${s === "pending" && booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán cọc</a>` : ""}
             ${canCancel ? `<button class="btn btn-danger btn-sm" type="button" id="cancelBookingBtn">Hủy đơn</button>` : ""}
             ${ui.key === "handover_pending" && booking.contractPdfUrl && !booking.contractPdfUrl.includes('sig=') ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}

@@ -142,21 +142,37 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
         if (booking.Status != BookingStatus.ReturnRequested && booking.Status != BookingStatus.InProgress)
             throw new InvalidOperationException("Chỉ có thể xác nhận trả xe khi xe đang trong chuyến hoặc đã có yêu cầu trả.");
 
+        // Calculate overdue fee if returned late
+        decimal overdueFee = 0;
+        if (DateTime.UtcNow > booking.EndDateTime)
+        {
+            var overdueHours = (decimal)(DateTime.UtcNow - booking.EndDateTime).TotalHours;
+            var dailyRate = booking.BasePrice > 0 && booking.RemainingAmount > 0
+                ? booking.TotalAmount / Math.Max(1, (decimal)(booking.EndDateTime - booking.StartDateTime).TotalDays)
+                : 0;
+            // Charge per overdue hour at 1/24 of daily rate, minimum 1 hour
+            overdueFee = Math.Round(Math.Ceiling(overdueHours) * (dailyRate / 24m), 0);
+        }
+
         var oldStatus = booking.Status;
-        booking.Status = BookingStatus.Completed;
+        booking.Status = BookingStatus.WaitingFinalPayment;
         booking.UpdatedAt = DateTime.UtcNow;
+        booking.ExtraFee = request.ExtraFee;
+        booking.OverdueFee = overdueFee;
 
         // Update car status based on inspection result
         var nextStatus = ParseOwnerCarStatus(request.NextCarStatus);
         booking.Car.Status = nextStatus;
         booking.Car.UpdatedAt = DateTime.UtcNow;
 
+        var finalAmount = booking.RemainingAmount + request.ExtraFee + overdueFee;
+
         booking.StatusHistories.Add(new BookingStatusHistory
         {
             OldStatus = oldStatus,
-            NewStatus = BookingStatus.Completed,
+            NewStatus = BookingStatus.WaitingFinalPayment,
             ChangedByUserId = ownerId,
-            Note = $"Xác nhận trả xe. Km: {request.OdometerKm}. Phụ phí: {request.ExtraFee:N0}đ. Hư hỏng: {request.DamageNotes ?? "Không"}",
+            Note = $"Xác nhận trả xe. Km: {request.OdometerKm}. Phụ phí: {request.ExtraFee:N0}đ. Phí trễ: {overdueFee:N0}đ. Tổng cần trả: {finalAmount:N0}đ. Hư hỏng: {request.DamageNotes ?? "Không"}",
             CreatedAt = DateTime.UtcNow
         });
 
