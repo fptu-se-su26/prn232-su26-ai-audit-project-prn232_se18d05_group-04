@@ -45,6 +45,30 @@ public class PaymentsController(IPaymentService paymentService) : ControllerBase
         }
     }
 
+    [HttpPost("final/create")]
+    public async Task<ActionResult<CreatePaymentResponse>> CreateFinalPayment([FromBody] CreatePaymentRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var customerId = GetCurrentUserId();
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var response = await paymentService.CreateFinalPaymentAsync(customerId, baseUrl, request, cancellationToken);
+            return Ok(response);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            return Unauthorized(new { message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     [HttpGet("callback")]
     [AllowAnonymous]
     public async Task<IActionResult> PaymentCallback(

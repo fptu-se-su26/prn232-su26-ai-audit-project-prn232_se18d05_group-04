@@ -100,6 +100,103 @@ public class PaymentService(IBookingRepository bookingRepository, global::Net.pa
         };
     }
 
+    public async Task<CreatePaymentResponse> CreateFinalPaymentAsync(int customerId, string baseApiUrl, CreatePaymentRequest request, CancellationToken cancellationToken = default)
+    {
+        var booking = await bookingRepository.GetByIdAsync(request.BookingId, cancellationToken);
+        if (booking == null)
+            throw new ArgumentException("Booking not found.");
+
+        if (booking.CustomerId != customerId)
+            throw new UnauthorizedAccessException("Unauthorized access to booking payment.");
+
+        if (booking.Status != BookingStatus.WaitingFinalPayment)
+            throw new InvalidOperationException($"Cannot pay final amount for booking in status {booking.Status}. Owner must confirm return first.");
+
+        var finalAmount = booking.RemainingAmount + booking.ExtraFee + (booking.OverdueFee ?? 0);
+        if (finalAmount <= 0)
+        {
+            // No payment needed, complete directly
+            var oldStatus2 = booking.Status;
+            booking.Status = BookingStatus.Completed;
+            booking.UpdatedAt = DateTime.UtcNow;
+            booking.StatusHistories.Add(new BookingStatusHistory
+            {
+                OldStatus = oldStatus2,
+                NewStatus = BookingStatus.Completed,
+                ChangedByUserId = customerId,
+                Note = "Không cần thanh toán thêm. Tự động hoàn tất.",
+                CreatedAt = DateTime.UtcNow
+            });
+            await bookingRepository.SaveChangesAsync(cancellationToken);
+            return new CreatePaymentResponse { PaymentUrl = "", TransactionCode = "", Amount = 0 };
+        }
+
+        var providerEnum = request.Method.ToLower() switch
+        {
+            "vnpay" => PaymentProvider.VNPay,
+            "momo" => PaymentProvider.MoMo,
+            "payos" => PaymentProvider.PayOS,
+            "cash" => PaymentProvider.PayOS,
+            _ => throw new ArgumentException("Unsupported payment method.")
+        };
+
+        var txnCode = "FNL" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + new Random().Next(100, 999);
+        long orderCode = long.Parse(DateTime.UtcNow.ToString("yyMMddHHmmss") + new Random().Next(100, 999));
+
+        var transaction = new PaymentTransaction
+        {
+            BookingId = booking.Id,
+            Amount = finalAmount,
+            PaymentProvider = providerEnum,
+            Status = PaymentStatus.Pending,
+            TransactionCode = txnCode,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        booking.PaymentTransactions.Add(transaction);
+        await bookingRepository.SaveChangesAsync(cancellationToken);
+
+        var frontendReturnUrl = !string.IsNullOrWhiteSpace(request.ReturnUrl) ? request.ReturnUrl : Environment.GetEnvironmentVariable("PayOS__ReturnUrl");
+        var frontendCancelUrl = !string.IsNullOrWhiteSpace(request.ReturnUrl) ? request.ReturnUrl : Environment.GetEnvironmentVariable("PayOS__CancelUrl");
+
+        var backendCallbackSuccess = $"{baseApiUrl}/api/payments/callback?TransactionCode={txnCode}&Status=success&RedirectUrl={Uri.EscapeDataString(frontendReturnUrl ?? "")}";
+        var backendCallbackCancel = $"{baseApiUrl}/api/payments/callback?TransactionCode={txnCode}&Status=failed&RedirectUrl={Uri.EscapeDataString(frontendCancelUrl ?? "")}";
+
+        var paymentData = new global::Net.payOS.Types.PaymentData(
+            orderCode: orderCode,
+            amount: (int)finalAmount,
+            description: $"TT {booking.BookingCode}".Substring(0, Math.Min($"TT {booking.BookingCode}".Length, 25)),
+            items: new List<global::Net.payOS.Types.ItemData>(),
+            cancelUrl: backendCallbackCancel,
+            returnUrl: backendCallbackSuccess
+        );
+
+        string checkoutUrl = "";
+        try
+        {
+            var createPaymentResult = await payOS.createPaymentLink(paymentData);
+            checkoutUrl = createPaymentResult.checkoutUrl;
+        }
+        catch (Exception ex)
+        {
+            if (Environment.GetEnvironmentVariable("PayOS__AllowMockPaymentsWhenUnconfigured") == "true")
+            {
+                checkoutUrl = backendCallbackSuccess;
+            }
+            else
+            {
+                throw new InvalidOperationException($"Failed to create PayOS link: {ex.Message}");
+            }
+        }
+
+        return new CreatePaymentResponse
+        {
+            PaymentUrl = checkoutUrl,
+            TransactionCode = txnCode,
+            Amount = finalAmount
+        };
+    }
+
     public async Task<PaymentStatusResponse> ProcessCallbackAsync(PaymentCallbackQuery query, CancellationToken cancellationToken = default)
     {
         // Start transaction
@@ -147,18 +244,36 @@ public class PaymentService(IBookingRepository bookingRepository, global::Net.pa
                 {
                     transactionRecord.PaidAt = DateTime.UtcNow;
                     var oldStatus = booking.Status;
-                    booking.Status = BookingStatus.WaitingPickup;
-                    booking.UpdatedAt = DateTime.UtcNow;
 
-                    // Log status history
-                    booking.StatusHistories.Add(new BookingStatusHistory
+                    if (booking.Status == BookingStatus.WaitingFinalPayment)
                     {
-                        OldStatus = oldStatus,
-                        NewStatus = BookingStatus.WaitingPickup,
-                        ChangedByUserId = booking.CustomerId,
-                        Note = "Deposit paid successfully. Booking confirmed.",
-                        CreatedAt = DateTime.UtcNow
-                    });
+                        // Final payment after return inspection → Complete the booking
+                        booking.Status = BookingStatus.Completed;
+                        booking.UpdatedAt = DateTime.UtcNow;
+
+                        booking.StatusHistories.Add(new BookingStatusHistory
+                        {
+                            OldStatus = oldStatus,
+                            NewStatus = BookingStatus.Completed,
+                            ChangedByUserId = booking.CustomerId,
+                            Note = "Thanh toán cuối chuyến thành công. Chuyến xe hoàn tất.",
+                            CreatedAt = DateTime.UtcNow
+                        });
+                    }
+                    else
+                    {
+                        // Deposit payment → Move to WaitingPickup
+                        booking.Status = BookingStatus.WaitingPickup;
+                        booking.UpdatedAt = DateTime.UtcNow;
+
+                        booking.StatusHistories.Add(new BookingStatusHistory
+                        {
+                            OldStatus = oldStatus,
+                            NewStatus = BookingStatus.WaitingPickup,
+                            ChangedByUserId = booking.CustomerId,
+                            Note = "Deposit paid successfully. Booking confirmed.",
+                            CreatedAt = DateTime.UtcNow
+                        });
 
                     // Update availability block reason to "Confirmed Booking"
                     foreach (var block in booking.AvailabilityBlocks)
@@ -196,6 +311,7 @@ public class PaymentService(IBookingRepository bookingRepository, global::Net.pa
                             }
                         }
                     }
+                    } // end else (deposit payment)
                 }
                 else if (cancelled)
                 {

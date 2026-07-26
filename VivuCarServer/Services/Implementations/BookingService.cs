@@ -579,7 +579,28 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
         await bookingRepository.SaveChangesAsync(cancellationToken);
         return true;
     }
+    public async Task<BookingDetailResponse?> RequestReturnAsync(int customerId, int bookingId, CancellationToken cancellationToken = default)
+    {
+        var booking = await bookingRepository.GetByIdAsync(bookingId, cancellationToken);
+        if (booking == null) return null;
 
+        if (booking.CustomerId != customerId)
+        {
+            throw new UnauthorizedAccessException("You do not have permission to request return for this booking.");
+        }
+
+        if (booking.Status != BookingStatus.InProgress)
+        {
+            throw new InvalidOperationException("You can only request return for a booking that is currently in progress.");
+        }
+
+        booking.Status = BookingStatus.ReturnRequested;
+        booking.UpdatedAt = DateTime.UtcNow;
+
+        await bookingRepository.SaveChangesAsync(cancellationToken);
+
+        return MapToDetailResponse(booking);
+    }
 
     private BookingDetailResponse MapToDetailResponse(Booking b)
     {
@@ -613,20 +634,12 @@ public class BookingService(IBookingRepository bookingRepository) : IBookingServ
             TotalAmount = b.TotalAmount,
             DepositAmount = b.DepositAmount,
             RemainingAmount = b.RemainingAmount,
-            Status = b.Status switch
-            {
-                BookingStatus.PendingApproval => "pending",
-                BookingStatus.WaitingDeposit => "pending",
-                BookingStatus.WaitingPickup => "approved",
-                BookingStatus.InProgress => "approved",
-                BookingStatus.ReturnRequested => "approved",
-                BookingStatus.Completed => "completed",
-                BookingStatus.Rejected => "rejected",
-                BookingStatus.Cancelled => "cancelled",
-                BookingStatus.Expired => "cancelled",
-                _ => "pending"
-            },
+            ExtraFee = b.ExtraFee,
+            OverdueFee = b.OverdueFee,
+            FinalPaymentAmount = b.RemainingAmount + b.ExtraFee + (b.OverdueFee ?? 0),
+            Status = b.Status.ToString().ToLowerInvariant(),
             CanPayDeposit = b.Status == BookingStatus.WaitingDeposit,
+            CanPayFinal = b.Status == BookingStatus.WaitingFinalPayment,
             CancellationReason = b.CancellationReason,
             CancelledAt = b.CancelledAt,
             CreatedAt = b.CreatedAt,

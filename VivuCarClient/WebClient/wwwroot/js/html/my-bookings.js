@@ -51,22 +51,9 @@ import { authService } from '/js/shared/auth-service.js';
     const payment = paymentStatuses[booking.id];
     const paid = payment?.paymentStatus === 'success';
     
-    let key = "unknown", label = "Không xác định", tone = "neutral";
-    
-    if (String(booking.status).toLowerCase() === "cancelled") { key = "cancelled"; label = "Đã hủy"; tone = "danger"; }
-    else if (String(booking.status).toLowerCase() === "rejected") { key = "rejected"; label = "Đã từ chối"; tone = "danger"; }
-    else if (String(booking.status).toLowerCase() === "completed") { key = "completed"; label = "Hoàn tất"; tone = "success"; }
-    else if (String(booking.status).toLowerCase() === "pending") {
-      if (paid) { key = "handover_pending"; label = "Đã cọc - chờ xác nhận"; tone = "primary"; }
-      else if (booking.canPayDeposit) { key = "payment_pending"; label = "Chờ thanh toán"; tone = "warning"; }
-      else { key = "approval_pending"; label = "Chờ duyệt GPLX"; tone = "warning"; }
-    }
-    else if (String(booking.status).toLowerCase() === "approved") {
-      // Missing inspection check for simplicity, default to renting/wait handover
-      const pickupDate = new Date(booking.startDateTime);
-      if (Date.now() < pickupDate.getTime()) { key = "handover_pending"; label = "Chờ bàn giao"; tone = "primary"; }
-      else { key = "renting"; label = "Đang thuê"; tone = "primary"; }
-    }
+    const ui = window.VivuCarUtils.getBookingApiUiState(booking, paid);
+    let { key, label, tone } = ui;
+    const s = String(booking.status || "").toLowerCase();
     return { key, label, tone };
   }
 
@@ -77,7 +64,16 @@ import { authService } from '/js/shared/auth-service.js';
       return { booking, ui };
     }).filter(({ booking, ui }) => {
       const haystack = `${booking.bookingCode || booking.id} ${booking.carName} ${booking.licensePlate}`.toLowerCase();
-      const filterOk = state.filter === "all" || ui.key === state.filter || booking.status === state.filter;
+      
+      let filterOk = false;
+      if (state.filter === "all") {
+        filterOk = true;
+      } else if (state.filter === "renting") {
+        filterOk = ui.key === "renting" || ui.key === "return_requested";
+      } else {
+        filterOk = ui.key === state.filter || booking.status === state.filter;
+      }
+
       return filterOk && (!keyword || haystack.includes(keyword));
     });
     
@@ -129,22 +125,23 @@ import { authService } from '/js/shared/auth-service.js';
   function card({ booking, ui }) {
     const payment = paymentStatuses[booking.id];
     const paid = payment?.paymentStatus === "success";
-    const canCancel = String(booking.status).toLowerCase() === "pending" && !paid;
+    const s = String(booking.status).toLowerCase();
+    const canCancel = (s === "pending" || s === "pendingapproval" || s === "waitingdeposit") && !paid;
     
     return `
       <article class="booking-card-wide">
         <img src="${booking.carImageUrl || '/img/placeholder-car.png'}" alt="${booking.carName}" style="object-fit:cover">
         <div>
-          <div class="car-meta"><span>#${booking.bookingCode || booking.id}</span>${U.renderStatusBadge(ui.tone, ui.label)}${U.renderStatusBadge("neutral", booking.status)}</div>
+          <div class="car-meta"><span>#${booking.bookingCode || booking.id}</span>${U.renderStatusBadge(ui.tone, ui.label)}</div>
           <h2>${booking.carName}</h2>
           <p class="muted">${new Date(booking.startDateTime).toLocaleString('vi-VN')} - ${new Date(booking.endDateTime).toLocaleString('vi-VN')} · ${booking.rentalDays || 0} ngày ${booking.rentalHours ? `và ${booking.rentalHours} giờ` : ''}</p>
           <strong>${U.formatVnd(booking.totalAmount)}</strong>
         </div>
         <div class="booking-actions">
           <a class="btn btn-secondary btn-sm" href="/Booking/Detail?id=${booking.id}">Chi tiết</a>
-          ${String(booking.status).toLowerCase() === "pending" && booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán</a>` : ""}
+          ${String(booking.status).toLowerCase() === "waitingdeposit" && booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán</a>` : ""}
           ${ui.key === "handover_pending" ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
-          ${ui.key === "renting" ? `<a class="btn btn-primary btn-sm" href="/Booking/ReturnRequest?id=${booking.id}">Trả xe</a>` : ""}
+          ${ui.key === "renting" ? `<a class="btn btn-primary btn-sm" href="/Booking/Detail?id=${booking.id}">Trả xe</a>` : ""}
           ${canCancel ? `<button class="btn btn-danger btn-sm" type="button" data-cancel="${booking.id}">Hủy đơn</button>` : ""}
           ${String(booking.status).toLowerCase() === "completed" ? `<a class="btn btn-ghost btn-sm" href="/Review/Create?bookingId=${booking.id}">Đánh giá</a>` : ""}
         </div>

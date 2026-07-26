@@ -87,18 +87,28 @@
             </div>
         </div>
 
+        <div id="costBreakdownPanel" class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden hidden">
+            <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50">
+                <h3 class="text-base font-semibold text-zinc-900">Bảng tính tiền cuối chuyến</h3>
+                <p class="text-sm text-zinc-500">Số tiền khách hàng sẽ cần thanh toán sau khi bạn xác nhận.</p>
+            </div>
+            <div class="p-6 space-y-2" id="costBreakdownBody">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex gap-3">
             <div class="shrink-0 pt-0.5">
                 <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </div>
             <div>
-                <h4 class="text-sm font-medium text-blue-900">Hoàn tất chuyến xe</h4>
-                <p class="text-sm text-blue-700 mt-1">Khi bạn bấm xác nhận, chuyến xe sẽ được cập nhật biên bản nhận xe, sau đó sẽ <strong>tự động chuyển sang trạng thái Hoàn tất</strong>. Doanh thu sẽ được ghi nhận vào tháng hiện tại.</p>
+                <h4 class="text-sm font-medium text-blue-900">Gửi biên bản & Yêu cầu thanh toán</h4>
+                <p class="text-sm text-blue-700 mt-1">Khi bạn bấm xác nhận, khách hàng sẽ nhận được <strong>yêu cầu thanh toán số tiền còn lại qua PayOS</strong>. Chuyến xe sẽ hoàn tất sau khi khách thanh toán xong.</p>
                 
                 <div class="mt-3 flex items-center">
                     <input id="confirmCheckbox" required type="checkbox" class="h-4 w-4 rounded border-blue-300 text-blue-600 focus:ring-blue-500 bg-white">
                     <label for="confirmCheckbox" class="ml-2 block text-sm text-blue-900 font-medium">
-                        Tôi xác nhận đã nhận lại xe và đồng ý hoàn tất chuyến đi này.
+                        Tôi xác nhận đã nhận lại xe và gửi yêu cầu thanh toán cho khách.
                     </label>
                 </div>
             </div>
@@ -106,7 +116,7 @@
 
         <div class="flex items-center gap-4 pt-2">
             <button type="submit" id="btnSubmit" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
-                Nhận lại xe & Hoàn tất
+                Gửi biên bản & Yêu cầu thanh toán
             </button>
             <a href="/Owner/Bookings/Detail?id=@Model.Id" class="inline-flex items-center justify-center rounded-lg bg-white border border-zinc-300 px-6 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:outline-none transition-colors">
                 Hủy bỏ
@@ -126,16 +136,50 @@
         const uploadedImages = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
-            // Load booking code
+            let bookingData = null;
+            
+            function formatVnd(v) {
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(Number(v || 0));
+            }
+
+            function updateCostBreakdown() {
+                if (!bookingData) return;
+                const extraFee = parseFloat(document.getElementById('extraFee').value) || 0;
+                const remaining = bookingData.remainingAmount || 0;
+                // Overdue is calculated server-side, but we can estimate it here
+                const total = remaining + extraFee;
+                
+                const panel = document.getElementById('costBreakdownPanel');
+                const body = document.getElementById('costBreakdownBody');
+                panel.classList.remove('hidden');
+                
+                body.innerHTML = `
+                    <div class="flex justify-between text-sm"><span class="text-zinc-600">Tổng tiền thuê</span><span class="font-medium">${formatVnd(bookingData.totalAmount)}</span></div>
+                    <div class="flex justify-between text-sm"><span class="text-zinc-600">Đã cọc</span><span class="font-medium text-green-700">- ${formatVnd(bookingData.depositAmount)}</span></div>
+                    <div class="flex justify-between text-sm"><span class="text-zinc-600">Tiền còn lại</span><span class="font-medium">${formatVnd(remaining)}</span></div>
+                    ${extraFee > 0 ? `<div class="flex justify-between text-sm"><span class="text-zinc-600">Phụ phí phát sinh</span><span class="font-medium text-orange-600">+ ${formatVnd(extraFee)}</span></div>` : ''}
+                    <div class="flex justify-between text-sm font-semibold pt-2 border-t border-zinc-200 mt-2">
+                        <span class="text-zinc-900">Khách cần thanh toán</span>
+                        <span class="text-red-600 text-base">${formatVnd(total)}</span>
+                    </div>
+                    <p class="text-xs text-zinc-500 mt-1">* Phí trả trễ (nếu có) sẽ được tính tự động bởi hệ thống.</p>
+                `;
+            }
+
+            // Load booking data
             try {
                 const response = await fetch(`/api/proxy/owner/bookings/${bookingId}`, {
                     headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
                 });
                 if (response.ok) {
-                    const data = await response.json();
-                    document.getElementById('bookingCode').textContent = data.bookingCode;
+                    bookingData = await response.json();
+                    document.getElementById('bookingCode').textContent = bookingData.bookingCode;
+                    updateCostBreakdown();
                 }
             } catch (e) {}
+
+            // Live update cost when extra fee changes
+            document.getElementById('extraFee').addEventListener('input', updateCostBreakdown);
 
             // ===== IMAGE UPLOAD VIA PROXY (no CORS issue) =====
             document.getElementById('fileUploadInput').addEventListener('change', async function () {
@@ -274,7 +318,7 @@
                         throw new Error(errorObj.message || 'Lỗi xử lý nhận lại xe');
                     }
 
-                    window.VivuCarUtils.showToast('Hoàn tất chuyến xe thành công!', 'success');
+                    window.VivuCarUtils.showToast('Đã gửi biên bản! Chờ khách thanh toán.', 'success');
                     setTimeout(() => window.location.href = `/Owner/Bookings/Detail?id=${bookingId}`, 1500);
                 } catch (error) {
                     errMsg.textContent = error.message;

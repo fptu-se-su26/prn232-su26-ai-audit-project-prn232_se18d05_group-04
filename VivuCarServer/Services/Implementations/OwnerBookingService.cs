@@ -5,12 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Repositories.Interfaces;
 using Services.Interfaces;
 using Services.Models.Owner;
+using Services.Models;
 
 namespace Services.Implementations;
 
 public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingService
 {
-    public async Task<IReadOnlyList<OwnerBookingResponse>> GetOwnerBookingsAsync(
+    public async Task<PagedResult<OwnerBookingResponse>> GetOwnerBookingsAsync(
         int ownerId,
         OwnerBookingListFilter filter,
         CancellationToken cancellationToken = default
@@ -43,6 +44,8 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
             }
         }
 
+        var totalCount = await query.CountAsync(cancellationToken);
+        
         var page = Math.Max(filter.Page, 1);
         var pageSize = Math.Clamp(filter.PageSize, 1, 50);
 
@@ -52,7 +55,13 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
-        return list.Select(MapToResponse).ToList();
+        return new PagedResult<OwnerBookingResponse>
+        {
+            Items = list.Select(MapToResponse).ToList(),
+            TotalCount = totalCount,
+            Page = page,
+            PageSize = pageSize
+        };
     }
 
     public async Task<OwnerBookingDetailResponse?> GetOwnerBookingDetailAsync(
@@ -133,21 +142,37 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
         if (booking.Status != BookingStatus.ReturnRequested && booking.Status != BookingStatus.InProgress)
             throw new InvalidOperationException("Chỉ có thể xác nhận trả xe khi xe đang trong chuyến hoặc đã có yêu cầu trả.");
 
+        // Calculate overdue fee if returned late
+        decimal overdueFee = 0;
+        if (DateTime.UtcNow > booking.EndDateTime)
+        {
+            var overdueHours = (decimal)(DateTime.UtcNow - booking.EndDateTime).TotalHours;
+            var dailyRate = booking.BasePrice > 0 && booking.RemainingAmount > 0
+                ? booking.TotalAmount / Math.Max(1, (decimal)(booking.EndDateTime - booking.StartDateTime).TotalDays)
+                : 0;
+            // Charge per overdue hour at 1/24 of daily rate, minimum 1 hour
+            overdueFee = Math.Round(Math.Ceiling(overdueHours) * (dailyRate / 24m), 0);
+        }
+
         var oldStatus = booking.Status;
-        booking.Status = BookingStatus.Completed;
+        booking.Status = BookingStatus.WaitingFinalPayment;
         booking.UpdatedAt = DateTime.UtcNow;
+        booking.ExtraFee = request.ExtraFee;
+        booking.OverdueFee = overdueFee;
 
         // Update car status based on inspection result
         var nextStatus = ParseOwnerCarStatus(request.NextCarStatus);
         booking.Car.Status = nextStatus;
         booking.Car.UpdatedAt = DateTime.UtcNow;
 
+        var finalAmount = booking.RemainingAmount + request.ExtraFee + overdueFee;
+
         booking.StatusHistories.Add(new BookingStatusHistory
         {
             OldStatus = oldStatus,
-            NewStatus = BookingStatus.Completed,
+            NewStatus = BookingStatus.WaitingFinalPayment,
             ChangedByUserId = ownerId,
-            Note = $"Xác nhận trả xe. Km: {request.OdometerKm}. Phụ phí: {request.ExtraFee:N0}đ. Hư hỏng: {request.DamageNotes ?? "Không"}",
+            Note = $"Xác nhận trả xe. Km: {request.OdometerKm}. Phụ phí: {request.ExtraFee:N0}đ. Phí trễ: {overdueFee:N0}đ. Tổng cần trả: {finalAmount:N0}đ. Hư hỏng: {request.DamageNotes ?? "Không"}",
             CreatedAt = DateTime.UtcNow
         });
 
@@ -312,7 +337,7 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
             AvailableCars = cars.Count(c => c.Status == CarStatus.Available),
             RentedCars = cars.Count(c => c.Status == CarStatus.Rented),
             PendingBookings = bookings.Count(b => b.Status == BookingStatus.PendingApproval),
-            ActiveBookings = bookings.Count(b => b.Status == BookingStatus.InProgress),
+            ActiveBookings = bookings.Count(b => b.Status == BookingStatus.InProgress || b.Status == BookingStatus.ReturnRequested),
             MonthlyRevenue = monthlyRevenue,
             RecentBookings = recentBookings
         };
@@ -338,19 +363,7 @@ public class OwnerBookingService(VivuCarDbContext dbContext) : IOwnerBookingServ
             EndDateTime = b.EndDateTime,
             TotalAmount = b.TotalAmount,
             DepositAmount = b.DepositAmount,
-            Status = b.Status switch
-            {
-                BookingStatus.PendingApproval => "pending",
-                BookingStatus.WaitingDeposit => "pending",
-                BookingStatus.WaitingPickup => "approved",
-                BookingStatus.InProgress => "approved",
-                BookingStatus.ReturnRequested => "approved",
-                BookingStatus.Completed => "completed",
-                BookingStatus.Rejected => "rejected",
-                BookingStatus.Cancelled => "cancelled",
-                BookingStatus.Expired => "cancelled",
-                _ => "pending"
-            },
+            Status = b.Status.ToString().ToLowerInvariant(),
             CreatedAt = b.CreatedAt
         };
     }
