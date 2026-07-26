@@ -193,18 +193,13 @@ window.VivuCarUtils = {
     if (String(booking.status).toLowerCase() === "cancelled") return { key: "cancelled", label: "Đã hủy", tone: "danger" };
     if (String(booking.status).toLowerCase() === "rejected") return { key: "rejected", label: "Bị từ chối", tone: "danger" };
     if (String(booking.status).toLowerCase() === "completed") return { key: "completed", label: "Hoàn tất", tone: "success" };
-    if (String(booking.status).toLowerCase() === "pending") {
-      return String(payment?.status).toLowerCase() === "success"
-        ? { key: "paid_pending", label: "Đã cọc - chờ chủ xe xác nhận", tone: "warning" }
-        : { key: "payment_pending", label: "Chờ thanh toán hoặc xác nhận", tone: "warning" };
-    }
-    if (String(booking.status).toLowerCase() === "approved") {
-      const hasPre = inspections.some((item) => item.inspection_type === "pre_rental");
-      const hasPost = inspections.some((item) => item.inspection_type === "post_rental");
-      if (!hasPre) return { key: "handover_pending", label: "Chờ bàn giao", tone: "info" };
-      if (!hasPost) return { key: "renting", label: "Đang thuê hoặc chờ trả xe", tone: "info" };
-      return { key: "completion_pending", label: "Chờ hoàn tất", tone: "warning" };
-    }
+    const s = String(booking.status).toLowerCase();
+    if (s === "pendingapproval") return { key: "pending_approval", label: "Chờ chủ xe duyệt", tone: "warning" };
+    if (s === "waitingdeposit") return { key: "payment_pending", label: "Chờ thanh toán cọc", tone: "warning" };
+    if (s === "waitingpickup") return { key: "handover_pending", label: "Chờ bàn giao", tone: "info" };
+    if (s === "inprogress") return { key: "renting", label: "Đang thuê", tone: "info" };
+    if (s === "returnrequested") return { key: "return_requested", label: "Yêu cầu trả xe", tone: "warning" };
+    if (s === "waitingfinalpayment") return { key: "waiting_final_payment", label: "Chờ thanh toán cuối", tone: "warning" };
     return { key: booking.status, label: booking.status, tone: "neutral" };
   },
   canCancelBooking(booking) {

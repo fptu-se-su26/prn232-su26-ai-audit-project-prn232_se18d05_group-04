@@ -135,7 +135,7 @@ import { authService } from '/js/shared/auth-service.js';
               </div>
               <a class="btn btn-primary btn-sm" href="/Payment/Final?bookingId=${booking.id}" style="margin-top:8px;">Thanh toán cuối chuyến</a>
             ` : ""}
-            ${s === "pending" && booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán cọc</a>` : ""}
+            ${s === "waitingdeposit" && booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán cọc</a>` : ""}
             ${canCancel ? `<button class="btn btn-danger btn-sm" type="button" id="cancelBookingBtn">Hủy đơn</button>` : ""}
             ${ui.key === "handover_pending" && booking.contractPdfUrl && !booking.contractPdfUrl.includes('sig=') ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
             ${booking.contractPdfUrl ? `<a class="btn btn-secondary btn-sm" href="${booking.contractPdfUrl.startsWith('/api') ? '/api/proxy' + booking.contractPdfUrl.substring(4) : booking.contractPdfUrl}" target="_blank">Xem hợp đồng</a>` : ""}

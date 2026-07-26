@@ -125,7 +125,8 @@ import { authService } from '/js/shared/auth-service.js';
   function card({ booking, ui }) {
     const payment = paymentStatuses[booking.id];
     const paid = payment?.paymentStatus === "success";
-    const canCancel = String(booking.status).toLowerCase() === "pending" && !paid;
+    const s = String(booking.status).toLowerCase();
+    const canCancel = (s === "pending" || s === "pendingapproval" || s === "waitingdeposit") && !paid;
     
     return `
       <article class="booking-card-wide">
@@ -138,9 +139,9 @@ import { authService } from '/js/shared/auth-service.js';
         </div>
         <div class="booking-actions">
           <a class="btn btn-secondary btn-sm" href="/Booking/Detail?id=${booking.id}">Chi tiết</a>
-          ${String(booking.status).toLowerCase() === "pending" && booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán</a>` : ""}
+          ${String(booking.status).toLowerCase() === "waitingdeposit" && booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán</a>` : ""}
           ${ui.key === "handover_pending" ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
-          ${ui.key === "renting" ? `<a class="btn btn-primary btn-sm" href="/Booking/ReturnRequest?id=${booking.id}">Trả xe</a>` : ""}
+          ${ui.key === "renting" ? `<a class="btn btn-primary btn-sm" href="/Booking/Detail?id=${booking.id}">Trả xe</a>` : ""}
           ${canCancel ? `<button class="btn btn-danger btn-sm" type="button" data-cancel="${booking.id}">Hủy đơn</button>` : ""}
           ${String(booking.status).toLowerCase() === "completed" ? `<a class="btn btn-ghost btn-sm" href="/Review/Create?bookingId=${booking.id}">Đánh giá</a>` : ""}
         </div>
