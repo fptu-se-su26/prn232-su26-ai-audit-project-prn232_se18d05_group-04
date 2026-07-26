@@ -1,10 +1,11 @@
 @page
 @model WebClient.Pages.Booking.ContractModel
 @{
+    Layout = "_UserLayout";
     ViewData["Title"] = "Ký Hợp Đồng";
+    ViewData["DataPage"] = "bookings";
 }
 
-@section Styles {
     <style>
         .contract-container {
             max-width: 800px;
@@ -31,7 +32,6 @@
             touch-action: none; /* prevent scrolling when signing on mobile */
         }
     </style>
-}
 
 <div id="contractRoot" class="contract-container">
     <div style="text-align:center; padding: 40px;">
@@ -40,5 +40,5 @@
 </div>
 
 @section Scripts {
-    <script type="module" src="~/js/html/booking-contract.js"></script>
+    <script type="module" src="~/js/html/booking-contract-v2.js"></script>
 }

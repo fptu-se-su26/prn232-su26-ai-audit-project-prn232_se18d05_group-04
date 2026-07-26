@@ -8,7 +8,7 @@
     return cars.slice().sort((a, b) => (U.carRating(b.id) + U.rentalCount(b.id)) - (U.carRating(a.id) + U.rentalCount(a.id))).slice(0, 4);
   }
   function render() {
-    const available = DB.cars.filter((car) => car.status === "available");
+    const available = DB.cars.filter((car) => String(car.status).toLowerCase() === "available");
     renderStats(available);
     renderAreas();
     renderTypes();
@@ -25,12 +25,12 @@
     ].map(([value, label]) => `<div class="home-stat"><strong>${value}</strong><span>${label}</span></div>`).join("");
   }
   function renderAreas() {
-    const areas = [...new Set(DB.cars.filter((car) => car.status === "available").map((car) => car.address.split(",")[0].trim()))];
+    const areas = [...new Set(DB.cars.filter((car) => String(car.status).toLowerCase() === "available").map((car) => car.address.split(",")[0].trim()))];
     document.getElementById("areaChips").innerHTML = areas.map((area) => `<a class="chip" href="search.html?location=${encodeURIComponent(area)}">${area}</a>`).join("");
   }
   function renderTypes() {
     document.getElementById("typeChips").innerHTML = DB.car_types.map((type) => {
-      const count = DB.cars.filter((car) => car.status === "available" && car.type_id === type.id).length;
+      const count = DB.cars.filter((car) => String(car.status).toLowerCase() === "available" && car.type_id === type.id).length;
       return `<a class="type-card" href="search.html?type_id=${type.id}"><strong>${type.name}</strong><span>${count} xe khả dụng</span></a>`;
     }).join("");
   }

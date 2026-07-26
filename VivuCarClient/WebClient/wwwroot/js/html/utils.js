@@ -161,15 +161,15 @@ window.VivuCarUtils = {
   },
   resolveBookingUiState(booking, payment, inspections = []) {
     if (!booking) return { key: "unknown", label: "Không xác định", tone: "neutral" };
-    if (booking.status === "cancelled") return { key: "cancelled", label: "Đã hủy", tone: "danger" };
-    if (booking.status === "rejected") return { key: "rejected", label: "Bị từ chối", tone: "danger" };
-    if (booking.status === "completed") return { key: "completed", label: "Hoàn tất", tone: "success" };
-    if (booking.status === "pending") {
-      return payment?.status === "success"
+    if (String(booking.status).toLowerCase() === "cancelled") return { key: "cancelled", label: "Đã hủy", tone: "danger" };
+    if (String(booking.status).toLowerCase() === "rejected") return { key: "rejected", label: "Bị từ chối", tone: "danger" };
+    if (String(booking.status).toLowerCase() === "completed") return { key: "completed", label: "Hoàn tất", tone: "success" };
+    if (String(booking.status).toLowerCase() === "pending") {
+      return String(payment?.status).toLowerCase() === "success"
         ? { key: "paid_pending", label: "Đã cọc - chờ chủ xe xác nhận", tone: "warning" }
         : { key: "payment_pending", label: "Chờ thanh toán hoặc xác nhận", tone: "warning" };
     }
-    if (booking.status === "approved") {
+    if (String(booking.status).toLowerCase() === "approved") {
       const hasPre = inspections.some((item) => item.inspection_type === "pre_rental");
       const hasPost = inspections.some((item) => item.inspection_type === "post_rental");
       if (!hasPre) return { key: "handover_pending", label: "Chờ bàn giao", tone: "info" };
@@ -193,10 +193,10 @@ window.VivuCarUtils = {
   },
   resolveChatUiState(session) {
     if (!session) return { key: "unknown", label: "Không xác định", tone: "neutral" };
-    if (session.status === "closed") return { key: "closed", label: "Đã xử lý", tone: "success" };
-    if (session.status === "escalated") return { key: "escalated", label: "Chờ người hỗ trợ", tone: "warning" };
-    if (session.status === "open" && session.session_type === "live") return { key: "live", label: "Live chat", tone: "info" };
-    if (session.status === "open" && session.session_type === "ai") return { key: "ai", label: "AI đang hỗ trợ", tone: "neutral" };
+    if (String(session.status).toLowerCase() === "closed") return { key: "closed", label: "Đã xử lý", tone: "success" };
+    if (String(session.status).toLowerCase() === "escalated") return { key: "escalated", label: "Chờ người hỗ trợ", tone: "warning" };
+    if (String(session.status).toLowerCase() === "open" && session.session_type === "live") return { key: "live", label: "Live chat", tone: "info" };
+    if (String(session.status).toLowerCase() === "open" && session.session_type === "ai") return { key: "ai", label: "AI đang hỗ trợ", tone: "neutral" };
     return { key: session.status, label: session.status, tone: "neutral" };
   }
 };

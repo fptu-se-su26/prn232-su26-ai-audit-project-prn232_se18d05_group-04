@@ -86,7 +86,7 @@ import { authService } from '/js/shared/auth-service.js';
 
   // ── 4. Render ────────────────────────────────────────────────────────────
   // Sử dụng gatewayStatus hoặc paymentStatus từ API (ưu tiên API nếu có)
-  const finalStatus = payStatus?.paymentStatus || gatewayStatus;
+  const finalStatus = String(payStatus?.paymentStatus || gatewayStatus).toLowerCase();
 
   const statusMap = {
     success: {

@@ -12,7 +12,7 @@
     return DB.bookings.filter(
       (b) =>
         b.car_id === carId &&
-        b.status === "approved" &&
+        String(b.status).toLowerCase() === "approved" &&
         new Date(b.pickup_datetime) > new Date(),
     );
   }
@@ -47,7 +47,7 @@
       );
     if (["maintenance", "blocked"].includes(next) && !reason)
       return U.renderToast("Vui lòng nhập lý do.", "danger");
-    if (car.status === "rented" && next !== "maintenance")
+    if (String(car.status).toLowerCase() === "rented" && next !== "maintenance")
       return U.renderToast(
         "Không cho chuyển xe đang rented thủ công nếu chưa có xử lý booking.",
         "danger",

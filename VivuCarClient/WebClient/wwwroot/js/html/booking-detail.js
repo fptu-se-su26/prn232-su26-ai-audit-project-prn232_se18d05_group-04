@@ -75,7 +75,8 @@ import { authService } from '/js/shared/auth-service.js';
     else if (s === "completed") { key = "completed"; label = "Hoàn tất"; tone = "success"; }
     else if (s === "pending" || s === "pendingapproval") {
       if (paid) { key = "handover_pending"; label = "Đã cọc - chờ xác nhận"; tone = "primary"; }
-      else { key = "payment_pending"; label = "Chờ thanh toán"; tone = "warning"; }
+      else if (booking.canPayDeposit) { key = "payment_pending"; label = "Chờ thanh toán"; tone = "warning"; }
+      else { key = "approval_pending"; label = "Chờ duyệt GPLX"; tone = "warning"; }
     }
     else if (s === "approved" || s === "waitingdeposit" || s === "waitingpickup" || s === "inprogress") {
       const pickupDate = new Date(booking.startDateTime);
@@ -135,10 +136,11 @@ import { authService } from '/js/shared/auth-service.js';
           <h2>Thời gian biểu</h2>
           <div class="timeline">${timeline()}</div>
           <div class="booking-actions mt-3.5">
-            ${s === "pending" && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán cọc</a>` : ""}
+            ${s === "pending" && booking.canPayDeposit && !paid ? `<a class="btn btn-primary btn-sm" href="/Payment/Deposit?bookingId=${booking.id}">Thanh toán cọc</a>` : ""}
             ${canCancel ? `<button class="btn btn-danger btn-sm" type="button" id="cancelBookingBtn">Hủy đơn</button>` : ""}
-            ${booking.contractPdfUrl && !booking.contractPdfUrl.includes('sig=') ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
-            ${booking.contractPdfUrl ? `<a class="btn btn-secondary btn-sm" href="${booking.contractPdfUrl}" target="_blank">Xem hợp đồng</a>` : ""}
+            ${ui.key === "handover_pending" ? `<a class="btn btn-primary btn-sm" href="/Booking/Contract?id=${booking.id}">Ký hợp đồng</a>` : ""}
+            ${booking.contractPdfUrl ? `<a class="btn btn-secondary btn-sm" href="${booking.contractPdfUrl.startsWith('/api') ? '/api/proxy' + booking.contractPdfUrl.substring(4) : booking.contractPdfUrl}" target="_blank">Xem hợp đồng</a>` : ""}
+            ${ui.key === "renting" ? `<a class="btn btn-primary btn-sm" href="/Booking/ReturnRequest?id=${booking.id}">Trả xe</a>` : ""}
             ${s === "completed" ? (
               currentReview 
                 ? `<button class="btn btn-outline btn-sm" type="button" id="reviewBtn">Sửa Đánh Giá</button>`
