@@ -117,11 +117,11 @@
   }
 
   function successfulPaymentForBooking(bookingId) {
-    return DB.payments.find((payment) => payment.booking_id === bookingId && payment.status === "success");
+    return DB.payments.find((payment) => payment.booking_id === bookingId && String(payment.status).toLowerCase() === "success");
   }
 
   function getBookingStatusGroup(booking) {
-    if (booking.status === "cancelled") return "cancelled";
+    if (String(booking.status).toLowerCase() === "cancelled") return "cancelled";
     if (successfulPaymentForBooking(booking.id)) return "paid";
     return "pending";
   }
@@ -187,11 +187,11 @@
   function calculateDashboardData() {
     const range = getDateRangeByPreset(state.selectedRange);
     const filteredBookings = DB.bookings.filter((booking) => isInRange(booking.created_at, range));
-    const paidPayments = DB.payments.filter((payment) => payment.status === "success" && isInRange(payment.paid_at, range));
+    const paidPayments = DB.payments.filter((payment) => String(payment.status).toLowerCase() === "success" && isInRange(payment.paid_at, range));
     const successfulRevenue = paidPayments.reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
     const paidBookingIds = new Set(paidPayments.map((payment) => payment.booking_id));
     const paidCount = filteredBookings.filter((booking) => paidBookingIds.has(booking.id) || successfulPaymentForBooking(booking.id) && isInRange(successfulPaymentForBooking(booking.id).paid_at, range)).length;
-    const cancelledCount = filteredBookings.filter((booking) => booking.status === "cancelled").length;
+    const cancelledCount = filteredBookings.filter((booking) => String(booking.status).toLowerCase() === "cancelled").length;
     const pendingCount = filteredBookings.filter((booking) => getBookingStatusGroup(booking) === "pending").length;
     const orderDetails = filteredBookings
       .map((booking) => ({ booking, group: getBookingStatusGroup(booking), payment: paymentForBooking(booking.id) }))

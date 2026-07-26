@@ -11,7 +11,7 @@
   }
   function ownerRevenue() {
     return DB.payments
-      .filter((p) => p.status === 'success' && ownerBookings().some((b) => b.id === p.booking_id))
+      .filter((p) => String(p.status).toLowerCase() === 'success' && ownerBookings().some((b) => b.id === p.booking_id))
       .reduce((s, p) => s + Number(p.amount || 0), 0);
   }
 
@@ -32,7 +32,7 @@
       .map((r) => ({ ...r, ui: U.resolveBookingUiState(r.booking, r.payment, r.inspections) }));
   }
 
-  function pendingCount() { return ownerBookings().filter((b) => b.status === 'pending').length; }
+  function pendingCount() { return ownerBookings().filter((b) => String(b.status).toLowerCase() === 'pending').length; }
   function rentingCount() {
     return recentBookings().filter((r) => r.ui.key === 'renting').length;
   }
@@ -44,12 +44,12 @@
     const pending = pendingCount();
     const kpis = [
       { label: 'Tổng xe', value: cars.length, color: 'text-zinc-900' },
-      { label: 'Xe đang hoạt động', value: cars.filter((c) => c.status === 'available').length, color: 'text-emerald-700' },
-      { label: 'Đang cho thuê', value: cars.filter((c) => c.status === 'rented').length, color: 'text-sky-700' },
+      { label: 'Xe đang hoạt động', value: cars.filter((c) => String(c.status).toLowerCase() === 'available').length, color: 'text-emerald-700' },
+      { label: 'Đang cho thuê', value: cars.filter((c) => String(c.status).toLowerCase() === 'rented').length, color: 'text-sky-700' },
       { label: 'Đơn chờ duyệt', value: pending, color: pending > 0 ? 'text-amber-700' : 'text-zinc-900' },
       { label: 'Tổng đơn', value: bookings.length, color: 'text-zinc-900' },
-      { label: 'Hoàn thành', value: bookings.filter((b) => b.status === 'completed').length, color: 'text-emerald-700' },
-      { label: 'Đã hủy', value: bookings.filter((b) => b.status === 'cancelled').length, color: 'text-red-600' },
+      { label: 'Hoàn thành', value: bookings.filter((b) => String(b.status).toLowerCase() === 'completed').length, color: 'text-emerald-700' },
+      { label: 'Đã hủy', value: bookings.filter((b) => String(b.status).toLowerCase() === 'cancelled').length, color: 'text-red-600' },
       { label: 'Doanh thu (ước)', value: U.formatVnd(revenue), color: 'text-emerald-700', mono: true }
     ];
     return `<div class="kpi-grid max-sm:grid-cols-2 !grid-cols-4 md:!grid-cols-4 lg:!grid-cols-4">${kpis.map((k) =>

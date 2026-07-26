@@ -53,13 +53,7 @@ import { authService } from '/js/shared/auth-service.js';
         root.innerHTML = U.renderEmptyState({ title: "Lỗi", text: "Không thể tải đơn thuê.", href: "/Booking/MyBookings", action: "Về danh sách" });
     }
 
-    function render(b) {
-        // We use the pdfUrl from booking.contractPdfUrl if exists, or fallback
-        let contractUrl = b.contractPdfUrl || `/api/bookings/${bookingId}/contract/pdf`;
-        if (contractUrl.startsWith('/api')) {
-            contractUrl = (window.API_BASE_URL || 'http://localhost:5246') + contractUrl;
-        }
-
+    async function render(b) {
         const isSigned = !!b.contractPdfUrl?.includes('sig=');
 
         // Render iframe and signature pad
@@ -70,7 +64,7 @@ import { authService } from '/js/shared/auth-service.js';
             </div>
 
             <div style="border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; height: 400px; margin-bottom: 24px;">
-                <iframe src="${contractUrl}" style="width: 100%; height: 100%; border: none;"></iframe>
+                <iframe id="contractIframe" style="width: 100%; height: 100%; border: none;"></iframe>
             </div>
 
             ${isSigned ? `
@@ -93,6 +87,19 @@ import { authService } from '/js/shared/auth-service.js';
 
         if (!isSigned) {
             initSignaturePad();
+        }
+
+        // Fetch the contract HTML from the API to ensure Bearer token is passed and contract is generated
+        try {
+            const contractRes = await authService.apiFetch(`bookings/${bookingId}/contract/pdf`);
+            if (contractRes.ok) {
+                const html = await contractRes.text();
+                document.getElementById('contractIframe').srcdoc = html;
+            } else {
+                document.getElementById('contractIframe').srcdoc = "<p style='padding:20px;color:red'>Lỗi: Không thể tải hợp đồng. Có thể bạn không có quyền xem, hoặc đơn hàng chưa ở trạng thái sinh hợp đồng.</p>";
+            }
+        } catch (e) {
+            document.getElementById('contractIframe').srcdoc = "<p style='padding:20px;color:red'>Lỗi kết nối khi tải hợp đồng.</p>";
         }
     }
 
@@ -209,7 +216,7 @@ import { authService } from '/js/shared/auth-service.js';
                 }
 
                 const uploadData = await uploadRes.json();
-                const signatureUrl = uploadData.url;
+                const signatureUrl = uploadData.publicUrl ?? uploadData.url;
 
                 // Call sign contract API
                 const signRes = await authService.apiFetch(`bookings/${bookingId}/contract/sign`, {

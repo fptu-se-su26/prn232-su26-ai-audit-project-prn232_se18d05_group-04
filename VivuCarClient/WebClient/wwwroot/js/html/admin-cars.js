@@ -38,7 +38,7 @@
 
   function tabCount(key) {
     if (key === "trash") return trashCars().length;
-    if (key === "available") return activeCars().filter((car) => car.status === "available").length;
+    if (key === "available") return activeCars().filter((car) => String(car.status).toLowerCase() === "available").length;
     if (key === "hidden") return activeCars().filter((car) => ["blocked", "maintenance"].includes(car.status)).length;
     return activeCars().length;
   }
@@ -52,7 +52,7 @@
     return source.filter((car) => {
       const keyword = `${car.license_plate} ${car.brand} ${car.model}`.toLowerCase();
       const tabMatch = state.tab === "all" || state.tab === "trash"
-        || (state.tab === "available" && car.status === "available")
+        || (state.tab === "available" && String(car.status).toLowerCase() === "available")
         || (state.tab === "hidden" && ["blocked", "maintenance"].includes(car.status));
       return tabMatch
         && (!state.keyword || keyword.includes(state.keyword.toLowerCase()))
@@ -67,10 +67,10 @@
     const cars = activeCars();
     const rows = [
       ["Tổng số xe", cars.length],
-      ["Đang rảnh", cars.filter((c) => c.status === "available").length],
-      ["Đang thuê", cars.filter((c) => c.status === "rented").length],
-      ["Bảo trì", cars.filter((c) => c.status === "maintenance").length],
-      ["Đã khóa", cars.filter((c) => c.status === "blocked").length]
+      ["Đang rảnh", cars.filter((c) => String(c.status).toLowerCase() === "available").length],
+      ["Đang thuê", cars.filter((c) => String(c.status).toLowerCase() === "rented").length],
+      ["Bảo trì", cars.filter((c) => String(c.status).toLowerCase() === "maintenance").length],
+      ["Đã khóa", cars.filter((c) => String(c.status).toLowerCase() === "blocked").length]
     ];
     document.getElementById("carSummary").innerHTML = rows.map(([label, value]) => `<article class="summary-card"><span>${label}</span><strong>${value}</strong></article>`).join("");
   }
@@ -90,7 +90,7 @@
     document.querySelector(".table-wrap").classList.toggle("hidden", filtered.length === 0);
     document.querySelector(".pagination").classList.toggle("hidden", filtered.length === 0);
     document.getElementById("carsTableBody").innerHTML = page.items.map((car) => {
-      const badgeKind = car.status === "available" ? "success" : car.status === "rented" ? "info" : car.status === "maintenance" ? "warning" : "danger";
+      const badgeKind = String(car.status).toLowerCase() === "available" ? "success" : String(car.status).toLowerCase() === "rented" ? "info" : String(car.status).toLowerCase() === "maintenance" ? "warning" : "danger";
       const actions = state.tab === "trash"
         ? U.renderActionMenu([
           { label: "Khôi phục", attrs: { "data-restore-car": car.id } },
@@ -99,7 +99,7 @@
         : U.renderActionMenu([
           { label: "Xem chi tiết", href: `admin-car-form.html?id=${car.id}` },
           { label: "Chỉnh sửa", href: `admin-car-form.html?id=${car.id}` },
-          car.status === "blocked"
+          String(car.status).toLowerCase() === "blocked"
             ? { label: "Mở khóa", attrs: { "data-unblock-car": car.id } }
             : { label: "Ẩn", attrs: { "data-block-car": car.id }, variant: "danger" },
           { label: "Xóa mềm", attrs: { "data-soft-delete-car": car.id }, variant: "danger" }

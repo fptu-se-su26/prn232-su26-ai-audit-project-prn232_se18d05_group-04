@@ -31,9 +31,9 @@ function imageButton(item) {
 function renderSummary() {
     const rows = [
         ["Tổng hồ sơ", items.length],
-        ["Chờ duyệt", items.filter(item => item.status === "pending").length],
-        ["Đã duyệt", items.filter(item => item.status === "approved").length],
-        ["Đã từ chối", items.filter(item => item.status === "rejected").length]
+        ["Chờ duyệt", items.filter(item => String(item.status).toLowerCase() === "pending").length],
+        ["Đã duyệt", items.filter(item => String(item.status).toLowerCase() === "approved").length],
+        ["Đã từ chối", items.filter(item => String(item.status).toLowerCase() === "rejected").length]
     ];
     document.getElementById("licenseModerationSummary").innerHTML = rows.map(row =>
         '<article class="summary-card"><span>' + row[0] + "</span><strong>" + row[1] + "</strong></article>"
@@ -140,8 +140,8 @@ function viewLicense(id) {
     document.getElementById("licenseDocumentImages").innerHTML = documentPreview(item.frontImageUrl, "Mặt trước");
     renderLicenseOcr(item);
     document.getElementById("licenseAdminNote").value = "";
-    document.getElementById("btnLicenseApprove").disabled = item.status === "approved";
-    document.getElementById("btnLicenseMismatch").disabled = item.status === "rejected";
+    document.getElementById("btnLicenseApprove").disabled = String(item.status).toLowerCase() === "approved";
+    document.getElementById("btnLicenseMismatch").disabled = String(item.status).toLowerCase() === "rejected";
     openModal("licenseDetailModal");
     window.requestAnimationFrame(() => detailModal.querySelector("[data-close-modal]")?.focus());
 }

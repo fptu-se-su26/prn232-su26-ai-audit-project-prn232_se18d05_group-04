@@ -98,6 +98,7 @@ import { authService } from '/js/shared/auth-service.js';
               `).join("")}
             </div>
             <button class="btn btn-primary btn-full" id="payNow" type="button" ${paid ? 'disabled' : ''}>${paid ? "Đã thanh toán" : "Tiếp tục thanh toán"}</button>
+            ${!paid ? `<button class="btn btn-success btn-full mt-3" id="mockSuccessBtn" type="button" style="background-color: #10b981; border-color: #10b981;">[Test] Mô phỏng thanh toán thành công</button>` : ''}
           </div>
         </section>
         <aside class="summary-card">
@@ -111,6 +112,45 @@ import { authService } from '/js/shared/auth-service.js';
       
     const payBtn = U.byId("payNow");
     if (payBtn) payBtn.addEventListener("click", payNow);
+    
+    const mockBtn = U.byId("mockSuccessBtn");
+    if (mockBtn) mockBtn.addEventListener("click", mockSuccess);
+  }
+
+  async function mockSuccess() {
+    const btn = U.byId("mockSuccessBtn");
+    btn.disabled = true;
+    btn.textContent = "Ä ang xá»­ lÃ½...";
+    
+    try {
+      const r = await authService.apiFetch('payments/deposit/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bookingId: booking.id,
+          method: "payos",
+          returnUrl: location.origin + "/Payment/Result"
+        })
+      });
+      
+      if (!r.ok) {
+        U.renderToast('Lá»—i táº¡o thanh toÃ¡n', 'danger');
+        btn.disabled = false;
+        btn.textContent = "[Test] MÃ´ phỏng thanh toÃ¡n thÃ nh cÃ´ng";
+        return;
+      }
+      
+      const response = await r.json();
+      if (response.transactionCode) {
+        const callbackUrl = `/api/proxy/payments/callback?TransactionCode=${response.transactionCode}&Status=success&RedirectUrl=${encodeURIComponent(location.origin + "/Payment/Result")}`;
+        window.location.href = callbackUrl;
+      }
+    } catch (e) {
+      console.error(e);
+      U.renderToast('Lá»—i káº¿t ná»‘i.', 'danger');
+      btn.disabled = false;
+      btn.textContent = "[Test] MÃ´ phỏng thanh toÃ¡n thÃ nh cÃ´ng";
+    }
   }
 
   async function payNow() {

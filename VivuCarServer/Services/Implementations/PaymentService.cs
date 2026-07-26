@@ -62,7 +62,7 @@ public class PaymentService(IBookingRepository bookingRepository, global::Net.pa
         // Route PayOS back to our backend callback endpoint first, then the backend will redirect to the frontend.
         // We inject the TransactionCode and expected status so the backend can process it.
         var backendCallbackSuccess = $"{baseApiUrl}/api/payments/callback?TransactionCode={txnCode}&Status=success&RedirectUrl={Uri.EscapeDataString(frontendReturnUrl)}";
-        var backendCallbackCancel = $"{baseApiUrl}/api/payments/callback?TransactionCode={txnCode}&Status=failed&RedirectUrl={Uri.EscapeDataString(frontendCancelUrl)}";
+        var backendCallbackCancel = $"{baseApiUrl}/api/payments/callback?TransactionCode={txnCode}&Status=cancelled&RedirectUrl={Uri.EscapeDataString(frontendCancelUrl)}";
 
         var paymentData = new global::Net.payOS.Types.PaymentData(
             orderCode: orderCode,
@@ -140,6 +140,8 @@ public class PaymentService(IBookingRepository bookingRepository, global::Net.pa
              if (transactionRecord.Status == PaymentStatus.Pending)
             {
                 var success = query.Status.ToLower() == "success";
+                var cancelled = query.Status.ToLower() == "cancelled";
+
                 transactionRecord.Status = success ? PaymentStatus.Success : PaymentStatus.Failed;
                 if (success)
                 {
@@ -171,7 +173,7 @@ public class PaymentService(IBookingRepository bookingRepository, global::Net.pa
                     var overlappingBookings = await bookingRepository.GetOverlappingBookingsAsync(booking.CarId, booking.StartDateTime, booking.EndDateTime, cancellationToken);
                     foreach (var overlap in overlappingBookings)
                     {
-                        if (overlap.Id != booking.Id && overlap.Status == BookingStatus.PendingApproval)
+                        if (overlap.Id != booking.Id && (overlap.Status == BookingStatus.PendingApproval || overlap.Status == BookingStatus.WaitingDeposit))
                         {
                             var overlapOldStatus = overlap.Status;
                             overlap.Status = BookingStatus.Rejected;
@@ -195,9 +197,35 @@ public class PaymentService(IBookingRepository bookingRepository, global::Net.pa
                         }
                     }
                 }
+                else if (cancelled)
+                {
+                    transactionRecord.Status = PaymentStatus.Failed;
+                    var oldStatus = booking.Status;
+                    booking.Status = BookingStatus.Cancelled;
+                    booking.CancellationReason = "NgÆ°á»i dÃ¹ng há»§y thanh toÃ¡n.";
+                    booking.UpdatedAt = DateTime.UtcNow;
+
+                    booking.StatusHistories.Add(new BookingStatusHistory
+                    {
+                        OldStatus = oldStatus,
+                        NewStatus = BookingStatus.Cancelled,
+                        ChangedByUserId = booking.CustomerId,
+                        Note = "User explicitly cancelled the payment on payment gateway.",
+                        CreatedAt = DateTime.UtcNow
+                    });
+
+                    // Remove availability blocks!
+                    foreach (var block in booking.AvailabilityBlocks.ToList())
+                    {
+                        if (block.BookingId == booking.Id)
+                        {
+                            booking.AvailabilityBlocks.Remove(block);
+                        }
+                    }
+                }
                 else
                 {
-                    // Failed payment
+                    // Failed payment (e.g. timeout)
                     transactionRecord.Status = PaymentStatus.Failed;
                 }
 

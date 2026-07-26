@@ -13,6 +13,7 @@ builder.Services.AddHttpClient("VivuCarApi", client =>
 .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
 {
     UseCookies = false,
+    AllowAutoRedirect = false,
     // Bypass self-signed cert in development
     ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
 });
