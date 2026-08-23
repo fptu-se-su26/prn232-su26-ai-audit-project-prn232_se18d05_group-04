@@ -1,0 +1,31 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [4 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 888 >>
+stream
+BT /F1 8 Tf 28 565 Td 11 TL (VivuCar payments report) Tj T* (Generated: 2026-07-25 15:19 UTC) Tj T* (Giao dich | Ma on | Khach hang | Ngay thanh toan | So tien | Phuong thuc | Trang thai) Tj T* (VNP-B3-DEP01 | BK-WPICK-003 | Nguyen Van An | 21/07/2026 00:22 | 820,800 | VNPay | success) Tj T* (MOMO-B4-DEP01 | BK-INPROG-004 | Tran Thi Binh | 20/07/2026 00:22 | 754,200 | MoMo | success) Tj T* (VNP-B5-DEP01 | BK-RETRN-005 | Nguyen Van An | 16/07/2026 00:22 | 484,200 | VNPay | success) Tj T* (CASH-B6-REM01 | BK-DONE-006 | Nguyen Van An | 11/07/2026 00:22 | 660,800 | MoMo | success) Tj T* (VNP-B6-DEP01 | BK-DONE-006 | Nguyen Van An | 08/07/2026 00:22 | 283,200 | VNPay | success) Tj T* (VNP-B8-REM01 | BK-DONE-008 | Nguyen Van An | 06/07/2026 00:22 | 1,694,700 | VNPay | success) Tj T* (VNP-B8-DEP01 | BK-DONE-008 | Nguyen Van An | 02/07/2026 00:22 | 726,300 | VNPay | success) Tj T* ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000183 00000 n 
+0000000309 00000 n 
+trailer << /Size 6 /Root 1 0 R >>
+startxref
+1248
+%%EOF

@@ -1,0 +1,15 @@
+@page
+@model VivuCarClient.WebClient.Pages.Payment.ResultModel
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Kết quả thanh toán";
+    ViewData["DataPage"] = "bookings";
+}
+
+<main class="page-shell booking-shell">
+  <div id="paymentResultRoot"></div>
+</main>
+
+@section Scripts {
+  <script type="module" src="~/js/html/payment-result.js" asp-append-version="true"></script>
+}

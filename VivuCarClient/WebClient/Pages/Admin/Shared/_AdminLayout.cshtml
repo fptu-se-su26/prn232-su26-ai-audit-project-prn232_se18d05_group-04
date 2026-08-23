@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - VivuCar Admin</title>
+    <link rel="icon" type="image/webp" href="~/logo.webp" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/animations.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin-tailwind.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="admin-is-booting min-h-[100dvh] bg-zinc-50 font-sans text-zinc-900 antialiased overflow-x-hidden" data-admin-page="@ViewData["AdminPage"]">
+<div class="app-shell">
+    <aside class="admin-sidebar" id="adminSidebar" data-admin-sidebar aria-label="Admin navigation">
+        <div class="flex items-center gap-2">
+            <a class="sidebar-brand min-w-0 flex-1" asp-page="/Admin/Dashboard" title="VivuCar Admin" data-sidebar-logo>
+                <img class="brand-mark" src="~/logo.webp" alt="" width="40" height="40" />
+                <span class="admin-sidebar-title"><span>VivuCar</span><span class="text-xs font-semibold text-zinc-500" data-admin-copy="console">Admin Console</span></span>
+            </a>
+            <button class="admin-sidebar-toggle" id="adminMenuButton" type="button" data-sidebar-collapse-toggle aria-controls="adminSidebar" aria-expanded="false" aria-label="Thu g&#7885;n sidebar"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-current"><path d="m15 18-6-6 6-6 1.4 1.4L11.8 12l4.6 4.6L15 18Z"/></svg></button>
+        </div>
+        <div class="admin-sidebar-search"><span class="admin-search-icon"><svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4 fill-current"><path d="m21 19.6-5.2-5.2a7 7 0 1 0-1.4 1.4l5.2 5.2 1.4-1.4ZM5 10a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z"/></svg></span><input id="adminPageSearch" class="pl-9" type="search" placeholder="T&#236;m ki&#7871;m..." aria-label="T&#236;m trong trang hi&#7879;n t&#7841;i"></div>
+        <nav class="sidebar-nav admin-primary-nav" aria-label="Admin navigation">
+            <a class="group @(ViewData["AdminPage"]?.ToString()=="dashboard"?"admin-nav-active":"")" asp-page="/Admin/Dashboard"><span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString()=="dashboard"?"admin-nav-icon-active":"")"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 19h16v2H2V3h2v16Zm3-3 4-5 3 3 5-7 2 1-6 9-4-3-3 4-1-2Z"/></svg></span><span class="admin-nav-label" data-admin-copy="dashboard">Dashboard doanh thu</span></a>
+            <a class="group @(ViewData["AdminPage"]?.ToString()=="users"?"admin-nav-active":"")" asp-page="/Admin/Users/Index"><span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString()=="users"?"admin-nav-icon-active":"")"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M16 11c1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3 1.3 3 3 3ZM8 11c1.7 0 3-1.3 3-3S9.7 5 8 5 5 6.3 5 8s1.3 3 3 3Zm0 2c-3 0-6 1.5-6 4v2h12v-2c0-2.5-3-4-6-4Z"/></svg></span><span class="admin-nav-label" data-admin-copy="users">Ng&#432;&#7901;i d&#249;ng</span></a>
+            <a class="group @(ViewData["AdminPage"]?.ToString()=="cars"?"admin-nav-active":"")" asp-page="/Admin/Cars/Index"><span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString()=="cars"?"admin-nav-icon-active":"")"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 11 1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11l2 1v6h-2v2h-3v-2H8v2H5v-2H3v-6l2-1Z"/></svg></span><span class="admin-nav-label" data-admin-copy="cars">Ph&#432;&#417;ng ti&#7879;n</span></a>
+            <a class="group @(ViewData["AdminPage"]?.ToString()=="vouchers"?"admin-nav-active":"")" asp-page="/Admin/Vouchers/Index"><span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString()=="vouchers"?"admin-nav-icon-active":"")"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 5h18v5a2 2 0 0 0 0 4v5H3v-5a2 2 0 0 0 0-4V5Zm6 2v10h2V7H9Z"/></svg></span><span class="admin-nav-label" data-admin-copy="vouchers">Voucher</span></a>
+            <div class="admin-nav-label mt-3 px-3 text-xs font-semibold uppercase tracking-wide text-zinc-400" data-admin-copy="moderation">Ki&#7875;m duy&#7879;t</div>
+            <a class="group admin-nav-child @(ViewData["AdminPage"]?.ToString()=="moderation-content"?"admin-nav-active":"")" asp-page="/Admin/Moderation/Content"><span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString()=="moderation-content"?"admin-nav-icon-active":"")"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 3h16a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-5l-3 3-3-3H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm7 4v5h2V7h-2Zm0 7v2h2v-2h-2Z"/></svg></span><span class="admin-nav-label" data-admin-copy="contentModeration">Ki&#7875;m duy&#7879;t n&#7897;i dung</span><span class="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700">1</span></a>
+            <a class="group admin-nav-child @(ViewData["AdminPage"]?.ToString()=="moderation-licenses"?"admin-nav-active":"")" asp-page="/Admin/Moderation/Licenses"><span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString()=="moderation-licenses"?"admin-nav-icon-active":"")"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 5h18v14H3V5Zm3 3v3h4V8H6Zm0 6v2h8v-2H6Zm10-6v2h3V8h-3Zm0 4v2h3v-2h-3Z"/></svg></span><span class="admin-nav-label" data-admin-copy="licenseModeration">Ki&#7875;m duy&#7879;t GPLX</span><span class="ml-auto rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700">1</span></a>
+            <a class="group @(ViewData["AdminPage"]?.ToString()=="reports"?"admin-nav-active":"")" asp-page="/Admin/Reports/Export"><span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString()=="reports"?"admin-nav-icon-active":"")"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 2h10l4 4v6h-2V8h-4V4H7v16h6v2H5V2Zm10 12h2v4l2-2 1.4 1.4L16 21.8l-4.4-4.4L13 16l2 2v-4Z"/></svg></span><span class="admin-nav-label" data-admin-copy="reports">Xu&#7845;t b&#225;o c&#225;o</span></a>
+            <a class="group @(ViewData["AdminPage"]?.ToString()=="trash"?"admin-nav-active":"")" asp-page="/Admin/Trash/Index"><span class="admin-nav-icon @(ViewData["AdminPage"]?.ToString()=="trash"?"admin-nav-icon-active":"")"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 4h10l1 2h3v2H3V6h3l1-2Zm-1 6h12l-1 11H7L6 10Zm3 2v6h2v-6H9Zm4 0v6h2v-6h-2Z"/></svg></span><span class="admin-nav-label" data-admin-copy="trash">Th&#249;ng r&#225;c</span></a>
+        </nav>
+        <div class="admin-account-shell">
+            <div id="adminAccountMenu" class="admin-account-menu" role="menu" aria-label="Tùy chọn tài khoản" hidden>
+                <a class="admin-account-menu-item" href="/admin/profile" role="menuitem">
+                    <span class="admin-account-menu-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0H5Z"/></svg></span>
+                    <span class="admin-account-item-copy" data-admin-copy="profile">Hồ sơ</span>
+                </a>
+                <button class="admin-account-menu-item" type="button" role="menuitem" data-admin-theme-toggle aria-pressed="false">
+                    <span class="admin-account-menu-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.5 0-1-.1-1.5A7 7 0 0 1 12 3Z"/></svg></span>
+                    <span class="admin-account-item-copy" data-admin-copy="theme">Giao diện</span>
+                    <small data-admin-theme-value>Sáng</small>
+                </button>
+                <button class="admin-account-menu-item" type="button" role="menuitem" data-admin-language-toggle>
+                    <span class="admin-account-menu-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm6.9 6h-3.1a15 15 0 0 0-1.4-3.2A8.1 8.1 0 0 1 18.9 8ZM12 4c.8 1 1.4 2.4 1.7 4h-3.4C10.6 6.4 11.2 5 12 4ZM4.3 14a8.4 8.4 0 0 1 0-4h3.4a17 17 0 0 0 0 4H4.3Zm.8 2h3.1a15 15 0 0 0 1.4 3.2A8.1 8.1 0 0 1 5.1 16Zm3.1-8H5.1a8.1 8.1 0 0 1 4.5-3.2A15 15 0 0 0 8.2 8ZM12 20c-.8-1-1.4-2.4-1.7-4h3.4c-.3 1.6-.9 3-1.7 4Zm2-6h-4a14 14 0 0 1 0-4h4a14 14 0 0 1 0 4Zm.4 5.2a15 15 0 0 0 1.4-3.2h3.1a8.1 8.1 0 0 1-4.5 3.2Zm1.9-5.2a17 17 0 0 0 0-4h3.4a8.4 8.4 0 0 1 0 4h-3.4Z"/></svg></span>
+                    <span class="admin-account-item-copy" data-admin-copy="language">Ngôn ngữ</span>
+                    <small data-admin-language-value>VI</small>
+                </button>
+                <div class="admin-account-menu-divider"></div>
+                <button class="admin-account-menu-item is-danger" type="button" role="menuitem" data-logout-trigger>
+                    <span class="admin-account-menu-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M10 17v-2h4V9h-4V7h6v10h-6Zm-1-3 1.4-1.4L8.8 11H3V9h5.8l1.6-1.6L9 6l-4 4 4 4Z"/></svg></span>
+                    <span class="admin-account-item-copy" data-admin-copy="logout">Đăng xuất</span>
+                </button>
+            </div>
+            <button id="adminAccountTrigger" class="admin-account-trigger" type="button" aria-haspopup="menu" aria-controls="adminAccountMenu" aria-expanded="false">
+                <span class="avatar shrink-0">
+                    <img id="adminAvatarImg" src="" alt="" class="w-full h-full object-cover rounded-full hidden" />
+                    <span id="adminAvatarText">A</span>
+                </span>
+                <span class="admin-nav-label min-w-0 flex-1">
+                    <span class="truncate text-sm font-semibold text-zinc-900">admin@vivucar.local</span>
+                    <small data-admin-copy="role">Quản trị viên</small>
+                </span>
+                <svg class="admin-account-trigger-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5-1.4-1.4-3.6 3.6-3.6-3.6L7 10Z"/></svg>
+            </button>
+        </div>
+    </aside>
+    <div class="main-shell">
+        <button class="icon-button menu-toggle fixed left-4 top-4 z-30 hidden max-lg:inline-grid" type="button" data-menu-toggle aria-label="Mở menu">☰</button>
+        <main class="content" id="mainContent">@RenderBody()</main>
+    </div>
+</div>
+<div class="modal-backdrop" id="logoutModal" role="dialog" aria-modal="true" aria-labelledby="logoutTitle" aria-hidden="true"><div class="modal" tabindex="-1"><div class="modal-header"><h2 id="logoutTitle">X&#225;c nh&#7853;n &#273;&#259;ng xu&#7845;t</h2><button class="icon-button" type="button" data-close-logout aria-label="&#272;&#243;ng">&#215;</button></div><p class="muted">B&#7841;n c&#243; ch&#7855;c mu&#7889;n &#273;&#259;ng xu&#7845;t kh&#7887;i VivuCar?</p><div class="modal-actions"><button class="btn btn-secondary" type="button" data-close-logout>H&#7911;y</button><button class="btn btn-danger" id="confirmLogout" type="button">&#272;&#259;ng xu&#7845;t</button></div></div></div>
+<script src="~/js/admin/tailwind-ui.js" asp-append-version="true"></script>
+<script>
+    window.VivuCarTailwindUI?.applyTailwind(document);
+    document.body.classList.remove("admin-is-booting");
+    // Suppress "Transition was skipped" — browser abort on navigation
+    window.addEventListener("unhandledrejection", e => {
+        if (e.reason?.name === "AbortError" || e.reason?.message?.includes("abort")) e.preventDefault();
+    });
+</script>
+<script type="module" src="~/js/admin/admin-layout.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required:false)
+</body>
+</html>

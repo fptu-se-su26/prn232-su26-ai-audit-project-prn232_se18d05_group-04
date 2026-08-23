@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+
+.vs/
+.env
+db.sql
+
+**/node_modules/

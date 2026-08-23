@@ -1,0 +1,227 @@
+@page
+@model WebClient.Pages.Owner.Incidents.DetailModel
+@{
+    ViewData["Title"] = "Chi tiết Sự cố";
+    ViewData["OwnerPage"] = "incidents";
+    
+}
+
+<div class="max-w-4xl mx-auto space-y-6 pb-12">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex items-center gap-4">
+            <a href="/Owner/Incidents/Index" class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-white border border-zinc-200 text-zinc-600 hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-colors">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            </a>
+            <div>
+                <div class="flex items-center gap-3">
+                    <h2 class="text-xl font-bold text-zinc-900">Sự cố <span id="incidentCode" class="font-mono">Đang tải...</span></h2>
+                    <span id="statusBadge"></span>
+                </div>
+                <p class="text-sm text-zinc-500 mt-1">Ngày tạo: <span id="createdAt">Đang tải...</span></p>
+            </div>
+        </div>
+        
+        <div id="actionButtons" class="flex items-center gap-3">
+            <!-- Dynamic action buttons -->
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="bg-white rounded-xl border border-zinc-200 p-6 shadow-sm">
+        <div class="mb-6">
+            <h3 id="incidentTitle" class="text-2xl font-bold text-zinc-900 mb-2">Đang tải...</h3>
+            <p id="incidentDesc" class="text-zinc-700 whitespace-pre-wrap"></p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-zinc-100">
+            <div>
+                <h4 class="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-3">Người báo cáo</h4>
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-full bg-zinc-100 text-zinc-600 flex items-center justify-center font-bold text-sm" id="customerAvatar">
+                        ?
+                    </div>
+                    <div>
+                        <p id="reportedBy" class="font-medium text-zinc-900"></p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-3">Chuyến xe liên quan</h4>
+                <a id="bookingLink" href="#" class="inline-flex items-center gap-3 p-3 w-full rounded-lg border border-zinc-200 hover:border-primary hover:bg-primary/5 transition-colors group">
+                    <div class="p-2 bg-primary/10 rounded text-primary">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                    </div>
+                    <div>
+                        <div class="text-sm font-medium text-zinc-900 group-hover:text-primary transition-colors">Xem chuyến thuê</div>
+                        <div class="text-xs text-zinc-500" id="bookingRef">Mã BK-</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Images -->
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50 flex justify-between items-center">
+            <h3 class="text-base font-semibold text-zinc-900">Hình ảnh đính kèm</h3>
+        </div>
+        <div class="p-6">
+            <div id="imageGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="col-span-full py-8 text-center text-zinc-500">Đang tải hình ảnh...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Update Status -->
+<div id="modalUpdate" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-zinc-900/50 backdrop-blur-sm transition-opacity"></div>
+    <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-zinc-200">
+                <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                        </div>
+                        <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+                            <h3 class="text-base font-semibold leading-6 text-zinc-900">Cập nhật trạng thái sự cố</h3>
+                            <div class="mt-4">
+                                <label class="block text-sm font-medium text-zinc-700 mb-1">Trạng thái mới</label>
+                                <select id="updateStatusInput" class="block w-full py-2 px-3 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm">
+                                    <option value="in_review">Đang xem xét (In Review)</option>
+                                    <option value="resolved">Đã giải quyết (Resolved)</option>
+                                    <option value="closed">Đóng (Closed)</option>
+                                </select>
+                                <p id="updateError" class="text-sm text-red-600 mt-2 hidden"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-zinc-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-zinc-200">
+                    <button type="button" id="btnConfirmUpdate" class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto">Cập nhật</button>
+                    <button type="button" onclick="document.getElementById('modalUpdate').classList.add('hidden')" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 hover:bg-zinc-50 sm:mt-0 sm:w-auto">Hủy bỏ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const incidentId = @Model.Id;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadIncidentDetail();
+            document.getElementById('btnConfirmUpdate').addEventListener('click', handleUpdateStatus);
+        });
+
+        async function loadIncidentDetail() {
+            try {
+                const response = await fetch(`/api/proxy/owner/incidents/${incidentId}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) return window.location.href = '/Index';
+                    throw new Error('Lỗi tải dữ liệu');
+                }
+
+                const data = await response.json();
+                renderDetail(data);
+                renderImages(data.images);
+            } catch (error) {
+                console.error(error);
+                window.VivuCarUtils.showToast('Lỗi tải chi tiết sự cố', 'error');
+            }
+        }
+
+        function renderDetail(data) {
+            document.getElementById('incidentCode').textContent = `INC-${data.id}`;
+            document.getElementById('createdAt').textContent = new Date(data.createdAt).toLocaleString('vi-VN');
+            document.getElementById('incidentTitle').textContent = data.title;
+            document.getElementById('incidentDesc').textContent = data.description;
+            
+            document.getElementById('reportedBy').textContent = data.reportedByName || 'Khách hàng';
+            if (data.reportedByName) {
+                document.getElementById('customerAvatar').textContent = data.reportedByName.charAt(0).toUpperCase();
+            }
+
+            document.getElementById('bookingLink').href = `/Owner/Bookings/Detail?id=${data.bookingId}`;
+            document.getElementById('bookingRef').textContent = `Mã đơn BK-${data.bookingId}`;
+
+            // Status Badge
+            const statusMap = {
+                'open': { label: 'Đang mở', color: 'bg-red-100 text-red-800' },
+                'in_review': { label: 'Đang xem xét', color: 'bg-yellow-100 text-yellow-800' },
+                'resolved': { label: 'Đã giải quyết', color: 'bg-green-100 text-green-800' },
+                'closed': { label: 'Đã đóng', color: 'bg-zinc-100 text-zinc-800' }
+            };
+            const sc = statusMap[data.status] || { label: data.status, color: 'bg-zinc-100 text-zinc-800' };
+            document.getElementById('statusBadge').innerHTML = `<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${sc.color}">${sc.label}</span>`;
+
+            // Actions
+            const actionsContainer = document.getElementById('actionButtons');
+            if (data.status !== 'closed' && data.status !== 'resolved') {
+                actionsContainer.innerHTML = `
+                    <button onclick="document.getElementById('modalUpdate').classList.remove('hidden')" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none transition-colors shadow-sm">
+                        Cập nhật trạng thái
+                    </button>
+                `;
+            } else {
+                actionsContainer.innerHTML = '';
+            }
+        }
+
+        function renderImages(images) {
+            const grid = document.getElementById('imageGrid');
+            if (!images || images.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-8 text-center text-zinc-400 italic">Không có hình ảnh đính kèm.</div>`;
+                return;
+            }
+
+            grid.innerHTML = images.map(img => `
+                <a href="${img.imageUrl}" target="_blank" class="group block relative rounded-lg overflow-hidden border border-zinc-200 aspect-w-4 aspect-h-3 bg-zinc-100">
+                    <img src="${img.imageUrl}" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300" alt="Incident Image" onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns%3D\\'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg\\' width%3D\\'100%25\\' height%3D\\'100%25\\'%3E%3Crect width%3D\\'100%25\\' height%3D\\'100%25\\' fill%3D\\'%23f4f4f5\\'%2F%3E%3Ctext x%3D\\'50%25\\' y%3D\\'50%25\\' fill%3D\\'%23a1a1aa\\' font-family%3D\\'sans-serif\\' font-size%3D\\'14\\' text-anchor%3D\\'middle\\' dominant-baseline%3D\\'middle\\'%3ELỗi tải ảnh%3C%2Ftext%3E%3C%2Fsvg%3E'" />
+                    ${img.caption ? `<div class="absolute bottom-0 left-0 right-0 bg-black/60 p-2 text-white text-xs truncate">${img.caption}</div>` : ''}
+                </a>
+            `).join('');
+        }
+
+        async function handleUpdateStatus() {
+            const status = document.getElementById('updateStatusInput').value;
+            const err = document.getElementById('updateError');
+            const btn = document.getElementById('btnConfirmUpdate');
+            
+            err.classList.add('hidden');
+            btn.disabled = true;
+            btn.textContent = 'Đang xử lý...';
+
+            try {
+                const res = await fetch(`/api/proxy/owner/incidents/${incidentId}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status })
+                });
+
+                if (!res.ok) {
+                    const errorObj = await res.json();
+                    throw new Error(errorObj.message || 'Lỗi cập nhật');
+                }
+
+                document.getElementById('modalUpdate').classList.add('hidden');
+                window.VivuCarUtils.showToast('Cập nhật trạng thái thành công', 'success');
+                loadIncidentDetail();
+            } catch (error) {
+                err.textContent = error.message;
+                err.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Cập nhật';
+            }
+        }
+    </script>
+}

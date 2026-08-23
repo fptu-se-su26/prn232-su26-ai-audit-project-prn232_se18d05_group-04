@@ -1,0 +1,46 @@
+<nav style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,0,0,.06)">
+    <div style="max-width:1280px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between">
+        <!-- Logo -->
+        <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+            <img src="/logo.webp" alt="VivuCar" style="height:32px;width:auto;display:block" />
+            <span style="font-size:1.1rem;font-weight:800;color:#18181b;letter-spacing:-.02em">VivuCar</span>
+        </a>
+
+        <!-- Nav links -->
+        <div class="md-flex" style="align-items:center;gap:32px">
+            <a href="/" style="font-size:.9375rem;font-weight:600;color:#52525b;text-decoration:none;transition:color .15s">Home</a>
+            <a href="/cars" style="font-size:.9375rem;font-weight:600;color:#52525b;text-decoration:none;transition:color .15s">Cars</a>
+            <a href="/Booking/MyBookings" style="font-size:.9375rem;font-weight:600;color:#52525b;text-decoration:none;transition:color .15s">Đơn hàng</a>
+        </div>
+
+        <!-- Auth state -->
+        <div style="display:flex;align-items:center;gap:12px">
+            <div id="navGuestState" class="hidden">
+                <a id="navLoginBtn" href="/Login" style="display:inline-block;padding:8px 20px;background:#16a34a;color:#fff;font-size:.8125rem;font-weight:600;border-radius:10px;text-decoration:none;transition:background .2s">Đăng nhập</a>
+            </div>
+            <div id="navUserState" style="position:relative" class="nav-user-group hidden">
+                <button style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:10px;transition:background .15s" id="navUserMenuBtn">
+                    <span id="navUserName" style="font-size:.8125rem;font-weight:600;color:#18181b"></span>
+                    <div style="width:32px;height:32px;border-radius:50%;background:#f0f0f0;border:1px solid #e6e4df;display:flex;align-items:center;justify-content:center;overflow:hidden">
+                        <img id="navUserAvatar" src="" style="width:100%;height:100%;object-fit:cover" class="hidden" />
+                        <span id="navUserInitials" style="font-size:.8125rem;font-weight:700;color:#a1a1aa"></span>
+                    </div>
+                </button>
+                <!-- Dropdown -->
+                <div style="position:absolute;right:0;top:calc(100% + 8px);width:180px;background:#fff;border:1px solid #e6e4df;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.1);opacity:0;visibility:hidden;transition:all .2s;z-index:100" class="nav-dropdown">
+                    <div style="padding:6px">
+                        <a href="/profile" style="display:block;padding:8px 12px;font-size:.8125rem;color:#52525b;text-decoration:none;border-radius:8px;transition:background .15s">Hồ sơ</a>
+                        <button id="navLogoutBtn" style="display:block;width:100%;text-align:left;padding:8px 12px;font-size:.8125rem;color:#ef4444;background:none;border:none;border-radius:8px;cursor:pointer;transition:background .15s">Đăng xuất</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+    .md-flex { display: none; }
+    @@media (min-width: 768px) { .md-flex { display: flex; } }
+    .nav-user-group:hover .nav-dropdown { opacity: 1; visibility: visible; }
+</style>
+<script type="module" src="~/js/shared/navbar.js"></script>

@@ -1,0 +1,18 @@
+@page "{id?}"
+@model VivuCarClient.WebClient.Pages.Booking.DetailModel
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Chi tiết đơn thuê";
+    ViewData["DataPage"] = "bookings";
+}
+
+<main class="page-shell booking-shell">
+  <div id="breadcrumbMount"></div>
+  <section id="bookingDetailRoot"></section>
+</main>
+
+@section Scripts {
+  <script type="module" src="~/js/html/booking-cancellation.js" asp-append-version="true"></script>
+  <script type="module" src="~/js/html/booking-detail.js" asp-append-version="true"></script>
+  <script src="~/js/html/ai-chatbot-widget.js" asp-append-version="true"></script>
+}

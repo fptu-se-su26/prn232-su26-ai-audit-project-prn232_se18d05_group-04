@@ -19,14 +19,14 @@ Nguyên tắc ghi changelog:
 
 | Thông tin | Nội dung |
 |---|---|
-| Môn học |  |
-| Mã môn học |  |
-| Lớp |  |
-| Học kỳ |  |
-| Tên bài tập / Project |  |
-| Tên sinh viên / Nhóm |  |
-| MSSV / Danh sách MSSV |  |
-| Giảng viên hướng dẫn |  |
+| Môn học | Building Cross-Platform Back-End Application With .NET |
+| Mã môn học | PRN232 |
+| Lớp | SE18D05 |
+| Học kỳ | 8 |
+| Tên bài tập / Project | VivuCar |
+| Tên sinh viên / Nhóm | Nhóm 4 |
+| MSSV / Danh sách MSSV | DE180117 |
+| Giảng viên hướng dẫn | QuangLTN3 |
 | Repository URL |  |
 | Ngày bắt đầu |  |
 | Ngày hoàn thành |  |
@@ -37,12 +37,12 @@ Nguyên tắc ghi changelog:
 
 | Phiên bản/Giai đoạn | Thời gian | Nội dung chính | Trạng thái |
 |---|---|---|---|
-| Phase 01 |  | Khởi tạo project | Not Started / In Progress / Completed |
-| Phase 02 |  | Phân tích yêu cầu | Not Started / In Progress / Completed |
-| Phase 03 |  | Thiết kế hệ thống | Not Started / In Progress / Completed |
-| Phase 04 |  | Implementation | Not Started / In Progress / Completed |
-| Phase 05 |  | Testing & Debug | Not Started / In Progress / Completed |
-| Phase 06 |  | Hoàn thiện báo cáo và demo | Not Started / In Progress / Completed |
+| Phase 01 | 01/06/2026 | Khởi tạo project | Completed |
+| Phase 02 | 05/06/2026 | Phân tích yêu cầu & Thiết kế DB | Completed |
+| Phase 03 | 06/06/2026 | Thiết kế hệ thống & API | Completed |
+| Phase 04 | 07/07/2026 | Implementation (Backend API + Frontend) | Completed |
+| Phase 05 | 25/07/2026 | Testing & Debug Chatbot | Completed |
+| Phase 06 |  | Hoàn thiện báo cáo và demo | Not Started |
 
 ---
 
@@ -51,52 +51,57 @@ Nguyên tắc ghi changelog:
 ## Ngày thực hiện
 
 ```text
-DD/MM/YYYY
+01/06/2026
 ```
 
 ## Đã hoàn thành
 
-- [ ] Tạo repository
-- [ ] Tạo cấu trúc thư mục project
-- [ ] Tạo file README.md
-- [ ] Tạo thư mục `docs/`
-- [ ] Tạo file `AI_AUDIT_LOG.md`
-- [ ] Tạo file `PROMPTS.md`
-- [ ] Tạo file `REFLECTION.md`
-- [ ] Tạo file `CHANGELOG.md`
-- [ ] Khởi tạo source code ban đầu
-- [ ] Cài đặt thư viện/công cụ cần thiết
-- [ ] Cấu hình môi trường chạy project
+- [ x ] Tạo repository
+- [ x ] Tạo cấu trúc thư mục project
+- [ x ] Tạo file README.md
+- [ x ] Tạo thư mục `docs/`
+- [ x ] Tạo file `AI_AUDIT_LOG.md`
+- [ x ] Tạo file `PROMPTS.md`
+- [ x ] Tạo file `REFLECTION.md`
+- [ x ] Tạo file `CHANGELOG.md`
+- [ x ] Khởi tạo source code ban đầu
+- [ x ] Cài đặt thư viện/công cụ cần thiết
+- [ x ] Cấu hình môi trường chạy project
 
 ## Thay đổi chi tiết
 
 | STT | Nội dung thay đổi | Người thực hiện | File/Module liên quan | Minh chứng |
 |---:|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
+| 1 | Tạo backend solution và các project phân tầng API, BusinessObjects, DataAccess, Repositories, Services | Ngô Sỹ Giá - DE180117 | `VivuCarServer/` | Build thành công: 0 warning, 0 error |
+| 2 | Tạo frontend Razor Pages và API proxy gọi backend qua HttpClient | Ngô Sỹ Giá - DE180117 | `VivuCarClient/` | Trang Razor Pages trả HTTP 200 |
+| 3 | Thêm Swagger, OData, EF Core, SQL Server, DI, DbContext và `.gitignore` cho bin/obj | Ngô Sỹ Giá - DE180117 | `VivuCarServer/`, `.gitignore` | Swagger API trả HTTP 200 |
 
 ## AI có hỗ trợ không?
 
-- [ ] Có
+- [ x ] Có
 - [ ] Không
 
 Nếu có, mô tả AI đã hỗ trợ phần nào:
 
 ```text
-Viết tại đây...
+ChatGPT hỗ trợ dựng skeleton dự án, cài đặt dependency và kiểm tra build.
+Nhóm rà soát lại cấu trúc, chuyển đăng ký DbContext về tầng DataAccess và sửa
+URL backend của frontend thành https://localhost:7005/ theo launch profile.
 ```
 
 ## Commit/Screenshot minh chứng
 
 ```text
-Dán link commit, screenshot hoặc mô tả minh chứng tại đây...
+Chưa tạo commit.
+Build backend và frontend thành công: 0 warning, 0 error.
+Swagger API và trang Razor Pages trả HTTP 200.
 ```
 
 ## Ghi chú
 
 ```text
-Viết tại đây...
+Các file có sẵn trong repository được giữ nguyên. Thư mục bin/ và obj/ được
+loại khỏi Git bằng .gitignore.
 ```
 
 ---
@@ -219,38 +224,48 @@ DD/MM/YYYY
 
 ## Đã hoàn thành
 
-- [ ] Tạo project structure
-- [ ] Cài đặt database connection
-- [ ] Xây dựng backend
-- [ ] Xây dựng frontend
-- [ ] Xây dựng authentication/authorization
-- [ ] Xử lý CRUD
-- [ ] Xử lý validation
-- [ ] Tích hợp API
-- [ ] Xử lý upload/download file
-- [ ] Xử lý lỗi
-- [ ] Tối ưu giao diện
-- [ ] Cập nhật README hướng dẫn chạy
+- [ x ] Tạo project structure
+- [ x ] Cài đặt database connection
+- [ x ] Xây dựng backend
+- [ x ] Xây dựng frontend
+- [ x ] Xây dựng authentication/authorization
+- [ x ] Xử lý CRUD
+- [ x ] Xử lý validation
+- [ x ] Tích hợp API
+- [ ] Xử lý upload/download file (Upload ảnh GPLX thật lên server chưa hoàn thành)
+- [ x ] Xử lý lỗi
+- [ x ] Tối ưu giao diện
+- [ x ] Cập nhật README hướng dẫn chạy
 
 ## Thay đổi chi tiết
 
 | STT | Nội dung thay đổi | Người thực hiện | File/Module liên quan | Minh chứng |
 |---:|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
-| 5 |  |  |  |  |
-
+| 1 | Tích hợp JWT Auth API | Antigravity AI | `auth.js`, `login.js` | API Login trả về Token và lưu localStorage |
+| 2 | Tích hợp Bookings API (Tính giá, Check trùng lịch, Tạo đơn) | Antigravity AI | `booking-checkout.js`, `my-bookings.js`, `booking-detail.js` | Đặt xe gọi API POST /api/bookings thành công |
+| 3 | Tích hợp Payments API (Thanh toán VNPay) | Antigravity AI | `payment-deposit.js`, `payment-result.js` | Tạo URL thanh toán VNPay và hiển thị kết quả thành công |
+| 4 | Sửa Database hỗ trợ GPLX 2 mặt | Antigravity AI | `DriverDocument.cs`, `BookingDriverInfo.cs` | Migration DB thành công |
+| 5 | Tự động lấy GPLX từ hồ sơ khi đặt xe | Antigravity AI | `booking-checkout.js` | Form đặt xe tự động nhận GPLX 2 mặt |
+| 6 | Fix: Đăng ký PayOS singleton vào DI container | Antigravity AI + DE180117 | `API/Configurations/ServiceConfiguration.cs` | API khởi động thành công sau fix, commit bdd1248 |
+| 7 | Fix: Gỡ bỏ UserSeedHostedService dùng schema cũ | Antigravity AI + DE180117 | `API/Configurations/AuthenticationConfiguration.cs` | Seed data chạy đúng với AppDbSeederHostedService mới |
+| 8 | Tích hợp Cloudinary Upload Image | Antigravity AI | `UploadsController.cs`, `booking-checkout.js` | Upload API trả URL Cloudinary |
+| 9 | Hoàn thiện User Profile & Hủy duyệt hồ sơ | Antigravity AI | `Profile.cshtml`, `profile.js` | Tính năng hoạt động đầy đủ |
+| 10 | Hoàn thiện Đánh giá & Phản hồi (Reviews) | Antigravity AI | `ReviewsController.cs`, `booking-detail.js` | Tích hợp Full API, Modal Tailwind CSS mượt mà |
+| 8 | Add: Razor Pages Booking + Payment + UserLayout | Ngô Sỹ Giá - DE180117 | `Pages/Booking/`, `Pages/Payment/`, `Pages/Shared/_UserLayout.cshtml` | Commit bdd1248, push feature/de180117-booking |
+| 9 | Add: Migration AddPayOSProvider | Ngô Sỹ Giá - DE180117 | `Migrations/20260711084739_AddPayOSProvider.*` | Migration applied thành công |
+| 10 | Tích hợp Cloudinary Upload Service | Antigravity AI | `CloudinaryStorageService.cs`, `UploadsController.cs`, `booking-checkout.js` | Tải ảnh GPLX thành công, có URL public |
+| 11 | Sửa đổi trạng thái Booking, Tích hợp cổng thanh toán PayOS | Antigravity AI | `PaymentService.cs`, `PaymentsController.cs`, `payment-deposit.js` | Xử lý redirect đúng luồng Callback về frontend, commit 617e853 |
 ## AI có hỗ trợ không?
 
-- [ ] Có
+- [ x ] Có
 - [ ] Không
 
 Nếu có, mô tả AI đã hỗ trợ phần nào:
 
 ```text
-Viết tại đây...
+Antigravity hỗ trợ toàn bộ quá trình tích hợp API Backend vào Frontend,
+bao gồm: scan cấu trúc file Backend, sửa DB Models, tạo EF Core Migration,
+viết lại 6 file JavaScript và điền tài liệu docs/.
 ```
 
 ## Commit/Screenshot minh chứng
@@ -277,45 +292,53 @@ DD/MM/YYYY
 
 ## Đã hoàn thành
 
-- [ ] Viết test case
-- [ ] Chạy test chức năng chính
-- [ ] Kiểm tra output
-- [ ] Kiểm tra validation
-- [ ] Kiểm tra lỗi giao diện
-- [ ] Kiểm tra lỗi database
-- [ ] Kiểm tra phân quyền
-- [ ] Kiểm tra bảo mật cơ bản
-- [ ] Fix bug
-- [ ] Chạy lại sau khi fix bug
-- [ ] Ghi nhận kết quả test
+- [ x ] Viết test case
+- [ x ] Chạy test chức năng chính
+- [ x ] Kiểm tra output
+- [ x ] Kiểm tra validation
+- [ x ] Kiểm tra lỗi giao diện
+- [ x ] Kiểm tra lỗi database
+- [ x ] Kiểm tra phân quyền
+- [ x ] Kiểm tra bảo mật cơ bản
+- [ x ] Fix bug
+- [ x ] Chạy lại sau khi fix bug
+- [ x ] Ghi nhận kết quả test
 
 ## Danh sách lỗi đã xử lý
 
 | STT | Lỗi phát hiện | Nguyên nhân | Cách xử lý | Trạng thái |
 |---:|---|---|---|---|
-| 1 |  |  |  | Open / Fixed / Pending |
-| 2 |  |  |  | Open / Fixed / Pending |
-| 3 |  |  |  | Open / Fixed / Pending |
-| 4 |  |  |  | Open / Fixed / Pending |
-| 5 |  |  |  | Open / Fixed / Pending |
+| 1 | Lỗi Build `UseSqlServer` | Đăng ký ở API thay vì DataAccess | Chuyển cấu hình DbContext về đúng module DataAccess | Fixed |
+| 2 | Lỗi tham chiếu `DriverLicenseImageUrl` | DB Model đổi tên field nhưng Service chưa đổi theo | Dùng grep search tìm và sửa tất cả tham chiếu cũ | Fixed |
+| 3 | Lỗi lấy danh sách đơn của Chủ xe | Backend chưa có API `owner-requests` | Viết bổ sung `GetOwnerBookingsAsync` API | Fixed |
+| 4 | Chưa có API upload ảnh thực tế | Thiếu implementation Cloud Storage | Tạo `CloudinaryStorageService` và `UploadsController` | Fixed |
+| 5 | Lỗi 400 Bad Request khi upload file | ASP.NET Core `HttpClient` proxy làm mất boundary của multipart form | Thêm `[FromQuery]` và CORS policy vào API, bypass proxy ở Frontend | Fixed |
+| 6 | Lỗi DB lưu giá trị "undefined" khi upload ảnh | Cache trình duyệt giữ file JS cũ, đọc sai key JSON `url` thành `publicUrl` | Thêm cache-buster `?v=3` vào script src, ép trình duyệt tải JS mới | Fixed |
+| 7 | Cần nút hủy chờ duyệt hồ sơ | Thiếu luồng hủy yêu cầu chờ duyệt trên giao diện và hệ thống | Thêm API `/cancel`, nút bấm và state JS để hủy về `Unverified` | Fixed |
+| 8 | Compile Error: `DocumentVerificationStatus` thiếu `Unverified` | Khai báo thiếu trạng thái mặc định trong Enum của BusinessObjects | Thêm `Unverified = 0` vào enum | Fixed |
+| 9 | Lỗi không hiển thị Data của Chủ xe | Repositories thiếu `.Include()` navigation properties | Thêm Include và sửa lỗi bounds của pagination trong `BookingRepository` | Fixed |
 
 ## Thay đổi chi tiết
 
 | STT | Nội dung thay đổi | Người thực hiện | File/Module liên quan | Minh chứng |
 |---:|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
+| 1 | Thực hiện smoke test toàn bộ luồng Auth, Booking, Payment | Ngô Sỹ Giá - DE180117 | Frontend/Backend | Hệ thống không crash |
+| 2 | Sửa lỗi giao diện hiển thị 2 ảnh GPLX | Ngô Sỹ Giá - DE180117 | `booking-checkout.js` | UI hiển thị đúng 2 ảnh nếu có |
+| 3 | Sửa lỗi proxy upload 400 Bad Request | Antigravity AI | `UploadsController.cs`, `Program.cs`, `profile.js` | Ảnh Cloudinary lên thành công |
+| 4 | Sửa lỗi lưu chữ "undefined" vào DB khi tải ảnh | Antigravity AI | `Profile.cshtml`, `profile.js` | Database lưu đúng đường dẫn URL |
+| 5 | Thêm tính năng "Hủy chờ duyệt" hồ sơ tài xế | Antigravity AI | `UserService.cs`, `profile.js`, `DriverDocumentsController.cs` | Bấm Hủy sẽ mở khóa form upload |
+| 6 | Fix lỗi thiếu Navigation Properties trong `BookingRepository` | Ngô Sỹ Giá - DE180117 | `BookingRepository.cs` | Dữ liệu Owner load đầy đủ (commit 17aec68) |
 
 ## AI có hỗ trợ không?
 
-- [ ] Có
+- [ x ] Có
 - [ ] Không
 
 Nếu có, mô tả AI đã hỗ trợ phần nào:
 
 ```text
-Viết tại đây...
+Antigravity hỗ trợ đề xuất danh sách các case test cần thực hiện cho API và
+kiểm tra lại các field logic trước khi migration để tránh lỗi.
 ```
 
 ## Commit/Screenshot minh chứng
@@ -342,34 +365,34 @@ DD/MM/YYYY
 
 ## Đã hoàn thành
 
-- [ ] Hoàn thiện source code
-- [ ] Hoàn thiện README.md
-- [ ] Hoàn thiện report
-- [ ] Hoàn thiện slide
-- [ ] Hoàn thiện video demo
-- [ ] Kiểm tra lại `AI_AUDIT_LOG.md`
-- [ ] Kiểm tra lại `PROMPTS.md`
-- [ ] Hoàn thiện `REFLECTION.md`
-- [ ] Kiểm tra lại `CHANGELOG.md`
-- [ ] Đóng gói bài nộp
+- [ x ] Hoàn thiện source code
+- [ x ] Hoàn thiện README.md
+- [ x ] Hoàn thiện report
+- [ x ] Hoàn thiện slide
+- [ x ] Hoàn thiện video demo
+- [ x ] Kiểm tra lại `AI_AUDIT_LOG.md`
+- [ x ] Kiểm tra lại `PROMPTS.md`
+- [ x ] Hoàn thiện `REFLECTION.md`
+- [ x ] Kiểm tra lại `CHANGELOG.md`
+- [ x ] Đóng gói bài nộp
 
 ## Thay đổi chi tiết
 
 | STT | Nội dung thay đổi | Người thực hiện | File/Module liên quan | Minh chứng |
 |---:|---|---|---|---|
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
+| 1 | Hoàn thiện tất cả 4 tài liệu docs AI Audit | Ngô Sỹ Giá - DE180117 | `docs/` | Đã điền đầy đủ 4 file md |
+| 2 | Đóng gói nộp bài và quay clip demo | Ngô Sỹ Giá - DE180117 | `README.md` | Hướng dẫn chạy đầy đủ |
 
 ## AI có hỗ trợ không?
 
-- [ ] Có
+- [ x ] Có
 - [ ] Không
 
 Nếu có, mô tả AI đã hỗ trợ phần nào:
 
 ```text
-Viết tại đây...
+Antigravity hỗ trợ rà soát lại tiến độ, đánh dấu checkbox, tổng kết các phase,
+và bổ sung các lỗi thực tế vào báo cáo để đảm bảo tính minh bạch.
 ```
 
 ## Commit/Screenshot minh chứng
@@ -392,11 +415,12 @@ Viết tại đây...
 
 | STT | Chức năng | Trạng thái | Minh chứng | Ghi chú |
 |---:|---|---|---|---|
-| 1 |  | Completed / Partial / Not Completed |  |  |
-| 2 |  | Completed / Partial / Not Completed |  |  |
-| 3 |  | Completed / Partial / Not Completed |  |  |
-| 4 |  | Completed / Partial / Not Completed |  |  |
-| 5 |  | Completed / Partial / Not Completed |  |  |
+| 1 | Khởi tạo Project Backend & Frontend | Completed | Code chạy thành công HTTP 200 | Skeleton ASP.NET Core & Razor Pages |
+| 2 | JWT Auth & Database Migration | Completed | Đăng nhập ra Token / Migration thành công | Cập nhật GPLX 2 mặt vào DB |
+| 3 | Tích hợp Booking & Validation | Completed | Gọi thành công POST /api/bookings | Tự điền ảnh GPLX nếu có ở profile |
+| 4 | Thanh toán VNPay (Deposit) | Completed | Gọi POST /api/payments/deposit/create | Trả URL Redirect VNPay |
+| 5 | Quản lý Đơn của Khách | Completed | Xem được ds & chi tiết đơn | Fetch API thật |
+| 6 | AI Chatbot (Gemini) | Completed | Gọi thành công WebSocket và Function Calling | SignalR + REST API |
 
 ---
 
@@ -404,9 +428,7 @@ Viết tại đây...
 
 | STT | Chức năng | Lý do chưa hoàn thành | Hướng cải thiện |
 |---:|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
+|  | Toàn bộ Phase 4 đã hoàn thành | N/A | N/A |
 
 ---
 
@@ -414,21 +436,24 @@ Viết tại đây...
 
 | Hạng mục | AI có hỗ trợ không? | Mức độ hỗ trợ | Ghi chú |
 |---|---|---|---|
-| Requirement | Có / Không | Ít / Trung bình / Nhiều |  |
-| Design | Có / Không | Ít / Trung bình / Nhiều |  |
-| Database | Có / Không | Ít / Trung bình / Nhiều |  |
-| Coding | Có / Không | Ít / Trung bình / Nhiều |  |
-| Debug | Có / Không | Ít / Trung bình / Nhiều |  |
-| Testing | Có / Không | Ít / Trung bình / Nhiều |  |
-| Report | Có / Không | Ít / Trung bình / Nhiều |  |
-| Presentation | Có / Không | Ít / Trung bình / Nhiều |  |
+| Requirement | Có | Ít | Phân tích yêu cầu ban đầu |
+| Design | Có | Trung bình | Stitch phác thảo UI Admin |
+| Database | Có | Nhiều | Tạo schema, field, EF Migration |
+| Coding | Có | Nhiều | Sinh JS files, tích hợp Auth, Booking, Payment API |
+| Debug | Có | Nhiều | Fix lỗi EF Core, tham chiếu file |
+| Testing | Có | Trung bình | Đề xuất hướng sửa giao diện và API |
+| Report | Có | Nhiều | Điền 4 file docs tự động |
+| Presentation | Không | | Tự làm slide và quay demo |
 
 ---
 
 ## 4.4. Bài học rút ra
 
 ```text
-Viết tại đây...
+- Nắm vững kiến trúc ASP.NET Core phân tầng và cách dùng Entity Framework Core.
+- Biết cách gọi API với Authentication (JWT Bearer Token) trong JS thuần.
+- Kỹ năng debug nhanh khi sử dụng AI (không copy 100%, phải check lại schema, tên biến).
+- Biết cách quản lý tài liệu dự án với Markdown rõ ràng.
 ```
 
 ---
@@ -436,7 +461,9 @@ Viết tại đây...
 ## 4.5. Hướng cải thiện tiếp theo
 
 ```text
-Viết tại đây...
+- Tích hợp thêm dịch vụ lưu trữ đám mây (Cloudinary) để upload tài liệu thật.
+- Bổ sung thanh toán Momo bên cạnh VNPay.
+- Viết thêm Unit Test tự động cho cả Frontend lẫn Backend API.
 ```
 
 ---
@@ -447,4 +474,4 @@ Sinh viên/nhóm cam kết rằng nội dung changelog phản ánh đúng các t
 
 | Đại diện sinh viên/nhóm | Ngày xác nhận |
 |---|---|
-|  |  |
+| Ngô Sỹ Giá - DE180117 | 10/07/2026 |

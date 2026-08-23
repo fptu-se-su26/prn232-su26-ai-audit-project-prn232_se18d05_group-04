@@ -1,0 +1,148 @@
+@page "/admin/dashboard"
+@model WebClient.Pages.Admin.DashboardModel
+@{
+    ViewData["Title"] = "Dashboard doanh thu";
+    ViewData["AdminPage"] = "dashboard";
+}
+
+<div class="revenue-dashboard" data-admin-dashboard-page>
+    <header class="revenue-page-heading">
+        <div>
+            <h1>Dashboard doanh thu</h1>
+            <p>Theo dõi tiền đã thu, tiến độ thanh toán và hiệu quả đơn hàng của VivuCar.</p>
+        </div>
+        <p id="selectedRangeText" class="revenue-period" aria-live="polite">Đang tải khoảng thời gian…</p>
+    </header>
+
+    <section class="revenue-filter-bar" aria-labelledby="revenueFilterTitle">
+        <div class="revenue-filter-copy">
+            <h2 id="revenueFilterTitle">Khoảng báo cáo</h2>
+            <p>Toàn bộ chỉ số bên dưới dùng cùng một khoảng ngày.</p>
+        </div>
+        <div class="revenue-filter-controls">
+            <div id="revenueRangeButtons" class="revenue-quick-ranges" aria-label="Khoảng thời gian nhanh"></div>
+            <label class="revenue-more-range">
+                <span class="sr-only">Chọn khoảng thời gian khác</span>
+                <select id="revenueRangeMore" aria-label="Khoảng thời gian khác"></select>
+            </label>
+        </div>
+        <div id="customRangePanel" class="revenue-custom-range" hidden>
+            <label>
+                <span>Ngày bắt đầu</span>
+                <input id="customStartDate" type="date" />
+            </label>
+            <label>
+                <span>Ngày kết thúc</span>
+                <input id="customEndDate" type="date" />
+            </label>
+            <button id="applyCustomRange" class="revenue-primary-button" type="button">Áp dụng</button>
+            <p id="customRangeError" class="revenue-field-error" role="alert" hidden></p>
+        </div>
+    </section>
+
+    <section class="revenue-kpi-strip" aria-label="Chỉ số doanh thu chính">
+        <article class="revenue-kpi revenue-kpi-primary">
+            <span>Doanh thu đã thu</span>
+            <strong id="successfulRevenue" class="revenue-metric-value">0 đ</strong>
+            <small id="successfulOrderCount">0 đơn đã thanh toán</small>
+        </article>
+        <article class="revenue-kpi">
+            <span>Đơn hoàn tất</span>
+            <strong id="completedOrders" class="revenue-metric-value">0 đơn</strong>
+            <small id="completedOrdersHint">Trong khoảng đang chọn</small>
+        </article>
+        <article class="revenue-kpi">
+            <span>Trung bình / đơn đã thu</span>
+            <strong id="averageOrderValue" class="revenue-metric-value">0 đ</strong>
+            <small>Doanh thu đã thu chia số đơn có thanh toán</small>
+        </article>
+    </section>
+
+    <section class="revenue-chart-grid">
+        <article class="revenue-panel revenue-chart-panel" aria-labelledby="revenueChartTitle">
+            <div class="revenue-panel-heading">
+                <div>
+                    <h2 id="revenueChartTitle">Cơ cấu giá trị đơn theo thời gian</h2>
+                    <p id="revenueChartDescription">Tiền đã thu và giá trị còn chờ thanh toán theo kỳ.</p>
+                </div>
+                <div class="revenue-chart-meta">
+                    <span id="chartGranularityBadge" class="revenue-chip">Theo tuần</span>
+                    <span id="revenueRangeBadge" class="revenue-chip revenue-chip-accent">Tháng này</span>
+                </div>
+            </div>
+            <div id="revenueChartLegend" class="revenue-chart-legend" aria-label="Chú thích biểu đồ">
+                <span><i class="is-paid"></i>Đã thu</span>
+                <span><i class="is-pending"></i>Chờ thanh toán</span>
+                <span><i class="is-cancelled"></i>Giá trị đơn đã hủy</span>
+            </div>
+            <p id="chartTextSummary" class="sr-only"></p>
+            <div id="monthlyRevenueChart" class="revenue-chart-host" aria-live="polite"></div>
+        </article>
+
+        <article class="revenue-panel revenue-donut-panel" aria-labelledby="paymentStateTitle">
+            <div class="revenue-panel-heading">
+                <div>
+                    <h2 id="paymentStateTitle">Tình trạng thu tiền theo đơn</h2>
+                    <p>Mỗi đơn chỉ thuộc một nhóm để tỷ lệ không bị trùng.</p>
+                </div>
+            </div>
+            <div class="revenue-donut-content">
+                <div id="orderStatusDonut" class="revenue-donut" role="img" aria-label="Chưa có đơn hàng">
+                    <div class="revenue-donut-center">
+                        <span>Tổng đơn</span>
+                        <strong id="totalOrders">0</strong>
+                    </div>
+                </div>
+                <div id="orderStatusLegend" class="revenue-donut-legend"></div>
+            </div>
+        </article>
+    </section>
+
+    <section class="revenue-panel revenue-orders-panel" aria-labelledby="orderDetailTitle">
+        <div class="revenue-panel-heading revenue-orders-heading">
+            <div>
+                <h2 id="orderDetailTitle">Chi tiết đơn hàng</h2>
+                <p>Trạng thái đơn và thanh toán được tách riêng, không dùng nhãn mơ hồ.</p>
+            </div>
+            <span id="orderDetailCount" class="revenue-chip">0 đơn</span>
+        </div>
+        <div class="revenue-table-toolbar" aria-label="Lọc danh sách đơn hàng">
+            <label class="revenue-search-field">
+                <span class="sr-only">Tìm đơn hàng</span>
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m21 19.6-5.2-5.2a7 7 0 1 0-1.4 1.4l5.2 5.2 1.4-1.4ZM5 10a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z"/></svg>
+                <input id="orderSearch" type="search" placeholder="Tìm mã đơn hoặc khách hàng" autocomplete="off" />
+            </label>
+            <label>
+                <span class="sr-only">Trạng thái đơn</span>
+                <select id="orderBookingStatus" aria-label="Trạng thái đơn">
+                    <option value="">Mọi trạng thái đơn</option>
+                    <option value="pending">Chờ xử lý</option>
+                    <option value="approved">Đã xác nhận</option>
+                    <option value="completed">Hoàn tất</option>
+                    <option value="rejected">Đã từ chối</option>
+                    <option value="cancelled">Đã hủy</option>
+                </select>
+            </label>
+            <label>
+                <span class="sr-only">Trạng thái thanh toán</span>
+                <select id="orderPaymentStatus" aria-label="Trạng thái thanh toán">
+                    <option value="">Mọi trạng thái thanh toán</option>
+                    <option value="pending">Chờ thanh toán</option>
+                    <option value="success">Đã thanh toán</option>
+                    <option value="failed">Thanh toán thất bại</option>
+                    <option value="refunded">Đã hoàn tiền</option>
+                </select>
+            </label>
+            <a id="exportRevenueReport" class="revenue-export-button" href="/admin/reports/export">Xuất báo cáo</a>
+        </div>
+        <div id="orderDetailTable" aria-live="polite"></div>
+        <nav id="orderPagination" class="revenue-pagination" aria-label="Phân trang đơn hàng"></nav>
+    </section>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-dashboard.css" asp-append-version="true" />
+}
+@section Scripts {
+    <script type="module" src="~/js/admin/dashboard.js" asp-append-version="true"></script>
+}

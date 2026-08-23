@@ -1,0 +1,109 @@
+@page "/admin/moderation/licenses"
+@model WebClient.Pages.Admin.Moderation.LicensesModel
+@{
+    ViewData["Title"] = "Kiểm duyệt GPLX";
+    ViewData["AdminPage"] = "moderation-licenses";
+}
+<div data-admin-licenses-page>
+
+<div class="page-heading">
+          <div>
+            <h1>Kiểm duyệt GPLX</h1>
+            <p>Duyệt giấy phép lái xe từ bảng `user_documents`, không trộn vào tab Người dùng.</p>
+          </div>
+        </div>
+
+        <section id="licenseModerationSummary" class="summary-grid"></section>
+        <section id="licenseModerationFilters" class="mb-5 flex gap-2 overflow-x-auto whitespace-nowrap"></section>
+
+        <section class="panel">
+          <div id="licenseModerationEmpty" class="empty-state hidden">
+            <h3>Không có GPLX cần xử lý</h3>
+            <p>Giấy phép lái xe chờ duyệt sẽ xuất hiện tại đây.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Người dùng</th>
+                  <th>Email</th>
+                  <th>Ảnh GPLX</th>
+                  <th>Ngày gửi</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="licenseModerationTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+<div class="modal-backdrop license-review-backdrop" id="licenseDetailModal" aria-hidden="true">
+    <section class="license-review-modal" role="dialog" aria-modal="true" aria-label="Kiểm tra giấy phép lái xe">
+
+      <div class="license-review-modal__body">
+        <section class="license-review-panel license-review-panel--document" aria-labelledby="licenseProfileTitle">
+          <div class="license-review-section-heading">
+            <div>
+              <h3 id="licenseProfileTitle">Thông tin hồ sơ</h3>
+              <p id="licenseProfileMeta">Đang tải hồ sơ...</p>
+            </div>
+            <span id="licenseReviewStatus" class="status-badge status-warning">Chờ duyệt</span>
+          </div>
+          <div class="license-document-images" id="licenseDocumentImages"></div>
+          <div class="license-review-section-heading license-review-section-heading--ocr">
+            <div><h3>Thông tin đối chiếu</h3><p>Sao chép dữ liệu hiện có để tra cứu thủ công.</p></div>
+            <div class="license-ocr-tools">
+              <span id="licenseOcrConfidence" class="license-ocr-confidence hidden"></span>
+              <button class="btn btn-secondary btn-sm" id="btnScanLicenseOcr" type="button">Quét OCR</button>
+            </div>
+          </div>
+          <div class="license-ocr-fields" id="licenseOcrFields"></div>
+        </section>
+
+        <section class="license-review-panel license-review-panel--lookup" aria-label="Tra cứu giấy phép lái xe trên Cục CSGT">
+          <div class="license-lookup-frame">
+            <iframe id="officialLicenseLookupFrame" src="https://gplx.csgt.bocongan.gov.vn/" title="Tra cứu giấy phép lái xe trên Cục CSGT" loading="lazy"></iframe>
+          </div>
+        </section>
+      </div>
+
+      <footer class="license-review-modal__footer">
+        <div class="license-review-note">
+          <label for="licenseAdminNote">Ghi chú phiên đối chiếu</label>
+          <input id="licenseAdminNote" type="text" placeholder="Nhập kết quả đối chiếu hoặc lý do xử lý">
+          <small>Ghi chú chưa được lưu vì API hiện tại chưa có trường tương ứng.</small>
+        </div>
+        <div class="license-review-actions">
+          <button class="btn btn-secondary" type="button" data-close-modal>Đóng</button>
+          <button class="btn btn-secondary" id="btnLicenseLookupUnavailable" type="button">Không tra cứu được</button>
+          <button class="btn btn-danger" id="btnLicenseMismatch" type="button">Thông tin không khớp</button>
+          <button class="btn btn-primary" id="btnLicenseApprove" type="button">Xác nhận hợp lệ</button>
+        </div>
+      </footer>
+    </section>
+  </div>
+<div class="modal-backdrop license-image-backdrop" id="licenseImageModal" aria-hidden="true">
+  <section class="license-image-modal" role="dialog" aria-modal="true" aria-labelledby="licenseImageTitle">
+    <header class="license-image-modal__header">
+      <div><h2 id="licenseImageTitle">Ảnh giấy phép lái xe</h2><p>Nhấn vào ảnh để chuyển giữa mặt trước và mặt sau.</p></div>
+      <button class="icon-button" type="button" data-close-license-image aria-label="Đóng ảnh">×</button>
+    </header>
+    <div class="license-image-modal__body">
+      <button class="license-flip-card" id="licenseFlipCard" type="button" aria-label="Lật ảnh GPLX">
+        <span class="license-flip-card__inner">
+          <span class="license-flip-card__face license-flip-card__face--front"><img id="licenseImageFront" alt="Mặt trước giấy phép lái xe"></span>
+          <span class="license-flip-card__face license-flip-card__face--back"><img id="licenseImageBack" alt="Mặt sau giấy phép lái xe"></span>
+        </span>
+      </button>
+    </div>
+    <footer class="license-image-modal__footer">
+      <span id="licenseImageSide" class="status-badge status-neutral">Mặt trước</span>
+      <div class="flex gap-2">
+        <button class="btn btn-secondary" id="btnFlipLicenseImage" type="button">Xem mặt sau</button>
+        <button class="btn btn-primary" type="button" data-close-license-image>Đóng</button>
+      </div>
+    </footer>
+  </section>
+</div></div>
+@section Scripts { <script type="module" src="~/js/admin/moderation/licenses.js" asp-append-version="true"></script> }

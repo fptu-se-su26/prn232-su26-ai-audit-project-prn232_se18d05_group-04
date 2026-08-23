@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - VivuCar</title>
+    <link rel="icon" type="image/webp" href="~/logo.webp" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/chat.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebClient.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("HeadStyles", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar border-bottom">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index"><img class="navbar-brand-logo" src="~/logo.webp" alt="" width="36" height="36" />VivuCar</a>
+                <span class="navbar-note">Thu&#234; xe t&#7921; l&#225;i</span>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer">
+        <div class="container">
+            &copy; 2026 VivuCar
+        </div>
+    </footer>
+
+    @await Html.PartialAsync("_ChatbotWidget")
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script type="module" src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/chatbot.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

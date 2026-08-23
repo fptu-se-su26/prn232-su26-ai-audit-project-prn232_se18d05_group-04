@@ -1,0 +1,332 @@
+@page
+@model WebClient.Pages.Owner.Bookings.ReturnModel
+@{
+    ViewData["Title"] = "Biên bản Nhận lại xe";
+    ViewData["OwnerPage"] = "bookings";
+    
+}
+
+<div class="max-w-4xl mx-auto space-y-6 pb-12">
+    <div class="flex items-center gap-4">
+        <a href="/Owner/Bookings/Detail?id=@Model.Id" class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-white border border-zinc-200 text-zinc-600 hover:text-primary hover:border-primary/30 hover:bg-primary/5 transition-colors">
+            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        </a>
+        <div>
+            <h2 class="text-xl font-bold text-zinc-900">@ViewData["Title"]</h2>
+            <p class="text-sm text-zinc-500">Mã đơn: <span id="bookingCode" class="font-mono text-zinc-900 font-medium">Đang tải...</span></p>
+        </div>
+    </div>
+
+    <form id="returnForm" class="space-y-6">
+        <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50">
+                <h3 class="text-base font-semibold text-zinc-900">Thông tin hiện trạng xe khi nhận</h3>
+            </div>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Số ODO (km) <span class="text-red-500">*</span></label>
+                    <input type="number" id="odometerKm" required min="0" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="Ví dụ: 15300" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Mức nhiên liệu (%) <span class="text-red-500">*</span></label>
+                    <input type="number" id="fuelLevel" required min="0" max="100" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="Ví dụ: 70" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Phụ phí phát sinh (VNĐ)</label>
+                    <input type="number" id="extraFee" min="0" step="10000" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" value="0" />
+                    <p class="text-xs text-zinc-500 mt-1">Phí quá giờ, phí rửa xe, vi phạm (nếu có)</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Trạng thái xe sau khi nhận</label>
+                    <select id="nextCarStatus" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm">
+                        <option value="available">Sẵn sàng nhận khách (Available)</option>
+                        <option value="maintenance">Bảo trì/Sửa chữa (Maintenance)</option>
+                        <option value="unavailable">Tạm ngưng (Unavailable)</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Ghi chú vết xước/hư hỏng phát sinh</label>
+                    <textarea id="damageNotes" rows="3" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="Ghi chú chi tiết nếu có hư hỏng mới..."></textarea>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-zinc-700 mb-1">Ghi chú chung</label>
+                    <textarea id="note" rows="2" class="block w-full px-3 py-2 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm" placeholder="Trừ tiền cọc, giải quyết tranh chấp..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50 flex justify-between items-center">
+                <div>
+                    <h3 class="text-base font-semibold text-zinc-900">Hình ảnh xác nhận</h3>
+                    <p class="text-sm text-zinc-500">Chụp hoặc chọn ảnh từ máy để lưu bằng chứng nhận lại xe.</p>
+                </div>
+                <label class="cursor-pointer inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors shadow-sm">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                    Chọn ảnh từ máy
+                    <input type="file" id="fileUploadInput" class="hidden" accept="image/*" multiple />
+                </label>
+            </div>
+            <div class="p-6">
+                <div id="uploadProgress" class="hidden mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                        <span class="text-sm text-zinc-600" id="uploadProgressText">Đang tải ảnh lên...</span>
+                    </div>
+                    <div class="mt-2 h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
+                        <div id="uploadProgressBar" class="h-full bg-blue-600 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="imagesContainer">
+                    <!-- Uploaded image thumbnails will appear here -->
+                </div>
+                <div id="noImageMessage" class="text-sm text-zinc-500 italic py-2 flex items-center gap-2">
+                    <svg class="h-5 w-5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    Chưa có hình ảnh nào. Bấm "Chọn ảnh từ máy" để tải lên.
+                </div>
+            </div>
+        </div>
+
+        <div id="costBreakdownPanel" class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden hidden">
+            <div class="px-6 py-4 border-b border-zinc-200 bg-zinc-50/50">
+                <h3 class="text-base font-semibold text-zinc-900">Bảng tính tiền cuối chuyến</h3>
+                <p class="text-sm text-zinc-500">Số tiền khách hàng sẽ cần thanh toán sau khi bạn xác nhận.</p>
+            </div>
+            <div class="p-6 space-y-2" id="costBreakdownBody">
+                <!-- Filled by JS -->
+            </div>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex gap-3">
+            <div class="shrink-0 pt-0.5">
+                <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <div>
+                <h4 class="text-sm font-medium text-blue-900">Gửi biên bản & Yêu cầu thanh toán</h4>
+                <p class="text-sm text-blue-700 mt-1">Khi bạn bấm xác nhận, khách hàng sẽ nhận được <strong>yêu cầu thanh toán số tiền còn lại qua PayOS</strong>. Chuyến xe sẽ hoàn tất sau khi khách thanh toán xong.</p>
+                
+                <div class="mt-3 flex items-center">
+                    <input id="confirmCheckbox" required type="checkbox" class="h-4 w-4 rounded border-blue-300 text-blue-600 focus:ring-blue-500 bg-white">
+                    <label for="confirmCheckbox" class="ml-2 block text-sm text-blue-900 font-medium">
+                        Tôi xác nhận đã nhận lại xe và gửi yêu cầu thanh toán cho khách.
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4 pt-2">
+            <button type="submit" id="btnSubmit" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                Gửi biên bản & Yêu cầu thanh toán
+            </button>
+            <a href="/Owner/Bookings/Detail?id=@Model.Id" class="inline-flex items-center justify-center rounded-lg bg-white border border-zinc-300 px-6 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 focus:outline-none transition-colors">
+                Hủy bỏ
+            </a>
+        </div>
+        
+        <div id="formError" class="hidden rounded-md bg-red-50 p-4 mt-4">
+            <p class="text-sm font-medium text-red-800" id="formErrorMsg"></p>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        const bookingId = @Model.Id;
+        // Store uploaded images as [{url, caption}]
+        const uploadedImages = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            let bookingData = null;
+            
+            function formatVnd(v) {
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(Number(v || 0));
+            }
+
+            function updateCostBreakdown() {
+                if (!bookingData) return;
+                const extraFee = parseFloat(document.getElementById('extraFee').value) || 0;
+                const remaining = bookingData.remainingAmount || 0;
+                // Overdue is calculated server-side, but we can estimate it here
+                const total = remaining + extraFee;
+                
+                const panel = document.getElementById('costBreakdownPanel');
+                const body = document.getElementById('costBreakdownBody');
+                panel.classList.remove('hidden');
+                
+                body.innerHTML = `
+                    <div class="flex justify-between text-sm"><span class="text-zinc-600">Tổng tiền thuê</span><span class="font-medium">${formatVnd(bookingData.totalAmount)}</span></div>
+                    <div class="flex justify-between text-sm"><span class="text-zinc-600">Đã cọc</span><span class="font-medium text-green-700">- ${formatVnd(bookingData.depositAmount)}</span></div>
+                    <div class="flex justify-between text-sm"><span class="text-zinc-600">Tiền còn lại</span><span class="font-medium">${formatVnd(remaining)}</span></div>
+                    ${extraFee > 0 ? `<div class="flex justify-between text-sm"><span class="text-zinc-600">Phụ phí phát sinh</span><span class="font-medium text-orange-600">+ ${formatVnd(extraFee)}</span></div>` : ''}
+                    <div class="flex justify-between text-sm font-semibold pt-2 border-t border-zinc-200 mt-2">
+                        <span class="text-zinc-900">Khách cần thanh toán</span>
+                        <span class="text-red-600 text-base">${formatVnd(total)}</span>
+                    </div>
+                    <p class="text-xs text-zinc-500 mt-1">* Phí trả trễ (nếu có) sẽ được tính tự động bởi hệ thống.</p>
+                `;
+            }
+
+            // Load booking data
+            try {
+                const response = await fetch(`/api/proxy/owner/bookings/${bookingId}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
+                });
+                if (response.ok) {
+                    bookingData = await response.json();
+                    document.getElementById('bookingCode').textContent = bookingData.bookingCode;
+                    updateCostBreakdown();
+                }
+            } catch (e) {}
+
+            // Live update cost when extra fee changes
+            document.getElementById('extraFee').addEventListener('input', updateCostBreakdown);
+
+            // ===== IMAGE UPLOAD VIA PROXY (no CORS issue) =====
+            document.getElementById('fileUploadInput').addEventListener('change', async function () {
+                const files = Array.from(this.files);
+                if (files.length === 0) return;
+
+                const progressEl = document.getElementById('uploadProgress');
+                const progressText = document.getElementById('uploadProgressText');
+                const progressBar = document.getElementById('uploadProgressBar');
+
+                progressEl.classList.remove('hidden');
+                let completed = 0;
+
+                try {
+                    for (const file of files) {
+                        progressText.textContent = `Đang tải ${completed + 1}/${files.length}: ${file.name}`;
+                        progressBar.style.width = `${(completed / files.length) * 100}%`;
+
+                        const formData = new FormData();
+                        formData.append('file', file);
+
+                        // Use proxy endpoint → no CORS
+                        const res = await fetch('/api/proxy/uploads?folder=inspections', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}`
+                            },
+                            body: formData
+                        });
+
+                        if (!res.ok) {
+                            const errBody = await res.text();
+                            console.error('Upload error:', res.status, errBody);
+                            throw new Error(`Upload thất bại (${res.status}): ${file.name}`);
+                        }
+
+                        const data = await res.json();
+                        let imageUrl = data.publicUrl || data.PublicUrl || data.url || data.Url || '';
+                        if (imageUrl && !imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+                            imageUrl = 'https://localhost:7005' + imageUrl;
+                        }
+                        uploadedImages.push({ url: imageUrl, caption: '' });
+                        addImageThumbnail(imageUrl, uploadedImages.length - 1);
+                        completed++;
+                    }
+
+                    progressBar.style.width = '100%';
+                    progressText.textContent = `Đã tải xong ${completed} ảnh!`;
+                    window.VivuCarUtils.showToast(`Tải ${completed} ảnh lên thành công!`, 'success');
+
+                    setTimeout(() => progressEl.classList.add('hidden'), 2000);
+                } catch (err) {
+                    console.error(err);
+                    window.VivuCarUtils.showToast(err.message || 'Lỗi tải ảnh', 'error');
+                    progressEl.classList.add('hidden');
+                }
+
+                this.value = ''; // Reset file input
+            });
+
+            // ===== RENDER IMAGE THUMBNAIL =====
+            function addImageThumbnail(url, index) {
+                document.getElementById('noImageMessage').classList.add('hidden');
+                const container = document.getElementById('imagesContainer');
+                const card = document.createElement('div');
+                card.className = 'relative group rounded-lg overflow-hidden border border-zinc-200 bg-zinc-50';
+                card.dataset.index = index;
+                card.innerHTML = `
+                    <img src="${url}" alt="Ảnh kiểm tra" class="w-full h-32 object-cover" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect fill=%22%23f4f4f5%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23a1a1aa%22 font-size=%2212%22>Lỗi ảnh</text></svg>';" />
+                    <input type="text" class="img-caption w-full px-2 py-1.5 text-xs border-t border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="Ghi chú ảnh..." />
+                    <button type="button" class="btn-remove-img absolute top-1 right-1 h-6 w-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow" title="Xóa ảnh">
+                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                `;
+
+                // Caption change handler
+                card.querySelector('.img-caption').addEventListener('input', function () {
+                    const idx = parseInt(card.dataset.index);
+                    if (uploadedImages[idx]) uploadedImages[idx].caption = this.value;
+                });
+
+                // Remove handler
+                card.querySelector('.btn-remove-img').addEventListener('click', function () {
+                    const idx = parseInt(card.dataset.index);
+                    uploadedImages[idx] = null; // Mark as removed
+                    card.remove();
+                    // Show empty message if no images left
+                    const remaining = container.querySelectorAll('[data-index]');
+                    if (remaining.length === 0) {
+                        document.getElementById('noImageMessage').classList.remove('hidden');
+                    }
+                });
+
+                container.appendChild(card);
+            }
+
+            // ===== FORM SUBMIT =====
+            document.getElementById('returnForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const btn = document.getElementById('btnSubmit');
+                const err = document.getElementById('formError');
+                const errMsg = document.getElementById('formErrorMsg');
+
+                btn.disabled = true;
+                btn.textContent = 'Đang xử lý...';
+                err.classList.add('hidden');
+
+                // Collect valid uploaded images
+                const images = uploadedImages
+                    .filter(img => img && img.url)
+                    .map(img => ({ imageUrl: img.url, caption: img.caption || '' }));
+
+                const payload = {
+                    odometerKm: parseInt(document.getElementById('odometerKm').value),
+                    fuelLevel: document.getElementById('fuelLevel').value.toString() + '%',
+                    extraFee: parseFloat(document.getElementById('extraFee').value) || 0,
+                    damageNotes: document.getElementById('damageNotes').value,
+                    note: document.getElementById('note').value,
+                    nextCarStatus: document.getElementById('nextCarStatus').value,
+                    imageUrls: images.map(x => x.imageUrl)
+                };
+
+                try {
+                    const res = await fetch(`/api/proxy/owner/bookings/${bookingId}/return`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!res.ok) {
+                        const errorObj = await res.json().catch(() => ({}));
+                        throw new Error(errorObj.message || 'Lỗi xử lý nhận lại xe');
+                    }
+
+                    window.VivuCarUtils.showToast('Đã gửi biên bản! Chờ khách thanh toán.', 'success');
+                    setTimeout(() => window.location.href = `/Owner/Bookings/Detail?id=${bookingId}`, 1500);
+                } catch (error) {
+                    errMsg.textContent = error.message;
+                    err.classList.remove('hidden');
+                    btn.disabled = false;
+                    btn.textContent = 'Nhận lại xe & Hoàn tất';
+                }
+            });
+        });
+    </script>
+}

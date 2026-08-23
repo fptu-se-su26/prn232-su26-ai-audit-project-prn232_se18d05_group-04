@@ -1,0 +1,173 @@
+@page
+@model WebClient.Pages.Owner.Incidents.IndexModel
+@{
+    ViewData["Title"] = "Quản lý Sự cố";
+    ViewData["OwnerPage"] = "incidents";
+    
+}
+
+<div class="space-y-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 class="text-xl font-bold text-zinc-900">Danh sách báo cáo sự cố</h2>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white rounded-xl border border-zinc-200 p-4 shadow-sm flex flex-col sm:flex-row gap-4">
+        <div class="w-full sm:w-48">
+            <select id="statusFilter" class="block w-full py-2 pl-3 pr-10 border border-zinc-300 rounded-lg focus:ring-primary focus:border-primary sm:text-sm">
+                <option value="">Tất cả trạng thái</option>
+                <option value="open">Đang mở (Open)</option>
+                <option value="in_review">Đang xem xét</option>
+                <option value="resolved">Đã giải quyết</option>
+                <option value="closed">Đã đóng</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Data Grid -->
+    <div class="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left whitespace-nowrap">
+                <thead class="text-xs text-zinc-500 uppercase bg-zinc-50 border-b border-zinc-200">
+                    <tr>
+                        <th scope="col" class="px-6 py-4 font-semibold w-24">ID</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Chuyến xe</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Tiêu đề sự cố</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Khách hàng báo cáo</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Ngày tạo</th>
+                        <th scope="col" class="px-6 py-4 font-semibold">Trạng thái</th>
+                        <th scope="col" class="px-6 py-4 text-right font-semibold">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="incidentsTbody" class="divide-y divide-zinc-100">
+                    <tr>
+                        <td colspan="7" class="px-6 py-8 text-center text-zinc-500">
+                            <div class="flex justify-center mb-2">
+                                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+                            </div>
+                            Đang tải dữ liệu...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination -->
+        <div id="pagination" class="px-6 py-4 border-t border-zinc-200 bg-zinc-50 flex items-center justify-between">
+            <div class="text-sm text-zinc-500" id="paginationInfo">Hiển thị 0 - 0 của 0 sự cố</div>
+            <div class="flex gap-2" id="paginationControls"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentPage = 1;
+        
+        async function loadIncidents(page = 1) {
+            currentPage = page;
+            const status = document.getElementById('statusFilter').value;
+            
+            const tbody = document.getElementById('incidentsTbody');
+            tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-zinc-500"><div class="flex justify-center mb-2"><div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div></div>Đang tải...</td></tr>`;
+            
+            try {
+                const params = new URLSearchParams({ page, pageSize: 10 });
+                if (status) params.append('status', status);
+                params.append('_', Date.now().toString());
+
+                const response = await fetch(`/api/proxy/owner/incidents?${params.toString()}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('vivucar_token')}` }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) return window.location.href = '/Index';
+                    throw new Error('Failed to load incidents');
+                }
+
+                const data = await response.json();
+                renderTable(data);
+                renderPagination(data);
+            } catch (error) {
+                console.error('Error loading incidents:', error);
+                tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-red-500">Lỗi khi tải dữ liệu.</td></tr>`;
+            }
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('incidentsTbody');
+            if (!data.items || data.items.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center justify-center text-zinc-400">
+                                <svg class="h-12 w-12 mb-3 text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                <p>Tuyệt vời, xe của bạn không có sự cố nào.</p>
+                            </div>
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.items.map(i => `
+                <tr class="hover:bg-zinc-50 transition-colors group">
+                    <td class="px-6 py-4 font-mono font-medium text-zinc-600">INC-${i.id}</td>
+                    <td class="px-6 py-4 font-medium text-zinc-900">
+                        <a href="/Owner/Bookings/Detail?id=${i.bookingId}" class="hover:underline text-primary">#BK-${i.bookingId}</a>
+                    </td>
+                    <td class="px-6 py-4 font-medium text-zinc-900 truncate max-w-[250px]" title="${i.title}">
+                        ${i.title}
+                    </td>
+                    <td class="px-6 py-4 text-zinc-700">
+                        ${i.reportedByName}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-zinc-500">
+                        ${new Date(i.createdAt).toLocaleString('vi-VN')}
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            i.status === 'open' ? 'bg-red-100 text-red-800' :
+                            i.status === 'in_review' ? 'bg-yellow-100 text-yellow-800' :
+                            i.status === 'resolved' ? 'bg-green-100 text-green-800' :
+                            'bg-zinc-100 text-zinc-800'
+                        }">
+                            ${
+                                i.status === 'open' ? 'Đang mở' :
+                                i.status === 'in_review' ? 'Đang xem xét' :
+                                i.status === 'resolved' ? 'Đã giải quyết' : 'Đã đóng'
+                            }
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <a href="/Owner/Incidents/Detail?id=${i.id}" class="text-sm font-medium text-primary hover:underline">Chi tiết</a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPagination(data) {
+            const info = document.getElementById('paginationInfo');
+            const controls = document.getElementById('paginationControls');
+
+            if (data.totalCount === 0) {
+                info.textContent = 'Không có dữ liệu';
+                controls.innerHTML = '';
+                return;
+            }
+
+            const start = (data.page - 1) * data.pageSize + 1;
+            const end = Math.min(data.page * data.pageSize, data.totalCount);
+            info.textContent = `Hiển thị ${start} - ${end} của ${data.totalCount} sự cố`;
+
+            let html = '';
+            html += `<button onclick="loadIncidents(${data.page - 1})" ${data.page === 1 ? 'disabled class="px-3 py-1.5 rounded-md border border-zinc-200 text-sm font-medium text-zinc-400 bg-zinc-50 cursor-not-allowed"' : 'class="px-3 py-1.5 rounded-md border border-zinc-300 text-sm font-medium text-zinc-700 bg-white hover:bg-zinc-50"'}>Trước</button>`;
+            html += `<button onclick="loadIncidents(${data.page + 1})" ${data.page >= data.totalPages ? 'disabled class="px-3 py-1.5 rounded-md border border-zinc-200 text-sm font-medium text-zinc-400 bg-zinc-50 cursor-not-allowed"' : 'class="px-3 py-1.5 rounded-md border border-zinc-300 text-sm font-medium text-zinc-700 bg-white hover:bg-zinc-50"'}>Sau</button>`;
+
+            controls.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadIncidents(1);
+            document.getElementById('statusFilter').addEventListener('change', () => loadIncidents(1));
+        });
+    </script>
+}

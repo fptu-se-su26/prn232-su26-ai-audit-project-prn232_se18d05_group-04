@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - VivuCar Chủ Xe</title>
+    <script>
+        tailwind = { config: { theme: { extend: { colors: { primary: '#2563eb' }, fontFamily: { sans: ['Be Vietnam Pro','Segoe UI','Arial','sans-serif'], mono: ['SFMono-Regular','Consolas','monospace'] } } } } };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="~/css/animations.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="min-h-[100dvh] bg-zinc-50 text-zinc-900 font-sans antialiased overflow-x-hidden" data-owner-page="@ViewData["OwnerPage"]">
+    <div class="app-shell flex h-screen overflow-hidden">
+        <aside class="w-64 bg-white border-r border-zinc-200 flex flex-col hidden md:flex shrink-0">
+            <div class="h-16 flex items-center px-6 border-b border-zinc-200 shrink-0">
+                <a asp-page="/Owner/Dashboard" class="flex items-center gap-2 text-zinc-900 font-bold text-xl">
+                    <svg aria-hidden="true" viewBox="0 0 512 512" class="h-5 w-5 fill-primary"><path d="M135.2 117.4 109.1 192h293.8l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8 74.8 96.3C88.3 57.8 124.6 32 165.4 32h181.2c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5C495.6 207.6 512 231.1 512 258.5V400c0 26.5-21.5 48-48 48h-16v32c0 17.7-14.3 32-32 32h-32c-17.7 0-32-14.3-32-32v-32H160v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32v-32H48c-26.5 0-48-21.5-48-48V258.5c0-27.4 16.4-50.9 39.6-61.7z"/></svg>
+                    <span>VivuCar <span class="text-sm font-medium text-zinc-500">Chủ Xe</span></span>
+                </a>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+                <a asp-page="/Owner/Dashboard" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium @(ViewData["OwnerPage"]?.ToString() == "dashboard" ? "bg-zinc-100 text-primary" : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900")">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    Dashboard
+                </a>
+                <a asp-page="/Owner/Cars/Index" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium @(ViewData["OwnerPage"]?.ToString() == "cars" ? "bg-zinc-100 text-primary" : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900")">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                    Xe của tôi
+                </a>
+                <a asp-page="/Owner/Bookings/Index" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium @(ViewData["OwnerPage"]?.ToString() == "bookings" ? "bg-zinc-100 text-primary" : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900")">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    Đặt xe
+                </a>
+                <a asp-page="/Owner/Incidents/Index" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium @(ViewData["OwnerPage"]?.ToString() == "incidents" ? "bg-zinc-100 text-primary" : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900")">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    Sự cố
+                </a>
+            </nav>
+            <div class="p-4 border-t border-zinc-200">
+                <a href="#" id="btnLogout" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-zinc-600 hover:bg-red-50 hover:text-red-600 w-full">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    Đăng xuất
+                </a>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-screen overflow-hidden bg-zinc-50">
+            <header class="h-16 bg-white border-b border-zinc-200 flex items-center justify-between px-6 md:px-8 shrink-0">
+                <h1 class="text-xl font-bold text-zinc-900 tracking-tight">@ViewData["Title"]</h1>
+                <div class="flex items-center gap-4">
+                    <div class="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm">
+                        CH
+                    </div>
+                </div>
+            </header>
+            <div class="flex-1 overflow-y-auto p-6 md:p-8">
+                <div class="max-w-6xl mx-auto">
+                    @RenderBody()
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- GSAP for Advanced Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <script src="~/js/html/constants.js" asp-append-version="true"></script>
+    <script src="~/js/html/utils.js" asp-append-version="true"></script>
+    
+    <script type="module">
+        import { authService } from '/js/shared/auth-service.js';
+        
+        // Expose to window
+        window.authService = authService;
+
+        // Fetch interceptor to ensure token is loaded and attached
+        const originalFetch = window.fetch;
+        window.fetch = async (...args) => {
+            const url = args[0];
+            if (typeof url === 'string' && url.startsWith('/api/proxy/')) {
+                // If token is missing, wait for refresh first
+                if (!localStorage.getItem('vivucar_token')) {
+                    await authService.refresh();
+                }
+                
+                // Inject the latest token into the Authorization header
+                const token = localStorage.getItem('vivucar_token');
+                if (token) {
+                    args[1] = args[1] || {};
+                    args[1].headers = args[1].headers || {};
+                    args[1].headers['Authorization'] = `Bearer ${token}`;
+                }
+            }
+            return originalFetch(...args);
+        };
+
+        // Perform initial refresh in background to keep session active
+        authService.refresh();
+
+        document.getElementById('btnLogout')?.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnLogout');
+            btn.innerHTML = 'Đang đăng xuất...';
+            btn.style.pointerEvents = 'none';
+            await authService.logout();
+            window.location.href = '/Index';
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        window.addEventListener("unhandledrejection", e => {
+            if (e.reason?.name === "AbortError" || e.reason?.message?.includes("abort")) e.preventDefault();
+        });
+    </script>
+</body>
+</html>

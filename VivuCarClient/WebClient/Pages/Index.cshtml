@@ -1,0 +1,386 @@
+@page "/"
+@model IndexModel
+@{
+    ViewData["Title"] = "VivuCar - Thuê xe tự lái Đà Nẵng";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <meta name="description" content="VivuCar - nền tảng thuê xe tự lái hàng đầu Đà Nẵng. Xe sạch, giá minh bạch, thủ tục đơn giản." />
+    <script>
+        tailwind = { config: { theme: { extend: { colors: { primary: { DEFAULT: '#16a34a', 50:'#f0fdf4', 100:'#dcfce7', 700:'#15803d' } }, fontFamily: { sans: ['Be Vietnam Pro','Segoe UI','Arial','sans-serif'] } } } } };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/chat.css" />
+    <style>
+        .car-card { transition: transform .2s, box-shadow .2s; }
+        .car-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,.1); }
+        .hero-gradient { background: linear-gradient(115deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.45) 60%, rgba(0,0,0,.3) 100%), url('/images/hero-img.jpg') center/cover no-repeat; }
+        .skeleton { background: linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; border-radius:12px; height:280px; will-change: transform; }
+        @@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+        .btn-detail { background:#f0fdf4; color:#15803d; font-size:0.75rem; font-weight:600; padding:6px 14px; border-radius:10px; text-decoration:none; transition:all .2s; }
+        .btn-detail:hover { background:#16a34a; color:#fff; }
+        .filter-chip { cursor:pointer; border:1px solid #e5e7eb; border-radius:9999px; padding:4px 14px; font-size:.8125rem; font-weight:500; transition:all .15s; background:#fff; color:#3f3f46; }
+        .filter-chip.active, .filter-chip:hover { background:#16a34a; border-color:#16a34a; color:#fff; }
+        @@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+        .float-anim { animation:float 3s ease-in-out infinite; }
+    </style>
+</head>
+<body class="bg-zinc-50 text-zinc-900 font-sans antialiased">
+
+    <!-- Navbar -->
+    <partial name="_Navbar" />
+
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white" style="min-height:100dvh;display:flex;align-items:center;padding:0 24px;position:relative">
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.4) 100%);pointer-events:none"></div>
+        <div class="max-w-7xl mx-auto" style="width:100%;position:relative;z-index:1;padding:40px 0 60px">
+            <!-- Hero text -->
+            <div style="max-width:580px;margin-bottom:48px">
+                <p style="display:inline-block;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin:0 0 20px;border-left:3px solid #16a34a;padding-left:16px">Thuê xe tự lái Đà Nẵng</p>
+                <h1 style="font-size:clamp(2rem,4.5vw,3.25rem);font-weight:800;line-height:1.15;margin:0 0 16px;letter-spacing:-.02em">Trải nghiệm lái xe<br style="display:none" class="md:block"/> đẳng cấp, giá minh bạch</h1>
+                <p style="font-size:1.05rem;color:rgba(255,255,255,.65);line-height:1.6;margin:0;max-width:65ch">Xe sạch sẽ, thủ tục đơn giản. Hơn 100 xe đang sẵn sàng tại Đà Nẵng.</p>
+            </div>
+
+            <!-- Quick Search Card - premium floating -->
+            <div style="background:rgba(255,255,255,.98);backdrop-filter:blur(12px);border-radius:18px;padding:28px 32px;max-width:780px;box-shadow:0 20px 60px rgba(0,0,0,.25),0 1px 3px rgba(0,0,0,.08),inset 0 1px 0 rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.3)">
+                <p style="font-size:13px;font-weight:700;color:#18181b;margin:0 0 20px;letter-spacing:-.01em">Tìm xe nhanh</p>
+                <div style="display:grid;grid-template-columns:1fr;gap:12px">
+                    <div style="grid-column:1/-1">
+                        <label for="homeSearchInput" style="font-size:11px;font-weight:600;color:#52525b;display:block;margin-bottom:4px">Tìm xe</label>
+                        <input id="homeSearchInput" type="text" autocomplete="off" placeholder="Tìm theo tên xe, hãng hoặc dòng xe..."
+                               style="width:100%;border:1px solid #e6e4df;border-radius:12px;padding:11px 16px;font-size:.875rem;color:#18181b;background:#fff;outline:none;box-sizing:border-box;transition:border-color .2s" onfocus="this.style.borderColor='#16a34a'" onblur="this.style.borderColor='#e6e4df'" />
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;max-width:100%">
+                        <div>
+                            <label for="homeLocationSelect" style="font-size:11px;font-weight:600;color:#52525b;display:block;margin-bottom:4px">Khu vực</label>
+                            <select id="homeLocationSelect" style="width:100%;border:1px solid #e6e4df;border-radius:12px;padding:11px 14px;font-size:.8125rem;color:#18181b;background:#fff;outline:none;cursor:pointer;transition:border-color .2s;-webkit-appearance:none;appearance:none" onfocus="this.style.borderColor='#16a34a'" onblur="this.style.borderColor='#e6e4df'">
+                                <option value="">Khu vực</option>
+                                <option>Hải Châu</option><option>Thanh Khê</option><option>Sơn Trà</option>
+                                <option>Ngũ Hành Sơn</option><option>Liên Chiểu</option><option>Cẩm Lệ</option><option>Hoà Vang</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="seatQuickSelect" style="font-size:11px;font-weight:600;color:#52525b;display:block;margin-bottom:4px">Số chỗ</label>
+                            <select id="seatQuickSelect" style="width:100%;border:1px solid #e6e4df;border-radius:12px;padding:11px 14px;font-size:.8125rem;color:#18181b;background:#fff;outline:none;cursor:pointer;transition:border-color .2s;-webkit-appearance:none;appearance:none" onfocus="this.style.borderColor='#16a34a'" onblur="this.style.borderColor='#e6e4df'">
+                                <option value="">Số chỗ</option>
+                                <option value="4">4 chỗ</option><option value="5">5 chỗ</option><option value="7">7 chỗ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="homeSortSelect" style="font-size:11px;font-weight:600;color:#52525b;display:block;margin-bottom:4px">Sắp xếp</label>
+                            <select id="homeSortSelect" style="width:100%;border:1px solid #e6e4df;border-radius:12px;padding:11px 14px;font-size:.8125rem;color:#18181b;background:#fff;outline:none;cursor:pointer;transition:border-color .2s;-webkit-appearance:none;appearance:none" onfocus="this.style.borderColor='#16a34a'" onblur="this.style.borderColor='#e6e4df'">
+                                <option value="">Sắp xếp</option>
+                                <option value="price_asc">Giá thấp → cao</option>
+                                <option value="price_desc">Giá cao → thấp</option>
+                                <option value="rating_desc">Đánh giá cao nhất</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button id="btnQuickSearch" style="width:100%;margin-top:16px;background:#16a34a;color:#fff;font-weight:700;font-size:.875rem;padding:12px 24px;border-radius:12px;border:none;cursor:pointer;transition:background .2s" onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">
+                    Tìm xe
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+    <main class="max-w-7xl mx-auto px-4 py-10 space-y-16">
+        <!-- Featured Cars -->
+        <section>
+            <div class="flex items-end justify-between mb-6">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-1">Top Picks</p>
+                    <h2 class="text-2xl font-bold text-zinc-900">Featured Cars</h2>
+                </div>
+                <a href="/cars/search?sortBy=rating_desc" class="text-sm font-semibold text-primary hover:underline">View all &rarr;</a>
+            </div>
+            <div id="featuredCarsGrid" class="flex gap-4 overflow-x-auto pb-2" style="-webkit-overflow-scrolling:touch;scrollbar-width:none">
+                <div class="skeleton" style="min-width:340px;height:340px;border-radius:16px;flex-shrink:0"></div>
+                <div class="skeleton" style="min-width:260px;height:340px;border-radius:16px;flex-shrink:0"></div>
+                <div class="skeleton" style="min-width:260px;height:340px;border-radius:16px;flex-shrink:0"></div>
+            </div>
+        </section>
+
+        <!-- Available Cars -->
+        <section>
+            <div class="flex items-end justify-between mb-6">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-1">Ready to Book</p>
+                    <h2 class="text-2xl font-bold text-zinc-900">Available Cars</h2>
+                </div>
+                <a href="/cars/search" class="text-sm font-semibold text-primary hover:underline">Advanced search &rarr;</a>
+            </div>
+            <div class="flex flex-wrap gap-2 mb-5" id="availFilterChips">
+                <button class="filter-chip active" data-filter="all">Tất cả</button>
+                <button class="filter-chip" data-filter="automatic">Tự động</button>
+                <button class="filter-chip" data-filter="manual">Số sàn</button>
+            </div>
+            <div id="availableCarsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+            </div>
+        </section>
+
+        <!-- How it Works -->
+        <section style="padding:0">
+            <div style="text-align:center;margin-bottom:48px">
+                <p style="display:inline-block;font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:#16a34a;margin:0 0 12px">Cách thức hoạt động</p>
+                <h2 style="font-size:1.75rem;font-weight:800;color:#18181b;margin:0;letter-spacing:-.02em">Thuê xe chỉ với 3 bước</h2>
+                <p style="font-size:.9375rem;color:#71717a;margin:8px 0 0">Nhanh gọn, minh bạch — ai cũng làm được.</p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr;gap:24px;max-width:900px;margin:0 auto">
+                @foreach (var (num, title, desc) in new[]{
+                    ("01","Tìm xe","Chọn khu vực, số chỗ và ngày nhận xe.\\nBộ lọc thông minh giúp bạn tìm nhanh xe phù hợp."),
+                    ("02","Chọn xe","Xem ảnh thực tế, kiểm tra giá và đánh giá\\ntừ những người thuê trước đó."),
+                    ("03","Đặt xe","Nhận xe đúng giờ tại địa điểm đã chọn.\\nTrả xe dễ dàng — toàn bộ quy trình online.")
+                })
+                {
+                    <div style="display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start">
+                        <div style="width:48px;height:48px;border-radius:14px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                            <span style="font-size:1.25rem;font-weight:800;color:#16a34a">@num</span>
+                        </div>
+                        <div>
+                            <h3 style="font-size:1.05rem;font-weight:700;color:#18181b;margin:0 0 4px">@title</h3>
+                            <p style="font-size:.875rem;color:#71717a;line-height:1.6;margin:0;white-space:pre-line">@desc</p>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+    </main>
+
+    <footer style="background:#fafafa;border-top:1px solid #e6e4df;padding:0;margin-top:64px">
+        <div class="max-w-7xl mx-auto" style="padding:44px 24px 32px">
+            <div style="display:grid;grid-template-columns:1fr;gap:36px;max-width:1000px;margin:0 auto">
+                <div style="display:grid;grid-template-columns:1fr 2fr;gap:40px;align-items:start">
+                    <div>
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+                            <svg viewBox="0 0 512 512" style="width:22px;height:22px;fill:#16a34a"><path d="M135.2 117.4 109.1 192h293.8l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8 74.8 96.3C88.3 57.8 124.6 32 165.4 32h181.2c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5C495.6 207.6 512 231.1 512 258.5V400c0 26.5-21.5 48-48 48h-16v32c0 17.7-14.3 32-32 32h-32c-17.7 0-32-14.3-32-32v-32H160v32c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32v-32H48c-26.5 0-48-21.5-48-48V258.5c0-27.4 16.4-50.9 39.6-61.7z"/></svg>
+                            <span style="font-size:1.15rem;font-weight:800;color:#18181b;letter-spacing:-.02em">VivuCar</span>
+                        </div>
+                        <p style="font-size:.8125rem;color:#a1a1aa;line-height:1.6;margin:0;max-width:240px">Nền tảng thuê xe tự lái — nhanh, minh bạch, đáng tin cậy.</p>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+                        <div>
+                            <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#a1a1aa;margin:0 0 14px">Khám phá</p>
+                            <div style="display:flex;flex-direction:column;gap:10px">
+                                <a href="/cars" style="font-size:.8125rem;color:#52525b;text-decoration:none;transition:color .15s">Tìm xe</a>
+                                <a href="/cars/search?sortBy=rating_desc" style="font-size:.8125rem;color:#52525b;text-decoration:none;transition:color .15s">Xe nổi bật</a>
+                                <a href="/cars/search" style="font-size:.8125rem;color:#52525b;text-decoration:none;transition:color .15s">Tìm nâng cao</a>
+                            </div>
+                        </div>
+                        <div>
+                            <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#a1a1aa;margin:0 0 14px">Tài khoản</p>
+                            <div style="display:flex;flex-direction:column;gap:10px">
+                                <a href="/Login" style="font-size:.8125rem;color:#52525b;text-decoration:none;transition:color .15s">Đăng nhập</a>
+                                <a href="/Register" style="font-size:.8125rem;color:#52525b;text-decoration:none;transition:color .15s">Đăng ký</a>
+                                <a href="/Booking/MyBookings" style="font-size:.8125rem;color:#52525b;text-decoration:none;transition:color .15s">Đơn của tôi</a>
+                            </div>
+                        </div>
+                        <div>
+                            <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#a1a1aa;margin:0 0 14px">Liên hệ</p>
+                            <div style="display:flex;flex-direction:column;gap:10px">
+                                <span style="font-size:.8125rem;color:#71717a">info@vivucar.vn</span>
+                                <span style="font-size:.8125rem;color:#71717a">0905.xxx.xxx</span>
+                                <span style="font-size:.8125rem;color:#71717a">Đà Nẵng, VN</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="border-top:1px solid #f0f0f0;margin-top:36px;padding-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;max-width:1000px;margin-left:auto;margin-right:auto">
+                <span style="font-size:.75rem;color:#a1a1aa">&copy; 2026 VivuCar. All rights reserved.</span>
+                <div style="display:flex;gap:16px">
+                    <a href="/terms" style="font-size:.75rem;color:#a1a1aa;text-decoration:none">Điều khoản</a>
+                    <a href="/privacy" style="font-size:.75rem;color:#a1a1aa;text-decoration:none">Bảo mật</a>
+                    <a href="/help" style="font-size:.75rem;color:#a1a1aa;text-decoration:none">Trợ giúp</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Inline scripts -->
+    <script>
+        const fmt = n => (n || 0).toLocaleString('vi-VN') + '₫';
+        const starsHtml = r => { const f = Math.round(r || 0); return '★'.repeat(f) + '☆'.repeat(5 - f); };
+
+        function getStatusBadge(status) {
+            const s = (status || 'Available').toLowerCase();
+            const map = {
+                available:    { bg:'#dcfce7', color:'#15803d', label:'Sẵn sàng' },
+                rented:       { bg:'#fef3c7', color:'#b45309', label:'Đang cho thuê' },
+                maintenance:  { bg:'#ffedd5', color:'#c2410c', label:'Bảo trì' },
+                blocked:      { bg:'#fee2e2', color:'#b91c1c', label:'Đã khóa' },
+            };
+            const m = map[s] || { bg:'#f4f4f5', color:'#3f3f46', label:status };
+            return `<span style="position:absolute;top:12px;left:12px;background:${m.bg};color:${m.color};font-size:12px;font-weight:600;padding:4px 12px;border-radius:999px;box-shadow:0 1px 3px rgba(0,0,0,.08)">${m.label}</span>`;
+        }
+
+        function featuredCard(car, index) {
+            const fuel = { Gasoline:'Xăng', Electric:'Điện', Diesel:'Dầu', Hybrid:'Hybrid' };
+            const w = index === 0 ? 360 : 280;
+            const hasImg = car.primaryImageUrl;
+            const bgImg = hasImg
+                ? `background-image:url('${car.primaryImageUrl}');background-size:cover;background-position:center`
+                : 'background:#e4e4e7';
+            const stars = starsHtml(car.averageRating);
+            return `<article style="min-width:${w}px;height:360px;border-radius:16px;overflow:hidden;position:relative;flex-shrink:0;scroll-snap-align:start;${bgImg}">
+                <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,rgba(0,0,0,.15) 50%,transparent 80%)"></div>
+                <div style="position:absolute;top:12px;left:12px">
+                    ${getStatusBadge(car.status)}
+                </div>
+                <div style="position:absolute;bottom:0;left:0;right:0;padding:20px;color:#fff">
+                    <p style="font-size:11px;color:rgba(255,255,255,.6);font-weight:500;margin:0 0 2px;text-transform:uppercase;letter-spacing:.05em">${car.brandName || ''}</p>
+                    <h3 style="font-size:${index === 0 ? '1.25rem' : '1.05rem'};font-weight:700;margin:0 0 4px;line-height:1.3">${car.name}</h3>
+                    <div style="display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:8px">
+                        <span style="color:#fbbf24">${stars}</span>
+                        <span style="color:rgba(255,255,255,.5)">${(car.averageRating || 0).toFixed(1)}</span>
+                        <span style="color:rgba(255,255,255,.4)">·</span>
+                        <span style="color:rgba(255,255,255,.5)">${car.seatCount} chỗ · ${car.transmission === 'Automatic' ? 'Tự động' : 'Số sàn'}</span>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between">
+                        <span style="font-size:${index === 0 ? '1.25rem' : '1.1rem'};font-weight:800">${fmt(car.dailyPrice)}</span>
+                        <a href="/cars/detail?id=${car.id}" style="font-size:12px;font-weight:600;background:rgba(255,255,255,.15);backdrop-filter:blur(4px);padding:5px 14px;border-radius:999px;color:#fff;text-decoration:none;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,.3)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">Chi tiết</a>
+                    </div>
+                </div>
+            </article>`;
+        }
+
+        function availableCard(car) {
+            const fuel = { Gasoline:'Xăng', Electric:'Điện', Diesel:'Dầu', Hybrid:'Hybrid' };
+            const hasImg = car.primaryImageUrl;
+            const img = hasImg
+                ? `<img src="${car.primaryImageUrl}" alt="${car.name}" style="width:100%;height:168px;object-fit:cover;transition:transform .4s ease" loading="lazy">`
+                : `<div style="width:100%;height:168px;background:#f4f4f5;display:flex;align-items:center;justify-content:center;color:#d4d4d8;font-size:1.5rem;font-weight:700">?</div>`;
+            const trans = car.transmission === 'Automatic' ? 'Tự động' : 'Số sàn';
+            const loc = car.location || 'Đà Nẵng';
+            return `<article class="car-card" style="background:#fff;border-radius:14px;border:1px solid #e6e4df;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s;cursor:pointer" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 30px rgba(0,0,0,.08)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                <div style="position:relative;overflow:hidden">${img}</div>
+                <div style="padding:12px 14px 14px;display:flex;flex-direction:column;flex:1">
+                    <p style="font-size:11px;color:#a1a1aa;font-weight:500;margin:0 0 1px;text-transform:uppercase;letter-spacing:.04em">${car.brandName || ''}</p>
+                    <h3 style="font-size:.9375rem;font-weight:700;color:#18181b;margin:0 0 6px;line-height:1.3">${car.name}</h3>
+                    <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:#fbbf24;margin-bottom:6px">
+                        <span>${starsHtml(car.averageRating)}</span>
+                        <span style="color:#a1a1aa;font-weight:500">${(car.averageRating || 0).toFixed(1)}</span>
+                        <span style="color:#d4d4d8">·</span>
+                        <span style="color:#a1a1aa">${loc}</span>
+                    </div>
+                    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:auto">
+                        <span style="font-size:10px;background:#f4f4f5;color:#52525b;padding:2px 8px;border-radius:999px">${car.seatCount} chỗ</span>
+                        <span style="font-size:10px;background:#f4f4f5;color:#52525b;padding:2px 8px;border-radius:999px">${trans}</span>
+                        <span style="font-size:10px;background:#f4f4f5;color:#52525b;padding:2px 8px;border-radius:999px">${fuel[car.fuel] || car.fuel || ''}</span>
+                    </div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid #f4f4f5;margin-top:8px">
+                        <div><span style="font-size:1rem;font-weight:800;color:#18181b">${fmt(car.dailyPrice)}</span><span style="font-size:11px;color:#a1a1aa">/ngày</span></div>
+                        <a href="/cars/detail?id=${car.id}" style="font-size:12px;font-weight:600;background:#16a34a;color:#fff;padding:5px 14px;border-radius:999px;text-decoration:none;transition:background .2s" onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">Đặt ngay</a>
+                    </div>
+                </div>
+            </article>`;
+        }
+
+        function empty(msg) {
+            return `<div class="col-span-4 py-16 text-center text-zinc-400">${msg}</div>`;
+        }
+
+        async function loadFeatured() {
+            try {
+                const r = await fetch('/api/proxy/cars/featured?sortBy=rating_desc&limit=4');
+                if (!r.ok) throw new Error(r.status);
+                const items = await r.json();
+                const grid = document.getElementById('featuredCarsGrid');
+                if (Array.isArray(items) && items.length) {
+                    grid.innerHTML = items.map((c, i) => featuredCard(c, i)).join('');
+                } else {
+                    grid.innerHTML = '<div style="color:#a1a1aa;padding:60px 0;text-align:center">Chưa có xe nổi bật.</div>';
+                }
+            } catch(e) {
+                console.error('Featured load error:', e);
+                document.getElementById('featuredCarsGrid').innerHTML = '<div style="color:#a1a1aa;padding:60px 0;text-align:center;width:100%">Không thể tải xe nổi bật.</div>';
+            }
+        }
+
+        let allAvailable = [];
+
+        function renderAvailable(items) {
+            document.getElementById('availableCarsGrid').innerHTML = items.length
+                ? items.map(availableCard).join('') : empty('Hiện chưa có xe nào sẵn sàng.');
+        }
+
+        async function loadAvailable() {
+            try {
+                const r = await fetch('/api/proxy/cars?pageSize=50&sortBy=newest');
+                if (!r.ok) throw new Error(r.status);
+                const data = await r.json();
+                allAvailable = (data.items ?? []).filter(c =>
+                    (c.status || 'Available').toLowerCase() === 'available'
+                ).slice(0, 8);
+                renderAvailable(allAvailable);
+            } catch(e) {
+                console.error('Available load error:', e);
+                document.getElementById('availableCarsGrid').innerHTML = empty('Không thể tải danh sách xe.');
+            }
+        }
+
+        // Chip filter logic
+        (function() {
+            const chips = document.querySelectorAll('#availFilterChips .filter-chip');
+            chips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    chips.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    const filter = this.dataset.filter;
+                    if (filter === 'all') {
+                        renderAvailable(allAvailable);
+                    } else {
+                        renderAvailable(allAvailable.filter(c =>
+                            (c.transmission || '').toLowerCase() === filter
+                        ));
+                    }
+                });
+            });
+        })();
+
+        document.getElementById('btnQuickSearch').addEventListener('click', () => {
+            const q = new URLSearchParams({
+                searchTerm: document.getElementById('homeSearchInput').value.trim(),
+                location:   document.getElementById('homeLocationSelect').value,
+                seatCount:  document.getElementById('seatQuickSelect').value,
+                sortBy:     document.getElementById('homeSortSelect').value,
+            });
+            window.location.href = `/cars?${q}`;
+        });
+        document.getElementById('homeSearchInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btnQuickSearch').click(); });
+
+        async function loadFilterOptions() {
+            try {
+                const r = await fetch('/api/proxy/cars/filter-options');
+                if (!r.ok) return;
+                const opt = await r.json();
+                if (Array.isArray(opt.districts) && opt.districts.length) {
+                    document.getElementById('homeLocationSelect').innerHTML =
+                        '<option value="">Tất cả khu vực</option>' +
+                        opt.districts.map(d => `<option value="${d}">${d}</option>`).join('');
+                }
+                if (Array.isArray(opt.seatCounts) && opt.seatCounts.length) {
+                    document.getElementById('seatQuickSelect').innerHTML =
+                        '<option value="">Tất cả</option>' +
+                        opt.seatCounts.map(s => `<option value="${s}">${s} chỗ</option>`).join('');
+                }
+            } catch(e) {}
+        }
+
+        loadFilterOptions();
+        loadFeatured();
+        loadAvailable();
+    </script>
+    @await Html.PartialAsync("_ChatbotWidget")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script src="~/js/chatbot.js" asp-append-version="true"></script>
+</body>
+</html>

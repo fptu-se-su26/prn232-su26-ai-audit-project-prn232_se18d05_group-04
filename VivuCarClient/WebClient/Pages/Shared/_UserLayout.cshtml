@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>@ViewData["Title"] - VivuCar</title>
+
+  <script>
+    tailwind = { config: { theme: { extend: { fontFamily: { sans: ['Be Vietnam Pro','Segoe UI','Arial','sans-serif'], mono: ['SFMono-Regular','Consolas','monospace'] }, colors: { notion: { bg: '#f7f7f5', surface: '#ffffff', muted: '#fbfbfa', border: '#e6e4df', text: '#1f1f1f' } } } } } };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="~/css/animations.css" asp-append-version="true" />
+  <link rel="stylesheet" href="~/css/booking.css" asp-append-version="true" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://npmcdn.com/flatpickr/dist/l10n/vn.js"></script>
+  <link rel="stylesheet" href="~/css/chat.css" asp-append-version="true" />
+  @await RenderSectionAsync("HeadScripts", required: false)
+</head>
+<body data-layout="@(ViewData["DataLayout"] ?? "user")" data-page="@ViewData["DataPage"]" class="@(ViewData["BodyClass"] ?? "min-h-[100dvh] bg-[#f7f7f5] text-[#1f1f1f] font-sans antialiased overflow-x-hidden")">
+  <partial name="_Navbar" />
+  
+  @RenderBody()
+  
+  <div id="modalMount"></div>
+  
+  <!-- GSAP for Advanced Animations (if needed by layout) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  @await Html.PartialAsync("_ChatbotWidget")
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+  <script src="~/js/html/tailwind-ui.js" asp-append-version="true"></script>
+  <script src="~/js/html/constants.js" asp-append-version="true"></script>
+  <script src="~/js/html/utils.js" asp-append-version="true"></script>
+  <script src="~/js/html/db-mock.js" asp-append-version="true"></script>
+  <script src="~/js/html/auth.js" asp-append-version="true"></script>
+  <script src="~/js/html/layout.js" asp-append-version="true"></script>
+  <script src="~/js/chatbot.js" asp-append-version="true"></script>
+  
+  @await RenderSectionAsync("Scripts", required: false)
+
+  <script>
+    window.addEventListener("unhandledrejection", e => {
+        if (e.reason?.name === "AbortError" || e.reason?.message?.includes("abort")) e.preventDefault();
+    });
+  </script>
+</body>
+</html>

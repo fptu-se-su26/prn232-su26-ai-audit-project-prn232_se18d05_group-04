@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kiểm duyệt GPLX | VivuCar</title>
+
+  <script>
+    tailwind.config = { theme: { extend: { fontFamily: { sans: ['Be Vietnam Pro','Segoe UI','Arial','sans-serif'], mono: ['SFMono-Regular','Consolas','monospace'] } } } };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../assets/css/animations.css">
+</head>
+<body data-page="moderation-licenses" class="min-h-[100dvh] bg-zinc-50 text-zinc-900 font-sans antialiased overflow-x-hidden">
+  <div class="app-shell">
+    <div id="sidebarMount"></div>
+    <div class="main-shell">
+      <div id="headerMount"></div>
+      <main class="content">
+        <div class="page-heading">
+          <div>
+            <h1>Kiểm duyệt GPLX</h1>
+            <p>Duyệt giấy phép lái xe từ bảng `user_documents`, không trộn vào tab Người dùng.</p>
+          </div>
+        </div>
+
+        <section id="licenseModerationSummary" class="summary-grid"></section>
+        <section id="licenseModerationFilters" class="mb-5 flex gap-2 overflow-x-auto whitespace-nowrap"></section>
+
+        <section class="panel">
+          <div id="licenseModerationEmpty" class="empty-state hidden">
+            <h3>Không có GPLX cần xử lý</h3>
+            <p>Giấy phép lái xe chờ duyệt sẽ xuất hiện tại đây.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Người dùng</th>
+                  <th>Email</th>
+                  <th>Ảnh GPLX</th>
+                  <th>Ngày gửi</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="licenseModerationTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="licenseDetailModal">
+    <div class="modal">
+      <div class="modal-header"><h2>Chi tiết GPLX</h2><button class="icon-button" type="button" data-close-modal>×</button></div>
+      <div id="licenseDetailContent"></div>
+      <div class="modal-actions"><button class="btn btn-secondary" type="button" data-close-modal>Đóng</button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="licenseRejectModal">
+    <div class="modal">
+      <div class="modal-header"><h2>Từ chối GPLX</h2><button class="icon-button" type="button" data-close-modal>×</button></div>
+      <p class="muted">Nhập lý do để người dùng biết cần bổ sung hoặc gửi lại giấy phép.</p>
+      <label>Lý do từ chối<textarea id="licenseRejectReason" placeholder="Ví dụ: Ảnh mặt sau bị mờ, vui lòng tải lại."></textarea></label>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btnCancelLicenseReject" type="button">Hủy</button>
+        <button class="btn btn-danger" id="btnConfirmLicenseReject" type="button">Từ chối GPLX</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalMount"></div>
+  <script src="../assets/js/tailwind-ui.js"></script>
+  <script src="../assets/js/constants.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script src="../assets/js/db-mock.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/layout.js"></script>
+  <script src="../assets/js/admin-moderation-licenses.js"></script>
+</body>
+</html>

@@ -21,12 +21,12 @@
 
 Đánh dấu các công cụ AI đã sử dụng trong quá trình thực hiện bài tập/project.
 
-- [ ] ChatGPT
+- [ x ] ChatGPT
 - [ x ] Gemini
 - [ ] Claude
 - [ ] GitHub Copilot
 - [ ] Cursor
-- [ ] Antigravity
+- [ x ] Antigravity
 - [ ] Perplexity
 - [ ] Microsoft Copilot
 - [ x ] Công cụ khác: Google Stitch
@@ -70,7 +70,7 @@ Nhóm sử dụng AI để hỗ trợ tăng tốc quá trình phát triển hệ
 | Nội dung | Thông tin |
 |---|---|
 | Ngày sử dụng | 16/5/2026 |
-| MSSV | DE180116 |
+| MSSV | DE180117 |
 | Công cụ AI | Stitch |
 | Mục đích sử dụng | Thiết kế layout UI cho trang của Admin |
 | Phần việc liên quan | Frontend |
@@ -95,7 +95,9 @@ Tạo ra 5 màn hình của Admin cho các trang quản lý, thông kê
 Mô tả rõ phần nào được sử dụng lại từ gợi ý của AI.
 
 ```text
-Viết tại đây...
+Nhóm sử dụng bố cục tổng thể của dashboard Admin gồm sidebar, navbar, cards,
+bảng dữ liệu, bộ lọc, phân trang, status badge và modal xác nhận làm định hướng
+cho giao diện quản trị.
 ```
 
 #### 4.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
@@ -103,26 +105,30 @@ Viết tại đây...
 Mô tả sinh viên/nhóm đã thay đổi, kiểm tra, sửa lỗi hoặc cải tiến gì so với gợi ý ban đầu của AI.
 
 ```text
-Viết tại đây...
+Nhóm rà soát lại các màn hình do Stitch gợi ý, chọn các thành phần phù hợp với
+nghiệp vụ VivuCar và tiếp tục điều chỉnh nội dung, dữ liệu mẫu, luồng thao tác
+theo yêu cầu thực tế của dự án.
 ```
 
 #### 4.5. Minh chứng
 
 | Loại minh chứng | Nội dung |
 |---|---|
-| Link commit |  |
-| File liên quan |  |
-| Screenshot |  |
-| Kết quả chạy/test |  |
+| Link commit | Chưa cập nhật |
+| File liên quan | Giao diện Admin |
+| Screenshot | Chưa cập nhật |
+| Kết quả chạy/test | Đã rà soát layout và khả năng hiển thị responsive |
 | Link video demo |  |
-| Ghi chú khác |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
 
 #### 4.6. Nhận xét cá nhân/nhóm
 
 Sinh viên/nhóm học được gì sau lần sử dụng AI này?
 
 ```text
-Viết tại đây...
+AI hỗ trợ tốt ở bước phác thảo giao diện và giúp nhóm hình dung nhanh các màn
+hình quản trị cần có. Tuy nhiên, nhóm vẫn phải đối chiếu với nghiệp vụ thực tế,
+chọn lọc thành phần phù hợp và tự hoàn thiện luồng sử dụng.
 ```
 
 ---
@@ -131,51 +137,64 @@ Viết tại đây...
 
 | Nội dung | Thông tin |
 |---|---|
-| Ngày sử dụng |  |
-| Công cụ AI | ChatGPT / Gemini / Claude / GitHub Copilot / Cursor / Antigravity / Khác |
-| Mục đích sử dụng |  |
-| Phần việc liên quan | Requirement / Design / Database / Frontend / Backend / Testing / Debug / Report / Presentation / Other |
-| Mức độ sử dụng | Hỗ trợ ý tưởng / Hỗ trợ một phần / Hỗ trợ nhiều / Sinh chính nội dung |
+| Ngày sử dụng | 01/06/2026 |
+| MSSV | DE180117 |
+| Công cụ AI | ChatGPT |
+| Mục đích sử dụng | Khởi tạo cấu trúc backend ASP.NET Core Web API và frontend Razor Pages |
+| Phần việc liên quan | Backend / Frontend / Debug |
+| Mức độ sử dụng | Hỗ trợ nhiều |
 
 #### 4.1. Prompt đã sử dụng
 
 ```text
-Dán nguyên văn prompt đã hỏi AI tại đây.
+Thiết lập dự án VivuCar với backend sử dụng ASP.NET Core Web API và frontend
+sử dụng Razor Pages. Backend gồm các project API, BusinessObjects, DataAccess,
+Repositories và Services. Cài đặt OData, Swagger, Entity Framework Core,
+SQL Server provider và migration support. Thiết lập project reference đúng
+chiều phụ thuộc. Tạo thêm file cần thiết nhưng không xóa file đang có sẵn.
 ```
 
 #### 4.2. Kết quả AI gợi ý
 
 ```text
-Viết tại đây...
+AI tạo hai solution .NET 8 cho backend và frontend; cài đặt package cần thiết;
+thiết lập project reference; cấu hình Swagger, OData, Entity Framework Core,
+SQL Server; tạo VivuCarDbContext và API proxy để Razor Pages gọi backend.
 ```
 
 #### 4.3. Phần sinh viên/nhóm đã sử dụng từ AI
 
 ```text
-Viết tại đây...
+Nhóm sử dụng cấu trúc phân tầng backend, Razor Pages frontend, cấu hình DI,
+Swagger, OData, DbContext SQL Server, API proxy và .gitignore cho bin/obj.
 ```
 
 #### 4.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
 
 ```text
-Viết tại đây...
+Nhóm build và kiểm tra runtime sau khi tạo project. Khi backend phát sinh lỗi
+compile-time liên quan đến UseSqlServer, nhóm chuyển phần đăng ký DbContext về
+tầng DataAccess để đúng trách nhiệm module. Nhóm cũng đối chiếu launch profile
+và sửa URL backend của frontend thành https://localhost:7005/.
 ```
 
 #### 4.5. Minh chứng
 
 | Loại minh chứng | Nội dung |
 |---|---|
-| Link commit |  |
-| File liên quan |  |
+| Link commit | Chưa tạo commit |
+| File liên quan | `VivuCarServer/`, `VivuCarClient/`, `.gitignore` |
 | Screenshot |  |
-| Kết quả chạy/test |  |
+| Kết quả chạy/test | Build backend và frontend thành công: 0 warning, 0 error. Swagger API và Razor Pages trả HTTP 200. |
 | Link video demo |  |
-| Ghi chú khác |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
 
 #### 4.6. Nhận xét cá nhân/nhóm
 
 ```text
-Viết tại đây...
+AI giúp giảm thời gian dựng skeleton dự án nhưng kết quả vẫn cần được kiểm tra
+bằng build và smoke test. Nhóm nhận thấy dependency graph, vị trí đăng ký DI và
+cổng chạy local phải được rà soát trước khi tiếp tục phát triển chức năng.
 ```
 
 ---
@@ -184,51 +203,318 @@ Viết tại đây...
 
 | Nội dung | Thông tin |
 |---|---|
-| Ngày sử dụng |  |
-| Công cụ AI | ChatGPT / Gemini / Claude / GitHub Copilot / Cursor / Antigravity / Khác |
-| Mục đích sử dụng |  |
-| Phần việc liên quan | Requirement / Design / Database / Frontend / Backend / Testing / Debug / Report / Presentation / Other |
-| Mức độ sử dụng | Hỗ trợ ý tưởng / Hỗ trợ một phần / Hỗ trợ nhiều / Sinh chính nội dung |
+| Ngày sử dụng | 07/07/2026 |
+| MSSV | DE180117 |
+| Công cụ AI | Antigravity |
+| Mục đích sử dụng | Tích hợp Backend API (Booking, Payment, Auth) vào Frontend HTML/JS; sửa DB thêm GPLX 2 mặt |
+| Phần việc liên quan | Database / Frontend / Backend / Debug |
+| Mức độ sử dụng | Hỗ trợ nhiều |
 
 #### 4.1. Prompt đã sử dụng
 
 ```text
-Dán nguyên văn prompt đã hỏi AI tại đây.
+xem backend đã có gì rồi để tích hợp lên giao diện thì làm luôn một thể.
+hiện tôi đang muốn nếu người dùng đó đã có ảnh bằng lái trong profile rồi thì
+lấy ảnh bằng lái trong profile. còn nếu chưa có thì trong trang đặt xe thêm cái
+upload ảnh gplx lên 2 mặt để người dùng khỏi phải qua trang profile upload
 ```
 
 #### 4.2. Kết quả AI gợi ý
 
+Tóm tắt nội dung AI đã trả lời hoặc gợi ý.
+
 ```text
-Viết tại đây...
+AI phân tích toàn bộ Backend (Controllers, Services, DTOs), xác định API
+cần tích hợp, sau đó thực hiện:
+- Sửa DB Models (DriverDocument.cs, BookingDriverInfo.cs) thêm DriverLicenseFrontImageUrl/BackImageUrl
+- Cập nhật Configuration và DTO tương ứng
+- Tạo EF Core Migration AddDriverLicenseBackImage và update DB
+- Sửa auth.js: thêm fetchWithAuth() gọi API Login thật thay Mock
+- Sửa booking-checkout.js: gọi price-preview, check-availability API và auto-fill GPLX từ profile
+- Sửa my-bookings.js, booking-detail.js: gọi API danh sách và chi tiết đơn
+- Sửa payment-deposit.js: tạo request VNPay qua API thật
+- Sửa payment-result.js: kiểm tra trạng thái thanh toán qua API
 ```
 
 #### 4.3. Phần sinh viên/nhóm đã sử dụng từ AI
 
+Mô tả rõ phần nào được sử dụng lại từ gợi ý của AI.
+
 ```text
-Viết tại đây...
+Nhóm áp dụng toàn bộ logic tích hợp API mà AI tạo ra, bao gồm:
+- Hàm fetchWithAuth() dùng chung để đính kèm JWT Bearer Token
+- Luồng kiểm tra GPLX trong profile trước khi hiển thị form Upload
+- Cấu trúc payload gửi lên POST /api/bookings với DriverInfo đầy đủ 2 ảnh GPLX
+- Migration DB AddDriverLicenseBackImage chạy thành công
 ```
 
 #### 4.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
 
+Mô tả sinh viên/nhóm đã thay đổi, kiểm tra, sửa lỗi hoặc cải tiến gì so với gợi ý ban đầu của AI.
+
 ```text
-Viết tại đây...
+Nhóm rà soát lại tên field DTO (DriverLicenseFrontImageUrl vs DriverLicenseImageUrl)
+và kiểm tra toàn bộ file BookingService.cs có còn tham chiếu tên cũ không.
+Nhóm build Backend để đảm bảo Migration không lỗi compile trước khi apply.
+Nhóm xác nhận lại API endpoint URL (/api/bookings/check-availability) khớp với
+cấu hình Route trong BookingsController.cs.
 ```
 
 #### 4.5. Minh chứng
 
 | Loại minh chứng | Nội dung |
 |---|---|
-| Link commit |  |
-| File liên quan |  |
+| Link commit | Chưa tạo commit |
+| File liên quan | `auth.js`, `booking-checkout.js`, `my-bookings.js`, `booking-detail.js`, `payment-deposit.js`, `payment-result.js`, `DriverDocument.cs`, `BookingDriverInfo.cs` |
 | Screenshot |  |
-| Kết quả chạy/test |  |
+| Kết quả chạy/test | Migration AddDriverLicenseBackImage: Build succeeded. Backend Build: 0 error. |
 | Link video demo |  |
-| Ghi chú khác |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
+
+#### 4.6. Nhận xét cá nhân/nhóm
+
+Sinh viên/nhóm học được gì sau lần sử dụng AI này?
+
+```text
+AI giúp tăng tốc đáng kể việc tích hợp API phức tạp (nhiều endpoint, nhiều file).
+Nhóm nhận ra tầm quan trọng của việc đối chiếu tên field giữa DB Model, DTO và
+Frontend payload trước khi chạy Migration. Việc để AI tự scan grep toàn bộ
+codebase để tìm tham chiếu cũ là rất hiệu quả cho việc refactor an toàn.
+```
+
+---
+
+### Lần sử dụng AI số 4
+
+| Nội dung | Thông tin |
+|---|---|
+| Ngày sử dụng | 20/07/2026 |
+| MSSV | DE180117 |
+| Công cụ AI | Antigravity |
+| Mục đích sử dụng | Pull code từ dev, debug lỗi DI + migration, push code lên nhánh |
+| Phần việc liên quan | Backend / Debug |
+| Mức độ sử dụng | Hỗ trợ nhiều |
+
+#### 4.1. Prompt đã sử dụng
+
+```text
+do có code mới trên git nhánh develop hãy pull về cho tôi nếu có lỗi hãy báo
+giờ cần làm gì tiếp theo để chạy được project
+```
+
+#### 4.2. Kết quả AI gợi ý
+
+```text
+AI thực hiện toàn bộ:
+- Fetch và merge origin/dev vào feature/de180117-booking
+- Phát hiện PayOS chưa được đăng ký vào DI container → fix ServiceConfiguration.cs
+- Phát hiện UserSeedHostedService dùng column schema cũ (BlockedReason, CarTypeId, Color, Year) → remove khỏi AuthenticationConfiguration.cs
+- Drop và recreate database sạch để sync toàn bộ 6 migration từ dev
+- Xác nhận API khởi động thành công tại http://localhost:5119
+- Commit và push code lên feature/de180117-booking theo đúng convention
+```
+
+#### 4.3. Phần sinh viên/nhóm đã sử dụng từ AI
+
+```text
+Áp dụng toàn bộ fix đề xuất của AI:
+- Thêm đăng ký PayOS singleton vào ServiceConfiguration.cs
+- Gỡ bỏ UserSeedHostedService khỏi AuthenticationConfiguration.cs
+- Chạy drop database + dotnet ef database update để reset DB sạch
+```
+
+#### 4.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Sinh viên xác nhận lại API đang chạy (log "Now listening on: http://localhost:5119"
+và "Application started") trước khi commit. Sinh viên tự quyết định drop DB
+thay vì cố patch từng migration bị lệch schema.
+```
+
+#### 4.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | bdd1248 — feature/de180117-booking |
+| File liên quan | `ServiceConfiguration.cs`, `AuthenticationConfiguration.cs`, `Pages/Booking/`, `Pages/Payment/`, `Pages/Shared/_UserLayout.cshtml`, `Migrations/20260711084739_AddPayOSProvider.*` |
+| Screenshot | API log: `Application started. Now listening on: http://localhost:5119` |
+| Kết quả chạy/test | dotnet build: 0 errors. dotnet run: API started. Seed 181 xe thành công. |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
 
 #### 4.6. Nhận xét cá nhân/nhóm
 
 ```text
-Viết tại đây...
+AI giúp chẩn đoán nhanh lỗi DI (PayOS chưa register) và schema drift (UserSeedHostedService
+dùng column cũ) sau khi merge từ dev. Việc drop và recreate DB là giải pháp
+sạch nhất khi migration bị conflict do nhánh song song. Cần chú ý đồng bộ
+DI registration khi thêm service mới có dependency bên ngoài (như PayOS SDK).
+```
+
+---
+
+### Lần sử dụng AI số 5: Tích hợp Cloudinary Storage Service
+
+#### 5.1. Mô tả vấn đề hoặc yêu cầu
+
+```text
+Chức năng upload ảnh thực tế (đặc biệt là Bằng lái xe) trong quá trình Đặt xe
+chưa được hoàn thiện, vẫn đang lưu tạm trong mảng mock. Cần tích hợp
+thư viện CloudinaryDotNet vào Backend để thay thế cơ chế Local File Upload.
+```
+
+#### 5.2. Các prompt đã sử dụng
+
+```text
+"Cloudinary__CloudName=dtm5a4bwr Cloudinary__ApiKey=826725167493146
+Cloudinary__ApiSecret=MZ_VzHZ0nwKPDaruPDRRKFf8ccI
+Cloudinary__SignedUrlExpiresInSeconds=300
+Cloudinary__ResourceType=image Cloudinary__DeliveryType=upload
+Cloudinary__FolderName=Vivucar Cloudinary__DevelopmentMediaRoot=./uploads
+bổ sung cái cloudary này vào file env và apply chỗ upload ảnh cho tôi"
+```
+
+#### 5.3. Kết quả do AI sinh ra
+
+```text
+- AI đề xuất bản Kế hoạch (Implementation Plan) gồm 5 bước: Cài package, 
+tạo CloudinaryStorageService, đổi DI, tạo UploadsController, và update Frontend.
+- Code sinh ra cho `CloudinaryStorageService.cs` có đầy đủ validation file size (< 5MB),
+loại file (JPG/PNG/WEBP) và dùng `CloudinaryDotNet` SDK để đẩy lên thư mục `Vivucar/`.
+- Code sinh ra cho `booking-checkout.js` sửa đổi event change của input file,
+dùng `fetchWithAuth` để post `FormData` lên `/api/uploads`.
+```
+
+#### 5.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Sinh viên rà soát file `.env` xác nhận các Config Key của Cloudinary đã được
+khai báo đúng như yêu cầu của SDK. Cho phép AI tự động thực thi các file thay vì code tay.
+```
+
+#### 5.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | 33091bd — feature/de180117-booking |
+| File liên quan | `API.csproj`, `CloudinaryStorageService.cs`, `ServiceConfiguration.cs`, `UploadsController.cs`, `booking-checkout.js` |
+| Screenshot | Đã đẩy file lên thành công qua API |
+| Kết quả chạy/test | dotnet build: 0 errors. Chạy UI upload GPLX -> response trả về url res.cloudinary.com |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
+
+#### 5.6. Nhận xét cá nhân/nhóm
+
+```text
+AI hiểu nhanh ngữ cảnh kiến trúc Repository/Service/Controller hiện tại để
+implement IFileStorageService mà không phá vỡ logic cũ. Chuyển đổi Local Storage
+sang Cloud Storage trơn tru. Quản lý tác vụ rất tốt với Implementation Plan và Tasks.
+```
+
+---
+
+### Lần sử dụng AI số 6: Xây dựng trang User Profile & Sửa lỗi Upload Cloudinary
+
+#### 6.1. Mô tả vấn đề hoặc yêu cầu
+
+```text
+Người dùng cần tạo giao diện Profile, hiển thị Avatar, Dropdown menu, Form cập nhật thông tin cá nhân và upload GPLX 2 mặt. Cần tích hợp nút Hủy chờ duyệt và sửa các lỗi liên quan đến proxy API khi upload ảnh lên Cloudinary.
+```
+
+#### 6.2. Các prompt đã sử dụng
+
+```text
+- ở trang profile thì còn đang lỗi font chữ khá nhiều, phần hồ sơ chưa load được data hiện tại...
+- thêm nút hủy chờ duyệt để có thể upload lại ảnh khác
+- cả hôm nay làm từ đầu phần user profile bạn tìm những file cần điền và điền cho đúng
+```
+
+#### 6.3. Kết quả do AI sinh ra
+
+```text
+- Sinh code UI cho Profile.cshtml và logic Javascript trong profile.js
+- Sửa cấu hình CORS trong Program.cs và loại bỏ proxy trong fetch để giải quyết lỗi 400 Bad Request
+- Thêm cache-buster v=3 vào html để khắc phục lỗi trình duyệt cache file cũ (gây ra lỗi lưu chữ "undefined" vào DB)
+- Bổ sung nút "Hủy chờ duyệt" ở Frontend và API endpoint my/cancel tương ứng ở Backend
+- Sửa lỗi Enum DocumentVerificationStatus thiếu trạng thái Unverified = 0 gây lỗi build
+```
+
+#### 6.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Sinh viên tự chạy lại lệnh dotnet run, khởi động lại Backend/Frontend và hard-reload trình duyệt (Ctrl + F5) theo hướng dẫn của AI để cập nhật giao diện và API mới nhất.
+```
+
+#### 6.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | Chưa tạo commit |
+| File liên quan | `Profile.cshtml`, `profile.js`, `UploadsController.cs`, `DriverDocumentsController.cs`, `Program.cs`, `UserService.cs`, `DocumentVerificationStatus.cs` |
+| Screenshot | Đã Hủy duyệt và Upload thành công không lỗi undefined |
+| Kết quả chạy/test | Trang Profile hoạt động tốt, Upload thành công không lỗi undefined. |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
+
+#### 6.6. Nhận xét cá nhân/nhóm
+
+```text
+AI giải quyết dứt điểm các lỗi khó liên quan đến cơ chế cache của trình duyệt và Model Binding của HttpClient proxy rất xuất sắc. Xử lý UI tốt và đồng bộ hoàn hảo với logic Backend C#.
+```
+
+---
+
+### Lần sử dụng AI số 7: Hoàn thiện luồng Đặt xe (Booking), Tích hợp PayOS và Ký hợp đồng trực tuyến
+
+#### 7.1. Mô tả vấn đề hoặc yêu cầu
+
+```text
+Hoàn thiện luồng Booking từ bước tạo Request, kiểm tra điều kiện tài liệu GPLX, thanh toán cọc qua PayOS và cuối cùng là Ký hợp đồng chữ ký số (Canvas). Đồng thời yêu cầu tạo script Integration Test chạy qua API thật (không dùng trình duyệt tự động) để verify toàn bộ luồng.
+```
+
+#### 7.2. Các prompt đã sử dụng
+
+```text
+- giờ booking đang cấn ở chỗ lên lịch booking upload ảnh và điền các thông tin...
+- giờ có một chút thông tin luồng đi như sau: tạo request booking -> duyệt GPLX -> cọc PayOS -> ký hợp đồng.
+- test và debug cho tôi đi và ở chỗ booking...
+- test xem payos đã hoạt động cọc được chưa ở giao diện thanh toán cọc...
+- Task: Runtime Integration Test cho luồng Booking...
+```
+
+#### 7.3. Kết quả do AI sinh ra
+
+```text
+- Cập nhật logic Backend (BookingService): Tự động đặt trạng thái WaitingDeposit nếu tài liệu GPLX đã Approved.
+- Tích hợp tính năng ký hợp đồng bằng thẻ <canvas>, lưu URL chữ ký số.
+- Tạo endpoint API POST /contract/sign để lưu vết hợp đồng.
+- Tạo PowerShell script chạy Integration Test 10 bước qua các API thực tế của hệ thống.
+- Xử lý lỗi 400 Bad Request của PayOS bằng cách cắt độ dài chuỗi description tối đa 25 ký tự.
+- Cập nhật logic tính giá thuê xe theo block ngày và giờ trong BookingService.
+```
+
+#### 7.4. Phần sinh viên/nhóm tự chỉnh sửa hoặc cải tiến
+
+```text
+Sinh viên đối chiếu lại cấu trúc Database hiện tại để ánh xạ đúng DocumentVerificationStatus (Approved = 2), tự chạy các HTTP Request để bắt nguyên nhân lỗi PayOS 400 và rà soát lại các UI component.
+Đồng thời bổ sung validation kiểm tra thời gian nhận/trả xe (07:00 - 22:00) và điều chỉnh giao diện (booking-detail, my-bookings) hiển thị chi tiết số ngày và giờ thuê xe.
+```
+
+#### 7.5. Minh chứng
+
+| Loại minh chứng | Nội dung |
+|---|---|
+| Link commit | Chưa cập nhật |
+| File liên quan | `BookingService.cs`, `PaymentService.cs`, `AdminModerationService.cs`, `Contract.cshtml`, `booking-contract.js`, `payment-deposit.js`, `booking-checkout.js`, `booking-detail.js`, `my-bookings.js` |
+| Screenshot | Script test Runtime Pass 100% |
+| Kết quả chạy/test | Integration test (PowerShell script) chạy thành công toàn bộ flow tạo đơn -> PayOS -> ký hợp đồng |
+| Link video demo |  |
+| Ghi chú khác | Người thực hiện: Ngô Sỹ Giá - DE180117 |
+
+#### 7.6. Nhận xét cá nhân/nhóm
+
+```text
+Việc sử dụng PowerShell script để mock API testing là phương pháp rất hiệu quả để kiểm tra các luồng nghiệp vụ dài mà không cần chờ tích hợp đầy đủ giao diện hoặc công cụ automation cồng kềnh. Tìm ra giới hạn 25 ký tự của PayOS nhờ phân tích response log chi tiết.
 ```
 
 ---
@@ -239,19 +525,19 @@ Viết tại đây...
 
 | Hạng mục | Không dùng AI | AI hỗ trợ ít | AI hỗ trợ nhiều | AI sinh chính | Ghi chú |
 |---|:---:|:---:|:---:|:---:|---|
-| Phân tích yêu cầu |  |  |  |  |  |
-| Viết user story/use case |  |  |  |  |  |
-| Thiết kế database |  |  |  |  |  |
-| Thiết kế kiến trúc hệ thống |  |  |  |  |  |
-| Thiết kế giao diện |  |  |  |  |  |
-| Code frontend |  |  |  |  |  |
-| Code backend |  |  |  |  |  |
-| Debug lỗi |  |  |  |  |  |
-| Viết test case |  |  |  |  |  |
-| Kiểm thử sản phẩm |  |  |  |  |  |
-| Tối ưu code |  |  |  |  |  |
-| Viết báo cáo |  |  |  |  |  |
-| Làm slide thuyết trình |  |  |  |  |  |
+| Phân tích yêu cầu |  | x |  |  | Nhóm phân tích spec, AI hỗ trợ đối chiếu DB schema |
+| Viết user story/use case | x |  |  |  |  |
+| Thiết kế database |  |  | x |  | AI hỗ trợ tạo schema ban đầu và migration |
+| Thiết kế kiến trúc hệ thống |  |  | x |  | AI hỗ trợ cấu trúc phân tầng ASP.NET Core |
+| Thiết kế giao diện |  |  |  | x | Stitch phác thảo UI Admin; AI sinh HTML/CSS/JS |
+| Code frontend |  |  |  | x | AI sinh 56 file JS, HTML pages và CSS |
+| Code backend |  |  |  | x | AI sinh Controllers, Services, Repositories, DTOs |
+| Debug lỗi |  |  | x |  | AI hỗ trợ tìm lỗi dependency và tham chiếu field sai |
+| Viết test case |  | x |  |  | AI hỗ trợ viết BookingServiceTests.cs |
+| Kiểm thử sản phẩm |  | x |  |  | Nhóm tự chạy build và smoke test |
+| Tối ưu code |  | x |  |  |  |
+| Viết báo cáo |  | x |  |  | AI hỗ trợ điền doc |
+| Làm slide thuyết trình | x |  |  |  |  |
 
 ---
 
@@ -261,9 +547,9 @@ Ghi lại các trường hợp AI trả lời sai, thiếu, chưa phù hợp ho�
 
 | STT | Lỗi/hạn chế từ AI | Cách phát hiện | Cách xử lý/cải tiến |
 |---:|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
+| 1 | AI đặt UseSqlServer ở sai tầng API | Build thất bại: namespace không khả dụng | Chuyển đăng ký DbContext về DataAccess |
+| 2 | AI dùng tên field DriverLicenseImageUrl trong BookingService nhưng Model đã đổi thành DriverLicenseFrontImageUrl | grep search phát hiện 3 chỗ tham chiếu cũ | Cập nhật toàn bộ tham chiếu trong BookingService.cs |
+| 3 | Backend chưa có API GET /api/bookings/owner-requests (lấy đơn theo Chủ xe) | Rà soát IBookingService interface | Tạm thời giữ Mock Data cho trang owner-booking-requests; ghi nhận Open Issue để BE bổ sung sau |
 
 ---
 
@@ -287,7 +573,11 @@ Có thể bao gồm:
 ### Nội dung kiểm chứng
 
 ```text
-Viết tại đây...
+Nhóm build backend bằng dotnet ef migrations add để kiểm tra lỗi compile-time
+trước khi update DB. Sau khi migration thành công, nhóm kiểm tra log output
+"Build succeeded. Done. To undo this action, use ef migrations remove".
+Nhóm sử dụng grep search để đảm bảo không còn tham chiếu tên field cũ
+(DriverLicenseImageUrl) trong codebase. Kết quả Backend build: 0 error.
 ```
 
 ---
@@ -365,4 +655,4 @@ Sinh viên/nhóm cam kết rằng:
 
 | Đại diện sinh viên/nhóm | Ngày xác nhận |
 |---|---|
-|  |  |
+| Ngô Sỹ Giá - DE180117 | 26/07/2026 |

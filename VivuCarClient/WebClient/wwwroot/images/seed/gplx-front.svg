@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600" role="img" aria-labelledby="title description">
+  <title id="title">Sample driving license front</title>
+  <desc id="description">Development-only placeholder for a driving license front image.</desc>
+  <rect width="960" height="600" rx="32" fill="#ecfdf5"/>
+  <rect x="36" y="36" width="888" height="528" rx="24" fill="#fff" stroke="#86efac" stroke-width="4"/>
+  <rect x="82" y="160" width="220" height="280" rx="18" fill="#d4d4d8"/>
+  <circle cx="192" cy="250" r="62" fill="#a1a1aa"/>
+  <rect x="122" y="326" width="140" height="78" rx="39" fill="#a1a1aa"/>
+  <text x="82" y="105" fill="#166534" font-family="Arial, sans-serif" font-size="42" font-weight="700">GIẤY PHÉP LÁI XE</text>
+  <text x="350" y="190" fill="#18181b" font-family="Arial, sans-serif" font-size="30" font-weight="700">HỒ SƠ MẪU</text>
+  <text x="350" y="250" fill="#52525b" font-family="Arial, sans-serif" font-size="24">Số GPLX: 790204013579</text>
+  <text x="350" y="305" fill="#52525b" font-family="Arial, sans-serif" font-size="24">Hạng: B2</text>
+  <text x="350" y="360" fill="#52525b" font-family="Arial, sans-serif" font-size="24">Dùng cho môi trường phát triển</text>
+  <text x="350" y="430" fill="#15803d" font-family="Arial, sans-serif" font-size="22" font-weight="700">MẶT TRƯỚC</text>
+</svg>

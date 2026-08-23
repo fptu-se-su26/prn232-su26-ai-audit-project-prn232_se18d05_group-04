@@ -1,0 +1,2571 @@
+{
+  "generated_at": 1784696656,
+  "car_count": 59,
+  "image_count": 265,
+  "cars": [
+    {
+      "source_order": 3,
+      "car_id": 4,
+      "slug": "vinfast-vf3-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696447/Vivucar/seed/cars/vinfast-vf3-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696448/Vivucar/seed/cars/vinfast-vf3-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696449/Vivucar/seed/cars/vinfast-vf3-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696450/Vivucar/seed/cars/vinfast-vf3-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696451/Vivucar/seed/cars/vinfast-vf3-2025/05.jpg"
+        }
+      ],
+      "name": "VinFast VF 3 2025",
+      "brand": "VinFast",
+      "model": "VF 3",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 4,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 481000,
+      "address": "Phường Tam Thuận, Quận Thanh Khê",
+      "description": "VinFast VF 3 2025 là mẫu xe SUV 4 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xanh dương"
+    },
+    {
+      "source_order": 6,
+      "car_id": 7,
+      "slug": "kia-k3-premium-2022",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740163/Vivucar/seed/cars/kia-k3-premium-2022/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740165/Vivucar/seed/cars/kia-k3-premium-2022/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740167/Vivucar/seed/cars/kia-k3-premium-2022/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740169/Vivucar/seed/cars/kia-k3-premium-2022/04.jpg"
+        }
+      ],
+      "name": "Kia K3 Premium 2022",
+      "brand": "Kia",
+      "model": "K3 Premium",
+      "year": 2022,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 934000,
+      "address": "Phường Tam Thuận, Quận Thanh Khê",
+      "description": "Kia K3 Premium 2022 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đen"
+    },
+    {
+      "source_order": 8,
+      "car_id": 9,
+      "slug": "vinfast-vf3-2026",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696452/Vivucar/seed/cars/vinfast-vf3-2026/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696453/Vivucar/seed/cars/vinfast-vf3-2026/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696454/Vivucar/seed/cars/vinfast-vf3-2026/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696454/Vivucar/seed/cars/vinfast-vf3-2026/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696457/Vivucar/seed/cars/vinfast-vf3-2026/05.jpg"
+        }
+      ],
+      "name": "VinFast VF 3 2026",
+      "brand": "VinFast",
+      "model": "VF 3",
+      "year": 2026,
+      "car_type": "SUV",
+      "seats": 4,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 565000,
+      "address": "Phường Nại Hiên Đông, Quận Sơn Trà",
+      "description": "VinFast VF 3 2026 là mẫu xe SUV 4 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xám"
+    },
+    {
+      "source_order": 11,
+      "car_id": 12,
+      "slug": "vinfast-lux-sa-2021",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740180/Vivucar/seed/cars/vinfast-lux-sa-2021/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740182/Vivucar/seed/cars/vinfast-lux-sa-2021/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740184/Vivucar/seed/cars/vinfast-lux-sa-2021/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740186/Vivucar/seed/cars/vinfast-lux-sa-2021/04.jpg"
+        }
+      ],
+      "name": "VinFast Lux Sa 2021",
+      "brand": "VinFast",
+      "model": "Lux Sa",
+      "year": 2021,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1028000,
+      "address": "Phường An Hải Bắc, Quận Sơn Trà",
+      "description": "VinFast Lux Sa 2021 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 12,
+      "car_id": 13,
+      "slug": "vinfast-vf7-eco-2026",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696458/Vivucar/seed/cars/vinfast-vf7-eco-2026/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696459/Vivucar/seed/cars/vinfast-vf7-eco-2026/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696459/Vivucar/seed/cars/vinfast-vf7-eco-2026/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696460/Vivucar/seed/cars/vinfast-vf7-eco-2026/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696461/Vivucar/seed/cars/vinfast-vf7-eco-2026/05.jpg"
+        }
+      ],
+      "name": "VinFast VF 7 Eco 2026",
+      "brand": "VinFast",
+      "model": "VF 7 Eco",
+      "year": 2026,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1298000,
+      "address": "Phường Hải Châu I, Quận Hải Châu",
+      "description": "VinFast VF 7 Eco 2026 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xám"
+    },
+    {
+      "source_order": 13,
+      "car_id": 14,
+      "slug": "vinfast-limo-green-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696462/Vivucar/seed/cars/vinfast-limo-green-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696463/Vivucar/seed/cars/vinfast-limo-green-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696464/Vivucar/seed/cars/vinfast-limo-green-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696470/Vivucar/seed/cars/vinfast-limo-green-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696471/Vivucar/seed/cars/vinfast-limo-green-2025/05.jpg"
+        }
+      ],
+      "name": "VinFast Limo Green 2025",
+      "brand": "VinFast",
+      "model": "Limo Green",
+      "year": 2025,
+      "car_type": "MPV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1079000,
+      "address": "Phường Thạch Thang, Quận Hải Châu",
+      "description": "VinFast Limo Green 2025 là mẫu xe MPV 7 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xám"
+    },
+    {
+      "source_order": 15,
+      "car_id": 16,
+      "slug": "vinfast-vf5-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696472/Vivucar/seed/cars/vinfast-vf5-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696473/Vivucar/seed/cars/vinfast-vf5-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696473/Vivucar/seed/cars/vinfast-vf5-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696474/Vivucar/seed/cars/vinfast-vf5-2024/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696476/Vivucar/seed/cars/vinfast-vf5-2024/05.jpg"
+        }
+      ],
+      "name": "VinFast VF 5 2024",
+      "brand": "VinFast",
+      "model": "VF 5",
+      "year": 2024,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 807000,
+      "address": "Phường Thạch Thang, Quận Hải Châu",
+      "description": "VinFast VF 5 2024 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 20,
+      "car_id": 21,
+      "slug": "chevrolet-captiva-2016",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740188/Vivucar/seed/cars/chevrolet-captiva-2016/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740190/Vivucar/seed/cars/chevrolet-captiva-2016/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740192/Vivucar/seed/cars/chevrolet-captiva-2016/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740194/Vivucar/seed/cars/chevrolet-captiva-2016/04.jpg"
+        }
+      ],
+      "name": "Chevrolet Captiva 2016",
+      "brand": "Chevrolet",
+      "model": "Captiva",
+      "year": 2016,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 876000,
+      "address": "Phường An Hải Bắc, Quận Sơn Trà",
+      "description": "Chevrolet Captiva 2016 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 23,
+      "car_id": 24,
+      "slug": "mazda-3-luxury-2020",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740196/Vivucar/seed/cars/mazda-3-luxury-2020/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740199/Vivucar/seed/cars/mazda-3-luxury-2020/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740202/Vivucar/seed/cars/mazda-3-luxury-2020/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740204/Vivucar/seed/cars/mazda-3-luxury-2020/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740207/Vivucar/seed/cars/mazda-3-luxury-2020/05.jpg"
+        }
+      ],
+      "name": "Mazda 3 Luxury 2020",
+      "brand": "Mazda",
+      "model": "3 Luxury",
+      "year": 2020,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 807000,
+      "address": "Phường Tân Chính, Quận Thanh Khê",
+      "description": "Mazda 3 Luxury 2020 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 24,
+      "car_id": 25,
+      "slug": "chevrolet-colorado-4x2-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740210/Vivucar/seed/cars/chevrolet-colorado-4x2-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740212/Vivucar/seed/cars/chevrolet-colorado-4x2-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740214/Vivucar/seed/cars/chevrolet-colorado-4x2-2018/03.jpg"
+        }
+      ],
+      "name": "Chevrolet Colorado 4X2 2018",
+      "brand": "Chevrolet",
+      "model": "Colorado 4X2",
+      "year": 2018,
+      "car_type": "Pickup",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "manual",
+      "fuel_type": "diesel",
+      "price_per_day": 895000,
+      "address": "Phường An Hải Đông, Quận Sơn Trà",
+      "description": "Chevrolet Colorado 4X2 2018 là mẫu xe bán tải 5 chỗ, hộp số số sàn, sử dụng động cơ dầu. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đỏ"
+    },
+    {
+      "source_order": 26,
+      "car_id": 27,
+      "slug": "omoda-c5-flagship-turbo-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740216/Vivucar/seed/cars/omoda-c5-flagship-turbo-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740218/Vivucar/seed/cars/omoda-c5-flagship-turbo-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740220/Vivucar/seed/cars/omoda-c5-flagship-turbo-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740223/Vivucar/seed/cars/omoda-c5-flagship-turbo-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740225/Vivucar/seed/cars/omoda-c5-flagship-turbo-2025/05.jpg"
+        }
+      ],
+      "name": "Omoda C5 Flagship Turbo 2025",
+      "brand": "Omoda",
+      "model": "C5 Flagship Turbo",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1033000,
+      "address": "Phường Tam Thuận, Quận Thanh Khê",
+      "description": "Omoda C5 Flagship Turbo 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 31,
+      "car_id": 32,
+      "slug": "toyota-fortuner-2009",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740237/Vivucar/seed/cars/toyota-fortuner-2009/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740239/Vivucar/seed/cars/toyota-fortuner-2009/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740241/Vivucar/seed/cars/toyota-fortuner-2009/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740244/Vivucar/seed/cars/toyota-fortuner-2009/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740246/Vivucar/seed/cars/toyota-fortuner-2009/05.jpg"
+        }
+      ],
+      "name": "Toyota Fortuner 2009",
+      "brand": "Toyota",
+      "model": "Fortuner",
+      "year": 2009,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 865000,
+      "address": "Phường Thạch Thang, Quận Hải Châu",
+      "description": "Toyota Fortuner 2009 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xám"
+    },
+    {
+      "source_order": 36,
+      "car_id": 37,
+      "slug": "mitsubishi-outlander-2019",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740248/Vivucar/seed/cars/mitsubishi-outlander-2019/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740250/Vivucar/seed/cars/mitsubishi-outlander-2019/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740253/Vivucar/seed/cars/mitsubishi-outlander-2019/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740257/Vivucar/seed/cars/mitsubishi-outlander-2019/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740260/Vivucar/seed/cars/mitsubishi-outlander-2019/05.jpg"
+        }
+      ],
+      "name": "Mitsubishi Outlander 2019",
+      "brand": "Mitsubishi",
+      "model": "Outlander",
+      "year": 2019,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 952000,
+      "address": "Phường Thạch Thang, Quận Hải Châu",
+      "description": "Mitsubishi Outlander 2019 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 38,
+      "car_id": 39,
+      "slug": "toyota-avanza-2023",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740262/Vivucar/seed/cars/toyota-avanza-2023/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740264/Vivucar/seed/cars/toyota-avanza-2023/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740266/Vivucar/seed/cars/toyota-avanza-2023/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740268/Vivucar/seed/cars/toyota-avanza-2023/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740270/Vivucar/seed/cars/toyota-avanza-2023/05.jpg"
+        }
+      ],
+      "name": "Toyota Avanza 2023",
+      "brand": "Toyota",
+      "model": "Avanza",
+      "year": 2023,
+      "car_type": "MPV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "manual",
+      "fuel_type": "gasoline",
+      "price_per_day": 1068000,
+      "address": "Phường Nại Hiên Đông, Quận Sơn Trà",
+      "description": "Toyota Avanza 2023 là mẫu xe MPV 7 chỗ, hộp số số sàn, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Bạc"
+    },
+    {
+      "source_order": 51,
+      "car_id": 52,
+      "slug": "kia-sorento-premium-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740293/Vivucar/seed/cars/kia-sorento-premium-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740295/Vivucar/seed/cars/kia-sorento-premium-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740297/Vivucar/seed/cars/kia-sorento-premium-2018/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740299/Vivucar/seed/cars/kia-sorento-premium-2018/04.jpg"
+        }
+      ],
+      "name": "Kia Sorento Premium 2018",
+      "brand": "Kia",
+      "model": "Sorento Premium",
+      "year": 2018,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1244000,
+      "address": "Phường Mỹ An, Quận Ngũ Hành Sơn",
+      "description": "Kia Sorento Premium 2018 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đen"
+    },
+    {
+      "source_order": 58,
+      "car_id": 59,
+      "slug": "hyundai-accent-2020",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740311/Vivucar/seed/cars/hyundai-accent-2020/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740314/Vivucar/seed/cars/hyundai-accent-2020/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740318/Vivucar/seed/cars/hyundai-accent-2020/03.jpg"
+        }
+      ],
+      "name": "Hyundai Accent 2020",
+      "brand": "Hyundai",
+      "model": "Accent",
+      "year": 2020,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 818000,
+      "address": "Phường Xuân Hà, Quận Thanh Khê",
+      "description": "Hyundai Accent 2020 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 60,
+      "car_id": 61,
+      "slug": "kia-soluto-2021",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740320/Vivucar/seed/cars/kia-soluto-2021/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740321/Vivucar/seed/cars/kia-soluto-2021/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740323/Vivucar/seed/cars/kia-soluto-2021/03.jpg"
+        }
+      ],
+      "name": "Kia Soluto 2021",
+      "brand": "Kia",
+      "model": "Soluto",
+      "year": 2021,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 645000,
+      "address": "Phường Hòa Khê, Quận Thanh Khê",
+      "description": "Kia Soluto 2021 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 69,
+      "car_id": 70,
+      "slug": "vinfast-vf6-eco-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696476/Vivucar/seed/cars/vinfast-vf6-eco-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696477/Vivucar/seed/cars/vinfast-vf6-eco-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696478/Vivucar/seed/cars/vinfast-vf6-eco-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696479/Vivucar/seed/cars/vinfast-vf6-eco-2024/04.jpg"
+        }
+      ],
+      "name": "VinFast VF 6 Eco 2024",
+      "brand": "VinFast",
+      "model": "VF 6 Eco",
+      "year": 2024,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 912000,
+      "address": "Phường An Hải Tây, Quận Sơn Trà",
+      "description": "VinFast VF 6 Eco 2024 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đỏ"
+    },
+    {
+      "source_order": 76,
+      "car_id": 77,
+      "slug": "kia-sonet-luxury-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740560/Vivucar/seed/cars/kia-sonet-luxury-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740563/Vivucar/seed/cars/kia-sonet-luxury-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740566/Vivucar/seed/cars/kia-sonet-luxury-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740570/Vivucar/seed/cars/kia-sonet-luxury-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740572/Vivucar/seed/cars/kia-sonet-luxury-2025/05.jpg"
+        }
+      ],
+      "name": "Kia Sonet Luxury 2025",
+      "brand": "Kia",
+      "model": "Sonet Luxury",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 971000,
+      "address": "Phường Hòa Thuận Đông, Quận Hải Châu",
+      "description": "Kia Sonet Luxury 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 77,
+      "car_id": 78,
+      "slug": "mitsubishi-outlander-2022",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740574/Vivucar/seed/cars/mitsubishi-outlander-2022/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740576/Vivucar/seed/cars/mitsubishi-outlander-2022/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740578/Vivucar/seed/cars/mitsubishi-outlander-2022/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740581/Vivucar/seed/cars/mitsubishi-outlander-2022/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740584/Vivucar/seed/cars/mitsubishi-outlander-2022/05.jpg"
+        }
+      ],
+      "name": "Mitsubishi Outlander 2022",
+      "brand": "Mitsubishi",
+      "model": "Outlander",
+      "year": 2022,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1105000,
+      "address": "Phường Mỹ An, Quận Ngũ Hành Sơn",
+      "description": "Mitsubishi Outlander 2022 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đen"
+    },
+    {
+      "source_order": 84,
+      "car_id": 85,
+      "slug": "peugeot-3008-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740602/Vivucar/seed/cars/peugeot-3008-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740607/Vivucar/seed/cars/peugeot-3008-2018/03.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740609/Vivucar/seed/cars/peugeot-3008-2018/04.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740612/Vivucar/seed/cars/peugeot-3008-2018/05.jpg"
+        }
+      ],
+      "name": "Peugeot 3008 2018",
+      "brand": "Peugeot",
+      "model": "3008",
+      "year": 2018,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 861000,
+      "address": "Phường Thạc Gián, Quận Thanh Khê",
+      "description": "Peugeot 3008 2018 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 85,
+      "car_id": 86,
+      "slug": "hyundai-creta-luxury-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740614/Vivucar/seed/cars/hyundai-creta-luxury-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740617/Vivucar/seed/cars/hyundai-creta-luxury-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740620/Vivucar/seed/cars/hyundai-creta-luxury-2025/03.jpg"
+        }
+      ],
+      "name": "Hyundai Creta Luxury 2025",
+      "brand": "Hyundai",
+      "model": "Creta Luxury",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1186000,
+      "address": "Phường An Hải Bắc, Quận Sơn Trà",
+      "description": "Hyundai Creta Luxury 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xám"
+    },
+    {
+      "source_order": 87,
+      "car_id": 88,
+      "slug": "ford-territory-titanium-2023",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740622/Vivucar/seed/cars/ford-territory-titanium-2023/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740626/Vivucar/seed/cars/ford-territory-titanium-2023/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740628/Vivucar/seed/cars/ford-territory-titanium-2023/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740631/Vivucar/seed/cars/ford-territory-titanium-2023/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740634/Vivucar/seed/cars/ford-territory-titanium-2023/05.jpg"
+        }
+      ],
+      "name": "Ford Territory Titanium 2023",
+      "brand": "Ford",
+      "model": "Territory Titanium",
+      "year": 2023,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1263000,
+      "address": "Phường Vĩnh Trung, Quận Thanh Khê",
+      "description": "Ford Territory Titanium 2023 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đen"
+    },
+    {
+      "source_order": 95,
+      "car_id": 96,
+      "slug": "mazda-cx8-premium-2023",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740636/Vivucar/seed/cars/mazda-cx8-premium-2023/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740638/Vivucar/seed/cars/mazda-cx8-premium-2023/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740641/Vivucar/seed/cars/mazda-cx8-premium-2023/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740643/Vivucar/seed/cars/mazda-cx8-premium-2023/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740646/Vivucar/seed/cars/mazda-cx8-premium-2023/05.jpg"
+        }
+      ],
+      "name": "Mazda CX-8 Premium 2023",
+      "brand": "Mazda",
+      "model": "CX-8 Premium",
+      "year": 2023,
+      "car_type": "SUV",
+      "seats": 6,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1547000,
+      "address": "Phường Nại Hiên Đông, Quận Sơn Trà",
+      "description": "Mazda CX-8 Premium 2023 là mẫu xe SUV 6 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 96,
+      "car_id": 97,
+      "slug": "vinfast-vf5-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696480/Vivucar/seed/cars/vinfast-vf5-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696481/Vivucar/seed/cars/vinfast-vf5-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696482/Vivucar/seed/cars/vinfast-vf5-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696483/Vivucar/seed/cars/vinfast-vf5-2025/04.jpg"
+        }
+      ],
+      "name": "VinFast VF 5 2025",
+      "brand": "VinFast",
+      "model": "VF 5",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 838000,
+      "address": "Phường Hòa Khê, Quận Thanh Khê",
+      "description": "VinFast VF 5 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xanh lá"
+    },
+    {
+      "source_order": 100,
+      "car_id": 101,
+      "slug": "mitsubishi-outlander-premium-2020",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740648/Vivucar/seed/cars/mitsubishi-outlander-premium-2020/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740651/Vivucar/seed/cars/mitsubishi-outlander-premium-2020/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740653/Vivucar/seed/cars/mitsubishi-outlander-premium-2020/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740655/Vivucar/seed/cars/mitsubishi-outlander-premium-2020/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740658/Vivucar/seed/cars/mitsubishi-outlander-premium-2020/05.jpg"
+        }
+      ],
+      "name": "Mitsubishi Outlander Premium 2020",
+      "brand": "Mitsubishi",
+      "model": "Outlander Premium",
+      "year": 2020,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1104000,
+      "address": "Phường Mỹ An, Quận Ngũ Hành Sơn",
+      "description": "Mitsubishi Outlander Premium 2020 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đỏ"
+    },
+    {
+      "source_order": 101,
+      "car_id": 102,
+      "slug": "hyundai-venue-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740660/Vivucar/seed/cars/hyundai-venue-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740662/Vivucar/seed/cars/hyundai-venue-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740664/Vivucar/seed/cars/hyundai-venue-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740667/Vivucar/seed/cars/hyundai-venue-2025/04.jpg"
+        }
+      ],
+      "name": "Hyundai Venue 2025",
+      "brand": "Hyundai",
+      "model": "Venue",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 918000,
+      "address": "Phường Hòa Khê, Quận Thanh Khê",
+      "description": "Hyundai Venue 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đen"
+    },
+    {
+      "source_order": 107,
+      "car_id": 108,
+      "slug": "ford-ranger-xls-4x4-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740669/Vivucar/seed/cars/ford-ranger-xls-4x4-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740671/Vivucar/seed/cars/ford-ranger-xls-4x4-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740674/Vivucar/seed/cars/ford-ranger-xls-4x4-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740676/Vivucar/seed/cars/ford-ranger-xls-4x4-2025/04.jpg"
+        }
+      ],
+      "name": "Ford Ranger XLS 4x4 2025",
+      "brand": "Ford",
+      "model": "Ranger XLS 4x4",
+      "year": 2025,
+      "car_type": "Pickup",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "diesel",
+      "price_per_day": 1027000,
+      "address": "Phường Hòa An, Quận Cẩm Lệ",
+      "description": "Ford Ranger XLS 4x4 2025 là mẫu xe bán tải 5 chỗ, hộp số tự động, sử dụng động cơ dầu. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đen"
+    },
+    {
+      "source_order": 108,
+      "car_id": 109,
+      "slug": "suzuki-ciaz-2017",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740679/Vivucar/seed/cars/suzuki-ciaz-2017/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740681/Vivucar/seed/cars/suzuki-ciaz-2017/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740684/Vivucar/seed/cars/suzuki-ciaz-2017/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740687/Vivucar/seed/cars/suzuki-ciaz-2017/04.jpg"
+        }
+      ],
+      "name": "Suzuki Ciaz 2017",
+      "brand": "Suzuki",
+      "model": "Ciaz",
+      "year": 2017,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 531000,
+      "address": "Phường Hòa Cường Bắc, Quận Hải Châu",
+      "description": "Suzuki Ciaz 2017 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Nâu"
+    },
+    {
+      "source_order": 111,
+      "car_id": 112,
+      "slug": "honda-city-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740689/Vivucar/seed/cars/honda-city-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740691/Vivucar/seed/cars/honda-city-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740693/Vivucar/seed/cars/honda-city-2018/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740695/Vivucar/seed/cars/honda-city-2018/04.jpg"
+        }
+      ],
+      "name": "Honda City 2018",
+      "brand": "Honda",
+      "model": "City",
+      "year": 2018,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 646000,
+      "address": "Phường Hòa Khê, Quận Thanh Khê",
+      "description": "Honda City 2018 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 118,
+      "car_id": 119,
+      "slug": "mazda-2-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740697/Vivucar/seed/cars/mazda-2-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740700/Vivucar/seed/cars/mazda-2-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740702/Vivucar/seed/cars/mazda-2-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740706/Vivucar/seed/cars/mazda-2-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740708/Vivucar/seed/cars/mazda-2-2025/05.jpg"
+        }
+      ],
+      "name": "Mazda 2 2025",
+      "brand": "Mazda",
+      "model": "2",
+      "year": 2025,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 818000,
+      "address": "Phường Hòa Cường Nam, Quận Hải Châu",
+      "description": "Mazda 2 2025 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đỏ"
+    },
+    {
+      "source_order": 120,
+      "car_id": 121,
+      "slug": "kia-sportage-signature-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740710/Vivucar/seed/cars/kia-sportage-signature-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740712/Vivucar/seed/cars/kia-sportage-signature-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740714/Vivucar/seed/cars/kia-sportage-signature-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740716/Vivucar/seed/cars/kia-sportage-signature-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740718/Vivucar/seed/cars/kia-sportage-signature-2025/05.jpg"
+        }
+      ],
+      "name": "Kia Sportage Signature 2025",
+      "brand": "Kia",
+      "model": "Sportage Signature",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1611000,
+      "address": "Phường An Khê, Quận Thanh Khê",
+      "description": "Kia Sportage Signature 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đen"
+    },
+    {
+      "source_order": 129,
+      "car_id": 130,
+      "slug": "hyundai-venue-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740720/Vivucar/seed/cars/hyundai-venue-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740722/Vivucar/seed/cars/hyundai-venue-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740725/Vivucar/seed/cars/hyundai-venue-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740727/Vivucar/seed/cars/hyundai-venue-2024/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740729/Vivucar/seed/cars/hyundai-venue-2024/05.jpg"
+        }
+      ],
+      "name": "Hyundai Venue 2024",
+      "brand": "Hyundai",
+      "model": "Venue",
+      "year": 2024,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1033000,
+      "address": "Phường Khuê Mỹ, Quận Ngũ Hành Sơn",
+      "description": "Hyundai Venue 2024 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xám"
+    },
+    {
+      "source_order": 134,
+      "car_id": 135,
+      "slug": "kia-carens-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740732/Vivucar/seed/cars/kia-carens-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740734/Vivucar/seed/cars/kia-carens-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740737/Vivucar/seed/cars/kia-carens-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740739/Vivucar/seed/cars/kia-carens-2024/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740742/Vivucar/seed/cars/kia-carens-2024/05.jpg"
+        }
+      ],
+      "name": "Kia Carens 2024",
+      "brand": "Kia",
+      "model": "Carens",
+      "year": 2024,
+      "car_type": "MPV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1097000,
+      "address": "Phường Khuê Mỹ, Quận Ngũ Hành Sơn",
+      "description": "Kia Carens 2024 là mẫu xe MPV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 135,
+      "car_id": 136,
+      "slug": "nissan-almera-el-2022",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740744/Vivucar/seed/cars/nissan-almera-el-2022/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740746/Vivucar/seed/cars/nissan-almera-el-2022/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740749/Vivucar/seed/cars/nissan-almera-el-2022/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740751/Vivucar/seed/cars/nissan-almera-el-2022/04.jpg"
+        }
+      ],
+      "name": "Nissan Almera El 2022",
+      "brand": "Nissan",
+      "model": "Almera El",
+      "year": 2022,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 646000,
+      "address": "Phường Khuê Trung, Quận Cẩm Lệ",
+      "description": "Nissan Almera El 2022 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 145,
+      "car_id": 146,
+      "slug": "vinfast-vf7-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696643/Vivucar/seed/cars/vinfast-vf7-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696643/Vivucar/seed/cars/vinfast-vf7-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696644/Vivucar/seed/cars/vinfast-vf7-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696645/Vivucar/seed/cars/vinfast-vf7-2025/04.jpg"
+        }
+      ],
+      "name": "VinFast VF 7 2025",
+      "brand": "VinFast",
+      "model": "VF 7",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1246000,
+      "address": "Phường Thanh Khê Đông, Quận Thanh Khê",
+      "description": "VinFast VF 7 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 153,
+      "car_id": 154,
+      "slug": "honda-jazz-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740754/Vivucar/seed/cars/honda-jazz-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740758/Vivucar/seed/cars/honda-jazz-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740760/Vivucar/seed/cars/honda-jazz-2018/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740763/Vivucar/seed/cars/honda-jazz-2018/04.jpg"
+        }
+      ],
+      "name": "Honda Jazz 2018",
+      "brand": "Honda",
+      "model": "Jazz",
+      "year": 2018,
+      "car_type": "Hatchback",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 620000,
+      "address": "Phường Khuê Trung, Quận Cẩm Lệ",
+      "description": "Honda Jazz 2018 là mẫu xe hatchback 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xám"
+    },
+    {
+      "source_order": 155,
+      "car_id": 156,
+      "slug": "honda-crv-l-awd-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740765/Vivucar/seed/cars/honda-crv-l-awd-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740767/Vivucar/seed/cars/honda-crv-l-awd-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740769/Vivucar/seed/cars/honda-crv-l-awd-2018/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740771/Vivucar/seed/cars/honda-crv-l-awd-2018/04.jpg"
+        }
+      ],
+      "name": "Honda CR-V L AWD 2018",
+      "brand": "Honda",
+      "model": "CR-V L AWD",
+      "year": 2018,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1246000,
+      "address": "Phường Hòa Thọ Đông, Quận Cẩm Lệ",
+      "description": "Honda CR-V L AWD 2018 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xanh dương"
+    },
+    {
+      "source_order": 162,
+      "car_id": 163,
+      "slug": "mitsubishi-xpander-2026",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740775/Vivucar/seed/cars/mitsubishi-xpander-2026/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740778/Vivucar/seed/cars/mitsubishi-xpander-2026/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740780/Vivucar/seed/cars/mitsubishi-xpander-2026/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740782/Vivucar/seed/cars/mitsubishi-xpander-2026/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740785/Vivucar/seed/cars/mitsubishi-xpander-2026/05.jpg"
+        }
+      ],
+      "name": "Mitsubishi Xpander 2026",
+      "brand": "Mitsubishi",
+      "model": "Xpander",
+      "year": 2026,
+      "car_type": "MPV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 897000,
+      "address": "Phường Hòa Minh, Quận Liên Chiểu",
+      "description": "Mitsubishi Xpander 2026 là mẫu xe MPV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xám"
+    },
+    {
+      "source_order": 164,
+      "car_id": 165,
+      "slug": "ford-focus-2017",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740789/Vivucar/seed/cars/ford-focus-2017/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740791/Vivucar/seed/cars/ford-focus-2017/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740793/Vivucar/seed/cars/ford-focus-2017/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740795/Vivucar/seed/cars/ford-focus-2017/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740797/Vivucar/seed/cars/ford-focus-2017/05.jpg"
+        }
+      ],
+      "name": "Ford Focus 2017",
+      "brand": "Ford",
+      "model": "Focus",
+      "year": 2017,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 624000,
+      "address": "Phường Khuê Mỹ, Quận Ngũ Hành Sơn",
+      "description": "Ford Focus 2017 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 177,
+      "car_id": 178,
+      "slug": "hyundai-creta-luxury-2023",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740799/Vivucar/seed/cars/hyundai-creta-luxury-2023/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740802/Vivucar/seed/cars/hyundai-creta-luxury-2023/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740804/Vivucar/seed/cars/hyundai-creta-luxury-2023/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740809/Vivucar/seed/cars/hyundai-creta-luxury-2023/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740812/Vivucar/seed/cars/hyundai-creta-luxury-2023/05.jpg"
+        }
+      ],
+      "name": "Hyundai Creta Luxury 2023",
+      "brand": "Hyundai",
+      "model": "Creta Luxury",
+      "year": 2023,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 969000,
+      "address": "Phường Hòa Minh, Quận Liên Chiểu",
+      "description": "Hyundai Creta Luxury 2023 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đỏ"
+    },
+    {
+      "source_order": 183,
+      "car_id": 184,
+      "slug": "mazda-6-premium-2021",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740815/Vivucar/seed/cars/mazda-6-premium-2021/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740817/Vivucar/seed/cars/mazda-6-premium-2021/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740820/Vivucar/seed/cars/mazda-6-premium-2021/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740822/Vivucar/seed/cars/mazda-6-premium-2021/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740825/Vivucar/seed/cars/mazda-6-premium-2021/05.jpg"
+        }
+      ],
+      "name": "Mazda 6 Premium 2021",
+      "brand": "Mazda",
+      "model": "6 Premium",
+      "year": 2021,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1037000,
+      "address": "Phường Hòa Xuân, Quận Cẩm Lệ",
+      "description": "Mazda 6 Premium 2021 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 184,
+      "car_id": 185,
+      "slug": "mitsubishi-xforce-ultimate-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740827/Vivucar/seed/cars/mitsubishi-xforce-ultimate-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740830/Vivucar/seed/cars/mitsubishi-xforce-ultimate-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740832/Vivucar/seed/cars/mitsubishi-xforce-ultimate-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740834/Vivucar/seed/cars/mitsubishi-xforce-ultimate-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740836/Vivucar/seed/cars/mitsubishi-xforce-ultimate-2025/05.jpg"
+        }
+      ],
+      "name": "Mitsubishi Xforce Ultimate 2025",
+      "brand": "Mitsubishi",
+      "model": "Xforce Ultimate",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1091000,
+      "address": "Phường Hòa Xuân, Quận Cẩm Lệ",
+      "description": "Mitsubishi Xforce Ultimate 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đỏ"
+    },
+    {
+      "source_order": 185,
+      "car_id": 186,
+      "slug": "toyota-corolla-cross-v-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740839/Vivucar/seed/cars/toyota-corolla-cross-v-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740841/Vivucar/seed/cars/toyota-corolla-cross-v-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740843/Vivucar/seed/cars/toyota-corolla-cross-v-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740845/Vivucar/seed/cars/toyota-corolla-cross-v-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740847/Vivucar/seed/cars/toyota-corolla-cross-v-2025/05.jpg"
+        }
+      ],
+      "name": "Toyota Corolla Cross V 2025",
+      "brand": "Toyota",
+      "model": "Corolla Cross V",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1275000,
+      "address": "Phường Khuê Mỹ, Quận Ngũ Hành Sơn",
+      "description": "Toyota Corolla Cross V 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 187,
+      "car_id": 188,
+      "slug": "geely-coolray-standard-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740850/Vivucar/seed/cars/geely-coolray-standard-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740852/Vivucar/seed/cars/geely-coolray-standard-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740855/Vivucar/seed/cars/geely-coolray-standard-2025/03.jpg"
+        }
+      ],
+      "name": "Geely Coolray Standard 2025",
+      "brand": "Geely",
+      "model": "Coolray Standard",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 917000,
+      "address": "Phường Hòa Minh, Quận Liên Chiểu",
+      "description": "Geely Coolray Standard 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 189,
+      "car_id": 190,
+      "slug": "mitsubishi-pajero-2018",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740860/Vivucar/seed/cars/mitsubishi-pajero-2018/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740862/Vivucar/seed/cars/mitsubishi-pajero-2018/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740866/Vivucar/seed/cars/mitsubishi-pajero-2018/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740868/Vivucar/seed/cars/mitsubishi-pajero-2018/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740870/Vivucar/seed/cars/mitsubishi-pajero-2018/05.jpg"
+        }
+      ],
+      "name": "Mitsubishi Pajero 2018",
+      "brand": "Mitsubishi",
+      "model": "Pajero",
+      "year": 2018,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "manual",
+      "fuel_type": "diesel",
+      "price_per_day": 1147000,
+      "address": "Phường Hòa Thọ Đông, Quận Cẩm Lệ",
+      "description": "Mitsubishi Pajero 2018 là mẫu xe SUV 7 chỗ, hộp số số sàn, sử dụng động cơ dầu. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xanh dương"
+    },
+    {
+      "source_order": 190,
+      "car_id": 191,
+      "slug": "honda-hrv-g-2023",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740873/Vivucar/seed/cars/honda-hrv-g-2023/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740876/Vivucar/seed/cars/honda-hrv-g-2023/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740878/Vivucar/seed/cars/honda-hrv-g-2023/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740881/Vivucar/seed/cars/honda-hrv-g-2023/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740883/Vivucar/seed/cars/honda-hrv-g-2023/05.jpg"
+        }
+      ],
+      "name": "Honda HR-V G 2023",
+      "brand": "Honda",
+      "model": "HR-V G",
+      "year": 2023,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1263000,
+      "address": "Phường Hòa An, Quận Cẩm Lệ",
+      "description": "Honda HR-V G 2023 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đen"
+    },
+    {
+      "source_order": 191,
+      "car_id": 192,
+      "slug": "honda-crv-l-2022",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740885/Vivucar/seed/cars/honda-crv-l-2022/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740888/Vivucar/seed/cars/honda-crv-l-2022/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740890/Vivucar/seed/cars/honda-crv-l-2022/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740892/Vivucar/seed/cars/honda-crv-l-2022/04.jpg"
+        }
+      ],
+      "name": "Honda CR-V L 2022",
+      "brand": "Honda",
+      "model": "CR-V L",
+      "year": 2022,
+      "car_type": "SUV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1458000,
+      "address": "Phường Hòa Minh, Quận Liên Chiểu",
+      "description": "Honda CR-V L 2022 là mẫu xe SUV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đen"
+    },
+    {
+      "source_order": 202,
+      "car_id": 203,
+      "slug": "vinfast-vf6-plus-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696484/Vivucar/seed/cars/vinfast-vf6-plus-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696485/Vivucar/seed/cars/vinfast-vf6-plus-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696486/Vivucar/seed/cars/vinfast-vf6-plus-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696486/Vivucar/seed/cars/vinfast-vf6-plus-2024/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696487/Vivucar/seed/cars/vinfast-vf6-plus-2024/05.jpg"
+        }
+      ],
+      "name": "VinFast VF 6 Plus 2024",
+      "brand": "VinFast",
+      "model": "VF 6 Plus",
+      "year": 2024,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1068000,
+      "address": "Phường Hòa Minh, Quận Liên Chiểu",
+      "description": "VinFast VF 6 Plus 2024 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đỏ"
+    },
+    {
+      "source_order": 203,
+      "car_id": 204,
+      "slug": "kia-cerato-2020",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740894/Vivucar/seed/cars/kia-cerato-2020/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740897/Vivucar/seed/cars/kia-cerato-2020/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740900/Vivucar/seed/cars/kia-cerato-2020/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740904/Vivucar/seed/cars/kia-cerato-2020/05.jpg"
+        }
+      ],
+      "name": "Kia Cerato 2020",
+      "brand": "Kia",
+      "model": "Cerato",
+      "year": 2020,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 899000,
+      "address": "Phường Hòa Minh, Quận Liên Chiểu",
+      "description": "Kia Cerato 2020 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đỏ"
+    },
+    {
+      "source_order": 204,
+      "car_id": 205,
+      "slug": "vinfast-limo-green-2026",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740906/Vivucar/seed/cars/vinfast-limo-green-2026/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740908/Vivucar/seed/cars/vinfast-limo-green-2026/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740910/Vivucar/seed/cars/vinfast-limo-green-2026/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740912/Vivucar/seed/cars/vinfast-limo-green-2026/04.jpg"
+        }
+      ],
+      "name": "VinFast Limo Green 2026",
+      "brand": "VinFast",
+      "model": "Limo Green",
+      "year": 2026,
+      "car_type": "MPV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1195000,
+      "address": "Phường Hòa Khánh Nam, Quận Liên Chiểu",
+      "description": "VinFast Limo Green 2026 là mẫu xe MPV 7 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 206,
+      "car_id": 207,
+      "slug": "suzuki-ertiga-2020",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740914/Vivucar/seed/cars/suzuki-ertiga-2020/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740919/Vivucar/seed/cars/suzuki-ertiga-2020/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740921/Vivucar/seed/cars/suzuki-ertiga-2020/03.jpg"
+        }
+      ],
+      "name": "Suzuki Ertiga 2020",
+      "brand": "Suzuki",
+      "model": "Ertiga",
+      "year": 2020,
+      "car_type": "MPV",
+      "seats": 7,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 775000,
+      "address": "Phường Hòa Khánh Nam, Quận Liên Chiểu",
+      "description": "Suzuki Ertiga 2020 là mẫu xe MPV 7 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 214,
+      "car_id": 215,
+      "slug": "kia-carnival-premium-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740923/Vivucar/seed/cars/kia-carnival-premium-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740925/Vivucar/seed/cars/kia-carnival-premium-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740927/Vivucar/seed/cars/kia-carnival-premium-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740929/Vivucar/seed/cars/kia-carnival-premium-2024/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740932/Vivucar/seed/cars/kia-carnival-premium-2024/05.jpg"
+        },
+        {
+          "display_order": 6,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740934/Vivucar/seed/cars/kia-carnival-premium-2024/06.jpg"
+        },
+        {
+          "display_order": 7,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740936/Vivucar/seed/cars/kia-carnival-premium-2024/07.jpg"
+        }
+      ],
+      "name": "Kia Carnival Premium 2024",
+      "brand": "Kia",
+      "model": "Carnival Premium",
+      "year": 2024,
+      "car_type": "MPV",
+      "seats": 8,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "diesel",
+      "price_per_day": 2084000,
+      "address": "Phường Hòa Xuân, Quận Cẩm Lệ",
+      "description": "Kia Carnival Premium 2024 là mẫu xe MPV 8 chỗ, hộp số tự động, sử dụng động cơ dầu. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 215,
+      "car_id": 216,
+      "slug": "vinfast-vf6-plus-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740938/Vivucar/seed/cars/vinfast-vf6-plus-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740941/Vivucar/seed/cars/vinfast-vf6-plus-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740944/Vivucar/seed/cars/vinfast-vf6-plus-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740946/Vivucar/seed/cars/vinfast-vf6-plus-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740948/Vivucar/seed/cars/vinfast-vf6-plus-2025/05.jpg"
+        }
+      ],
+      "name": "VinFast VF 6 Plus 2025",
+      "brand": "VinFast",
+      "model": "VF 6 Plus",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1132000,
+      "address": "Phường Hòa Khánh Bắc, Quận Liên Chiểu",
+      "description": "VinFast VF 6 Plus 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 225,
+      "car_id": 226,
+      "slug": "vinfast-minio-green-2026",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696651/Vivucar/seed/cars/vinfast-minio-green-2026/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696652/Vivucar/seed/cars/vinfast-minio-green-2026/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696653/Vivucar/seed/cars/vinfast-minio-green-2026/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696654/Vivucar/seed/cars/vinfast-minio-green-2026/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1784696655/Vivucar/seed/cars/vinfast-minio-green-2026/05.jpg"
+        }
+      ],
+      "name": "VinFast Minio Green 2026",
+      "brand": "VinFast",
+      "model": "Minio Green",
+      "year": 2026,
+      "car_type": "Hatchback",
+      "seats": 4,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 472000,
+      "address": "Phường Hòa Hải, Quận Ngũ Hành Sơn",
+      "description": "VinFast Minio Green 2026 là mẫu xe hatchback 4 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 229,
+      "car_id": 230,
+      "slug": "vinfast-vf7-plus-2025",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740950/Vivucar/seed/cars/vinfast-vf7-plus-2025/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740952/Vivucar/seed/cars/vinfast-vf7-plus-2025/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783740955/Vivucar/seed/cars/vinfast-vf7-plus-2025/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741039/Vivucar/seed/cars/vinfast-vf7-plus-2025/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741041/Vivucar/seed/cars/vinfast-vf7-plus-2025/05.jpg"
+        }
+      ],
+      "name": "VinFast VF 7 Plus 2025",
+      "brand": "VinFast",
+      "model": "VF 7 Plus",
+      "year": 2025,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "electric",
+      "price_per_day": 1298000,
+      "address": "Phường Hòa Hải, Quận Ngũ Hành Sơn",
+      "description": "VinFast VF 7 Plus 2025 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng năng lượng điện. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 234,
+      "car_id": 235,
+      "slug": "mercedes-c200-exclusive-2023",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741044/Vivucar/seed/cars/mercedes-c200-exclusive-2023/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741046/Vivucar/seed/cars/mercedes-c200-exclusive-2023/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741050/Vivucar/seed/cars/mercedes-c200-exclusive-2023/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741054/Vivucar/seed/cars/mercedes-c200-exclusive-2023/05.jpg"
+        }
+      ],
+      "name": "Mercedes-Benz C200 Exclusive 2023",
+      "brand": "Mercedes-Benz",
+      "model": "C200 Exclusive",
+      "year": 2023,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1965000,
+      "address": "Phường Hòa Khánh Nam, Quận Liên Chiểu",
+      "description": "Mercedes-Benz C200 Exclusive 2023 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Đen"
+    },
+    {
+      "source_order": 235,
+      "car_id": 236,
+      "slug": "mercedes-c250-2016",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741057/Vivucar/seed/cars/mercedes-c250-2016/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741059/Vivucar/seed/cars/mercedes-c250-2016/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741061/Vivucar/seed/cars/mercedes-c250-2016/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741063/Vivucar/seed/cars/mercedes-c250-2016/04.jpg"
+        }
+      ],
+      "name": "Mercedes-Benz C250 2016",
+      "brand": "Mercedes-Benz",
+      "model": "C250",
+      "year": 2016,
+      "car_type": "Sedan",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1277000,
+      "address": "Phường Hòa Hải, Quận Ngũ Hành Sơn",
+      "description": "Mercedes-Benz C250 2016 là mẫu xe sedan 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Trắng"
+    },
+    {
+      "source_order": 237,
+      "car_id": 238,
+      "slug": "toyota-yaris-cross-2024",
+      "images": [
+        {
+          "display_order": 1,
+          "is_primary": true,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741065/Vivucar/seed/cars/toyota-yaris-cross-2024/01.jpg"
+        },
+        {
+          "display_order": 2,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741067/Vivucar/seed/cars/toyota-yaris-cross-2024/02.jpg"
+        },
+        {
+          "display_order": 3,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741069/Vivucar/seed/cars/toyota-yaris-cross-2024/03.jpg"
+        },
+        {
+          "display_order": 4,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741071/Vivucar/seed/cars/toyota-yaris-cross-2024/04.jpg"
+        },
+        {
+          "display_order": 5,
+          "is_primary": false,
+          "url": "https://res.cloudinary.com/dtm5a4bwr/image/upload/v1783741073/Vivucar/seed/cars/toyota-yaris-cross-2024/05.jpg"
+        }
+      ],
+      "name": "Toyota Yaris Cross 2024",
+      "brand": "Toyota",
+      "model": "Yaris Cross",
+      "year": 2024,
+      "car_type": "SUV",
+      "seats": 5,
+      "kilometers_driven": 0,
+      "transmission": "automatic",
+      "fuel_type": "gasoline",
+      "price_per_day": 1074000,
+      "address": "Xã Hòa Phước, Huyện Hòa Vang",
+      "description": "Toyota Yaris Cross 2024 là mẫu xe SUV 5 chỗ, hộp số tự động, sử dụng động cơ xăng. Phù hợp cho nhu cầu thuê xe tự lái tại Đà Nẵng.",
+      "status": "available",
+      "color": "Xám"
+    }
+  ]
+}

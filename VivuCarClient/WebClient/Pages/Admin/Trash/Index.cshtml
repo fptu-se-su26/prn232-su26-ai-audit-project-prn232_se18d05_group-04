@@ -1,0 +1,47 @@
+@page "/admin/trash"
+@model WebClient.Pages.Admin.Trash.IndexModel
+@{
+    ViewData["Title"] = "Thùng rác";
+    ViewData["AdminPage"] = "trash";
+}
+<div data-admin-trash-page>
+
+<div class="page-heading">
+          <div>
+            <h1>Thùng rác</h1>
+            <p>Quản lý và khôi phục các tài khoản khách thuê đã được xóa mềm.</p>
+          </div>
+        </div>
+
+        <section id="trashSummary" class="summary-grid"></section>
+
+        <section class="toolbar toolbar-trash">
+          <input id="trashSearchInput" aria-label="Tìm tài khoản đã xóa" placeholder="Tìm theo tên hoặc email">
+          <button class="btn btn-primary" id="btnFilterTrash" type="button">Lọc</button>
+          <button class="btn btn-secondary" id="btnResetTrash" type="button">Đặt lại</button>
+        </section>
+
+        <section class="panel">
+          <div id="trashEmpty" class="empty-state hidden">
+            <h3>Thùng rác trống</h3>
+            <p>Không tìm thấy tài khoản khách thuê đã xóa mềm.</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Loại</th>
+                  <th>Đối tượng</th>
+                  <th>Thông tin</th>
+                  <th>Ngày tạo</th>
+                  <th>Đã xoá lúc</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="trashTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+</div>
+@section Scripts { <script type="module" src="~/js/admin/trash/index.js" asp-append-version="true"></script> }
